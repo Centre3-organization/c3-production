@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, openId, name, email, role FROM users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, openId, name, email, role FROM users;",
+  "rows": [
+    {
+      "id": "2",
+      "openId": "manual_1769279678589_k55czc5",
+      "name": "Full User",
+      "email": "full@centre3.com",
+      "role": "user"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\tname\temail\trole\n2\tmanual_1769279678589_k55czc5\tFull User\tfull@centre3.com\tuser\n",
+  "stderr": "",
+  "execution_time_ms": 1546
+}

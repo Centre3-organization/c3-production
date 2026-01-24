@@ -54,3 +54,6 @@
 - [x] Migrated from old project structure
 - [x] Fixed TypeScript errors for simplified user schema
 - [x] Database tables preserved from existing data
+
+## Bug Fixes
+- [x] User mohsiin@gmail.com not found in database - added user as admin
