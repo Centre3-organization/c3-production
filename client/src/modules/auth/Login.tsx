@@ -5,12 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ShieldCheck, Lock, AlertCircle, Loader2 } from "lucide-react";
+import { Lock, AlertCircle, Loader2 } from "lucide-react";
 import { trpc } from "@/utils/trpc";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-
-// Cookie name must match the server's COOKIE_NAME
-// Cookie is now set by the server, no client-side cookie handling needed
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -21,9 +18,6 @@ export default function Login() {
 
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: () => {
-      // Cookie is set by the server
-      // Redirect to dashboard on successful login
-      // Force a page reload to refresh the auth state
       window.location.href = "/";
     },
     onError: (err: any) => {
@@ -44,41 +38,52 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-muted/30 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#4F008C_1px,transparent_1px)] [background-size:20px_20px]"></div>
+    <div className="min-h-screen w-full flex items-center justify-center bg-white relative overflow-hidden">
+      {/* Background Pattern - Center3 brand pattern */}
+      <div className="absolute inset-0 z-0 opacity-[0.02] pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#4f008c_1px,transparent_1px)] [background-size:24px_24px]"></div>
       </div>
       
-      <div className="absolute top-0 left-0 w-full h-2 bg-primary z-10"></div>
+      {/* Top brand bar - Center3 Purple */}
+      <div className="absolute top-0 left-0 w-full h-2 bg-[#4f008c] z-10"></div>
 
-      <Card className="w-full max-w-md z-10 shadow-xl border-t-4 border-t-primary">
-        <CardHeader className="space-y-1 text-center pb-8">
-          <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            <ShieldCheck className="h-8 w-8 text-primary" />
+      <Card className="w-full max-w-md z-10 shadow-xl border-t-4 border-t-[#4f008c]">
+        <CardHeader className="space-y-1 text-center pb-6">
+          {/* Center3 Logo */}
+          <div className="mx-auto mb-4">
+            <img 
+              src="/center3-logo.png" 
+              alt="center3" 
+              className="h-16 w-auto"
+              onError={(e) => {
+                // Fallback to text if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.parentElement!.innerHTML = '<h1 class="text-2xl font-bold text-[#4f008c]">center3</h1>';
+              }}
+            />
           </div>
-          <CardTitle className="text-2xl font-bold tracking-tight">CENTRE3</CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-base text-[#8e9aa5]">
             Enterprise Data Center Security Operations & Access Governance Platform
           </CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+            <Alert variant="destructive" className="mb-4 border-[#ff375e] bg-[#ff375e]/10">
+              <AlertCircle className="h-4 w-4 text-[#ff375e]" />
+              <AlertDescription className="text-[#ff375e]">{error}</AlertDescription>
             </Alert>
           )}
           
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-[#4f008c] font-medium">Email</Label>
               <Input 
                 id="email" 
                 type="email" 
                 placeholder="name@company.com" 
                 required 
-                className="h-11"
+                className="h-11 border-[#dedfe2] focus:border-[#4f008c] focus:ring-[#4f008c]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loginMutation.isPending}
@@ -87,8 +92,8 @@ export default function Login() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <a href="#" className="text-sm font-medium text-primary hover:underline">
+                <Label htmlFor="password" className="text-[#4f008c] font-medium">Password</Label>
+                <a href="#" className="text-sm font-medium text-[#ff375e] hover:underline">
                   Forgot password?
                 </a>
               </div>
@@ -97,13 +102,13 @@ export default function Login() {
                   id="password" 
                   type="password" 
                   required 
-                  className="h-11 pr-10"
+                  className="h-11 pr-10 border-[#dedfe2] focus:border-[#4f008c] focus:ring-[#4f008c]"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loginMutation.isPending}
                   autoComplete="current-password"
                 />
-                <Lock className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
+                <Lock className="absolute right-3 top-3 h-5 w-5 text-[#8e9aa5]" />
               </div>
             </div>
             <div className="flex items-center space-x-2 pt-2">
@@ -111,14 +116,15 @@ export default function Login() {
                 id="remember" 
                 checked={rememberMe}
                 onCheckedChange={(checked) => setRememberMe(checked === true)}
+                className="border-[#8e9aa5] data-[state=checked]:bg-[#4f008c] data-[state=checked]:border-[#4f008c]"
               />
-              <Label htmlFor="remember" className="text-sm font-normal text-muted-foreground">
+              <Label htmlFor="remember" className="text-sm font-normal text-[#8e9aa5]">
                 Remember this device for 30 days
               </Label>
             </div>
             <Button 
               type="submit" 
-              className="w-full h-11 text-base mt-4" 
+              className="w-full h-11 text-base mt-4 bg-[#4f008c] hover:bg-[#7333a3] text-white" 
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? (
@@ -132,10 +138,10 @@ export default function Login() {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4 text-center text-sm text-muted-foreground pt-4 border-t bg-muted/10">
+        <CardFooter className="flex flex-col space-y-4 text-center text-sm text-[#8e9aa5] pt-4 border-t bg-[#dedfe2]/20">
           <p>Protected by Enterprise Security</p>
           <div className="flex items-center justify-center gap-4 text-xs opacity-70">
-            <span>© 2025 CENTRE3</span>
+            <span>© 2025 center3</span>
             <span>•</span>
             <span>Privacy Policy</span>
             <span>•</span>

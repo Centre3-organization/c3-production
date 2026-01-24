@@ -221,18 +221,18 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* Quick Actions Bar - Enterprise Style */}
-      <Card className="border-0 bg-slate-800 dark:bg-slate-900 text-white shadow-lg">
+      {/* Quick Actions Bar - Center3 Brand Style */}
+      <Card className="border-0 bg-[#4f008c] dark:bg-[#3a1066] text-white shadow-lg">
         <CardContent className="py-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <Activity className="h-5 w-5 text-slate-300" />
+              <Activity className="h-5 w-5 text-white/80" />
               <span className="font-medium text-slate-100">Quick Actions</span>
             </div>
             <div className="flex flex-wrap gap-3">
               <Button 
                 size="default" 
-                className="bg-slate-700 hover:bg-slate-600 text-white border-0 h-10 px-5"
+                className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
                 onClick={() => navigate("/approvals/l1")}
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" /> 
@@ -240,7 +240,7 @@ export default function Home() {
               </Button>
               <Button 
                 size="default" 
-                className="bg-slate-700 hover:bg-slate-600 text-white border-0 h-10 px-5"
+                className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
                 onClick={() => navigate("/approvals/l2")}
               >
                 <UserCheck className="h-4 w-4 mr-2" /> 
@@ -248,7 +248,7 @@ export default function Home() {
               </Button>
               <Button 
                 size="default" 
-                className="bg-slate-700 hover:bg-slate-600 text-white border-0 h-10 px-5"
+                className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
                 onClick={() => navigate("/global-overwatch")}
               >
                 <Eye className="h-4 w-4 mr-2" /> 

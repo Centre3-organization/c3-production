@@ -41,98 +41,135 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Center3 Brand Colors */
+  --color-center3-purple: oklch(0.32 0.22 295);
+  --color-center3-coral: oklch(0.65 0.22 15);
+  --color-center3-silver: oklch(0.68 0.02 250);
+  --color-center3-light-silver: oklch(0.90 0.01 250);
+  --color-center3-moonlight: oklch(0.55 0.20 300);
+  --color-center3-dark-purple: oklch(0.25 0.15 295);
+  --color-center3-light-purple: oklch(0.45 0.18 295);
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --radius: 0.65rem;
-  /* STC Purple #4F008C -> OKLCH approx 0.35 0.23 290 */
-  --stc-purple: oklch(0.35 0.23 290);
-  --stc-purple-light: oklch(0.45 0.23 290);
-  --stc-purple-dark: oklch(0.25 0.23 290);
-  
-  --background: oklch(0.98 0.005 290);
-  --foreground: oklch(0.20 0.02 290);
-  
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.02 290);
-  
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.02 290);
-  
-  --primary: var(--stc-purple);
-  --primary-foreground: oklch(1 0 0);
-  
-  --secondary: oklch(0.96 0.01 290);
-  --secondary-foreground: var(--stc-purple);
-  
-  --muted: oklch(0.96 0.01 290);
-  --muted-foreground: oklch(0.50 0.02 290);
-  
-  --accent: oklch(0.96 0.01 290);
-  --accent-foreground: var(--stc-purple);
-  
-  --destructive: oklch(0.6 0.2 20);
-  --destructive-foreground: oklch(1 0 0);
-  
-  --border: oklch(0.92 0.01 290);
-  --input: oklch(0.92 0.01 290);
-  --ring: var(--stc-purple);
+  /* Center3 Brand Colors - Primary Palette */
+  /* Purple #4f008c - Primary brand color */
+  --center3-purple: oklch(0.32 0.22 295);
+  /* Coral #ff375e - Accent color */
+  --center3-coral: oklch(0.65 0.22 15);
+  /* Silver #8e9aa5 - Secondary text */
+  --center3-silver: oklch(0.68 0.02 250);
+  /* Light Silver #dedfe2 - Subtle backgrounds */
+  --center3-light-silver: oklch(0.90 0.01 250);
+  /* Moon Light #a54ee1 - Secondary purple */
+  --center3-moonlight: oklch(0.55 0.20 300);
+  /* Dark Purple #3a1066 - Dark backgrounds */
+  --center3-dark-purple: oklch(0.25 0.15 295);
+  /* Light Purple #7333a3 - Supergraphic */
+  --center3-light-purple: oklch(0.45 0.18 295);
   
   --radius: 0.5rem;
   
-  /* Sidebar - STC Purple Background */
-  --sidebar: var(--stc-purple);
+  /* Background - White (Air) */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.20 0.02 295);
+  
+  /* Card - White with purple text */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.20 0.02 295);
+  
+  /* Popover */
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.20 0.02 295);
+  
+  /* Primary - Center3 Purple */
+  --primary: var(--center3-purple);
+  --primary-foreground: oklch(1 0 0);
+  
+  /* Secondary - Light Silver background */
+  --secondary: var(--center3-light-silver);
+  --secondary-foreground: var(--center3-purple);
+  
+  /* Muted - Light backgrounds */
+  --muted: oklch(0.96 0.005 250);
+  --muted-foreground: var(--center3-silver);
+  
+  /* Accent - Coral for highlights */
+  --accent: var(--center3-coral);
+  --accent-foreground: oklch(1 0 0);
+  
+  /* Destructive - Coral for errors/warnings */
+  --destructive: var(--center3-coral);
+  --destructive-foreground: oklch(1 0 0);
+  
+  /* Borders and inputs */
+  --border: oklch(0.90 0.01 250);
+  --input: oklch(0.90 0.01 250);
+  --ring: var(--center3-purple);
+  
+  /* Chart colors - Purple gradient */
+  --chart-1: var(--center3-coral);
+  --chart-2: var(--center3-purple);
+  --chart-3: var(--center3-light-purple);
+  --chart-4: var(--center3-moonlight);
+  --chart-5: var(--center3-dark-purple);
+  
+  /* Sidebar - Center3 Purple Background */
+  --sidebar: var(--center3-purple);
   --sidebar-foreground: oklch(1 0 0);
   --sidebar-primary: oklch(1 0 0 / 0.2);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(1 0 0 / 0.1);
   --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: var(--stc-purple);
+  --sidebar-border: var(--center3-light-purple);
   --sidebar-ring: oklch(1 0 0);
 }
 
 .dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  /* Dark mode - Dark Purple background */
+  --background: var(--center3-dark-purple);
+  --foreground: oklch(0.95 0.005 0);
+  
+  --card: oklch(0.28 0.12 295);
+  --card-foreground: oklch(0.95 0.005 0);
+  
+  --popover: oklch(0.28 0.12 295);
+  --popover-foreground: oklch(0.95 0.005 0);
+  
+  --primary: var(--center3-moonlight);
+  --primary-foreground: oklch(1 0 0);
+  
+  --secondary: oklch(0.35 0.10 295);
+  --secondary-foreground: oklch(0.90 0.005 0);
+  
+  --muted: oklch(0.30 0.08 295);
+  --muted-foreground: oklch(0.70 0.02 250);
+  
+  --accent: var(--center3-coral);
+  --accent-foreground: oklch(1 0 0);
+  
+  --destructive: var(--center3-coral);
+  --destructive-foreground: oklch(1 0 0);
+  
+  --border: oklch(0.40 0.10 295);
+  --input: oklch(0.35 0.08 295);
+  --ring: var(--center3-moonlight);
+  
+  --chart-1: var(--center3-coral);
+  --chart-2: var(--center3-moonlight);
+  --chart-3: var(--center3-light-purple);
+  --chart-4: oklch(0.50 0.15 295);
+  --chart-5: oklch(0.60 0.18 300);
+  
+  --sidebar: var(--center3-dark-purple);
+  --sidebar-foreground: oklch(0.95 0.005 0);
+  --sidebar-primary: var(--center3-moonlight);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(1 0 0 / 0.1);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.40 0.10 295);
+  --sidebar-ring: var(--center3-moonlight);
 }
 
 @layer base {
@@ -154,27 +191,27 @@
   input[type="radio"]:not(:disabled) {
     @apply cursor-pointer;
   }
+  
+  /* Typography - Brand Guidelines */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 500; /* Medium weight for headlines */
+  }
+  
+  /* Bold/Extrabold only for highlights, numbers, percentages */
+  .highlight, .stat-number {
+    font-weight: 700;
+  }
 }
 
 @layer components {
   /**
    * Custom container utility that centers content and adds responsive padding.
-   *
-   * This overrides Tailwind's default container behavior to:
-   * - Auto-center content (mx-auto)
-   * - Add responsive horizontal padding
-   * - Set max-width for large screens
-   *
-   * Usage: <div className="container">...</div>
-   *
-   * For custom widths, use max-w-* utilities directly:
-   * <div className="max-w-6xl mx-auto px-4">...</div>
    */
   .container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
+    padding-left: 1rem;
     padding-right: 1rem;
   }
 
@@ -185,16 +222,80 @@
 
   @media (min-width: 640px) {
     .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
+      padding-left: 1.5rem;
       padding-right: 1.5rem;
     }
   }
 
   @media (min-width: 1024px) {
     .container {
-      padding-left: 2rem; /* 32px - desktop padding */
+      padding-left: 2rem;
       padding-right: 2rem;
-      max-width: 1280px; /* Standard content width */
+      max-width: 1280px;
     }
+  }
+  
+  /* Center3 Brand Button Styles */
+  .btn-center3-primary {
+    background-color: var(--center3-purple);
+    color: white;
+  }
+  
+  .btn-center3-primary:hover {
+    background-color: var(--center3-light-purple);
+  }
+  
+  .btn-center3-coral {
+    background-color: var(--center3-coral);
+    color: white;
+  }
+  
+  .btn-center3-coral:hover {
+    opacity: 0.9;
+  }
+  
+  /* Center3 Icon Styles - Outline default, filled on hover/active */
+  .icon-center3 {
+    color: var(--center3-purple);
+    stroke-width: 1.5;
+  }
+  
+  .icon-center3:hover,
+  .icon-center3.active {
+    fill: var(--center3-purple);
+  }
+}
+
+/* Utility classes for Center3 brand colors */
+@layer utilities {
+  .text-center3-purple {
+    color: var(--center3-purple);
+  }
+  .text-center3-coral {
+    color: var(--center3-coral);
+  }
+  .text-center3-silver {
+    color: var(--center3-silver);
+  }
+  .bg-center3-purple {
+    background-color: var(--center3-purple);
+  }
+  .bg-center3-coral {
+    background-color: var(--center3-coral);
+  }
+  .bg-center3-light-silver {
+    background-color: var(--center3-light-silver);
+  }
+  .bg-center3-dark-purple {
+    background-color: var(--center3-dark-purple);
+  }
+  .bg-center3-light-purple {
+    background-color: var(--center3-light-purple);
+  }
+  .border-center3-purple {
+    border-color: var(--center3-purple);
+  }
+  .border-center3-coral {
+    border-color: var(--center3-coral);
   }
 }

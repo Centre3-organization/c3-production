@@ -247,17 +247,19 @@ export default function Layout({ children }: LayoutProps) {
         )}>
           {(sidebarOpen || isMobile) ? (
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
-                <ShieldAlert className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-white tracking-tight">CENTRE3</h1>
-                <p className="text-[10px] text-sidebar-foreground/60 uppercase tracking-wider">Security Ops</p>
-              </div>
+              <img 
+                src="/center3-logo-white.png" 
+                alt="center3" 
+                className="h-8 w-auto"
+              />
             </div>
           ) : (
-            <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
-              <ShieldAlert className="h-5 w-5 text-white" />
+            <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center overflow-hidden">
+              <img 
+                src="/center3-icon.png" 
+                alt="center3" 
+                className="h-6 w-6 object-contain"
+              />
             </div>
           )}
         </div>
