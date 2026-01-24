@@ -66,3 +66,6 @@
 
 ## Session Bug Fix
 - [x] Login authenticates but redirects back to login page - fixed by setting JWT cookie on server side
+
+## Font Update
+- [x] Change default font to Montserrat across the entire website
