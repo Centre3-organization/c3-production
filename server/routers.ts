@@ -5,6 +5,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./infra/db/connection";
 import { TRPCError } from "@trpc/server";
+import bcrypt from "bcryptjs";
 
 // Users Module
 import { departmentsRouter } from "./modules/users/departments.router";
@@ -57,7 +58,7 @@ export const appRouter = router({
     login: publicProcedure
       .input(z.object({
         email: z.string().email(),
-        password: z.string().optional(),
+        password: z.string().min(1, "Password is required"),
       }))
       .mutation(async ({ input }) => {
         const user = await db.getUserByEmail(input.email);
@@ -65,7 +66,23 @@ export const appRouter = router({
         if (!user) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
-            message: "User not found. Please contact an administrator.",
+            message: "Invalid email or password.",
+          });
+        }
+
+        // Verify password
+        if (!user.passwordHash) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Password not set for this account. Please contact an administrator.",
+          });
+        }
+
+        const isValidPassword = await bcrypt.compare(input.password, user.passwordHash);
+        if (!isValidPassword) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Invalid email or password.",
           });
         }
 

@@ -57,3 +57,9 @@
 
 ## Bug Fixes
 - [x] User mohsiin@gmail.com not found in database - added user as admin
+
+## Password Authentication Implementation
+- [x] Add passwordHash column to users table
+- [x] Implement password hashing with bcrypt
+- [x] Update login router to verify password
+- [x] Set password for admin mohsiin@gmail.com
