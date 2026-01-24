@@ -10,14 +10,7 @@ import { trpc } from "@/utils/trpc";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Cookie name must match the server's COOKIE_NAME
-const COOKIE_NAME = "__manus_session";
-
-function setCookie(name: string, value: string, days: number = 365) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  // Set cookie with proper attributes for security
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
-}
+// Cookie is now set by the server, no client-side cookie handling needed
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -27,11 +20,8 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
 
   const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: (data: any) => {
-      // Set the session cookie with the token from server
-      if (data.sessionToken) {
-        setCookie(COOKIE_NAME, data.sessionToken, rememberMe ? 30 : 1);
-      }
+    onSuccess: () => {
+      // Cookie is set by the server
       // Redirect to dashboard on successful login
       // Force a page reload to refresh the auth state
       window.location.href = "/";
@@ -50,7 +40,7 @@ export default function Login() {
       return;
     }
 
-    loginMutation.mutate({ email, password });
+    loginMutation.mutate({ email, password, rememberMe });
   };
 
   return (

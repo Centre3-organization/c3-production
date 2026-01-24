@@ -59,8 +59,9 @@ export const appRouter = router({
       .input(z.object({
         email: z.string().email(),
         password: z.string().min(1, "Password is required"),
+        rememberMe: z.boolean().optional(),
       }))
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
         const user = await db.getUserByEmail(input.email);
         
         if (!user) {
@@ -90,7 +91,20 @@ export const appRouter = router({
           lastSignedIn: new Date(),
         });
 
-        const sessionToken = `session_${user.id}_${Date.now()}`;
+        // Create a proper JWT session token using the SDK
+        const { sdk } = await import("./_core/sdk");
+        const expiresInMs = input.rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000; // 30 days or 1 day
+        const sessionToken = await sdk.createSessionToken(user.openId, {
+          expiresInMs,
+          name: user.name || user.email || "User",
+        });
+
+        // Set the session cookie on the response
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, sessionToken, {
+          ...cookieOptions,
+          maxAge: expiresInMs,
+        });
 
         return {
           success: true,

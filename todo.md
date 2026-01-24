@@ -63,3 +63,6 @@
 - [x] Implement password hashing with bcrypt
 - [x] Update login router to verify password
 - [x] Set password for admin mohsiin@gmail.com
+
+## Session Bug Fix
+- [x] Login authenticates but redirects back to login page - fixed by setting JWT cookie on server side
