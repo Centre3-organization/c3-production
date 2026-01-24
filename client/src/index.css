@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -53,29 +54,50 @@
   --chart-4: var(--color-blue-700);
   --chart-5: var(--color-blue-800);
   --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
+  /* STC Purple #4F008C -> OKLCH approx 0.35 0.23 290 */
+  --stc-purple: oklch(0.35 0.23 290);
+  --stc-purple-light: oklch(0.45 0.23 290);
+  --stc-purple-dark: oklch(0.25 0.23 290);
+  
+  --background: oklch(0.98 0.005 290);
+  --foreground: oklch(0.20 0.02 290);
+  
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
+  --card-foreground: oklch(0.20 0.02 290);
+  
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  --popover-foreground: oklch(0.20 0.02 290);
+  
+  --primary: var(--stc-purple);
+  --primary-foreground: oklch(1 0 0);
+  
+  --secondary: oklch(0.96 0.01 290);
+  --secondary-foreground: var(--stc-purple);
+  
+  --muted: oklch(0.96 0.01 290);
+  --muted-foreground: oklch(0.50 0.02 290);
+  
+  --accent: oklch(0.96 0.01 290);
+  --accent-foreground: var(--stc-purple);
+  
+  --destructive: oklch(0.6 0.2 20);
+  --destructive-foreground: oklch(1 0 0);
+  
+  --border: oklch(0.92 0.01 290);
+  --input: oklch(0.92 0.01 290);
+  --ring: var(--stc-purple);
+  
+  --radius: 0.5rem;
+  
+  /* Sidebar - STC Purple Background */
+  --sidebar: var(--stc-purple);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(1 0 0 / 0.2);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(1 0 0 / 0.1);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: var(--stc-purple);
+  --sidebar-ring: oklch(1 0 0);
 }
 
 .dark {
@@ -118,7 +140,8 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Manrope', sans-serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),

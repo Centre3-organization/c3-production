@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `sites` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `code` varchar(20) NOT NULL UNIQUE,\n  `name` varchar(100) NOT NULL,\n  `countryId` int,\n  `regionId` int,\n  `cityId` int,\n  `address` text,\n  `latitude` varchar(20),\n  `longitude` varchar(20),\n  `siteTypeId` int,\n  `category` enum('primary','secondary','tertiary') DEFAULT 'primary',\n  `maxCapacity` int NOT NULL DEFAULT 0,\n  `currentOccupancy` int NOT NULL DEFAULT 0,\n  `status` enum('active','inactive','maintenance','offline') NOT NULL DEFAULT 'active',\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  CONSTRAINT `sites_id` PRIMARY KEY(`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute CREATE TABLE IF NOT EXISTS `sites` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `code` varchar(20) NOT NULL UNIQUE,\n  `name` varchar(100) NOT NULL,\n  `countryId` int,\n  `regionId` int,\n  `cityId` int,\n  `address` text,\n  `latitude` varchar(20),\n  `longitude` varchar(20),\n  `siteTypeId` int,\n  `category` enum('primary','secondary','tertiary') DEFAULT 'primary',\n  `maxCapacity` int NOT NULL DEFAULT 0,\n  `currentOccupancy` int NOT NULL DEFAULT 0,\n  `status` enum('active','inactive','maintenance','offline') NOT NULL DEFAULT 'active',\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  CONSTRAINT `sites_id` PRIMARY KEY(`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1510
+}
