@@ -15,7 +15,10 @@ import {
   approvalTasks,
   approvalHistory,
   workflowConditions,
-  stageApprovers
+  stageApprovers,
+  requestVisitors,
+  requestMaterials,
+  requestVehicles
 } from "../../../drizzle/schema";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "../../_core/trpc";
 // Workflow engine functions are defined locally
@@ -465,13 +468,14 @@ export const requestsRouter = router({
   // Create new request
   create: protectedProcedure
     .input(z.object({
-      type: z.enum(["admin_visit", "work_permit", "material_entry", "tep", "mop", "escort"]),
+      // Legacy fields (for backward compatibility)
+      type: z.enum(["admin_visit", "work_permit", "material_entry", "tep", "mop", "escort"]).optional(),
       visitorName: z.string().min(1).max(100),
       visitorIdType: z.enum(["national_id", "iqama", "passport"]),
       visitorIdNumber: z.string().min(1).max(50),
       visitorCompany: z.string().max(100).optional(),
       visitorPhone: z.string().max(20).optional(),
-      visitorEmail: z.string().email().optional(),
+      visitorEmail: z.string().email().optional().nullable(),
       hostId: z.number().optional(),
       siteId: z.number(),
       purpose: z.string().min(1).max(500),
@@ -487,6 +491,46 @@ export const requestsRouter = router({
         quantity: z.number().default(1),
       })).optional(),
       submitImmediately: z.boolean().default(false),
+      
+      // Dynamic Request Type System fields
+      categoryId: z.number().optional(),
+      selectedTypeIds: z.array(z.number()).optional(),
+      formData: z.record(z.string(), z.any()).optional(),
+      
+      // Visitors array (fixes bug: only 1 visitor saved)
+      visitors: z.array(z.object({
+        fullName: z.string().min(1).max(255),
+        idType: z.enum(["national_id", "iqama", "passport"]).optional(),
+        idNumber: z.string().min(1).max(50),
+        nationality: z.string().max(100).optional(),
+        company: z.string().max(255).optional(),
+        jobTitle: z.string().max(255).optional(),
+        phone: z.string().max(20).optional(),
+        email: z.string().email().optional().nullable(),
+        isVerified: z.boolean().optional(),
+      })).optional(),
+      
+      // Materials array (for MHV)
+      materials: z.array(z.object({
+        materialType: z.string().min(1).max(100),
+        description: z.string().max(500).optional(),
+        quantity: z.number().default(1),
+        serialNumber: z.string().max(255).optional(),
+        unit: z.string().max(50).optional(),
+        direction: z.enum(["entry", "exit"]).optional(),
+      })).optional(),
+      
+      // Vehicles array (for VIP/MHV)
+      vehicles: z.array(z.object({
+        vehicleType: z.string().max(100).optional(),
+        plateNumber: z.string().max(50).optional(),
+        driverName: z.string().max(255).optional(),
+        driverIdNumber: z.string().max(50).optional(),
+        driverNationality: z.string().max(100).optional(),
+        driverCompany: z.string().max(255).optional(),
+        driverPhone: z.string().max(20).optional(),
+        purpose: z.string().max(500).optional(),
+      })).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       const db = await getDb();
@@ -495,17 +539,32 @@ export const requestsRouter = router({
       const requestNumber = generateRequestNumber();
       const status = input.submitImmediately ? "pending_approval" : "draft";
       
+      // Determine request type from selectedTypeIds or use legacy type
+      let requestType = input.type || "admin_visit";
+      if (input.selectedTypeIds && input.selectedTypeIds.length > 0) {
+        // Map type IDs to request type (simplified - first type determines main type)
+        // In production, you'd look up the type code from the database
+        const typeMapping: Record<number, string> = {
+          1: "admin_visit",
+          2: "tep",
+          3: "work_permit",
+          4: "mop",
+          5: "material_entry", // MHV maps to material_entry
+        };
+        requestType = (typeMapping[input.selectedTypeIds[0]] as any) || "admin_visit";
+      }
+      
       // Insert request
       const insertResult = await db.insert(requests).values({
         requestNumber,
-        type: input.type,
+        type: requestType,
         status,
         visitorName: input.visitorName,
         visitorIdType: input.visitorIdType,
         visitorIdNumber: input.visitorIdNumber,
         visitorCompany: input.visitorCompany,
         visitorPhone: input.visitorPhone,
-        visitorEmail: input.visitorEmail,
+        visitorEmail: input.visitorEmail || undefined,
         hostId: input.hostId,
         siteId: input.siteId,
         requestorId: ctx.user.id,
@@ -514,6 +573,10 @@ export const requestsRouter = router({
         endDate: new Date(input.endDate).toISOString().split('T')[0],
         startTime: input.startTime,
         endTime: input.endTime,
+        // Dynamic form fields
+        categoryId: input.categoryId,
+        selectedTypeIds: input.selectedTypeIds,
+        formData: input.formData,
       } as any);
       
       const requestId = Number((insertResult as any).insertId || (insertResult as any)[0]?.insertId);
@@ -528,7 +591,7 @@ export const requestsRouter = router({
         );
       }
       
-      // Insert assets
+      // Insert assets (legacy)
       if (input.assets && input.assets.length > 0) {
         await db.insert(requestAssets).values(
           input.assets.map(asset => ({
@@ -541,9 +604,59 @@ export const requestsRouter = router({
         );
       }
       
+      // Insert visitors (new - fixes bug: only 1 visitor saved)
+      if (input.visitors && input.visitors.length > 0) {
+        await db.insert(requestVisitors).values(
+          input.visitors.map((visitor, index) => ({
+            requestId,
+            visitorIndex: index + 1,
+            fullName: visitor.fullName,
+            idType: visitor.idType || "national_id",
+            idNumber: visitor.idNumber,
+            nationality: visitor.nationality,
+            company: visitor.company,
+            jobTitle: visitor.jobTitle,
+            mobile: visitor.phone,
+            email: visitor.email || undefined,
+            isVerified: visitor.isVerified || false,
+          }))
+        );
+      }
+      
+      // Insert materials (for MHV)
+      if (input.materials && input.materials.length > 0) {
+        await db.insert(requestMaterials).values(
+          input.materials.map((material, index) => ({
+            requestId,
+            materialIndex: index + 1,
+            direction: material.direction || "entry",
+            materialType: material.materialType,
+            model: material.description,
+            serialNumber: material.serialNumber,
+            quantity: material.quantity || 1,
+          }))
+        );
+      }
+      
+      // Insert vehicles (for VIP/MHV)
+      if (input.vehicles && input.vehicles.length > 0) {
+        await db.insert(requestVehicles).values(
+          input.vehicles.map(vehicle => ({
+            requestId,
+            driverName: vehicle.driverName,
+            driverNationality: vehicle.driverNationality,
+            driverId: vehicle.driverIdNumber,
+            driverCompany: vehicle.driverCompany,
+            driverPhone: vehicle.driverPhone,
+            vehiclePlate: vehicle.plateNumber,
+            vehicleType: vehicle.vehicleType,
+          }))
+        );
+      }
+      
       // If submitting immediately, start the workflow
       if (input.submitImmediately) {
-        await startWorkflowForRequest(db, requestId, input.type, input.siteId, ctx.user.id);
+        await startWorkflowForRequest(db, requestId, requestType, input.siteId, ctx.user.id);
       }
       
       // Fetch the created request

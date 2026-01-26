@@ -371,3 +371,29 @@
 - [x] Integrate with existing approval workflow
 - [x] Test all request type combinations
 - [x] Verify visitor data is properly saved (multiple visitors)
+
+## Dynamic Request Type System Enhancements (Jan 26, 2026)
+
+### Phase 1: UI Enhancement - Pop-up Dialogs
+- [x] Convert category selection to pop-up dialog
+- [x] Convert type selection to pop-up dialog
+- [x] Maintain current styling in dialog format
+
+### Phase 2: Complete Request Submission
+- [x] Wire up form data to save visitors to request_visitors table
+- [x] Wire up form data to save materials to request_materials table
+- [x] Wire up form data to save vehicles to request_vehicles table
+- [x] Store dynamic form fields in form_data JSON column
+
+### Phase 3: Admin Visit Form Sections
+- [x] Seed form sections for Admin Visit type (already seeded with 6 sections)
+- [x] Seed form fields for Admin Visit sections (30 fields total)
+- [x] Test Admin Visit form rendering
+
+### Phase 4: Request Type Configuration Admin UI
+- [x] Create Request Types page in Settings
+- [x] Build Category management UI (CRUD)
+- [x] Build Type management UI (CRUD)
+- [x] Build Section management UI (CRUD)
+- [x] Build Field management UI (CRUD)
+- [ ] Add field options editor for dropdowns

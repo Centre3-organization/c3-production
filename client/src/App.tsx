@@ -51,6 +51,7 @@ import { DelegationManagement } from "./modules/workflows/DelegationManagement";
 // Settings Module
 import Settings from "./modules/settings/Settings";
 import TranslationManagement from "./modules/settings/TranslationManagement";
+import RequestTypeConfig from "./modules/settings/RequestTypeConfig";
 
 function Router() {
   return (
@@ -159,6 +160,11 @@ function Router() {
       <Route path="/settings/translations">
         <Layout>
           <TranslationManagement />
+        </Layout>
+      </Route>
+      <Route path="/settings/request-types">
+        <Layout>
+          <RequestTypeConfig />
         </Layout>
       </Route>
       
