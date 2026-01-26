@@ -1,0 +1,38 @@
+{
+  "query": "SELECT w.id as workflow_id, w.name as workflow_name, s.id as stage_id, s.stageName, s.stageOrder \nFROM approvalWorkflows w \nLEFT JOIN approvalStages s ON s.workflowId = w.id \nWHERE w.name = 'Standard Access Request';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT w.id as workflow_id, w.name as workflow_name, s.id as stage_id, s.stageName, s.stageOrder \nFROM approvalWorkflows w \nLEFT JOIN approvalStages s ON s.workflowId = w.id \nWHERE w.name = 'Standard Access Request';",
+  "rows": [
+    {
+      "workflow_id": "3",
+      "workflow_name": "Standard Access Request",
+      "stage_id": "1",
+      "stageName": "L1 - Initial Review",
+      "stageOrder": "1"
+    },
+    {
+      "workflow_id": "3",
+      "workflow_name": "Standard Access Request",
+      "stage_id": "2",
+      "stageName": "L2 - Security Approval",
+      "stageOrder": "2"
+    },
+    {
+      "workflow_id": "4",
+      "workflow_name": "Standard Access Request",
+      "stage_id": "3",
+      "stageName": "L1 - Initial Review",
+      "stageOrder": "1"
+    },
+    {
+      "workflow_id": "4",
+      "workflow_name": "Standard Access Request",
+      "stage_id": "4",
+      "stageName": "L2 - Security Approval",
+      "stageOrder": "2"
+    }
+  ],
+  "messages": [],
+  "stdout": "workflow_id\tworkflow_name\tstage_id\tstageName\tstageOrder\n3\tStandard Access Request\t1\tL1 - Initial Review\t1\n3\tStandard Access Request\t2\tL2 - Security Approval\t2\n4\tStandard Access Request\t3\tL1 - Initial Review\t1\n4\tStandard Access Request\t4\tL2 - Security Approval\t2\n",
+  "stderr": "",
+  "execution_time_ms": 1520
+}

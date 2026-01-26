@@ -286,6 +286,7 @@ export const requests = mysqlTable("requests", {
     "draft", 
     "pending_l1", 
     "pending_manual", 
+    "pending_approval",
     "approved", 
     "rejected", 
     "cancelled", 
@@ -953,13 +954,17 @@ export const approvalHistory = mysqlTable("approvalHistory", {
     assignee?: number;
     assigneeName?: string;
     stageName?: string;
+    stageOrder?: number;
     workflowName?: string;
+    firstStageName?: string;
     escalationRule?: string;
     delegationId?: number;
     questions?: string[];
     requiredDocuments?: string[];
     totalStages?: number;
     completedStages?: number;
+    entryMethod?: string;
+    cardNumber?: string;
   }>(),
   ipAddress: varchar("ipAddress", { length: 45 }),
   userAgent: text("userAgent"),

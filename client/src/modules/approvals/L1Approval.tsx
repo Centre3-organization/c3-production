@@ -16,7 +16,9 @@ import {
   RefreshCw,
   FileText,
   Zap,
-  ArrowUpRight
+  ArrowUpRight,
+  GitBranch,
+  History
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,14 +61,17 @@ export default function L1Approval() {
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [processingId, setProcessingId] = useState<number | null>(null);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   
-  const { data: pendingRequests, isLoading, refetch } = trpc.requests.getPendingL1.useQuery();
+  // Use the new workflow-based pending tasks query
+  const { data: pendingTasks, isLoading, refetch } = trpc.requests.getMyPendingApprovals.useQuery();
   const { data: stats } = trpc.requests.getStats.useQuery();
   
-  const approveL1 = trpc.requests.approveL1.useMutation({
-    onSuccess: () => {
+  // Use the new workflow-based approval mutation
+  const approveTask = trpc.requests.approveTask.useMutation({
+    onSuccess: (result) => {
       toast.success("Request approved", {
-        description: "Moved to Manual Approval queue"
+        description: result.message || "Moved to next approval stage"
       });
       refetch();
       setSelectedRequest(null);
@@ -78,7 +83,8 @@ export default function L1Approval() {
     }
   });
   
-  const rejectL1 = trpc.requests.rejectL1.useMutation({
+  // Use the new workflow-based rejection mutation
+  const rejectTask = trpc.requests.rejectTask.useMutation({
     onSuccess: () => {
       toast.error("Request rejected");
       refetch();
@@ -93,26 +99,32 @@ export default function L1Approval() {
     }
   });
   
-  const requests = pendingRequests || [];
+  // Filter to only show L1 stage tasks
+  const l1Tasks = (pendingTasks || []).filter((task: any) => 
+    task.stageName?.toLowerCase().includes('l1') || task.stageOrder === 1
+  );
   
   // Filter by search
-  const filteredRequests = requests.filter(req => {
+  const filteredTasks = l1Tasks.filter((task: any) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
-      req.requestNumber.toLowerCase().includes(query) ||
-      req.visitorName.toLowerCase().includes(query) ||
-      (req.visitorCompany?.toLowerCase().includes(query))
+      task.requestNumber?.toLowerCase().includes(query) ||
+      task.visitorName?.toLowerCase().includes(query) ||
+      (task.visitorCompany?.toLowerCase().includes(query))
     );
   });
   
-  const handleApprove = (request: any) => {
-    setProcessingId(request.id);
-    approveL1.mutate({ id: request.id });
+  const handleApprove = (task: any) => {
+    setProcessingId(task.taskId);
+    approveTask.mutate({ 
+      taskId: task.taskId,
+      comments: "Approved at L1 review"
+    });
   };
   
-  const handleRejectClick = (request: any) => {
-    setSelectedRequest(request);
+  const handleRejectClick = (task: any) => {
+    setSelectedRequest(task);
     setRejectDialogOpen(true);
   };
   
@@ -121,8 +133,16 @@ export default function L1Approval() {
       toast.error("Please provide a rejection reason");
       return;
     }
-    setProcessingId(selectedRequest.id);
-    rejectL1.mutate({ id: selectedRequest.id, comments: rejectReason });
+    setProcessingId(selectedRequest.taskId);
+    rejectTask.mutate({ 
+      taskId: selectedRequest.taskId, 
+      comments: rejectReason 
+    });
+  };
+  
+  const handleViewDetails = (task: any) => {
+    setSelectedRequest(task);
+    setDetailsDialogOpen(true);
   };
 
   return (
@@ -135,10 +155,14 @@ export default function L1Approval() {
             L1 Approval Queue
           </h1>
           <p className="text-muted-foreground mt-1">
-            Quick review and forward requests to manual approval
+            Initial review stage - Quick review and forward requests to security approval
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+            <GitBranch className="h-3 w-3 mr-1" />
+            Workflow-Based
+          </Badge>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
@@ -152,8 +176,8 @@ export default function L1Approval() {
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-amber-700">In Queue</p>
-                <p className="text-3xl font-bold text-amber-900">{stats?.pendingL1 || 0}</p>
+                <p className="text-sm font-medium text-amber-700">In L1 Queue</p>
+                <p className="text-3xl font-bold text-amber-900">{l1Tasks.length}</p>
               </div>
               <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
                 <Clock className="h-6 w-6 text-amber-600" />
@@ -166,7 +190,7 @@ export default function L1Approval() {
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-blue-700">Pending Manual</p>
+                <p className="text-sm font-medium text-blue-700">Pending L2</p>
                 <p className="text-3xl font-bold text-blue-900">{stats?.pendingManual || 0}</p>
               </div>
               <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
@@ -226,7 +250,7 @@ export default function L1Approval() {
         <div className="flex items-center justify-center py-16">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      ) : filteredRequests.length === 0 ? (
+      ) : filteredTasks.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-16">
             <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
@@ -238,9 +262,9 @@ export default function L1Approval() {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {filteredRequests.map((request) => (
+          {filteredTasks.map((task: any) => (
             <Card 
-              key={request.id} 
+              key={task.taskId} 
               className="hover:shadow-md transition-shadow border-l-4 border-l-amber-400"
             >
               <CardContent className="p-0">
@@ -249,16 +273,25 @@ export default function L1Approval() {
                   <div className="flex-1 p-5">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <Badge variant="outline" className={typeColors[request.type]}>
-                          {typeLabels[request.type] || request.type}
+                        <Badge variant="outline" className={typeColors[task.type] || "bg-gray-100"}>
+                          {typeLabels[task.type] || task.type}
                         </Badge>
                         <span className="text-sm font-mono text-muted-foreground">
-                          {request.requestNumber}
+                          {task.requestNumber}
+                        </span>
+                        <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                          <GitBranch className="h-3 w-3 mr-1" />
+                          {task.workflowName || "Standard Workflow"}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                          Stage {task.stageOrder}: {task.stageName}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {task.createdAt ? format(new Date(task.createdAt), "MMM dd, HH:mm") : ""}
                         </span>
                       </div>
-                      <span className="text-xs text-muted-foreground">
-                        {request.createdAt ? format(new Date(request.createdAt), "MMM dd, HH:mm") : ""}
-                      </span>
                     </div>
                     
                     <div className="grid grid-cols-4 gap-6">
@@ -268,8 +301,8 @@ export default function L1Approval() {
                           <User className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                          <p className="font-semibold text-foreground">{request.visitorName}</p>
-                          <p className="text-sm text-muted-foreground">{request.visitorCompany || "Individual"}</p>
+                          <p className="font-semibold text-foreground">{task.visitorName}</p>
+                          <p className="text-sm text-muted-foreground">{task.visitorCompany || "Individual"}</p>
                         </div>
                       </div>
                       
@@ -279,7 +312,7 @@ export default function L1Approval() {
                           <Building2 className="h-5 w-5 text-blue-600" />
                         </div>
                         <div>
-                          <p className="font-medium text-foreground">{request.siteName || "N/A"}</p>
+                          <p className="font-medium text-foreground">{task.siteName || "N/A"}</p>
                           <p className="text-sm text-muted-foreground">Destination</p>
                         </div>
                       </div>
@@ -290,9 +323,11 @@ export default function L1Approval() {
                           <Calendar className="h-5 w-5 text-green-600" />
                         </div>
                         <div>
-                          <p className="font-medium text-foreground">{request.startDate}</p>
+                          <p className="font-medium text-foreground">
+                            {task.startDate ? format(new Date(task.startDate), "MMM dd") : "N/A"}
+                          </p>
                           <p className="text-sm text-muted-foreground">
-                            {request.startTime || "00:00"} - {request.endTime || "23:59"}
+                            {task.startTime || ""} - {task.endTime || ""}
                           </p>
                         </div>
                       </div>
@@ -302,42 +337,45 @@ export default function L1Approval() {
                         <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
                           <FileText className="h-5 w-5 text-purple-600" />
                         </div>
-                        <div className="min-w-0">
-                          <p className="font-medium text-foreground truncate">
-                            {request.purpose ? request.purpose.slice(0, 30) + (request.purpose.length > 30 ? "..." : "") : "No purpose specified"}
-                          </p>
+                        <div>
+                          <p className="font-medium text-foreground line-clamp-1">{task.purpose || "General Visit"}</p>
                           <p className="text-sm text-muted-foreground">Purpose</p>
                         </div>
                       </div>
                     </div>
                   </div>
                   
-                  {/* Action Buttons */}
-                  <div className="flex flex-col border-l bg-muted/20 p-3 gap-2 justify-center min-w-[140px]">
+                  {/* Action Panel */}
+                  <div className="flex flex-col justify-center gap-2 px-5 py-4 bg-muted/30 border-l min-w-[180px]">
                     <Button 
                       size="sm" 
-                      className="bg-green-600 hover:bg-green-700 text-white gap-1"
-                      onClick={() => handleApprove(request)}
-                      disabled={processingId === request.id}
+                      className="bg-green-600 hover:bg-green-700"
+                      onClick={() => handleApprove(task)}
+                      disabled={processingId === task.taskId}
                     >
-                      {processingId === request.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                      {processingId === task.taskId ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                       ) : (
-                        <>
-                          <CheckCircle2 className="h-4 w-4" />
-                          Approve
-                        </>
+                        <CheckCircle2 className="h-4 w-4 mr-2" />
                       )}
+                      Approve
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="destructive"
+                      onClick={() => handleRejectClick(task)}
+                      disabled={processingId === task.taskId}
+                    >
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Reject
                     </Button>
                     <Button 
                       size="sm" 
                       variant="outline"
-                      className="text-red-600 border-red-200 hover:bg-red-50 gap-1"
-                      onClick={() => handleRejectClick(request)}
-                      disabled={processingId === request.id}
+                      onClick={() => handleViewDetails(task)}
                     >
-                      <XCircle className="h-4 w-4" />
-                      Reject
+                      <History className="h-4 w-4 mr-2" />
+                      Details
                     </Button>
                   </div>
                 </div>
@@ -346,7 +384,7 @@ export default function L1Approval() {
           ))}
         </div>
       )}
-
+      
       {/* Reject Dialog */}
       <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
         <DialogContent>
@@ -356,18 +394,10 @@ export default function L1Approval() {
               Reject Request
             </DialogTitle>
             <DialogDescription>
-              Please provide a reason for rejecting this request. This will be visible to the requestor.
+              Please provide a reason for rejecting this access request. This will be recorded in the approval history.
             </DialogDescription>
           </DialogHeader>
-          
           <div className="py-4">
-            <div className="mb-4 p-3 bg-muted/50 rounded-lg">
-              <p className="text-sm font-medium">{selectedRequest?.requestNumber}</p>
-              <p className="text-sm text-muted-foreground">
-                {selectedRequest?.visitorName} - {selectedRequest?.visitorCompany}
-              </p>
-            </div>
-            
             <Textarea
               placeholder="Enter rejection reason..."
               value={rejectReason}
@@ -375,7 +405,6 @@ export default function L1Approval() {
               rows={4}
             />
           </div>
-          
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>
               Cancel
@@ -385,10 +414,88 @@ export default function L1Approval() {
               onClick={handleRejectConfirm}
               disabled={!rejectReason.trim() || processingId !== null}
             >
-              {processingId ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              ) : null}
+              {processingId !== null ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <XCircle className="h-4 w-4 mr-2" />
+              )}
               Confirm Rejection
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Details Dialog */}
+      <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-primary" />
+              Request Details
+            </DialogTitle>
+            <DialogDescription>
+              {selectedRequest?.requestNumber} - {selectedRequest?.workflowName || "Standard Workflow"}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedRequest && (
+            <div className="space-y-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Visitor</label>
+                  <p className="font-semibold">{selectedRequest.visitorName}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Company</label>
+                  <p className="font-semibold">{selectedRequest.visitorCompany || "Individual"}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Site</label>
+                  <p className="font-semibold">{selectedRequest.siteName || "N/A"}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Request Type</label>
+                  <p className="font-semibold">{typeLabels[selectedRequest.type] || selectedRequest.type}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Visit Date</label>
+                  <p className="font-semibold">
+                    {selectedRequest.startDate ? format(new Date(selectedRequest.startDate), "MMM dd, yyyy") : "N/A"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Time</label>
+                  <p className="font-semibold">{selectedRequest.startTime} - {selectedRequest.endTime}</p>
+                </div>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Purpose</label>
+                <p className="font-semibold">{selectedRequest.purpose || "General Visit"}</p>
+              </div>
+              
+              <div className="border-t pt-4">
+                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <GitBranch className="h-4 w-4" />
+                  Workflow Information
+                </label>
+                <div className="mt-2 p-3 bg-muted/50 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Workflow:</span>
+                    <Badge variant="outline">{selectedRequest.workflowName || "Standard Workflow"}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-sm">Current Stage:</span>
+                    <Badge variant="outline" className="bg-amber-50 text-amber-700">
+                      Stage {selectedRequest.stageOrder}: {selectedRequest.stageName}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDetailsDialogOpen(false)}>
+              Close
             </Button>
           </DialogFooter>
         </DialogContent>

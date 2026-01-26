@@ -24,7 +24,8 @@ import {
   AlertCircle,
   BadgeCheck,
   History,
-  Key
+  Key,
+  GitBranch
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,13 +75,15 @@ export default function ManualApproval() {
   const [rejectReason, setRejectReason] = useState("");
   const [processingId, setProcessingId] = useState<number | null>(null);
   
-  const { data: pendingRequests, isLoading, refetch } = trpc.requests.getPendingManual.useQuery();
+  // Use the new workflow-based pending tasks query
+  const { data: pendingTasks, isLoading, refetch } = trpc.requests.getMyPendingApprovals.useQuery();
   const { data: stats } = trpc.requests.getStats.useQuery();
   
-  const approveManual = trpc.requests.approveManual.useMutation({
-    onSuccess: () => {
+  // Use the new workflow-based approval mutation
+  const approveTask = trpc.requests.approveTask.useMutation({
+    onSuccess: (result) => {
       toast.success("Access Granted", {
-        description: `Entry method: ${entryMethod === "manual" ? "Manual Entry" : entryMethod === "rfid" ? "RFID Tag" : "Access Card"}`
+        description: result.message || `Entry method: ${entryMethod === "manual" ? "Manual Entry" : entryMethod === "rfid" ? "RFID Tag" : "Access Card"}`
       });
       refetch();
       setSelectedRequest(null);
@@ -94,7 +97,8 @@ export default function ManualApproval() {
     }
   });
   
-  const rejectManual = trpc.requests.rejectManual.useMutation({
+  // Use the new workflow-based rejection mutation
+  const rejectTask = trpc.requests.rejectTask.useMutation({
     onSuccess: () => {
       toast.error("Request rejected");
       refetch();
@@ -116,21 +120,26 @@ export default function ManualApproval() {
     setRejectReason("");
   };
   
-  const requests = pendingRequests || [];
+  // Filter to only show L2/Security stage tasks
+  const l2Tasks = (pendingTasks || []).filter((task: any) => 
+    task.stageName?.toLowerCase().includes('l2') || 
+    task.stageName?.toLowerCase().includes('security') ||
+    task.stageOrder === 2
+  );
   
   // Filter by search
-  const filteredRequests = requests.filter(req => {
+  const filteredTasks = l2Tasks.filter((task: any) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
-      req.requestNumber.toLowerCase().includes(query) ||
-      req.visitorName.toLowerCase().includes(query) ||
-      (req.visitorCompany?.toLowerCase().includes(query))
+      task.requestNumber?.toLowerCase().includes(query) ||
+      task.visitorName?.toLowerCase().includes(query) ||
+      (task.visitorCompany?.toLowerCase().includes(query))
     );
   });
   
-  const handleApproveClick = (request: any) => {
-    setSelectedRequest(request);
+  const handleApproveClick = (task: any) => {
+    setSelectedRequest(task);
     setApprovalDialogOpen(true);
   };
   
@@ -142,17 +151,17 @@ export default function ManualApproval() {
       return;
     }
     
-    setProcessingId(selectedRequest.id);
-    approveManual.mutate({
-      id: selectedRequest.id,
+    setProcessingId(selectedRequest.taskId);
+    approveTask.mutate({
+      taskId: selectedRequest.taskId,
+      comments: comments || `Approved with ${entryMethod === "manual" ? "Manual Entry" : entryMethod === "rfid" ? "RFID Tag" : "Access Card"}`,
       entryMethod,
       cardNumber: cardNumber || undefined,
-      comments: comments || undefined,
     });
   };
   
-  const handleRejectClick = (request: any) => {
-    setSelectedRequest(request);
+  const handleRejectClick = (task: any) => {
+    setSelectedRequest(task);
     setRejectDialogOpen(true);
   };
   
@@ -161,8 +170,11 @@ export default function ManualApproval() {
       toast.error("Please provide a rejection reason");
       return;
     }
-    setProcessingId(selectedRequest.id);
-    rejectManual.mutate({ id: selectedRequest.id, comments: rejectReason });
+    setProcessingId(selectedRequest.taskId);
+    rejectTask.mutate({ 
+      taskId: selectedRequest.taskId, 
+      comments: rejectReason 
+    });
   };
   
   const toggleExpand = (id: number) => {
@@ -176,13 +188,17 @@ export default function ManualApproval() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <Shield className="h-6 w-6 text-indigo-600" />
-            L2 Approval
+            L2 Security Approval
           </h1>
           <p className="text-muted-foreground mt-1">
             Final security review and access credential issuance
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+            <GitBranch className="h-3 w-3 mr-1" />
+            Workflow-Based
+          </Badge>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
@@ -196,8 +212,8 @@ export default function ManualApproval() {
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-indigo-700">Awaiting Review</p>
-                <p className="text-3xl font-bold text-indigo-900">{stats?.pendingManual || 0}</p>
+                <p className="text-sm font-medium text-indigo-700">In L2 Queue</p>
+                <p className="text-3xl font-bold text-indigo-900">{l2Tasks.length}</p>
               </div>
               <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center">
                 <Shield className="h-6 w-6 text-indigo-600" />
@@ -256,27 +272,27 @@ export default function ManualApproval() {
         <div className="flex items-center justify-center py-16">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      ) : filteredRequests.length === 0 ? (
+      ) : filteredTasks.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-16">
             <div className="h-16 w-16 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
               <Shield className="h-8 w-8 text-indigo-600" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground">No pending reviews</h3>
-            <p className="text-muted-foreground mt-1">All requests have been processed</p>
+            <h3 className="text-lg font-semibold text-foreground">No pending L2 reviews</h3>
+            <p className="text-muted-foreground mt-1">All security reviews have been processed</p>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-4">
-          {filteredRequests.map((request) => (
+          {filteredTasks.map((task: any) => (
             <Card 
-              key={request.id} 
+              key={task.taskId} 
               className="overflow-hidden border-l-4 border-l-indigo-500"
             >
               {/* Header Row */}
               <div 
                 className="p-4 cursor-pointer hover:bg-muted/30 transition-colors"
-                onClick={() => toggleExpand(request.id)}
+                onClick={() => toggleExpand(task.taskId)}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -285,28 +301,36 @@ export default function ManualApproval() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-foreground">{request.visitorName}</span>
+                        <span className="font-semibold text-foreground">{task.visitorName}</span>
                         <Badge variant="outline" className="text-xs">
-                          {typeLabels[request.type] || request.type}
+                          {typeLabels[task.type] || task.type}
+                        </Badge>
+                        <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 text-xs">
+                          <GitBranch className="h-3 w-3 mr-1" />
+                          {task.workflowName || "Standard Workflow"}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground mt-0.5">
-                        <span>{request.visitorCompany || "Individual"}</span>
+                      <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                        <span className="font-mono">{task.requestNumber}</span>
                         <span>•</span>
-                        <span className="font-mono">{request.requestNumber}</span>
+                        <span>{task.visitorCompany || "Individual"}</span>
+                        <span>•</span>
+                        <Badge variant="outline" className="bg-indigo-50 text-indigo-700 text-xs">
+                          Stage {task.stageOrder}: {task.stageName}
+                        </Badge>
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-sm font-medium">{request.siteName}</p>
-                      <p className="text-xs text-muted-foreground">{request.startDate}</p>
+                      <p className="text-sm font-medium text-foreground">
+                        {task.startDate ? format(new Date(task.startDate), "MMM dd, yyyy") : "N/A"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {task.startTime} - {task.endTime}
+                      </p>
                     </div>
-                    <Badge className="bg-indigo-100 text-indigo-800 border-indigo-200">
-                      L1 Approved
-                    </Badge>
-                    {expandedId === request.id ? (
+                    {expandedId === task.taskId ? (
                       <ChevronUp className="h-5 w-5 text-muted-foreground" />
                     ) : (
                       <ChevronDown className="h-5 w-5 text-muted-foreground" />
@@ -315,134 +339,98 @@ export default function ManualApproval() {
                 </div>
               </div>
               
-              {/* Expanded Details */}
-              {expandedId === request.id && (
-                <div className="border-t bg-muted/10">
-                  <div className="p-6 grid grid-cols-3 gap-6">
+              {/* Expanded Content */}
+              {expandedId === task.taskId && (
+                <div className="border-t bg-muted/20">
+                  <div className="p-5 grid grid-cols-3 gap-6">
                     {/* Visitor Details */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-                        <User className="h-4 w-4" />
+                      <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
                         Visitor Information
                       </h4>
                       <div className="space-y-3">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <IdCard className="h-4 w-4 text-muted-foreground" />
-                          <div>
-                            <p className="text-xs text-muted-foreground">ID</p>
-                            <p className="text-sm font-medium capitalize">
-                              {request.visitorIdType?.replace("_", " ")} - {request.visitorIdNumber}
-                            </p>
-                          </div>
+                          <span className="text-sm">{task.visitorIdType}: {task.visitorIdNumber}</span>
                         </div>
-                        {request.visitorPhone && (
-                          <div className="flex items-center gap-3">
-                            <Phone className="h-4 w-4 text-muted-foreground" />
-                            <div>
-                              <p className="text-xs text-muted-foreground">Phone</p>
-                              <p className="text-sm font-medium">{request.visitorPhone}</p>
-                            </div>
-                          </div>
-                        )}
-                        {request.visitorEmail && (
-                          <div className="flex items-center gap-3">
-                            <Mail className="h-4 w-4 text-muted-foreground" />
-                            <div>
-                              <p className="text-xs text-muted-foreground">Email</p>
-                              <p className="text-sm font-medium">{request.visitorEmail}</p>
-                            </div>
-                          </div>
-                        )}
+                        <div className="flex items-center gap-2">
+                          <Phone className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{task.visitorPhone || "N/A"}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{task.visitorEmail || "N/A"}</span>
+                        </div>
                       </div>
                     </div>
                     
                     {/* Visit Details */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-                        <Building2 className="h-4 w-4" />
+                      <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
                         Visit Details
                       </h4>
                       <div className="space-y-3">
-                        <div className="flex items-center gap-3">
-                          <MapPin className="h-4 w-4 text-muted-foreground" />
-                          <div>
-                            <p className="text-xs text-muted-foreground">Site</p>
-                            <p className="text-sm font-medium">{request.siteName}</p>
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <Building2 className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{task.siteName || "N/A"}</span>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <div>
-                            <p className="text-xs text-muted-foreground">Schedule</p>
-                            <p className="text-sm font-medium">
-                              {request.startDate} {request.startDate !== request.endDate && `→ ${request.endDate}`}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {request.startTime || "00:00"} - {request.endTime || "23:59"}
-                            </p>
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <FileText className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{task.purpose || "General Visit"}</span>
                         </div>
-                        {request.purpose && (
-                          <div className="flex items-start gap-3">
-                            <FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
-                            <div>
-                              <p className="text-xs text-muted-foreground">Purpose</p>
-                              <p className="text-sm">{request.purpose}</p>
-                            </div>
-                          </div>
-                        )}
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">Host: {task.hostName || "N/A"}</span>
+                        </div>
                       </div>
                     </div>
                     
-                    {/* Zones & Actions */}
+                    {/* Workflow Info */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-                        <Shield className="h-4 w-4" />
-                        Requested Zones
+                      <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                        Workflow Status
                       </h4>
-                      {request.zones && request.zones.length > 0 ? (
-                        <div className="space-y-2">
-                          {request.zones.map((zone: any) => (
-                            <div 
-                              key={zone.id} 
-                              className="flex items-center justify-between p-2 bg-white rounded border"
-                            >
-                              <div>
-                                <p className="text-sm font-medium">{zone.name}</p>
-                                <p className="text-xs text-muted-foreground">{zone.code}</p>
-                              </div>
-                              <Badge 
-                                variant="secondary" 
-                                className={securityLevelColors[zone.securityLevel] || ""}
-                              >
-                                {zone.securityLevel}
-                              </Badge>
-                            </div>
-                          ))}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <GitBranch className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{task.workflowName || "Standard Workflow"}</span>
                         </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground">No specific zones requested</p>
-                      )}
-                      
-                      {/* Action Buttons */}
-                      <div className="pt-4 flex gap-2">
-                        <Button 
-                          className="flex-1 bg-green-600 hover:bg-green-700 text-white gap-2"
-                          onClick={() => handleApproveClick(request)}
-                        >
-                          <Key className="h-4 w-4" />
-                          Grant Access
-                        </Button>
-                        <Button 
-                          variant="outline"
-                          className="flex-1 text-red-600 border-red-200 hover:bg-red-50 gap-2"
-                          onClick={() => handleRejectClick(request)}
-                        >
-                          <XCircle className="h-4 w-4" />
-                          Deny
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Shield className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">Stage {task.stageOrder}: {task.stageName}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">
+                            Assigned: {task.assignedAt ? format(new Date(task.assignedAt), "MMM dd, HH:mm") : "N/A"}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div className="px-5 pb-5 flex justify-end gap-3">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => handleRejectClick(task)}
+                      disabled={processingId === task.taskId}
+                    >
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Reject
+                    </Button>
+                    <Button 
+                      className="bg-indigo-600 hover:bg-indigo-700"
+                      onClick={() => handleApproveClick(task)}
+                      disabled={processingId === task.taskId}
+                    >
+                      {processingId === task.taskId ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Key className="h-4 w-4 mr-2" />
+                      )}
+                      Grant Access
+                    </Button>
                   </div>
                 </div>
               )}
@@ -450,77 +438,71 @@ export default function ManualApproval() {
           ))}
         </div>
       )}
-
+      
       {/* Approval Dialog */}
       <Dialog open={approvalDialogOpen} onOpenChange={setApprovalDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-green-600">
-              <Key className="h-5 w-5" />
+            <DialogTitle className="flex items-center gap-2">
+              <Key className="h-5 w-5 text-indigo-600" />
               Grant Access
             </DialogTitle>
             <DialogDescription>
-              Select the entry method and issue access credentials
+              Select entry method and issue access credentials for {selectedRequest?.visitorName}
             </DialogDescription>
           </DialogHeader>
           
-          <div className="py-4 space-y-6">
-            {/* Request Summary */}
-            <div className="p-3 bg-muted/50 rounded-lg">
-              <p className="text-sm font-medium">{selectedRequest?.requestNumber}</p>
-              <p className="text-sm text-muted-foreground">
-                {selectedRequest?.visitorName} - {selectedRequest?.visitorCompany}
-              </p>
-            </div>
-            
+          <div className="space-y-6 py-4">
             {/* Entry Method Selection */}
             <div className="space-y-3">
               <Label className="text-sm font-medium">Entry Method</Label>
-              <RadioGroup value={entryMethod} onValueChange={(v: any) => setEntryMethod(v)}>
-                <div className="grid grid-cols-3 gap-3">
-                  <div>
-                    <RadioGroupItem value="manual" id="manual" className="peer sr-only" />
-                    <Label
-                      htmlFor="manual"
-                      className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
-                    >
-                      <Fingerprint className="h-6 w-6 mb-2" />
-                      <span className="text-sm font-medium">Manual</span>
-                    </Label>
-                  </div>
-                  <div>
-                    <RadioGroupItem value="rfid" id="rfid" className="peer sr-only" />
-                    <Label
-                      htmlFor="rfid"
-                      className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
-                    >
-                      <Scan className="h-6 w-6 mb-2" />
-                      <span className="text-sm font-medium">RFID</span>
-                    </Label>
-                  </div>
-                  <div>
-                    <RadioGroupItem value="card" id="card" className="peer sr-only" />
-                    <Label
-                      htmlFor="card"
-                      className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
-                    >
-                      <CreditCard className="h-6 w-6 mb-2" />
-                      <span className="text-sm font-medium">Card</span>
-                    </Label>
-                  </div>
+              <RadioGroup 
+                value={entryMethod} 
+                onValueChange={(v) => setEntryMethod(v as "manual" | "rfid" | "card")}
+                className="grid grid-cols-3 gap-3"
+              >
+                <div className="relative">
+                  <RadioGroupItem value="manual" id="manual" className="peer sr-only" />
+                  <Label 
+                    htmlFor="manual" 
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-indigo-600 cursor-pointer"
+                  >
+                    <Fingerprint className="h-6 w-6 mb-2" />
+                    <span className="text-xs font-medium">Manual</span>
+                  </Label>
+                </div>
+                <div className="relative">
+                  <RadioGroupItem value="rfid" id="rfid" className="peer sr-only" />
+                  <Label 
+                    htmlFor="rfid" 
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-indigo-600 cursor-pointer"
+                  >
+                    <Scan className="h-6 w-6 mb-2" />
+                    <span className="text-xs font-medium">RFID Tag</span>
+                  </Label>
+                </div>
+                <div className="relative">
+                  <RadioGroupItem value="card" id="card" className="peer sr-only" />
+                  <Label 
+                    htmlFor="card" 
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-indigo-600 cursor-pointer"
+                  >
+                    <CreditCard className="h-6 w-6 mb-2" />
+                    <span className="text-xs font-medium">Access Card</span>
+                  </Label>
                 </div>
               </RadioGroup>
             </div>
             
-            {/* Card/RFID Number */}
+            {/* Card Number (if applicable) */}
             {(entryMethod === "rfid" || entryMethod === "card") && (
               <div className="space-y-2">
                 <Label htmlFor="cardNumber">
-                  {entryMethod === "rfid" ? "RFID Tag Number" : "Card Number"}
+                  {entryMethod === "rfid" ? "RFID Tag Number" : "Card Number"} *
                 </Label>
-                <Input
+                <Input 
                   id="cardNumber"
-                  placeholder={entryMethod === "rfid" ? "Scan or enter tag number..." : "Enter card number..."}
+                  placeholder={entryMethod === "rfid" ? "Enter RFID tag number..." : "Enter card number..."}
                   value={cardNumber}
                   onChange={(e) => setCardNumber(e.target.value)}
                 />
@@ -530,12 +512,12 @@ export default function ManualApproval() {
             {/* Comments */}
             <div className="space-y-2">
               <Label htmlFor="comments">Comments (Optional)</Label>
-              <Textarea
+              <Textarea 
                 id="comments"
-                placeholder="Add any notes..."
+                placeholder="Add any notes about this approval..."
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
-                rows={2}
+                rows={3}
               />
             </div>
           </div>
@@ -545,50 +527,41 @@ export default function ManualApproval() {
               Cancel
             </Button>
             <Button 
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-indigo-600 hover:bg-indigo-700"
               onClick={handleApproveConfirm}
-              disabled={processingId !== null || ((entryMethod === "rfid" || entryMethod === "card") && !cardNumber.trim())}
+              disabled={processingId !== null}
             >
-              {processingId ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              {processingId !== null ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               ) : (
                 <CheckCircle2 className="h-4 w-4 mr-2" />
               )}
-              Confirm Access
+              Grant Access
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
+      
       {/* Reject Dialog */}
       <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-600">
               <AlertCircle className="h-5 w-5" />
-              Deny Access
+              Reject Request
             </DialogTitle>
             <DialogDescription>
-              Please provide a reason for denying access. This will be recorded in the audit log.
+              Please provide a reason for rejecting this access request. This will be recorded in the approval history.
             </DialogDescription>
           </DialogHeader>
-          
           <div className="py-4">
-            <div className="mb-4 p-3 bg-muted/50 rounded-lg">
-              <p className="text-sm font-medium">{selectedRequest?.requestNumber}</p>
-              <p className="text-sm text-muted-foreground">
-                {selectedRequest?.visitorName} - {selectedRequest?.visitorCompany}
-              </p>
-            </div>
-            
             <Textarea
-              placeholder="Enter reason for denial..."
+              placeholder="Enter rejection reason..."
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               rows={4}
             />
           </div>
-          
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>
               Cancel
@@ -598,10 +571,12 @@ export default function ManualApproval() {
               onClick={handleRejectConfirm}
               disabled={!rejectReason.trim() || processingId !== null}
             >
-              {processingId ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              ) : null}
-              Confirm Denial
+              {processingId !== null ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <XCircle className="h-4 w-4 mr-2" />
+              )}
+              Confirm Rejection
             </Button>
           </DialogFooter>
         </DialogContent>

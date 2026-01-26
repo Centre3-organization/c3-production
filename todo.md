@@ -196,3 +196,23 @@
 - [x] Test shift-based routing
 - [x] Test delegation system
 - [x] Test escalation logic
+
+## Approval Process Documentation & Migration (Jan 26, 2026)
+
+### Documentation
+- [x] Write comprehensive approval process documentation
+- [x] Document all approval workflow components
+- [x] Document approver types and resolution logic
+- [x] Document shift-based routing
+- [x] Document delegation system
+- [x] Document escalation rules
+- [x] Create test cases for all scenarios
+
+### Migration to New Workflow System
+- [x] Remove old L1/L2 hardcoded approval logic
+- [x] Create "Standard Access Request" workflow with L1 stage
+- [x] Create "Standard Access Request" workflow with L2 stage
+- [x] Seed example workflows in database
+- [x] Update L1Approval page to use workflow engine
+- [x] Update L2Approval page to use workflow engine
+- [x] Test complete approval flow
