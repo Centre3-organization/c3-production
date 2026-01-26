@@ -216,3 +216,8 @@
 - [x] Update L1Approval page to use workflow engine
 - [x] Update L2Approval page to use workflow engine
 - [x] Test complete approval flow
+
+## Workflow Fixes (Jan 26, 2026)
+- [x] Add duplicate name validation to workflow creation
+- [x] Delete duplicate "Standard Access Request" workflows from database
+- [x] Create 5 test cases for L3 approval workflow testing

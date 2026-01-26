@@ -1,0 +1,42 @@
+{
+  "query": "SELECT id, name, processType, isDefault, isActive, createdAt FROM approvalWorkflows ORDER BY name, createdAt;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, processType, isDefault, isActive, createdAt FROM approvalWorkflows ORDER BY name, createdAt;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "New Workflow",
+      "processType": "tdp",
+      "isDefault": "0",
+      "isActive": "0",
+      "createdAt": "2026-01-26 14:03:50"
+    },
+    {
+      "id": "2",
+      "name": "New Workflow",
+      "processType": "admin_visit",
+      "isDefault": "0",
+      "isActive": "1",
+      "createdAt": "2026-01-26 14:04:14"
+    },
+    {
+      "id": "3",
+      "name": "Standard Access Request",
+      "processType": "admin_visit",
+      "isDefault": "1",
+      "isActive": "1",
+      "createdAt": "2026-01-26 14:23:38"
+    },
+    {
+      "id": "4",
+      "name": "Standard Access Request",
+      "processType": "admin_visit",
+      "isDefault": "1",
+      "isActive": "1",
+      "createdAt": "2026-01-26 14:24:14"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tprocessType\tisDefault\tisActive\tcreatedAt\n1\tNew Workflow\ttdp\t0\t0\t2026-01-26 14:03:50\n2\tNew Workflow\tadmin_visit\t0\t1\t2026-01-26 14:04:14\n3\tStandard Access Request\tadmin_visit\t1\t1\t2026-01-26 14:23:38\n4\tStandard Access Request\tadmin_visit\t1\t1\t2026-01-26 14:24:14\n",
+  "stderr": "",
+  "execution_time_ms": 1546
+}

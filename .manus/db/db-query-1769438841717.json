@@ -1,0 +1,49 @@
+{
+  "query": "SELECT * FROM approvalWorkflows;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT * FROM approvalWorkflows;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "New Workflow",
+      "description": "NULL",
+      "processType": "tdp",
+      "isActive": "0",
+      "priority": "0",
+      "isDefault": "0",
+      "version": "1",
+      "createdBy": "3",
+      "createdAt": "2026-01-26 14:03:50",
+      "updatedAt": "2026-01-26 14:37:17"
+    },
+    {
+      "id": "2",
+      "name": "New Workflow",
+      "description": "NULL",
+      "processType": "admin_visit",
+      "isActive": "1",
+      "priority": "0",
+      "isDefault": "0",
+      "version": "1",
+      "createdBy": "3",
+      "createdAt": "2026-01-26 14:04:14",
+      "updatedAt": "2026-01-26 14:04:14"
+    },
+    {
+      "id": "3",
+      "name": "Standard Access Request",
+      "description": "Default workflow for all access requests with L1 (Initial Review) and L2 (Security Approval) stages",
+      "processType": "admin_visit",
+      "isActive": "1",
+      "priority": "100",
+      "isDefault": "1",
+      "version": "1",
+      "createdBy": "1",
+      "createdAt": "2026-01-26 14:23:38",
+      "updatedAt": "2026-01-26 14:23:38"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tdescription\tprocessType\tisActive\tpriority\tisDefault\tversion\tcreatedBy\tcreatedAt\tupdatedAt\n1\tNew Workflow\tNULL\ttdp\t0\t0\t0\t1\t3\t2026-01-26 14:03:50\t2026-01-26 14:37:17\n2\tNew Workflow\tNULL\tadmin_visit\t1\t0\t0\t1\t3\t2026-01-26 14:04:14\t2026-01-26 14:04:14\n3\tStandard Access Request\tDefault workflow for all access requests with L1 (Initial Review) and L2 (Security Approval) stages\tadmin_visit\t1\t100\t1\t1\t1\t2026-01-26 14:23:38\t2026-01-26 14:23:38\n",
+  "stderr": "",
+  "execution_time_ms": 1542
+}

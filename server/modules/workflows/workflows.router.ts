@@ -102,6 +102,17 @@ export const workflowsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
+      // Check for duplicate workflow name
+      const existingWorkflow = await db
+        .select({ id: approvalWorkflows.id })
+        .from(approvalWorkflows)
+        .where(eq(approvalWorkflows.name, input.name))
+        .limit(1);
+
+      if (existingWorkflow.length > 0) {
+        throw new Error(`A workflow with the name "${input.name}" already exists. Please choose a different name.`);
+      }
+
       // If setting as default, unset other defaults for the process type
       if (input.isDefault && input.processType) {
         await db
@@ -161,17 +172,36 @@ export const workflowsRouter = router({
       return { success: true };
     }),
 
-  // Delete a workflow (soft delete by setting inactive)
+  // Delete a workflow (hard delete)
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      await db
-        .update(approvalWorkflows)
-        .set({ isActive: false })
-        .where(eq(approvalWorkflows.id, input.id));
+      // First delete related records
+      // Delete stage approvers for stages in this workflow
+      const stages = await db
+        .select({ id: approvalStages.id })
+        .from(approvalStages)
+        .where(eq(approvalStages.workflowId, input.id));
+      
+      const stageIds = stages.map(s => s.id);
+      if (stageIds.length > 0) {
+        for (const stageId of stageIds) {
+          await db.delete(stageApprovers).where(eq(stageApprovers.stageId, stageId));
+          await db.delete(escalationRules).where(eq(escalationRules.stageId, stageId));
+        }
+      }
+      
+      // Delete stages
+      await db.delete(approvalStages).where(eq(approvalStages.workflowId, input.id));
+      
+      // Delete conditions
+      await db.delete(workflowConditions).where(eq(workflowConditions.workflowId, input.id));
+      
+      // Delete the workflow
+      await db.delete(approvalWorkflows).where(eq(approvalWorkflows.id, input.id));
 
       return { success: true };
     }),
