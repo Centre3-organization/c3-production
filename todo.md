@@ -396,4 +396,24 @@
 - [x] Build Type management UI (CRUD)
 - [x] Build Section management UI (CRUD)
 - [x] Build Field management UI (CRUD)
-- [ ] Add field options editor for dropdowns
+- [x] Add field options editor for dropdowns
+
+## Request Type Configuration Enhancements (Jan 26, 2026)
+
+### Phase 1: Field Options Editor
+- [x] Create FieldOptionsEditor component for managing dropdown/radio options
+- [x] Support adding, editing, removing options with label/value pairs
+- [x] Support Arabic translations for option labels
+- [x] Integrate into field edit dialog
+
+### Phase 2: Drag-and-Drop Reordering
+- [x] Install @dnd-kit/core and @dnd-kit/sortable
+- [x] Add drag-and-drop to sections list
+- [x] Add drag-and-drop to fields list
+- [x] Create backend endpoint to update sort orders in batch
+
+### Phase 3: Form Preview Mode
+- [x] Create FormPreview component that renders the form as users will see it
+- [x] Add Preview button to type detail view
+- [x] Show all sections as tabs with their fields
+- [x] Display field types, required indicators, and placeholders

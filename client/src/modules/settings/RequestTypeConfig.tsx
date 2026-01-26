@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { toast } from "sonner";
 import {
   Plus,
@@ -23,14 +21,28 @@ import {
   LayoutList,
   FormInput,
   ChevronRight,
-  Settings2,
-  Copy,
   Eye,
-  EyeOff,
-  ArrowLeft,
-  Save,
-  X,
+  Repeat,
 } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { FieldOptionsEditor, FieldOption } from "./components/FieldOptionsEditor";
+import { FormPreview } from "./components/FormPreview";
 
 type Category = {
   id: number;
@@ -88,9 +100,142 @@ type FormField = {
   isActive: boolean;
 };
 
+// Sortable item component for sections
+function SortableSectionItem({
+  section,
+  onClick,
+  onEdit,
+}: {
+  section: FormSection;
+  onClick: () => void;
+  onEdit: (e: React.MouseEvent) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: section.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+      onClick={onClick}
+    >
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          className="cursor-grab hover:bg-muted p-1 rounded"
+          {...attributes}
+          {...listeners}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
+        </button>
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+          <LayoutList className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <div className="font-medium">{section.name}</div>
+          <div className="text-sm text-muted-foreground">Order: {section.displayOrder}</div>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        {section.isRepeatable && (
+          <Badge variant="secondary" className="flex items-center gap-1">
+            <Repeat className="h-3 w-3" />
+            Repeatable ({section.minItems || 1}-{section.maxItems || "∞"})
+          </Badge>
+        )}
+        <Badge variant={section.isActive ? "default" : "outline"}>
+          {section.isActive ? "Active" : "Inactive"}
+        </Badge>
+        <Button variant="ghost" size="icon" onClick={onEdit}>
+          <Pencil className="h-4 w-4" />
+        </Button>
+        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+      </div>
+    </div>
+  );
+}
+
+// Sortable item component for fields
+function SortableFieldItem({
+  field,
+  onEdit,
+  onDelete,
+}: {
+  field: FormField;
+  onEdit: (e: React.MouseEvent) => void;
+  onDelete: (e: React.MouseEvent) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: field.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+    >
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          className="cursor-grab hover:bg-muted p-1 rounded"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
+        </button>
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+          <FormInput className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <div className="font-medium">{field.name}</div>
+          <div className="text-sm text-muted-foreground">{field.fieldType} · {field.code}</div>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        {field.isRequired && <Badge variant="destructive">Required</Badge>}
+        <Badge variant="outline">Col {field.columnSpan}</Badge>
+        <Badge variant={field.isActive ? "default" : "outline"}>
+          {field.isActive ? "Active" : "Inactive"}
+        </Badge>
+        <Button variant="ghost" size="icon" onClick={onEdit}>
+          <Pencil className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" size="icon" onClick={onDelete} className="text-destructive hover:text-destructive">
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function RequestTypeConfig() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState("categories");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedType, setSelectedType] = useState<RequestType | null>(null);
   const [selectedSection, setSelectedSection] = useState<FormSection | null>(null);
@@ -100,7 +245,20 @@ export default function RequestTypeConfig() {
   const [typeDialogOpen, setTypeDialogOpen] = useState(false);
   const [sectionDialogOpen, setSectionDialogOpen] = useState(false);
   const [fieldDialogOpen, setFieldDialogOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
+  
+  // Field options state
+  const [fieldOptions, setFieldOptions] = useState<FieldOption[]>([]);
+  const [selectedFieldType, setSelectedFieldType] = useState<string>("text");
+
+  // DnD sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Queries
   const { data: categories, refetch: refetchCategories } = trpc.requestConfig.categories.list.useQuery();
@@ -137,15 +295,6 @@ export default function RequestTypeConfig() {
     onError: (err) => toast.error(err.message),
   });
 
-  const deleteCategory = trpc.requestConfig.categories.delete.useMutation({
-    onSuccess: () => {
-      toast.success("Category deleted successfully");
-      refetchCategories();
-      setSelectedCategory(null);
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
   const createType = trpc.requestConfig.types.create.useMutation({
     onSuccess: () => {
       toast.success("Request type created successfully");
@@ -161,15 +310,6 @@ export default function RequestTypeConfig() {
       refetchTypes();
       setTypeDialogOpen(false);
       setEditingItem(null);
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
-  const deleteType = trpc.requestConfig.types.delete.useMutation({
-    onSuccess: () => {
-      toast.success("Request type deleted successfully");
-      refetchTypes();
-      setSelectedType(null);
     },
     onError: (err) => toast.error(err.message),
   });
@@ -193,11 +333,10 @@ export default function RequestTypeConfig() {
     onError: (err: any) => toast.error(err.message),
   });
 
-  const deleteSection = trpc.requestConfig.sections.delete.useMutation({
+  const updateSectionOrder = trpc.requestConfig.sections.updateOrder.useMutation({
     onSuccess: () => {
-      toast.success("Section deleted successfully");
+      toast.success("Section order updated");
       refetchSections();
-      setSelectedSection(null);
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -207,6 +346,7 @@ export default function RequestTypeConfig() {
       toast.success("Field created successfully");
       refetchFields();
       setFieldDialogOpen(false);
+      setFieldOptions([]);
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -217,6 +357,7 @@ export default function RequestTypeConfig() {
       refetchFields();
       setFieldDialogOpen(false);
       setEditingItem(null);
+      setFieldOptions([]);
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -228,6 +369,26 @@ export default function RequestTypeConfig() {
     },
     onError: (err: any) => toast.error(err.message),
   });
+
+  const updateFieldOrder = trpc.requestConfig.fields.updateOrder.useMutation({
+    onSuccess: () => {
+      toast.success("Field order updated");
+      refetchFields();
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  // Initialize field options when editing
+  useEffect(() => {
+    if (editingItem && fieldDialogOpen) {
+      setSelectedFieldType(editingItem.fieldType || "text");
+      if (editingItem.options && Array.isArray(editingItem.options)) {
+        setFieldOptions(editingItem.options);
+      } else {
+        setFieldOptions([]);
+      }
+    }
+  }, [editingItem, fieldDialogOpen]);
 
   // Form handlers
   const handleCategorySubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -299,7 +460,13 @@ export default function RequestTypeConfig() {
   const handleFieldSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const fieldType = formData.get("fieldType") as "text" | "textarea" | "number" | "email" | "phone" | "date" | "datetime" | "dropdown" | "dropdown_multi" | "checkbox" | "radio" | "file" | "readonly" | "checkbox_group" | "file_multi" | "user_lookup";
+    const fieldType = selectedFieldType as any;
+    
+    // Prepare options for select/radio fields
+    const options = ["dropdown", "dropdown_multi", "radio", "checkbox_group", "select"].includes(fieldType)
+      ? fieldOptions.filter(opt => opt.value && opt.label)
+      : undefined;
+
     const data = {
       sectionId: selectedSection!.id,
       code: formData.get("code") as string,
@@ -312,6 +479,7 @@ export default function RequestTypeConfig() {
       placeholder: formData.get("placeholder") as string || undefined,
       helpText: formData.get("helpText") as string || undefined,
       defaultValue: formData.get("defaultValue") as string || undefined,
+      options,
       isActive: formData.get("isActive") === "on",
     };
 
@@ -319,6 +487,41 @@ export default function RequestTypeConfig() {
       updateField.mutate({ id: editingItem.id, ...data });
     } else {
       createField.mutate(data);
+    }
+  };
+
+  // Drag and drop handlers
+  const handleSectionDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const sectionsList = sections as FormSection[];
+      const oldIndex = sectionsList.findIndex((s) => s.id === active.id);
+      const newIndex = sectionsList.findIndex((s) => s.id === over.id);
+      const newOrder = arrayMove(sectionsList, oldIndex, newIndex);
+      
+      // Update order in database
+      const orderUpdates = newOrder.map((s, idx) => ({
+        id: s.id,
+        displayOrder: idx + 1,
+      }));
+      updateSectionOrder.mutate({ updates: orderUpdates });
+    }
+  };
+
+  const handleFieldDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const fieldsList = fields as FormField[];
+      const oldIndex = fieldsList.findIndex((f) => f.id === active.id);
+      const newIndex = fieldsList.findIndex((f) => f.id === over.id);
+      const newOrder = arrayMove(fieldsList, oldIndex, newIndex);
+      
+      // Update order in database
+      const orderUpdates = newOrder.map((f, idx) => ({
+        id: f.id,
+        displayOrder: idx + 1,
+      }));
+      updateFieldOrder.mutate({ updates: orderUpdates });
     }
   };
 
@@ -330,7 +533,7 @@ export default function RequestTypeConfig() {
     { value: "phone", label: "Phone" },
     { value: "date", label: "Date" },
     { value: "datetime", label: "Date & Time" },
-    { value: "dropdown", label: "Dropdown" },
+    { value: "select", label: "Dropdown" },
     { value: "dropdown_multi", label: "Multi-Select" },
     { value: "checkbox", label: "Checkbox" },
     { value: "checkbox_group", label: "Checkbox Group" },
@@ -341,6 +544,8 @@ export default function RequestTypeConfig() {
     { value: "readonly", label: "Read Only" },
   ];
 
+  const showOptionsEditor = ["dropdown", "dropdown_multi", "radio", "checkbox_group", "select"].includes(selectedFieldType);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -348,17 +553,16 @@ export default function RequestTypeConfig() {
         <div>
           <h1 className="text-2xl font-bold">{t("settings.requestTypes", "Request Type Configuration")}</h1>
           <p className="text-muted-foreground">
-            {t("settings.requestTypesDescription", "Configure request categories, types, form sections, and fields")}
+            {t("settings.requestTypesDesc", "Configure request categories, types, form sections, and fields")}
           </p>
         </div>
       </div>
 
       {/* Breadcrumb Navigation */}
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex items-center gap-2 flex-wrap">
         <Button
-          variant="ghost"
+          variant={!selectedCategory ? "default" : "ghost"}
           size="sm"
-          className={!selectedCategory ? "bg-primary/10 text-primary" : ""}
           onClick={() => {
             setSelectedCategory(null);
             setSelectedType(null);
@@ -372,9 +576,8 @@ export default function RequestTypeConfig() {
           <>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
             <Button
-              variant="ghost"
+              variant={!selectedType ? "default" : "ghost"}
               size="sm"
-              className={selectedCategory && !selectedType ? "bg-primary/10 text-primary" : ""}
               onClick={() => {
                 setSelectedType(null);
                 setSelectedSection(null);
@@ -389,9 +592,8 @@ export default function RequestTypeConfig() {
           <>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
             <Button
-              variant="ghost"
+              variant={!selectedSection ? "default" : "ghost"}
               size="sm"
-              className={selectedType && !selectedSection ? "bg-primary/10 text-primary" : ""}
               onClick={() => setSelectedSection(null)}
             >
               <LayoutList className="h-4 w-4 mr-1" />
@@ -402,7 +604,7 @@ export default function RequestTypeConfig() {
         {selectedSection && (
           <>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            <Button variant="ghost" size="sm" className="bg-primary/10 text-primary">
+            <Button variant="default" size="sm" className="bg-primary/10 text-primary">
               <FormInput className="h-4 w-4 mr-1" />
               {selectedSection.name}
             </Button>
@@ -430,18 +632,28 @@ export default function RequestTypeConfig() {
                   {selectedSection && `Fields in ${selectedSection.name}`}
                 </CardDescription>
               </div>
-              <Button
-                onClick={() => {
-                  setEditingItem(null);
-                  if (!selectedCategory) setCategoryDialogOpen(true);
-                  else if (!selectedType) setTypeDialogOpen(true);
-                  else if (!selectedSection) setSectionDialogOpen(true);
-                  else setFieldDialogOpen(true);
-                }}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add {!selectedCategory ? "Category" : !selectedType ? "Type" : !selectedSection ? "Section" : "Field"}
-              </Button>
+              <div className="flex items-center gap-2">
+                {selectedType && !selectedSection && (
+                  <Button variant="outline" onClick={() => setPreviewOpen(true)}>
+                    <Eye className="h-4 w-4 mr-2" />
+                    Preview Form
+                  </Button>
+                )}
+                <Button
+                  onClick={() => {
+                    setEditingItem(null);
+                    setFieldOptions([]);
+                    setSelectedFieldType("text");
+                    if (!selectedCategory) setCategoryDialogOpen(true);
+                    else if (!selectedType) setTypeDialogOpen(true);
+                    else if (!selectedSection) setSectionDialogOpen(true);
+                    else setFieldDialogOpen(true);
+                  }}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add {!selectedCategory ? "Category" : !selectedType ? "Type" : !selectedSection ? "Section" : "Field"}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               {/* Categories List */}
@@ -540,145 +752,111 @@ export default function RequestTypeConfig() {
                 </div>
               )}
 
-              {/* Sections List */}
+              {/* Sections List with Drag and Drop */}
               {selectedType && !selectedSection && (
-                <div className="space-y-2">
-                  {(sections as FormSection[] | undefined)?.map((section) => (
-                    <div
-                      key={section.id}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                      onClick={() => setSelectedSection(section)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <LayoutList className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <div className="font-medium">{section.name}</div>
-                          <div className="text-sm text-muted-foreground">Order: {section.displayOrder}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {section.isRepeatable && (
-                          <Badge variant="secondary">
-                            Repeatable ({section.minItems || 1}-{section.maxItems || "∞"})
-                          </Badge>
-                        )}
-                        <Badge variant={section.isActive ? "default" : "outline"}>
-                          {section.isActive ? "Active" : "Inactive"}
-                        </Badge>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => {
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleSectionDragEnd}
+                >
+                  <SortableContext
+                    items={(sections as FormSection[] || []).map((s) => s.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <div className="space-y-2">
+                      {(sections as FormSection[] | undefined)?.map((section) => (
+                        <SortableSectionItem
+                          key={section.id}
+                          section={section}
+                          onClick={() => setSelectedSection(section)}
+                          onEdit={(e) => {
                             e.stopPropagation();
                             setEditingItem(section);
                             setSectionDialogOpen(true);
                           }}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </div>
+                        />
+                      ))}
+                      {(!sections || (sections as FormSection[]).length === 0) && (
+                        <div className="text-center py-8 text-muted-foreground">
+                          No sections found. Create your first form section.
+                        </div>
+                      )}
                     </div>
-                  ))}
-                  {(!sections || (sections as FormSection[]).length === 0) && (
-                    <div className="text-center py-8 text-muted-foreground">
-                      No sections found. Create form sections (tabs) for this type.
-                    </div>
-                  )}
-                </div>
+                  </SortableContext>
+                </DndContext>
               )}
 
-              {/* Fields List */}
+              {/* Fields List with Drag and Drop */}
               {selectedSection && (
-                <div className="space-y-2">
-                  {(fields as FormField[] | undefined)?.map((field) => (
-                    <div
-                      key={field.id}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <FormInput className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <div className="font-medium">{field.name}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {field.fieldType} • {field.code}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {field.isRequired && (
-                          <Badge variant="destructive">Required</Badge>
-                        )}
-                        <Badge variant="outline">Col {field.columnSpan}</Badge>
-                        <Badge variant={field.isActive ? "default" : "outline"}>
-                          {field.isActive ? "Active" : "Inactive"}
-                        </Badge>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => {
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleFieldDragEnd}
+                >
+                  <SortableContext
+                    items={(fields as FormField[] || []).map((f) => f.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <div className="space-y-2">
+                      {(fields as FormField[] | undefined)?.map((field) => (
+                        <SortableFieldItem
+                          key={field.id}
+                          field={field}
+                          onEdit={(e) => {
+                            e.stopPropagation();
                             setEditingItem(field);
+                            setSelectedFieldType(field.fieldType);
+                            setFieldOptions(field.options || []);
                             setFieldDialogOpen(true);
                           }}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => {
-                            if (confirm("Delete this field?")) {
+                          onDelete={(e) => {
+                            e.stopPropagation();
+                            if (confirm("Are you sure you want to delete this field?")) {
                               deleteField.mutate({ id: field.id });
                             }
                           }}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
+                        />
+                      ))}
+                      {(!fields || (fields as FormField[]).length === 0) && (
+                        <div className="text-center py-8 text-muted-foreground">
+                          No fields found. Create your first form field.
+                        </div>
+                      )}
                     </div>
-                  ))}
-                  {(!fields || (fields as FormField[]).length === 0) && (
-                    <div className="text-center py-8 text-muted-foreground">
-                      No fields found. Add form fields to this section.
-                    </div>
-                  )}
-                </div>
+                  </SortableContext>
+                </DndContext>
               )}
             </CardContent>
           </Card>
         </div>
 
-        {/* Right Panel - Quick Info */}
-        <div className="space-y-4">
+        {/* Right Panel - Quick Stats & Help */}
+        <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Quick Stats</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
+            <CardContent className="space-y-3">
+              <div className="flex justify-between">
                 <span className="text-muted-foreground">Categories</span>
-                <Badge variant="secondary">{(categories as Category[] | undefined)?.length || 0}</Badge>
+                <span className="font-medium">{(categories as Category[])?.length || 0}</span>
               </div>
               {selectedCategory && (
-                <div className="flex items-center justify-between">
+                <div className="flex justify-between">
                   <span className="text-muted-foreground">Types</span>
-                  <Badge variant="secondary">{(types as RequestType[] | undefined)?.length || 0}</Badge>
+                  <span className="font-medium">{(types as RequestType[])?.length || 0}</span>
                 </div>
               )}
               {selectedType && (
-                <div className="flex items-center justify-between">
+                <div className="flex justify-between">
                   <span className="text-muted-foreground">Sections</span>
-                  <Badge variant="secondary">{(sections as FormSection[] | undefined)?.length || 0}</Badge>
+                  <span className="font-medium">{(sections as FormSection[])?.length || 0}</span>
                 </div>
               )}
               {selectedSection && (
-                <div className="flex items-center justify-between">
+                <div className="flex justify-between">
                   <span className="text-muted-foreground">Fields</span>
-                  <Badge variant="secondary">{(fields as FormField[] | undefined)?.length || 0}</Badge>
+                  <span className="font-medium">{(fields as FormField[])?.length || 0}</span>
                 </div>
               )}
             </CardContent>
@@ -693,9 +871,8 @@ export default function RequestTypeConfig() {
               <p><strong>Types</strong> are specific permit types within a category (e.g., TEP, WP, MOP).</p>
               <p><strong>Sections</strong> are form tabs that organize fields.</p>
               <p><strong>Fields</strong> are individual form inputs.</p>
-              <p className="pt-2 border-t">
-                <strong>Exclusive types</strong> cannot be combined with other types.
-              </p>
+              <p className="pt-2 border-t"><strong>Drag and drop</strong> sections or fields to reorder them.</p>
+              <p><strong>Exclusive</strong> types cannot be combined with other types.</p>
             </CardContent>
           </Card>
         </div>
@@ -1017,7 +1194,7 @@ export default function RequestTypeConfig() {
 
       {/* Field Dialog */}
       <Dialog open={fieldDialogOpen} onOpenChange={setFieldDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingItem ? "Edit Field" : "Create Field"}</DialogTitle>
             <DialogDescription>
@@ -1038,7 +1215,10 @@ export default function RequestTypeConfig() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="fieldType">Field Type *</Label>
-                <Select name="fieldType" defaultValue={editingItem?.fieldType || "text"}>
+                <Select 
+                  value={selectedFieldType} 
+                  onValueChange={setSelectedFieldType}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
@@ -1084,14 +1264,14 @@ export default function RequestTypeConfig() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="columnSpan">Column Span (1-4)</Label>
+                <Label htmlFor="columnSpan">Column Span (1-12)</Label>
                 <Input
                   id="columnSpan"
                   name="columnSpan"
                   type="number"
                   min="1"
-                  max="4"
-                  defaultValue={editingItem?.columnSpan || 1}
+                  max="12"
+                  defaultValue={editingItem?.columnSpan || 6}
                 />
               </div>
             </div>
@@ -1122,6 +1302,17 @@ export default function RequestTypeConfig() {
                 defaultValue={editingItem?.defaultValue || ""}
               />
             </div>
+
+            {/* Field Options Editor for select/radio fields */}
+            {showOptionsEditor && (
+              <div className="border rounded-lg p-4 bg-muted/30">
+                <FieldOptionsEditor
+                  options={fieldOptions}
+                  onChange={setFieldOptions}
+                />
+              </div>
+            )}
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Switch
@@ -1151,6 +1342,16 @@ export default function RequestTypeConfig() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Form Preview Dialog */}
+      {selectedType && (
+        <FormPreview
+          open={previewOpen}
+          onOpenChange={setPreviewOpen}
+          requestTypeId={selectedType.id}
+          typeName={selectedType.name}
+        />
+      )}
     </div>
   );
 }

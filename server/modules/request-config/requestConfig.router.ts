@@ -660,6 +660,33 @@ export const formSectionsRouter = router({
         await connection.end();
       }
     }),
+
+  // Update section order (admin only)
+  updateOrder: adminProcedure
+    .input(
+      z.object({
+        updates: z.array(
+          z.object({
+            id: z.number(),
+            displayOrder: z.number(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const connection = await getConnection();
+      try {
+        for (const update of input.updates) {
+          await connection.execute(
+            `UPDATE formSections SET displayOrder = ? WHERE id = ?`,
+            [update.displayOrder, update.id]
+          );
+        }
+        return { success: true };
+      } finally {
+        await connection.end();
+      }
+    }),
 });
 
 // ============================================================================
@@ -872,6 +899,33 @@ export const formFieldsRouter = router({
           `UPDATE formFields SET isActive = false WHERE id = ?`,
           [input.id]
         );
+        return { success: true };
+      } finally {
+        await connection.end();
+      }
+    }),
+
+  // Update field order (admin only)
+  updateOrder: adminProcedure
+    .input(
+      z.object({
+        updates: z.array(
+          z.object({
+            id: z.number(),
+            displayOrder: z.number(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const connection = await getConnection();
+      try {
+        for (const update of input.updates) {
+          await connection.execute(
+            `UPDATE formFields SET displayOrder = ? WHERE id = ?`,
+            [update.displayOrder, update.id]
+          );
+        }
         return { success: true };
       } finally {
         await connection.end();
