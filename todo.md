@@ -242,3 +242,10 @@
 - [x] Add approval level column to show L1/L2/L3 etc.
 - [x] Add Approvals link to sidebar navigation
 - [x] Delete all existing requests from database for clean testing
+
+## Login Page Redesign (Jan 26, 2026)
+- [x] Redesign login page with split layout (image left, form right)
+- [x] Use dark background with dramatic data center image
+- [x] Apply center3 brand colors (purple gradient)
+- [x] Add center3 logo and tagline on left side
+- [x] Style form panel with dark theme
