@@ -43,6 +43,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { FieldOptionsEditor, FieldOption } from "./components/FieldOptionsEditor";
 import { FormPreview } from "./components/FormPreview";
+import { ConditionBuilder, ShowCondition, parseCondition, stringifyCondition, AvailableField } from "./components/ConditionBuilder";
 
 type Category = {
   id: number;
@@ -97,6 +98,7 @@ type FormField = {
   helpText: string | null;
   defaultValue: string | null;
   options: any;
+  showCondition: any;
   isActive: boolean;
 };
 
@@ -251,6 +253,7 @@ export default function RequestTypeConfig() {
   // Field options state
   const [fieldOptions, setFieldOptions] = useState<FieldOption[]>([]);
   const [selectedFieldType, setSelectedFieldType] = useState<string>("text");
+  const [showCondition, setShowCondition] = useState<ShowCondition>(null);
 
   // DnD sensors
   const sensors = useSensors(
@@ -378,7 +381,7 @@ export default function RequestTypeConfig() {
     onError: (err: any) => toast.error(err.message),
   });
 
-  // Initialize field options when editing
+  // Initialize field options and showCondition when editing
   useEffect(() => {
     if (editingItem && fieldDialogOpen) {
       setSelectedFieldType(editingItem.fieldType || "text");
@@ -387,6 +390,11 @@ export default function RequestTypeConfig() {
       } else {
         setFieldOptions([]);
       }
+      // Initialize showCondition
+      setShowCondition(parseCondition(editingItem.showCondition));
+    } else if (!fieldDialogOpen) {
+      // Reset when dialog closes
+      setShowCondition(null);
     }
   }, [editingItem, fieldDialogOpen]);
 
@@ -467,6 +475,40 @@ export default function RequestTypeConfig() {
       ? fieldOptions.filter(opt => opt.value && opt.label)
       : undefined;
 
+    // Prepare showCondition for storage - convert to simple format expected by backend
+    type BackendOperator = "equals" | "not_equals" | "in" | "not_empty" | "empty";
+    const prepareConditionForBackend = (cond: ShowCondition): { field: string; operator?: BackendOperator; value?: string | boolean | string[] } | undefined => {
+      if (!cond) return undefined;
+      // If it's a group with single condition, extract it
+      if ('logic' in cond && cond.conditions.length === 1 && !('logic' in cond.conditions[0])) {
+        const single = cond.conditions[0] as { field: string; operator: string; value: string };
+        return {
+          field: single.field,
+          operator: single.operator as any,
+          value: single.value,
+        };
+      }
+      // If it's a single condition
+      if (!('logic' in cond)) {
+        return {
+          field: cond.field,
+          operator: cond.operator as any,
+          value: cond.value,
+        };
+      }
+      // For complex conditions, just use the first condition for now
+      // TODO: Support complex conditions in backend
+      if (cond.conditions.length > 0 && !('logic' in cond.conditions[0])) {
+        const first = cond.conditions[0] as { field: string; operator: string; value: string };
+        return {
+          field: first.field,
+          operator: first.operator as any,
+          value: first.value,
+        };
+      }
+      return undefined;
+    };
+
     const data = {
       sectionId: selectedSection!.id,
       code: formData.get("code") as string,
@@ -480,6 +522,7 @@ export default function RequestTypeConfig() {
       helpText: formData.get("helpText") as string || undefined,
       defaultValue: formData.get("defaultValue") as string || undefined,
       options,
+      showCondition: prepareConditionForBackend(showCondition),
       isActive: formData.get("isActive") === "on",
     };
 
@@ -1312,6 +1355,22 @@ export default function RequestTypeConfig() {
                 />
               </div>
             )}
+
+            {/* Conditional Visibility Editor */}
+            <div className="border-t pt-4">
+              <Label className="text-sm font-medium mb-3 block">Conditional Visibility</Label>
+              <ConditionBuilder
+                condition={showCondition}
+                availableFields={(fields || []).map((f: FormField) => ({
+                  code: f.code,
+                  name: f.name,
+                  fieldType: f.fieldType,
+                  options: f.options?.map((opt: any) => ({ value: opt.value, label: opt.label })),
+                }))}
+                onChange={setShowCondition}
+                currentFieldCode={editingItem?.code}
+              />
+            </div>
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">

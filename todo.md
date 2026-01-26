@@ -417,3 +417,22 @@
 - [x] Add Preview button to type detail view
 - [x] Show all sections as tabs with their fields
 - [x] Display field types, required indicators, and placeholders
+
+## Conditional Field Logic UI (Jan 26, 2026)
+
+### Phase 1: Design & Component Structure
+- [x] Create ConditionBuilder component for visual rule editing
+- [x] Support single conditions (field → operator → value)
+- [x] Support condition groups with AND/OR logic
+- [x] Show available fields from same section for selection
+
+### Phase 2: Integration
+- [x] Add ConditionBuilder to field edit dialog
+- [x] Convert visual conditions to JSON for storage
+- [x] Parse existing JSON conditions for editing
+- [x] Update field preview to show condition summary
+
+### Phase 3: Testing
+- [ ] Test creating new conditions visually
+- [ ] Test editing existing conditions
+- [ ] Test condition evaluation in form rendering
