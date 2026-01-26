@@ -105,6 +105,7 @@ export default function TranslationManagement() {
   const [filteredTranslations, setFilteredTranslations] = useState<TranslationEntry[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState('all');
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<{ en: string; ar: string }>({ en: '', ar: '' });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -173,8 +174,19 @@ export default function TranslationManagement() {
       );
     }
     
+    // Filter by status
+    if (selectedStatus !== 'all') {
+      if (selectedStatus === 'done') {
+        filtered = filtered.filter(t => t.ar && t.ar !== t.en && !t.isModified);
+      } else if (selectedStatus === 'missing') {
+        filtered = filtered.filter(t => !t.ar || t.ar === t.en);
+      } else if (selectedStatus === 'modified') {
+        filtered = filtered.filter(t => t.isModified);
+      }
+    }
+    
     setFilteredTranslations(filtered);
-  }, [translations, searchQuery, selectedCategory]);
+  }, [translations, searchQuery, selectedCategory, selectedStatus]);
 
   // Start editing a translation
   const startEditing = (entry: TranslationEntry) => {
@@ -354,7 +366,7 @@ export default function TranslationManagement() {
               />
             </div>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder={isRTL ? 'اختر الفئة' : 'Select category'} />
               </SelectTrigger>
               <SelectContent>
@@ -365,16 +377,17 @@ export default function TranslationManagement() {
                 ))}
               </SelectContent>
             </Select>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => exportTranslations('en')} className="gap-1">
-                <Download className="h-4 w-4" />
-                EN
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => exportTranslations('ar')} className="gap-1">
-                <Download className="h-4 w-4" />
-                AR
-              </Button>
-            </div>
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder={isRTL ? 'الحالة' : 'Status'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{isRTL ? 'الكل' : 'All'}</SelectItem>
+                <SelectItem value="done">{isRTL ? 'مترجم' : 'Done'}</SelectItem>
+                <SelectItem value="missing">{isRTL ? 'مفقود' : 'Missing'}</SelectItem>
+                <SelectItem value="modified">{isRTL ? 'معدل' : 'Modified'}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardHeader>
         <CardContent>

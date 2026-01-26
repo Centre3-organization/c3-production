@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Link, useLocation } from "wouter";
 import { trpc } from "@/utils/trpc";
 import { useAuth } from "@/utils/useAuth";
+import { useTranslation } from "react-i18next";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -44,7 +45,6 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { useTranslation } from "react-i18next";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -52,22 +52,26 @@ interface LayoutProps {
 
 type NavItem = {
   icon: any;
-  label: string;
+  labelKey: string; // Translation key
+  label: string; // Fallback label
   href?: string;
-  children?: { label: string; href: string }[];
+  children?: { labelKey: string; label: string; href: string }[];
   badge?: number;
-  requiredPermission?: string; // e.g., "users.read", "approvals.l1"
+  requiredPermission?: string;
 };
 
 type NavSection = {
-  title?: string;
+  titleKey?: string; // Translation key for section title
+  title?: string; // Fallback title
   items: NavItem[];
-  requiredPermission?: string; // Hide entire section if user lacks permission
+  requiredPermission?: string;
 };
 
 export default function Layout({ children }: LayoutProps) {
   const [location, setLocation] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === 'rtl';
   
   // Use the auth hook with redirect enabled
   const { user: authUser, loading: authLoading, isAuthenticated, logout } = useAuth({
@@ -83,8 +87,6 @@ export default function Layout({ children }: LayoutProps) {
   const { data: permissions } = trpc.users.getMyPermissions.useQuery(undefined, {
     enabled: isAuthenticated,
   });
-  
-  // User role is now directly on the user object (user.role)
   
   // Redirect to access-denied if user is not authorized
   useEffect(() => {
@@ -135,56 +137,62 @@ export default function Layout({ children }: LayoutProps) {
   const allNavSections: NavSection[] = [
     {
       items: [
-        { icon: LayoutDashboard, label: "Dashboard", href: "/" },
+        { icon: LayoutDashboard, labelKey: "nav.dashboard", label: "Dashboard", href: "/" },
       ]
     },
     {
+      titleKey: "nav.requests",
       title: "Requests",
       items: [
-        { icon: FileText, label: "All Requests", href: "/requests", requiredPermission: "requests.read" },
-        { icon: CreditCard, label: "New Request", href: "/requests/new", requiredPermission: "requests.create" },
+        { icon: FileText, labelKey: "nav.allRequests", label: "All Requests", href: "/requests", requiredPermission: "requests.read" },
+        { icon: CreditCard, labelKey: "nav.newRequest", label: "New Request", href: "/requests/new", requiredPermission: "requests.create" },
       ]
     },
     {
+      titleKey: "nav.approvals",
       title: "Approvals",
       items: [
-        { icon: FileCheck, label: "Approvals", href: "/approvals", requiredPermission: "approvals.l1" },
-        { icon: FileCheck, label: "L1 Approval", href: "/approvals/l1", requiredPermission: "approvals.l1" },
-        { icon: FileCheck, label: "L2 Approval", href: "/approvals/l2", requiredPermission: "approvals.manual" },
+        { icon: FileCheck, labelKey: "nav.approvals", label: "Approvals", href: "/approvals", requiredPermission: "approvals.l1" },
+        { icon: FileCheck, labelKey: "nav.l1Approval", label: "L1 Approval", href: "/approvals/l1", requiredPermission: "approvals.l1" },
+        { icon: FileCheck, labelKey: "nav.l2Approval", label: "L2 Approval", href: "/approvals/l2", requiredPermission: "approvals.manual" },
       ]
     },
     {
+      titleKey: "nav.facilities",
       title: "Site and Facilities",
       items: [
-        { icon: Building2, label: "Sites", href: "/sites", requiredPermission: "sites.read" },
-        { icon: Map, label: "Zones", href: "/zones", requiredPermission: "zones.read" },
-        { icon: Radio, label: "Areas", href: "/areas", requiredPermission: "zones.read" },
+        { icon: Building2, labelKey: "nav.sites", label: "Sites", href: "/sites", requiredPermission: "sites.read" },
+        { icon: Map, labelKey: "nav.zones", label: "Zones", href: "/zones", requiredPermission: "zones.read" },
+        { icon: Radio, labelKey: "nav.areas", label: "Areas", href: "/areas", requiredPermission: "zones.read" },
       ]
     },
     {
+      titleKey: "nav.security",
       title: "Security Operations",
       requiredPermission: "alerts.view",
       items: [
-        { icon: MapPin, label: "Global Overwatch", href: "/global-overwatch", requiredPermission: "alerts.view" },
-        { icon: ShieldAlert, label: "Security Alerts", href: "/alerts", badge: 3, requiredPermission: "alerts.view" },
+        { icon: MapPin, labelKey: "nav.globalOverwatch", label: "Global Overwatch", href: "/global-overwatch", requiredPermission: "alerts.view" },
+        { icon: ShieldAlert, labelKey: "nav.securityAlerts", label: "Security Alerts", href: "/alerts", badge: 3, requiredPermission: "alerts.view" },
       ]
     },
     {
+      titleKey: "nav.workflowManagement",
       title: "Workflow Management",
       requiredPermission: "users.read",
       items: [
-        { icon: Workflow, label: "Workflow Builder", href: "/workflows", requiredPermission: "users.read" },
-        { icon: Clock, label: "Shift Management", href: "/shifts", requiredPermission: "users.read" },
-        { icon: UserCheck, label: "Delegations", href: "/delegations" },
+        { icon: Workflow, labelKey: "nav.workflows", label: "Workflow Builder", href: "/workflows", requiredPermission: "users.read" },
+        { icon: Clock, labelKey: "nav.shiftManagement", label: "Shift Management", href: "/shifts", requiredPermission: "users.read" },
+        { icon: UserCheck, labelKey: "nav.delegations", label: "Delegations", href: "/delegations" },
       ]
     },
     {
+      titleKey: "nav.administration",
       title: "Administration",
       requiredPermission: "users.read",
       items: [
-        { icon: FolderTree, label: "Groups", href: "/groups", requiredPermission: "users.read" },
-        { icon: Users, label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
-        { icon: Settings, label: "Settings", href: "/settings", requiredPermission: "users.read" },
+        { icon: FolderTree, labelKey: "nav.groups", label: "Groups", href: "/groups", requiredPermission: "users.read" },
+        { icon: Users, labelKey: "nav.users", label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
+        { icon: Settings, labelKey: "nav.settings", label: "Settings", href: "/settings", requiredPermission: "users.read" },
       ]
     }
   ];
@@ -228,7 +236,7 @@ export default function Layout({ children }: LayoutProps) {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Authenticating...</p>
+          <p className="text-muted-foreground">{t('common.loading', 'Authenticating...')}</p>
         </div>
       </div>
     );
@@ -237,11 +245,19 @@ export default function Layout({ children }: LayoutProps) {
   // Get user display info - prioritize currentUser from database over authUser from OAuth
   const userName = currentUser?.name || authUser?.name || "User";
   const userEmail = currentUser?.email || authUser?.email || "";
-  const userRoleName = currentUser?.role === 'admin' ? 'Administrator' : 'User';
+  const userRoleName = currentUser?.role === 'admin' 
+    ? (isRTL ? 'مدير النظام' : 'Administrator') 
+    : (isRTL ? 'مستخدم' : 'User');
   const userInitials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || "U";
 
+  // Get translated label
+  const getLabel = (labelKey: string, fallback: string) => {
+    const translated = t(labelKey);
+    return translated !== labelKey ? translated : fallback;
+  };
+
   return (
-    <div className="min-h-screen bg-background flex w-full">
+    <div className="min-h-screen bg-background flex w-full" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
         <div 
@@ -252,9 +268,12 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 left-0 h-full z-50 flex flex-col transition-all duration-300 bg-sidebar text-sidebar-foreground",
+        "fixed top-0 h-full z-50 flex flex-col transition-all duration-300 bg-sidebar text-sidebar-foreground",
+        isRTL ? "right-0" : "left-0",
         isMobile 
-          ? (sidebarOpen ? "w-64 translate-x-0" : "-translate-x-full w-64")
+          ? (sidebarOpen 
+              ? "w-64 translate-x-0" 
+              : (isRTL ? "translate-x-full w-64" : "-translate-x-full w-64"))
           : (sidebarOpen ? "w-64" : "w-20")
       )}>
         {/* Logo */}
@@ -288,7 +307,7 @@ export default function Layout({ children }: LayoutProps) {
               {section.title && (sidebarOpen || isMobile) && (
                 <div className="px-3 mb-2">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/50">
-                    {section.title}
+                    {section.titleKey ? getLabel(section.titleKey, section.title) : section.title}
                   </span>
                 </div>
               )}
@@ -312,13 +331,13 @@ export default function Layout({ children }: LayoutProps) {
                           <item.icon className="h-5 w-5 shrink-0 opacity-80" />
                           {(sidebarOpen || isMobile) && (
                             <>
-                              <span className="flex-1">{item.label}</span>
-                              {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                              <span className="flex-1">{getLabel(item.labelKey, item.label)}</span>
+                              {isOpen ? <ChevronDown className="h-4 w-4" /> : (isRTL ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />)}
                             </>
                           )}
                         </div>
                       </CollapsibleTrigger>
-                      <CollapsibleContent className="pl-8 space-y-1 mt-1">
+                      <CollapsibleContent className={cn("space-y-1 mt-1", isRTL ? "pr-8" : "pl-8")}>
                         {item.children.map((child) => {
                           const isChildActive = location === child.href;
                           return (
@@ -332,7 +351,7 @@ export default function Layout({ children }: LayoutProps) {
                                 )}
                                 onClick={() => isMobile && setSidebarOpen(false)}
                               >
-                                {child.label}
+                                {getLabel(child.labelKey, child.label)}
                               </div>
                             </Link>
                           );
@@ -359,7 +378,7 @@ export default function Layout({ children }: LayoutProps) {
                       <item.icon className={cn("h-5 w-5 shrink-0", isActive ? "text-white" : "opacity-80 group-hover:opacity-100")} />
                       {(sidebarOpen || isMobile) && (
                         <div className="flex items-center justify-between flex-1">
-                          <span>{item.label}</span>
+                          <span>{getLabel(item.labelKey, item.label)}</span>
                           {item.badge && (
                             <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
                               {item.badge}
@@ -369,8 +388,11 @@ export default function Layout({ children }: LayoutProps) {
                       )}
                       
                       {!sidebarOpen && !isMobile && (
-                        <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 border">
-                          {item.label}
+                        <div className={cn(
+                          "absolute px-2 py-1 bg-popover text-popover-foreground text-xs rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 border",
+                          isRTL ? "right-full mr-2" : "left-full ml-2"
+                        )}>
+                          {getLabel(item.labelKey, item.label)}
                         </div>
                       )}
                     </div>
@@ -389,7 +411,7 @@ export default function Layout({ children }: LayoutProps) {
               !sidebarOpen && !isMobile && "justify-center px-0"
             )}>
             <LogOut className="h-5 w-5 shrink-0 opacity-80" />
-            {(sidebarOpen || isMobile) && <span>Logout</span>}
+            {(sidebarOpen || isMobile) && <span>{t('auth.logout', 'Logout')}</span>}
           </div>
         </div>
       </aside>
@@ -397,7 +419,9 @@ export default function Layout({ children }: LayoutProps) {
       {/* Main Content */}
       <div className={cn(
         "flex-1 flex flex-col min-h-screen transition-all duration-300 w-full", 
-        !isMobile && (sidebarOpen ? "ml-64" : "ml-20")
+        !isMobile && (sidebarOpen 
+          ? (isRTL ? "mr-64" : "ml-64") 
+          : (isRTL ? "mr-20" : "ml-20"))
       )}>
         {/* Header */}
         <header className="h-16 bg-background border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-10">
@@ -408,14 +432,16 @@ export default function Layout({ children }: LayoutProps) {
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="shrink-0"
             >
-              {sidebarOpen ? <ChevronLeft className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {sidebarOpen 
+                ? (isRTL ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />) 
+                : <Menu className="h-5 w-5" />}
             </Button>
             
             <div className="relative max-w-md flex-1 hidden md:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground", isRTL ? "right-3" : "left-3")} />
               <Input 
-                placeholder="Search requests, visitors, zones..." 
-                className="pl-9 bg-muted/50 border-0 focus-visible:ring-1"
+                placeholder={t('requests.searchPlaceholder', 'Search requests, visitors, zones...')}
+                className={cn("bg-muted/50 border-0 focus-visible:ring-1", isRTL ? "pr-9" : "pl-9")}
               />
             </div>
           </div>
@@ -437,14 +463,14 @@ export default function Layout({ children }: LayoutProps) {
                       {userInitials}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="hidden md:block text-left">
+                  <div className={cn("hidden md:block", isRTL ? "text-right" : "text-left")}>
                     <p className="text-sm font-medium leading-none">{userName}</p>
                     <p className="text-xs text-muted-foreground capitalize">{userRoleName}</p>
                   </div>
                   <ChevronDown className="h-4 w-4 text-muted-foreground hidden md:block" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align={isRTL ? "start" : "end"} className="w-56">
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{userName}</p>
@@ -453,17 +479,17 @@ export default function Layout({ children }: LayoutProps) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setLocation('/profile')}>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
+                  <User className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+                  <span>{t('nav.profile', 'Profile')}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setLocation('/settings')}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
+                  <Settings className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+                  <span>{t('nav.settings', 'Settings')}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Logout</span>
+                  <LogOut className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+                  <span>{t('auth.logout', 'Logout')}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

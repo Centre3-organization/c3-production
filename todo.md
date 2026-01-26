@@ -285,3 +285,11 @@
 - [x] Extend Arabic translations to Sites/Zones/Areas pages
 - [x] Extend Arabic translations to Settings pages
 - [x] Extend Arabic translations to sidebar navigation
+
+## Translation & RTL Fixes (Jan 26, 2026)
+- [x] Remove EN/AR download buttons from Translation Management page
+- [x] Add status filter (Done/Missing/Modified) to Translation Management
+- [x] Fix sidebar to move to right side in RTL (Arabic) mode
+- [x] Add sidebar navigation translations for Arabic
+- [x] Add profile dropdown translations (Profile, Settings, Logout)
+- [x] Ensure section headers in sidebar are translated
