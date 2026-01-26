@@ -41,6 +41,11 @@ import Users from "./modules/users/Users";
 // Groups Module
 import Groups from "./modules/groups/Groups";
 
+// Workflows Module
+import { WorkflowBuilder } from "./modules/workflows/WorkflowBuilder";
+import { ShiftManagement } from "./modules/workflows/ShiftManagement";
+import { DelegationManagement } from "./modules/workflows/DelegationManagement";
+
 // Settings Module
 import Settings from "./modules/settings/Settings";
 
@@ -136,6 +141,23 @@ function Router() {
       <Route path="/settings">
         <Layout>
           <Settings />
+        </Layout>
+      </Route>
+      
+      {/* Protected Routes - Workflow Management */}
+      <Route path="/workflows">
+        <Layout>
+          <WorkflowBuilder />
+        </Layout>
+      </Route>
+      <Route path="/shifts">
+        <Layout>
+          <ShiftManagement />
+        </Layout>
+      </Route>
+      <Route path="/delegations">
+        <Layout>
+          <DelegationManagement />
         </Layout>
       </Route>
       <Route path="/profile">

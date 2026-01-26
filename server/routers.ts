@@ -31,6 +31,9 @@ import { securityAlertsRouter } from "./modules/security/alerts.router";
 // Groups Module
 import { groupsRouter } from "./modules/groups/groups.router";
 
+// Workflows Module
+import { workflowsRouter } from "./modules/workflows/workflows.router";
+
 import { seedDefaultRoles, seedDefaultDepartments } from "./infra/db/connection";
 
 // Initialize default data on server start
@@ -145,6 +148,9 @@ export const appRouter = router({
   
   // Groups Module
   groups: groupsRouter,
+  
+  // Workflows Module
+  workflows: workflowsRouter,
 });
 
 export type AppRouter = typeof appRouter;

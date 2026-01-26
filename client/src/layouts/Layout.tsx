@@ -25,7 +25,10 @@ import {
   ShieldAlert,
   User,
   Loader2,
-  FolderTree
+  FolderTree,
+  Workflow,
+  Clock,
+  UserCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -161,6 +164,15 @@ export default function Layout({ children }: LayoutProps) {
       items: [
         { icon: MapPin, label: "Global Overwatch", href: "/global-overwatch", requiredPermission: "alerts.view" },
         { icon: ShieldAlert, label: "Security Alerts", href: "/alerts", badge: 3, requiredPermission: "alerts.view" },
+      ]
+    },
+    {
+      title: "Workflow Management",
+      requiredPermission: "users.read",
+      items: [
+        { icon: Workflow, label: "Workflow Builder", href: "/workflows", requiredPermission: "users.read" },
+        { icon: Clock, label: "Shift Management", href: "/shifts", requiredPermission: "users.read" },
+        { icon: UserCheck, label: "Delegations", href: "/delegations" },
       ]
     },
     {

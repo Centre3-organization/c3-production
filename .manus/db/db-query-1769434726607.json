@@ -1,0 +1,9 @@
+{
+  "query": "\nALTER TABLE `users` \nADD COLUMN `managerId` int,\nADD COLUMN `alternateManagerId` int,\nADD COLUMN `employeeType` enum('internal', 'external', 'contractor') DEFAULT 'internal',\nADD COLUMN `workScheduleId` int,\nADD COLUMN `defaultSiteId` int,\nADD COLUMN `canDelegate` boolean DEFAULT false,\nADD COLUMN `maxDelegationDays` int DEFAULT 30,\nADD COLUMN `approvalAuthorityLevel` int DEFAULT 0,\nADD COLUMN `outOfOfficeUntil` timestamp,\nADD COLUMN `outOfOfficeDelegateId` int;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute \nALTER TABLE `users` \nADD COLUMN `managerId` int,\nADD COLUMN `alternateManagerId` int,\nADD COLUMN `employeeType` enum('internal', 'external', 'contractor') DEFAULT 'internal',\nADD COLUMN `workScheduleId` int,\nADD COLUMN `defaultSiteId` int,\nADD COLUMN `canDelegate` boolean DEFAULT false,\nADD COLUMN `maxDelegationDays` int DEFAULT 30,\nADD COLUMN `approvalAuthorityLevel` int DEFAULT 0,\nADD COLUMN `outOfOfficeUntil` timestamp,\nADD COLUMN `outOfOfficeDelegateId` int;\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 4854
+}

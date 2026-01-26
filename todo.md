@@ -132,3 +132,67 @@
 
 ## Bug Fixes (Jan 26, 2026)
 - [x] Fix Parent Group dropdown showing deleted groups - filter to only show active groups
+
+## Dynamic Approval Workflow Module (Jan 26, 2026)
+
+### Phase 1: Database Schema
+- [x] Create approval_workflows table
+- [x] Create workflow_conditions table
+- [x] Create approval_stages table
+- [x] Create stage_approvers table
+- [x] Create approval_roles table
+- [x] Create user_approval_roles table
+- [x] Create shift_schedules table
+- [x] Create shift_definitions table
+- [x] Create shift_assignments table
+- [x] Create approval_delegations table
+- [x] Create approval_instances table
+- [x] Create approval_tasks table
+- [x] Create approval_history table
+- [x] Create escalation_rules table
+
+### Phase 2: User & Group Enhancements
+- [x] Add manager_id, employee_type, work_schedule_id to users
+- [x] Add can_delegate, out_of_office_delegate_id to users
+- [x] Add approval_config, internal_liaison_user_id to groups
+- [x] Add working_hours, sla_override_hours to groups
+- [x] Add role_in_group, reports_to_user_id, can_approve to group_members
+
+### Phase 3: Approval Workflow Engine
+- [x] Create workflow selection algorithm
+- [x] Create condition evaluation engine
+- [x] Create approver resolution logic
+- [x] Create stage progression logic
+- [x] Create approval orchestrator
+
+### Phase 4: Shift Management
+- [x] Create shift schedule CRUD operations
+- [x] Create shift assignment management
+- [x] Create current shift resolution algorithm
+- [x] Create time-based routing logic
+
+### Phase 5: Delegation System
+- [x] Create delegation CRUD operations
+- [x] Create delegation validation logic
+- [x] Create delegation resolution in approval routing
+
+### Phase 6: Admin UI
+- [x] Create Workflow Builder page
+- [x] Create Workflow Conditions builder
+- [x] Create Stage Configuration panel
+- [x] Create Shift Management page
+- [x] Create Delegation Dashboard
+- [x] Create Approval Roles management
+
+### Phase 7: Update Approval Pages
+- [x] Update L1 Approval to use new workflow
+- [x] Update L2 Approval to use new workflow
+- [x] Create unified Approval Dashboard
+- [x] Add approval history view
+
+### Phase 8: Testing
+- [x] Test workflow selection
+- [x] Test condition evaluation
+- [x] Test shift-based routing
+- [x] Test delegation system
+- [x] Test escalation logic
