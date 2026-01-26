@@ -20,6 +20,7 @@ import Reports from "./modules/dashboard/Reports";
 // Requests Module
 import RequestList from "./modules/requests/RequestList";
 import RequestForm from "./modules/requests/RequestForm";
+import DynamicRequestForm from "./modules/requests/DynamicRequestForm";
 
 // Approvals Module
 import Approvals from "./modules/approvals/Approvals";
@@ -78,6 +79,11 @@ function Router() {
         </Layout>
       </Route>
       <Route path="/requests/new">
+        <Layout>
+          <DynamicRequestForm />
+        </Layout>
+      </Route>
+      <Route path="/requests/new-legacy">
         <Layout>
           <RequestForm />
         </Layout>

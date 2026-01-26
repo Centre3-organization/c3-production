@@ -1,0 +1,615 @@
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Upload, X, FileText, User, Search, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { trpc } from "@/lib/trpc";
+
+interface FieldOption {
+  value: string;
+  label: string;
+  labelAr?: string;
+}
+
+interface FieldValidation {
+  min?: number;
+  max?: number;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  patternMessage?: string;
+  accept?: string;
+  maxSizeMB?: number;
+  maxFiles?: number;
+}
+
+interface ShowCondition {
+  field: string;
+  operator?: "equals" | "not_equals" | "in" | "not_empty" | "empty";
+  value?: string | string[] | boolean;
+}
+
+interface FormField {
+  id: number;
+  code: string;
+  name: string;
+  nameAr?: string;
+  fieldType: string;
+  isRequired: boolean;
+  displayOrder: number;
+  columnSpan: number;
+  placeholder?: string;
+  placeholderAr?: string;
+  helpText?: string;
+  helpTextAr?: string;
+  defaultValue?: string;
+  options?: FieldOption[];
+  optionsSource?: "static" | "api" | "dependent";
+  optionsApi?: string;
+  dependsOnField?: string;
+  validation?: FieldValidation;
+  showCondition?: ShowCondition;
+}
+
+interface FieldRendererProps {
+  field: FormField;
+  value: any;
+  onChange: (value: any) => void;
+  formValues: Record<string, any>;
+  disabled?: boolean;
+  error?: string;
+}
+
+export function FieldRenderer({
+  field,
+  value,
+  onChange,
+  formValues,
+  disabled = false,
+  error,
+}: FieldRendererProps) {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
+  const [dynamicOptions, setDynamicOptions] = useState<FieldOption[]>([]);
+  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
+
+  // Get localized text
+  const getLabel = () => (isRTL && field.nameAr ? field.nameAr : field.name);
+  const getPlaceholder = () =>
+    isRTL && field.placeholderAr ? field.placeholderAr : field.placeholder;
+  const getHelpText = () =>
+    isRTL && field.helpTextAr ? field.helpTextAr : field.helpText;
+  const getOptionLabel = (opt: FieldOption) =>
+    isRTL && opt.labelAr ? opt.labelAr : opt.label;
+
+  // Check if field should be visible based on conditions
+  const isVisible = (): boolean => {
+    if (!field.showCondition) return true;
+
+    const { field: condField, operator = "equals", value: condValue } = field.showCondition;
+    const fieldValue = formValues[condField];
+
+    switch (operator) {
+      case "equals":
+        return fieldValue === condValue;
+      case "not_equals":
+        return fieldValue !== condValue;
+      case "in":
+        return Array.isArray(condValue) && condValue.includes(fieldValue);
+      case "not_empty":
+        return fieldValue !== undefined && fieldValue !== null && fieldValue !== "";
+      case "empty":
+        return fieldValue === undefined || fieldValue === null || fieldValue === "";
+      default:
+        return true;
+    }
+  };
+
+  // Load dependent options when parent value changes
+  useEffect(() => {
+    if (field.optionsSource === "dependent" && field.dependsOnField) {
+      const parentValue = formValues[field.dependsOnField];
+      if (parentValue) {
+        loadDependentOptions(parentValue);
+      } else {
+        setDynamicOptions([]);
+      }
+    }
+  }, [field.dependsOnField, formValues]);
+
+  const loadDependentOptions = async (parentValue: string) => {
+    setIsLoadingOptions(true);
+    try {
+      // In a real implementation, this would call the API
+      // For now, we'll simulate with a delay
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Options would come from API
+      setDynamicOptions([]);
+    } catch (error) {
+      console.error("Failed to load options:", error);
+    } finally {
+      setIsLoadingOptions(false);
+    }
+  };
+
+  // Get options to display
+  const getOptions = (): FieldOption[] => {
+    if (field.optionsSource === "dependent") {
+      return dynamicOptions;
+    }
+    return field.options || [];
+  };
+
+  if (!isVisible()) return null;
+
+  const baseInputClass = cn(
+    "w-full",
+    error && "border-red-500 focus:ring-red-500"
+  );
+
+  // Render based on field type
+  switch (field.fieldType) {
+    case "text":
+    case "email":
+    case "phone":
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <Input
+            type={field.fieldType === "email" ? "email" : "text"}
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={getPlaceholder()}
+            disabled={disabled}
+            className={baseInputClass}
+            maxLength={field.validation?.maxLength}
+          />
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "number":
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <Input
+            type="number"
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value ? Number(e.target.value) : "")}
+            placeholder={getPlaceholder()}
+            disabled={disabled}
+            className={baseInputClass}
+            min={field.validation?.min}
+            max={field.validation?.max}
+          />
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "textarea":
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <Textarea
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={getPlaceholder()}
+            disabled={disabled}
+            className={cn(baseInputClass, "min-h-[100px]")}
+            maxLength={field.validation?.maxLength}
+          />
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "date":
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <Input
+            type="date"
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            disabled={disabled}
+            className={baseInputClass}
+          />
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "datetime":
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <Input
+            type="datetime-local"
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            disabled={disabled}
+            className={baseInputClass}
+          />
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "dropdown":
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <Select
+            value={value || ""}
+            onValueChange={onChange}
+            disabled={disabled || isLoadingOptions}
+          >
+            <SelectTrigger className={baseInputClass}>
+              <SelectValue placeholder={getPlaceholder() || t("common.select", "Select...")} />
+            </SelectTrigger>
+            <SelectContent>
+              {isLoadingOptions ? (
+                <div className="flex items-center justify-center p-4">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                </div>
+              ) : (
+                getOptions().map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {getOptionLabel(opt)}
+                  </SelectItem>
+                ))
+              )}
+            </SelectContent>
+          </Select>
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "dropdown_multi":
+      const selectedValues = Array.isArray(value) ? value : [];
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <div className="border rounded-md p-3 space-y-2">
+            {getOptions().map((opt) => (
+              <div key={opt.value} className="flex items-center gap-2">
+                <Checkbox
+                  id={`${field.code}-${opt.value}`}
+                  checked={selectedValues.includes(opt.value)}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      onChange([...selectedValues, opt.value]);
+                    } else {
+                      onChange(selectedValues.filter((v: string) => v !== opt.value));
+                    }
+                  }}
+                  disabled={disabled}
+                />
+                <Label
+                  htmlFor={`${field.code}-${opt.value}`}
+                  className="text-sm font-normal cursor-pointer"
+                >
+                  {getOptionLabel(opt)}
+                </Label>
+              </div>
+            ))}
+          </div>
+          {selectedValues.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {selectedValues.map((v: string) => {
+                const opt = getOptions().find((o) => o.value === v);
+                return (
+                  <Badge key={v} variant="secondary" className="text-xs">
+                    {opt ? getOptionLabel(opt) : v}
+                    <button
+                      type="button"
+                      onClick={() => onChange(selectedValues.filter((sv: string) => sv !== v))}
+                      className="ml-1 hover:text-red-600"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                );
+              })}
+            </div>
+          )}
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "radio":
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <RadioGroup
+            value={value || ""}
+            onValueChange={onChange}
+            disabled={disabled}
+            className="flex flex-wrap gap-4"
+          >
+            {getOptions().map((opt) => (
+              <div key={opt.value} className="flex items-center gap-2">
+                <RadioGroupItem value={opt.value} id={`${field.code}-${opt.value}`} />
+                <Label
+                  htmlFor={`${field.code}-${opt.value}`}
+                  className="text-sm font-normal cursor-pointer"
+                >
+                  {getOptionLabel(opt)}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "checkbox":
+      return (
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id={field.code}
+              checked={value === true || value === "true"}
+              onCheckedChange={(checked) => onChange(checked)}
+              disabled={disabled}
+            />
+            <Label
+              htmlFor={field.code}
+              className="text-sm font-medium cursor-pointer flex items-center gap-1"
+            >
+              {getLabel()}
+              {field.isRequired && <span className="text-red-600">*</span>}
+            </Label>
+          </div>
+          {getHelpText() && (
+            <p className="text-xs text-gray-500 ml-6">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600 ml-6">{error}</p>}
+        </div>
+      );
+
+    case "checkbox_group":
+      const checkedValues = Array.isArray(value) ? value : [];
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {getOptions().map((opt) => (
+              <div key={opt.value} className="flex items-center gap-2">
+                <Checkbox
+                  id={`${field.code}-${opt.value}`}
+                  checked={checkedValues.includes(opt.value)}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      onChange([...checkedValues, opt.value]);
+                    } else {
+                      onChange(checkedValues.filter((v: string) => v !== opt.value));
+                    }
+                  }}
+                  disabled={disabled}
+                />
+                <Label
+                  htmlFor={`${field.code}-${opt.value}`}
+                  className="text-sm font-normal cursor-pointer"
+                >
+                  {getOptionLabel(opt)}
+                </Label>
+              </div>
+            ))}
+          </div>
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "file":
+    case "file_multi":
+      const files = Array.isArray(value) ? value : value ? [value] : [];
+      const isMulti = field.fieldType === "file_multi";
+      const maxFiles = field.validation?.maxFiles || (isMulti ? 10 : 1);
+
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-[#0f62fe]/50 transition-colors">
+            <input
+              type="file"
+              id={field.code}
+              multiple={isMulti}
+              accept={field.validation?.accept}
+              onChange={(e) => {
+                const newFiles = Array.from(e.target.files || []);
+                if (isMulti) {
+                  onChange([...files, ...newFiles].slice(0, maxFiles));
+                } else {
+                  onChange(newFiles[0] || null);
+                }
+              }}
+              disabled={disabled || files.length >= maxFiles}
+              className="hidden"
+            />
+            <label
+              htmlFor={field.code}
+              className="cursor-pointer flex flex-col items-center gap-2"
+            >
+              <Upload className="h-8 w-8 text-gray-400" />
+              <span className="text-sm text-gray-600">
+                {t("common.clickToUpload", "Click to upload")}
+                {isMulti && ` (${files.length}/${maxFiles})`}
+              </span>
+              {field.validation?.accept && (
+                <span className="text-xs text-gray-400">
+                  {field.validation.accept}
+                </span>
+              )}
+            </label>
+          </div>
+          {files.length > 0 && (
+            <div className="space-y-2 mt-2">
+              {files.map((file: File | string, index: number) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 p-2 bg-gray-50 rounded"
+                >
+                  <FileText className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm flex-1 truncate">
+                    {typeof file === "string" ? file : file.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isMulti) {
+                        onChange(files.filter((_: any, i: number) => i !== index));
+                      } else {
+                        onChange(null);
+                      }
+                    }}
+                    className="text-gray-400 hover:text-red-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "user_lookup":
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            {getLabel()}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          <div className="relative">
+            <Input
+              type="text"
+              value={value?.name || value || ""}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder={getPlaceholder() || t("common.searchUser", "Search user...")}
+              disabled={disabled}
+              className={cn(baseInputClass, "pr-10")}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+              disabled={disabled}
+            >
+              <Search className="h-4 w-4" />
+            </Button>
+          </div>
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
+        </div>
+      );
+
+    case "readonly":
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase">
+            {getLabel()}
+          </Label>
+          <Input
+            type="text"
+            value={value || field.defaultValue || ""}
+            readOnly
+            className="bg-gray-50"
+          />
+          {getHelpText() && (
+            <p className="text-xs text-gray-500">{getHelpText()}</p>
+          )}
+        </div>
+      );
+
+    default:
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase">
+            {getLabel()} (Unsupported: {field.fieldType})
+          </Label>
+          <Input
+            type="text"
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            disabled={disabled}
+            className={baseInputClass}
+          />
+        </div>
+      );
+  }
+}

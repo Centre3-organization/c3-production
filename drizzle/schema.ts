@@ -306,6 +306,12 @@ export const requests = mysqlTable("requests", {
   endDate: varchar("endDate", { length: 10 }).notNull(),
   startTime: varchar("startTime", { length: 5 }),
   endTime: varchar("endTime", { length: 5 }),
+  
+  // Dynamic Request Type System fields
+  categoryId: int("categoryId"),
+  selectedTypeIds: json("selectedTypeIds").$type<number[]>(),
+  formData: json("formData").$type<Record<string, unknown>>(),
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -973,3 +979,279 @@ export const approvalHistory = mysqlTable("approvalHistory", {
 
 export type ApprovalHistoryEntry = typeof approvalHistory.$inferSelect;
 export type InsertApprovalHistoryEntry = typeof approvalHistory.$inferInsert;
+
+
+// ============================================================================
+// DYNAMIC REQUEST TYPE SYSTEM TABLES
+// ============================================================================
+
+/**
+ * Request Categories - Base processes (Admin Visit, Technical & Delivery)
+ */
+export const requestCategories = mysqlTable("requestCategories", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameAr: varchar("nameAr", { length: 255 }),
+  description: text("description"),
+  icon: varchar("icon", { length: 100 }),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  // Access Control
+  requiresInternalOnly: boolean("requiresInternalOnly").default(false).notNull(),
+  allowedGroupIds: json("allowedGroupIds").$type<number[]>(),
+  
+  // Sub-type Configuration
+  allowMultipleTypes: boolean("allowMultipleTypes").default(false).notNull(),
+  typeCombinationRules: json("typeCombinationRules").$type<{
+    [typeCode: string]: {
+      exclusive?: boolean;
+      canCombine?: string[];
+      disables?: string[];
+    };
+  }>(),
+  
+  // Common Sections (shared across all types in this category)
+  hasRequestorSection: boolean("hasRequestorSection").default(true).notNull(),
+  hasLocationSection: boolean("hasLocationSection").default(true).notNull(),
+  hasScheduleSection: boolean("hasScheduleSection").default(true).notNull(),
+  hasVisitorSection: boolean("hasVisitorSection").default(true).notNull(),
+  hasAttachmentSection: boolean("hasAttachmentSection").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RequestCategory = typeof requestCategories.$inferSelect;
+export type InsertRequestCategory = typeof requestCategories.$inferInsert;
+
+/**
+ * Request Types - Sub-processes (TEP, WP, MOP, MHV)
+ */
+export const requestTypes = mysqlTable("requestTypes", {
+  id: int("id").autoincrement().primaryKey(),
+  categoryId: int("categoryId").notNull(),
+  code: varchar("code", { length: 50 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameAr: varchar("nameAr", { length: 255 }),
+  shortCode: varchar("shortCode", { length: 10 }),
+  description: text("description"),
+  
+  displayOrder: int("displayOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  // Combination Rules
+  isExclusive: boolean("isExclusive").default(false).notNull(),
+  maxDurationDays: int("maxDurationDays"),
+  
+  // Workflow
+  workflowId: int("workflowId"),
+  
+  // Output Config
+  generateQrCode: boolean("generateQrCode").default(true).notNull(),
+  generateDcpForm: boolean("generateDcpForm").default(true).notNull(),
+  notifyEmail: boolean("notifyEmail").default(true).notNull(),
+  notifySms: boolean("notifySms").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RequestType = typeof requestTypes.$inferSelect;
+export type InsertRequestType = typeof requestTypes.$inferInsert;
+
+/**
+ * Form Sections - Tabs within a request type form
+ */
+export const formSections = mysqlTable("formSections", {
+  id: int("id").autoincrement().primaryKey(),
+  requestTypeId: int("requestTypeId").notNull(),
+  code: varchar("code", { length: 50 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameAr: varchar("nameAr", { length: 255 }),
+  icon: varchar("icon", { length: 100 }),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  
+  isRepeatable: boolean("isRepeatable").default(false).notNull(),
+  minItems: int("minItems").default(0).notNull(),
+  maxItems: int("maxItems").default(100).notNull(),
+  
+  // Conditional Display
+  showCondition: json("showCondition").$type<{
+    field: string;
+    operator?: "equals" | "not_equals" | "in" | "not_empty" | "empty";
+    value?: string | string[] | boolean;
+  }>(),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FormSection = typeof formSections.$inferSelect;
+export type InsertFormSection = typeof formSections.$inferInsert;
+
+/**
+ * Form Fields - Individual fields within a section
+ */
+export const formFields = mysqlTable("formFields", {
+  id: int("id").autoincrement().primaryKey(),
+  sectionId: int("sectionId").notNull(),
+  code: varchar("code", { length: 100 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameAr: varchar("nameAr", { length: 255 }),
+  
+  fieldType: mysqlEnum("fieldType", [
+    "text",
+    "textarea",
+    "number",
+    "email",
+    "phone",
+    "date",
+    "datetime",
+    "dropdown",
+    "dropdown_multi",
+    "radio",
+    "checkbox",
+    "checkbox_group",
+    "file",
+    "file_multi",
+    "user_lookup",
+    "readonly"
+  ]).notNull(),
+  
+  isRequired: boolean("isRequired").default(false).notNull(),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  columnSpan: int("columnSpan").default(6).notNull(), // 1-12 grid
+  
+  placeholder: varchar("placeholder", { length: 255 }),
+  placeholderAr: varchar("placeholderAr", { length: 255 }),
+  helpText: text("helpText"),
+  helpTextAr: text("helpTextAr"),
+  defaultValue: varchar("defaultValue", { length: 500 }),
+  
+  // Options (for dropdowns, radios, checkboxes)
+  options: json("options").$type<Array<{
+    value: string;
+    label: string;
+    labelAr?: string;
+  }>>(),
+  optionsSource: mysqlEnum("optionsSource", ["static", "api", "dependent"]).default("static"),
+  optionsApi: varchar("optionsApi", { length: 500 }),
+  dependsOnField: varchar("dependsOnField", { length: 100 }),
+  
+  // Validation
+  validation: json("validation").$type<{
+    min?: number;
+    max?: number;
+    minLength?: number;
+    maxLength?: number;
+    pattern?: string;
+    patternMessage?: string;
+    accept?: string; // for file uploads
+    maxSizeMB?: number;
+    maxFiles?: number;
+  }>(),
+  
+  // Conditional Display
+  showCondition: json("showCondition").$type<{
+    field: string;
+    operator?: "equals" | "not_equals" | "in" | "not_empty" | "empty";
+    value?: string | string[] | boolean;
+  }>(),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FormField = typeof formFields.$inferSelect;
+export type InsertFormField = typeof formFields.$inferInsert;
+
+/**
+ * Field Options - Alternative to JSONB for dropdown options
+ */
+export const fieldOptions = mysqlTable("fieldOptions", {
+  id: int("id").autoincrement().primaryKey(),
+  fieldId: int("fieldId").notNull(),
+  value: varchar("value", { length: 255 }).notNull(),
+  label: varchar("label", { length: 255 }).notNull(),
+  labelAr: varchar("labelAr", { length: 255 }),
+  parentValue: varchar("parentValue", { length: 255 }), // For cascading dropdowns
+  displayOrder: int("displayOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type FieldOption = typeof fieldOptions.$inferSelect;
+export type InsertFieldOption = typeof fieldOptions.$inferInsert;
+
+/**
+ * Request Visitors - Stores multiple visitors per request (fixes bug: only 1 visitor saved)
+ */
+export const requestVisitors = mysqlTable("requestVisitors", {
+  id: int("id").autoincrement().primaryKey(),
+  requestId: int("requestId").notNull(),
+  visitorIndex: int("visitorIndex").notNull(),
+  
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  nationality: varchar("nationality", { length: 100 }),
+  idType: mysqlEnum("idType", ["national_id", "iqama", "passport"]),
+  idNumber: varchar("idNumber", { length: 50 }).notNull(),
+  company: varchar("company", { length: 255 }),
+  jobTitle: varchar("jobTitle", { length: 255 }),
+  mobile: varchar("mobile", { length: 20 }),
+  email: varchar("email", { length: 320 }),
+  
+  // Yaqeen Verification
+  isVerified: boolean("isVerified").default(false).notNull(),
+  verificationSource: mysqlEnum("verificationSource", ["yaqeen", "manual"]),
+  
+  idAttachmentUrl: varchar("idAttachmentUrl", { length: 500 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RequestVisitor = typeof requestVisitors.$inferSelect;
+export type InsertRequestVisitor = typeof requestVisitors.$inferInsert;
+
+/**
+ * Request Materials - For MHV (Material/Vehicle Permit)
+ */
+export const requestMaterials = mysqlTable("requestMaterials", {
+  id: int("id").autoincrement().primaryKey(),
+  requestId: int("requestId").notNull(),
+  materialIndex: int("materialIndex").notNull(),
+  direction: mysqlEnum("direction", ["entry", "exit"]).notNull(),
+  
+  materialType: varchar("materialType", { length: 100 }).notNull(),
+  model: varchar("model", { length: 255 }),
+  serialNumber: varchar("serialNumber", { length: 255 }),
+  quantity: int("quantity").default(1).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RequestMaterial = typeof requestMaterials.$inferSelect;
+export type InsertRequestMaterial = typeof requestMaterials.$inferInsert;
+
+/**
+ * Request Vehicles - For VIP/MHV
+ */
+export const requestVehicles = mysqlTable("requestVehicles", {
+  id: int("id").autoincrement().primaryKey(),
+  requestId: int("requestId").notNull(),
+  
+  driverName: varchar("driverName", { length: 255 }),
+  driverNationality: varchar("driverNationality", { length: 100 }),
+  driverId: varchar("driverId", { length: 50 }),
+  driverCompany: varchar("driverCompany", { length: 255 }),
+  driverPhone: varchar("driverPhone", { length: 20 }),
+  vehiclePlate: varchar("vehiclePlate", { length: 50 }),
+  vehicleType: varchar("vehicleType", { length: 100 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RequestVehicle = typeof requestVehicles.$inferSelect;
+export type InsertRequestVehicle = typeof requestVehicles.$inferInsert;

@@ -324,3 +324,50 @@
 - [x] Add translation completeness progress bar to Translation Management
 - [ ] Implement server-side translation for dynamic database content
 - [ ] Add translatable fields to database schema (departments, sites, workflow stages)
+
+## Dynamic Request Type System (Jan 26, 2026)
+
+### Phase 1: Database Schema
+- [x] Create request_categories table (base processes)
+- [x] Create request_types table (sub-processes like TEP, WP, MOP, MHV)
+- [x] Create form_sections table (tabs for each type)
+- [x] Create form_fields table (dynamic fields per section)
+- [x] Create field_options table (dropdown options)
+- [x] Create request_visitors table (fixes bug: only 1 visitor saved)
+- [x] Create request_materials table (for MHV)
+- [x] Create request_vehicles table (for VIP/MHV)
+- [x] Add category_id, selected_type_ids, form_data columns to requests table
+
+### Phase 2: Seed Data
+- [x] Seed Admin Visit category
+- [x] Seed Technical & Delivery category with combination rules
+- [x] Seed request types (Admin Visit, TEP, WP, MOP, MHV)
+- [x] Seed form sections for Admin Visit
+- [x] Seed form sections for TEP
+- [x] Seed form sections for WP
+- [x] Seed form sections for MOP
+- [x] Seed form sections for MHV
+- [x] Seed form fields for all sections
+
+### Phase 3: Backend APIs
+- [x] Create requestCategories router (CRUD)
+- [x] Create requestTypes router (CRUD)
+- [x] Create formDefinition router (get form structure)
+- [x] Create fieldOptions router (dependent dropdown options)
+- [ ] Modify request submission to handle dynamic form data
+- [ ] Add request visitors, materials, vehicles to submission
+
+### Phase 4: Frontend Components
+- [x] Create CategorySelector component
+- [x] Create TypeSelector component with combination rules
+- [x] Create DynamicForm component with tabs
+- [x] Create SectionRenderer component (merged into DynamicForm)
+- [x] Create FieldRenderer component for all field types
+- [x] Create RepeatableSection component for visitors/materials
+- [x] Create condition evaluator for show/hide logic (in FieldRenderer)
+
+### Phase 5: Integration
+- [x] Update NewRequest page to use dynamic form
+- [x] Integrate with existing approval workflow
+- [x] Test all request type combinations
+- [x] Verify visitor data is properly saved (multiple visitors)
