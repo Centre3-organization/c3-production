@@ -1,5 +1,14 @@
 @import "tailwindcss";
-/* Montserrat font loaded via index.html for better performance */
+/* STC Forward font - Primary brand font */
+@font-face {
+  font-family: 'STC Forward';
+  src: url('/fonts/STC-Forward-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Montserrat font loaded via index.html as fallback */
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -178,7 +187,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'STC Forward', 'Montserrat', sans-serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),

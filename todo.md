@@ -82,3 +82,7 @@
 
 ## Logo Size Update
 - [x] Increase sidebar logo size to 200x50px
+
+## Font Update - STC Forward
+- [x] Add STC Forward font file to project
+- [x] Update CSS to use STC Forward as primary font with Montserrat fallback
