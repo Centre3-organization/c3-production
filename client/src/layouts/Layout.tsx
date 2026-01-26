@@ -20,7 +20,6 @@ import {
   Building2,
   Map,
   Radio,
-  Users,
   FileCheck,
   ShieldAlert,
   User,
@@ -166,7 +165,6 @@ export default function Layout({ children }: LayoutProps) {
       title: "Administration",
       requiredPermission: "users.read",
       items: [
-        { icon: Users, label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
         { icon: Settings, label: "Settings", href: "/settings", requiredPermission: "users.read" },
       ]
     }
