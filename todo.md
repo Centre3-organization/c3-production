@@ -436,3 +436,35 @@
 - [ ] Test creating new conditions visually
 - [ ] Test editing existing conditions
 - [ ] Test condition evaluation in form rendering
+
+## Dynamic Approvals UI Redesign (Jan 26, 2026)
+
+### Phase 1: Sidebar Navigation
+- [x] Remove hardcoded "L1 Approval" and "L2 Approval" menu items
+- [x] Keep single "Approvals" menu item → Shows ALL pending tasks
+- [x] Add "Approval History" menu item for past decisions
+
+### Phase 2: Backend API Updates
+- [x] Update approval tasks API to include stageName from workflow config
+- [x] Add stageOrder and totalStages to approval task response
+- [x] Add getMyApprovalHistory endpoint for approval history
+- [x] Add getApprovalStats endpoint for dashboard cards
+
+### Phase 3: Approvals Dashboard Redesign
+- [x] Replace fixed L1/L2/L3 cards with dynamic cards (My Pending, Awaiting Others, Completed Today)
+- [x] Replace L1/L2/L3 badges with actual stage names
+- [x] Add stage filter dropdown
+- [x] Add stage breakdown chips with click-to-filter
+- [x] Add search by stage name
+
+### Phase 4: Stage Progress Visualization
+- [x] Add visual stage progress indicator to task cards
+- [x] Show stage progress bar (current/total)
+- [x] Highlight current stage
+- [x] Show workflow name in task details
+
+### Phase 5: Approval History Page
+- [x] Create ApprovalHistory page for past decisions
+- [x] Add pagination support
+- [x] Add status filter (approved/rejected)
+- [x] Show decision date and details

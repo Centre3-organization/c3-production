@@ -152,9 +152,8 @@ export default function Layout({ children }: LayoutProps) {
       titleKey: "nav.approvals",
       title: "Approvals",
       items: [
-        { icon: FileCheck, labelKey: "nav.approvals", label: "Approvals", href: "/approvals", requiredPermission: "approvals.l1" },
-        { icon: FileCheck, labelKey: "nav.l1Approval", label: "L1 Approval", href: "/approvals/l1", requiredPermission: "approvals.l1" },
-        { icon: FileCheck, labelKey: "nav.l2Approval", label: "L2 Approval", href: "/approvals/l2", requiredPermission: "approvals.manual" },
+        { icon: FileCheck, labelKey: "nav.myApprovals", label: "My Approvals", href: "/approvals", requiredPermission: "approvals.l1" },
+        { icon: Clock, labelKey: "nav.approvalHistory", label: "Approval History", href: "/approvals/history", requiredPermission: "approvals.l1" },
       ]
     },
     {

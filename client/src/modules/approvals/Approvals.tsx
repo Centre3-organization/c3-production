@@ -21,7 +21,9 @@ import {
   GitBranch,
   History,
   ClipboardCheck,
-  Eye
+  Eye,
+  CheckCheck,
+  Send
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,20 +67,27 @@ const typeColors: Record<string, string> = {
   escort: "bg-green-100 text-green-800 border-green-200",
 };
 
-// Level badge colors
-const levelColors: Record<number, string> = {
-  1: "bg-amber-100 text-amber-800 border-amber-300",
-  2: "bg-blue-100 text-blue-800 border-blue-300",
-  3: "bg-purple-100 text-purple-800 border-purple-300",
-  4: "bg-rose-100 text-rose-800 border-rose-300",
-  5: "bg-emerald-100 text-emerald-800 border-emerald-300",
-};
+// Dynamic stage badge colors - cycles through for any number of stages
+const stageColors = [
+  "bg-amber-100 text-amber-800 border-amber-300",
+  "bg-blue-100 text-blue-800 border-blue-300",
+  "bg-purple-100 text-purple-800 border-purple-300",
+  "bg-rose-100 text-rose-800 border-rose-300",
+  "bg-emerald-100 text-emerald-800 border-emerald-300",
+  "bg-cyan-100 text-cyan-800 border-cyan-300",
+  "bg-orange-100 text-orange-800 border-orange-300",
+  "bg-indigo-100 text-indigo-800 border-indigo-300",
+];
+
+function getStageColor(stageOrder: number): string {
+  return stageColors[(stageOrder - 1) % stageColors.length];
+}
 
 export default function Approvals() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
   const [searchQuery, setSearchQuery] = useState("");
-  const [levelFilter, setLevelFilter] = useState<string>("all");
+  const [stageFilter, setStageFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
@@ -87,7 +96,7 @@ export default function Approvals() {
   
   // Use the workflow-based pending tasks query
   const { data: pendingTasks, isLoading, refetch } = trpc.requests.getMyPendingApprovals.useQuery();
-  const { data: stats } = trpc.requests.getStats.useQuery();
+  const { data: approvalStats } = trpc.requests.getApprovalStats.useQuery();
   
   // Use the workflow-based approval mutation
   const approveTask = trpc.requests.approveTask.useMutation({
@@ -121,19 +130,27 @@ export default function Approvals() {
     }
   });
   
-  // Group tasks by level for stats
-  const tasksByLevel = (pendingTasks || []).reduce((acc: Record<number, number>, task: any) => {
-    const level = task.stageOrder || 1;
-    acc[level] = (acc[level] || 0) + 1;
+  // Group tasks by stage name for dynamic stats
+  const tasksByStage = (pendingTasks || []).reduce((acc: Record<string, { count: number; order: number }>, task: any) => {
+    const stageName = task.stageName || `Stage ${task.stageOrder}`;
+    if (!acc[stageName]) {
+      acc[stageName] = { count: 0, order: task.stageOrder || 1 };
+    }
+    acc[stageName].count++;
     return acc;
   }, {});
   
-  // Filter by search and level
+  // Get unique stages sorted by order
+  const uniqueStages = Object.entries(tasksByStage)
+    .sort(([, a], [, b]) => a.order - b.order)
+    .map(([name, data]) => ({ name, ...data }));
+  
+  // Filter by search and stage
   const filteredTasks = (pendingTasks || []).filter((task: any) => {
-    // Level filter
-    if (levelFilter !== "all") {
-      const filterLevel = parseInt(levelFilter);
-      if (task.stageOrder !== filterLevel) return false;
+    // Stage filter
+    if (stageFilter !== "all") {
+      const taskStageName = task.stageName || `Stage ${task.stageOrder}`;
+      if (taskStageName !== stageFilter) return false;
     }
     
     // Search filter
@@ -142,7 +159,8 @@ export default function Approvals() {
     return (
       task.request?.requestNumber?.toLowerCase().includes(query) ||
       task.request?.visitorName?.toLowerCase().includes(query) ||
-      task.request?.visitorCompany?.toLowerCase().includes(query)
+      task.request?.visitorCompany?.toLowerCase().includes(query) ||
+      task.stageName?.toLowerCase().includes(query)
     );
   });
   
@@ -150,7 +168,7 @@ export default function Approvals() {
     setProcessingId(task.taskId);
     approveTask.mutate({ 
       taskId: task.taskId,
-      comments: `Approved at L${task.stageOrder} review`
+      comments: `Approved at ${task.stageName || 'Stage ' + task.stageOrder} review`
     });
   };
   
@@ -176,8 +194,28 @@ export default function Approvals() {
     setDetailsDialogOpen(true);
   };
 
-  // Get unique levels from tasks
-  const uniqueLevels = Array.from(new Set((pendingTasks || []).map((t: any) => t.stageOrder || 1))).sort();
+  // Stage progress component
+  const StageProgress = ({ currentStage, totalStages, stageName }: { currentStage: number; totalStages: number; stageName: string }) => (
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
+        {Array.from({ length: totalStages }, (_, i) => (
+          <div
+            key={i}
+            className={`h-2 w-6 rounded-full transition-colors ${
+              i < currentStage 
+                ? 'bg-green-500' 
+                : i === currentStage - 1 
+                  ? 'bg-[#0f62fe]' 
+                  : 'bg-gray-200'
+            }`}
+          />
+        ))}
+      </div>
+      <span className="text-xs text-muted-foreground">
+        {currentStage}/{totalStages}
+      </span>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -186,271 +224,275 @@ export default function Approvals() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <ClipboardCheck className="h-6 w-6 text-[#0f62fe]" />
-            Approvals
+            {t("approvals.myApprovals", "My Approvals")}
           </h1>
           <p className="text-muted-foreground mt-1">
-            All pending approval tasks assigned to you across all workflow stages
+            {t("approvals.description", "All pending approval tasks assigned to you across all workflow stages")}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
             <GitBranch className="h-3 w-3 mr-1" />
-            Workflow-Based
+            {t("approvals.workflowBased", "Workflow-Based")}
           </Badge>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
+            {t("common.refresh", "Refresh")}
           </Button>
         </div>
       </div>
 
-      {/* Stats Bar - Show counts by level */}
-      <div className="grid grid-cols-5 gap-4">
-        <Card className="bg-gradient-to-br from-gray-50 to-slate-50 border-gray-200">
-          <CardContent className="pt-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-700">Total Pending</p>
-                <p className="text-3xl font-bold text-gray-900">{(pendingTasks || []).length}</p>
-              </div>
-              <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center">
-                <Clock className="h-6 w-6 text-gray-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
+      {/* Dynamic Stats Cards */}
+      <div className="grid grid-cols-4 gap-4">
+        {/* My Pending */}
         <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-amber-700">L1 Queue</p>
-                <p className="text-3xl font-bold text-amber-900">{tasksByLevel[1] || 0}</p>
+                <p className="text-sm font-medium text-amber-700">{t("approvals.myPending", "My Pending")}</p>
+                <p className="text-3xl font-bold text-amber-900">{approvalStats?.pending || (pendingTasks || []).length}</p>
               </div>
               <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
-                <Badge className="bg-amber-500 text-white text-xs px-2">L1</Badge>
+                <Clock className="h-6 w-6 text-amber-600" />
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-          <CardContent className="pt-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-blue-700">L2 Queue</p>
-                <p className="text-3xl font-bold text-blue-900">{tasksByLevel[2] || 0}</p>
-              </div>
-              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-                <Badge className="bg-blue-500 text-white text-xs px-2">L2</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
-          <CardContent className="pt-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-purple-700">L3 Queue</p>
-                <p className="text-3xl font-bold text-purple-900">{tasksByLevel[3] || 0}</p>
-              </div>
-              <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
-                <Badge className="bg-purple-500 text-white text-xs px-2">L3</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
+        {/* Completed Today */}
         <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-700">Approved</p>
-                <p className="text-3xl font-bold text-green-900">{stats?.approved || 0}</p>
+                <p className="text-sm font-medium text-green-700">{t("approvals.completedToday", "Completed Today")}</p>
+                <p className="text-3xl font-bold text-green-900">{approvalStats?.completedToday || 0}</p>
               </div>
               <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-green-600" />
+                <CheckCheck className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Awaiting Others */}
+        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-blue-700">{t("approvals.awaitingOthers", "Awaiting Others")}</p>
+                <p className="text-3xl font-bold text-blue-900">{approvalStats?.awaitingOthers || 0}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                <Send className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Dynamic Stage Summary */}
+        <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-purple-700">{t("approvals.activeStages", "Active Stages")}</p>
+                <p className="text-3xl font-bold text-purple-900">{uniqueStages.length}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
+                <GitBranch className="h-6 w-6 text-purple-600" />
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Stage Breakdown - Dynamic chips */}
+      {uniqueStages.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 p-4 bg-gray-50 rounded-lg border">
+          <span className="text-sm font-medium text-gray-600 mr-2">{t("approvals.byStage", "By Stage")}:</span>
+          {uniqueStages.map((stage) => (
+            <Badge 
+              key={stage.name}
+              variant="outline" 
+              className={`${getStageColor(stage.order)} cursor-pointer hover:opacity-80 transition-opacity`}
+              onClick={() => setStageFilter(stageFilter === stage.name ? "all" : stage.name)}
+            >
+              {stage.name}: {stage.count}
+            </Badge>
+          ))}
+          {stageFilter !== "all" && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-6 px-2 text-xs"
+              onClick={() => setStageFilter("all")}
+            >
+              {t("common.clearFilter", "Clear filter")}
+            </Button>
+          )}
+        </div>
+      )}
 
       {/* Search and Filters */}
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input 
-            placeholder="Search by ID, visitor name, company..." 
+            placeholder={t("approvals.searchPlaceholder", "Search by ID, visitor name, company, stage...")}
             className="pl-10 bg-white"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Select value={levelFilter} onValueChange={setLevelFilter}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Filter by Level" />
+        
+        <Select value={stageFilter} onValueChange={setStageFilter}>
+          <SelectTrigger className="w-[200px] bg-white">
+            <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
+            <SelectValue placeholder={t("approvals.filterByStage", "Filter by Stage")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Levels</SelectItem>
-            <SelectItem value="1">L1 - Initial Review</SelectItem>
-            <SelectItem value="2">L2 - Security Review</SelectItem>
-            <SelectItem value="3">L3 - Final Approval</SelectItem>
-            <SelectItem value="4">L4</SelectItem>
-            <SelectItem value="5">L5</SelectItem>
+            <SelectItem value="all">{t("approvals.allStages", "All Stages")}</SelectItem>
+            {uniqueStages.map((stage) => (
+              <SelectItem key={stage.name} value={stage.name}>
+                {stage.name} ({stage.count})
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        <Button variant="outline" size="icon">
-          <Filter className="h-4 w-4" />
-        </Button>
       </div>
 
-      {/* Request Table */}
+      {/* Tasks List */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-[#0f62fe]" />
         </div>
       ) : filteredTasks.length === 0 ? (
         <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
-              <CheckCircle2 className="h-8 w-8 text-green-600" />
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <div className="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+              <CheckCircle2 className="h-8 w-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground">All caught up!</h3>
-            <p className="text-muted-foreground mt-1">No pending approvals at the moment</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-1">
+              {t("approvals.noTasks", "No pending approvals")}
+            </h3>
+            <p className="text-sm text-muted-foreground text-center max-w-sm">
+              {stageFilter !== "all" 
+                ? t("approvals.noTasksFiltered", "No tasks found for the selected stage filter")
+                : t("approvals.noTasksDescription", "You're all caught up! There are no approval tasks waiting for your review.")}
+            </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="bg-white border rounded-lg overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                  Level
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                  Request #
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                  Type
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                  Visitor
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                  Site
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                  Schedule
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                  Stage
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {filteredTasks.map((task: any) => (
-                <tr key={task.taskId} className="hover:bg-gray-50 transition-colors">
-                  {/* Level Badge */}
-                  <td className="px-4 py-4">
-                    <Badge 
-                      variant="outline" 
-                      className={`font-bold ${levelColors[task.stageOrder] || levelColors[1]}`}
-                    >
-                      L{task.stageOrder || 1}
-                    </Badge>
-                  </td>
-                  
-                  {/* Request Number */}
-                  <td className="px-4 py-4">
-                    <span className="font-mono text-sm text-gray-900">
-                      {task.request?.requestNumber || '-'}
-                    </span>
-                  </td>
-                  
-                  {/* Type */}
-                  <td className="px-4 py-4">
-                    <Badge variant="outline" className={typeColors[task.request?.type] || "bg-gray-100"}>
-                      {typeLabels[task.request?.type] || task.request?.type}
-                    </Badge>
-                  </td>
-                  
-                  {/* Visitor */}
-                  <td className="px-4 py-4">
-                    <div>
-                      <p className="font-medium text-gray-900">{task.request?.visitorName || '-'}</p>
-                      <p className="text-xs text-gray-500">{task.request?.visitorCompany || '-'}</p>
+        <div className="space-y-3">
+          {filteredTasks.map((task: any) => (
+            <Card 
+              key={task.taskId} 
+              className="hover:shadow-md transition-shadow cursor-pointer border-l-4"
+              style={{ borderLeftColor: task.stageOrder === 1 ? '#f59e0b' : task.stageOrder === 2 ? '#3b82f6' : '#8b5cf6' }}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 min-w-0">
+                    {/* Top row: Request number, type, stage */}
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="font-mono text-sm font-medium text-[#0f62fe]">
+                        {task.request?.requestNumber}
+                      </span>
+                      <Badge variant="outline" className={typeColors[task.request?.type] || "bg-gray-100"}>
+                        {typeLabels[task.request?.type] || task.request?.type}
+                      </Badge>
+                      <Badge variant="outline" className={getStageColor(task.stageOrder || 1)}>
+                        {task.stageName || `Stage ${task.stageOrder}`}
+                      </Badge>
+                      {/* Stage progress */}
+                      <StageProgress 
+                        currentStage={task.stageOrder || 1} 
+                        totalStages={task.totalStages || 1}
+                        stageName={task.stageName}
+                      />
                     </div>
-                  </td>
-                  
-                  {/* Site */}
-                  <td className="px-4 py-4">
-                    <div className="flex items-center gap-1.5">
-                      <Building2 className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-700">{task.request?.siteName || '-'}</span>
-                    </div>
-                  </td>
-                  
-                  {/* Schedule */}
-                  <td className="px-4 py-4">
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-700">
-                        {task.request?.startDate || '-'}
+                    
+                    {/* Visitor info */}
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+                      <span className="flex items-center gap-1">
+                        <User className="h-4 w-4" />
+                        {task.request?.visitorName || "N/A"}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Building2 className="h-4 w-4" />
+                        {task.request?.visitorCompany || "N/A"}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4" />
+                        {task.request?.siteName || "N/A"}
                       </span>
                     </div>
-                  </td>
-                  
-                  {/* Stage Name */}
-                  <td className="px-4 py-4">
-                    <span className="text-sm text-gray-600">
-                      {task.stageName || `Stage ${task.stageOrder}`}
-                    </span>
-                  </td>
+                    
+                    {/* Date info */}
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {task.request?.startDate ? format(new Date(task.request.startDate), "MMM d, yyyy") : "N/A"}
+                        {task.request?.endDate && task.request.endDate !== task.request.startDate && (
+                          <> - {format(new Date(task.request.endDate), "MMM d, yyyy")}</>
+                        )}
+                      </span>
+                      <span className="text-gray-400">|</span>
+                      <span>
+                        {t("approvals.workflow", "Workflow")}: {task.workflowName || "Default"}
+                      </span>
+                      <span className="text-gray-400">|</span>
+                      <span>
+                        {t("approvals.assigned", "Assigned")}: {task.taskCreatedAt ? format(new Date(task.taskCreatedAt), "MMM d, HH:mm") : "N/A"}
+                      </span>
+                    </div>
+                  </div>
                   
                   {/* Actions */}
-                  <td className="px-4 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleViewDetails(task)}
-                        className="text-gray-600 hover:text-gray-900"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleApprove(task)}
-                        disabled={processingId === task.taskId}
-                        className="text-green-600 border-green-200 hover:bg-green-50"
-                      >
-                        {processingId === task.taskId ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <CheckCircle2 className="h-4 w-4" />
-                        )}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleRejectClick(task)}
-                        disabled={processingId === task.taskId}
-                        className="text-red-600 border-red-200 hover:bg-red-50"
-                      >
-                        <XCircle className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  <div className="flex items-center gap-2 ml-4">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewDetails(task);
+                      }}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRejectClick(task);
+                      }}
+                      disabled={processingId === task.taskId}
+                    >
+                      <XCircle className="h-4 w-4 mr-1" />
+                      {t("common.reject", "Reject")}
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleApprove(task);
+                      }}
+                      disabled={processingId === task.taskId}
+                    >
+                      {processingId === task.taskId ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                      ) : (
+                        <CheckCircle2 className="h-4 w-4 mr-1" />
+                      )}
+                      {t("common.approve", "Approve")}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       )}
 
@@ -460,42 +502,51 @@ export default function Approvals() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-600">
               <XCircle className="h-5 w-5" />
-              Reject Request
+              {t("approvals.rejectRequest", "Reject Request")}
             </DialogTitle>
             <DialogDescription>
-              Please provide a reason for rejecting this request. This will be visible to the requestor.
+              {t("approvals.rejectDescription", "Please provide a reason for rejecting this request. This will be visible to the requestor.")}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="bg-gray-50 p-3 rounded-md">
-              <p className="text-sm">
-                <span className="font-medium">Request:</span> {selectedRequest?.request?.requestNumber}
-              </p>
-              <p className="text-sm">
-                <span className="font-medium">Visitor:</span> {selectedRequest?.request?.visitorName}
-              </p>
-              <p className="text-sm">
-                <span className="font-medium">Level:</span> L{selectedRequest?.stageOrder || 1}
-              </p>
+          
+          {selectedRequest && (
+            <div className="space-y-4">
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-mono text-sm font-medium">{selectedRequest.request?.requestNumber}</span>
+                  <Badge variant="outline" className={getStageColor(selectedRequest.stageOrder || 1)}>
+                    {selectedRequest.stageName || `Stage ${selectedRequest.stageOrder}`}
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {selectedRequest.request?.visitorName} • {selectedRequest.request?.visitorCompany}
+                </p>
+              </div>
+              
+              <Textarea
+                placeholder={t("approvals.rejectReasonPlaceholder", "Enter rejection reason...")}
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+                rows={4}
+              />
             </div>
-            <Textarea
-              placeholder="Enter rejection reason..."
-              value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
-              className="min-h-[100px]"
-            />
-          </div>
+          )}
+          
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>
-              Cancel
+              {t("common.cancel", "Cancel")}
             </Button>
             <Button 
               variant="destructive" 
               onClick={handleRejectConfirm}
               disabled={!rejectReason.trim() || processingId !== null}
             >
-              {processingId ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Confirm Rejection
+              {processingId !== null ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <XCircle className="h-4 w-4 mr-2" />
+              )}
+              {t("approvals.confirmReject", "Confirm Rejection")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -507,118 +558,95 @@ export default function Approvals() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5 text-[#0f62fe]" />
-              Request Details
+              {t("approvals.requestDetails", "Request Details")}
             </DialogTitle>
           </DialogHeader>
+          
           {selectedRequest && (
-            <div className="space-y-6 py-4">
-              {/* Level & Status */}
-              <div className="flex items-center gap-3">
-                <Badge 
-                  variant="outline" 
-                  className={`font-bold text-lg px-3 py-1 ${levelColors[selectedRequest.stageOrder] || levelColors[1]}`}
-                >
-                  L{selectedRequest.stageOrder || 1}
-                </Badge>
-                <span className="text-gray-600">{selectedRequest.stageName}</span>
-                <Badge variant="outline" className={typeColors[selectedRequest.request?.type] || "bg-gray-100"}>
-                  {typeLabels[selectedRequest.request?.type] || selectedRequest.request?.type}
-                </Badge>
-              </div>
-
-              {/* Request Info */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <p className="text-xs font-medium text-gray-500 uppercase">Request Number</p>
-                  <p className="font-mono">{selectedRequest.request?.requestNumber}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-xs font-medium text-gray-500 uppercase">Workflow</p>
-                  <p>{selectedRequest.workflowName}</p>
-                </div>
-              </div>
-
-              {/* Visitor Info */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  Visitor Information
-                </h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-gray-500">Name:</span>
-                    <p className="font-medium">{selectedRequest.request?.visitorName}</p>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">Company:</span>
-                    <p className="font-medium">{selectedRequest.request?.visitorCompany || '-'}</p>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">ID Type:</span>
-                    <p className="font-medium capitalize">{selectedRequest.request?.visitorIdType?.replace('_', ' ')}</p>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">ID Number:</span>
-                    <p className="font-mono">{selectedRequest.request?.visitorIdNumber}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Location & Schedule */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
-                    <Building2 className="h-4 w-4" />
-                    Location
-                  </h4>
-                  <p className="text-blue-900">{selectedRequest.request?.siteName}</p>
-                </div>
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <h4 className="font-bold text-green-800 mb-2 flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    Schedule
-                  </h4>
-                  <p className="text-green-900">
-                    {selectedRequest.request?.startDate} - {selectedRequest.request?.endDate}
-                  </p>
-                </div>
-              </div>
-
-              {/* Purpose */}
-              {selectedRequest.request?.purpose && (
+            <div className="space-y-4">
+              {/* Header info */}
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
-                  <h4 className="font-bold text-gray-800 mb-2">Purpose of Visit</h4>
-                  <p className="text-gray-600 bg-gray-50 p-3 rounded-md">
-                    {selectedRequest.request?.purpose}
-                  </p>
+                  <span className="font-mono text-lg font-medium">{selectedRequest.request?.requestNumber}</span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="outline" className={typeColors[selectedRequest.request?.type] || "bg-gray-100"}>
+                      {typeLabels[selectedRequest.request?.type] || selectedRequest.request?.type}
+                    </Badge>
+                    <Badge variant="outline" className={getStageColor(selectedRequest.stageOrder || 1)}>
+                      {selectedRequest.stageName || `Stage ${selectedRequest.stageOrder}`}
+                    </Badge>
+                  </div>
                 </div>
-              )}
+                <StageProgress 
+                  currentStage={selectedRequest.stageOrder || 1} 
+                  totalStages={selectedRequest.totalStages || 1}
+                  stageName={selectedRequest.stageName}
+                />
+              </div>
+              
+              {/* Details grid */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.visitor", "Visitor")}</label>
+                    <p className="text-sm font-medium">{selectedRequest.request?.visitorName || "N/A"}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.company", "Company")}</label>
+                    <p className="text-sm font-medium">{selectedRequest.request?.visitorCompany || "N/A"}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.site", "Site")}</label>
+                    <p className="text-sm font-medium">{selectedRequest.request?.siteName || "N/A"}</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.purpose", "Purpose")}</label>
+                    <p className="text-sm font-medium">{selectedRequest.request?.purpose || "N/A"}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.dates", "Dates")}</label>
+                    <p className="text-sm font-medium">
+                      {selectedRequest.request?.startDate ? format(new Date(selectedRequest.request.startDate), "MMM d, yyyy") : "N/A"}
+                      {selectedRequest.request?.endDate && selectedRequest.request.endDate !== selectedRequest.request.startDate && (
+                        <> - {format(new Date(selectedRequest.request.endDate), "MMM d, yyyy")}</>
+                      )}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.workflow", "Workflow")}</label>
+                    <p className="text-sm font-medium">{selectedRequest.workflowName || "Default"}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
+          
           <DialogFooter>
             <Button variant="outline" onClick={() => setDetailsDialogOpen(false)}>
-              Close
+              {t("common.close", "Close")}
             </Button>
             <Button
               variant="outline"
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
               onClick={() => {
                 setDetailsDialogOpen(false);
                 handleRejectClick(selectedRequest);
               }}
-              className="text-red-600 border-red-200 hover:bg-red-50"
             >
               <XCircle className="h-4 w-4 mr-2" />
-              Reject
+              {t("common.reject", "Reject")}
             </Button>
             <Button
+              className="bg-green-600 hover:bg-green-700 text-white"
               onClick={() => {
                 setDetailsDialogOpen(false);
                 handleApprove(selectedRequest);
               }}
-              className="bg-green-600 hover:bg-green-700"
             >
               <CheckCircle2 className="h-4 w-4 mr-2" />
-              Approve
+              {t("common.approve", "Approve")}
             </Button>
           </DialogFooter>
         </DialogContent>

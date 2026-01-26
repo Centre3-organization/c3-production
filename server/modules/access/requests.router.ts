@@ -130,6 +130,19 @@ export const requestsRouter = router({
     
     if (tasks.length === 0) return [];
     
+    // Get total stages count for each workflow
+    const workflowIds = Array.from(new Set(tasks.map(t => t.workflowId)));
+    const stageCounts = await db
+      .select({
+        workflowId: approvalStages.workflowId,
+        totalStages: sql<number>`count(*)`.as('totalStages'),
+      })
+      .from(approvalStages)
+      .where(inArray(approvalStages.workflowId, workflowIds))
+      .groupBy(approvalStages.workflowId);
+    
+    const stageCountMap = new Map(stageCounts.map(s => [s.workflowId, Number(s.totalStages)]));
+    
     // Get the request details for each task
     const requestIds = Array.from(new Set(tasks.map(t => t.requestId)));
     const requestsData = await db
@@ -162,8 +175,145 @@ export const requestsRouter = router({
     
     return tasks.map(task => ({
       ...task,
+      totalStages: stageCountMap.get(task.workflowId) || 1,
       request: requestsMap.get(task.requestId),
     }));
+  }),
+  
+  // Get approval history for current user
+  getMyApprovalHistory: protectedProcedure
+    .input(z.object({
+      limit: z.number().min(1).max(100).default(50),
+      offset: z.number().min(0).default(0),
+    }).optional())
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      const limit = input?.limit || 50;
+      const offset = input?.offset || 0;
+      
+      // Get completed tasks (approved or rejected) by current user
+      const tasks = await db
+        .select({
+          taskId: approvalTasks.id,
+          instanceId: approvalTasks.instanceId,
+          stageId: approvalTasks.stageId,
+          stageName: approvalStages.stageName,
+          stageOrder: approvalStages.stageOrder,
+          requestId: approvalInstances.requestId,
+          workflowId: approvalInstances.workflowId,
+          workflowName: approvalWorkflows.name,
+          taskStatus: approvalTasks.status,
+          taskCompletedAt: approvalTasks.decidedAt,
+          taskCreatedAt: approvalTasks.createdAt,
+        })
+        .from(approvalTasks)
+        .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
+        .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
+        .innerJoin(approvalWorkflows, eq(approvalInstances.workflowId, approvalWorkflows.id))
+        .where(and(
+          eq(approvalTasks.assignedTo, ctx.user.id),
+          or(
+            eq(approvalTasks.status, "approved"),
+            eq(approvalTasks.status, "rejected")
+          )
+        ))
+        .orderBy(desc(approvalTasks.decidedAt))
+        .limit(limit)
+        .offset(offset);
+      
+      if (tasks.length === 0) return [];
+      
+      // Get total stages count for each workflow
+      const workflowIds = Array.from(new Set(tasks.map(t => t.workflowId)));
+      const stageCounts = await db
+        .select({
+          workflowId: approvalStages.workflowId,
+          totalStages: sql<number>`count(*)`.as('totalStages'),
+        })
+        .from(approvalStages)
+        .where(inArray(approvalStages.workflowId, workflowIds))
+        .groupBy(approvalStages.workflowId);
+      
+      const stageCountMap = new Map(stageCounts.map(s => [s.workflowId, Number(s.totalStages)]));
+      
+      // Get the request details for each task
+      const requestIds = Array.from(new Set(tasks.map(t => t.requestId)));
+      const requestsData = await db
+        .select({
+          id: requests.id,
+          requestNumber: requests.requestNumber,
+          type: requests.type,
+          status: requests.status,
+          visitorName: requests.visitorName,
+          visitorCompany: requests.visitorCompany,
+          purpose: requests.purpose,
+          siteId: requests.siteId,
+          siteName: sites.name,
+          createdAt: requests.createdAt,
+        })
+        .from(requests)
+        .leftJoin(sites, eq(requests.siteId, sites.id))
+        .where(inArray(requests.id, requestIds));
+      
+      const requestsMap = new Map(requestsData.map(r => [r.id, r]));
+      
+      return tasks.map(task => ({
+        ...task,
+        totalStages: stageCountMap.get(task.workflowId) || 1,
+        request: requestsMap.get(task.requestId),
+      }));
+    }),
+  
+  // Get approval statistics for dashboard
+  getApprovalStats: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return { pending: 0, completedToday: 0, awaitingOthers: 0 };
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Count pending tasks assigned to current user
+    const pendingResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(approvalTasks)
+      .where(and(
+        eq(approvalTasks.assignedTo, ctx.user.id),
+        eq(approvalTasks.status, "pending")
+      ));
+    
+    // Count tasks completed today by current user
+    const completedTodayResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(approvalTasks)
+      .where(and(
+        eq(approvalTasks.assignedTo, ctx.user.id),
+        or(
+          eq(approvalTasks.status, "approved"),
+          eq(approvalTasks.status, "rejected")
+        ),
+        sql`DATE(${approvalTasks.decidedAt}) = CURDATE()`
+      ));
+    
+    // Count requests submitted by current user that are awaiting approval
+    const awaitingOthersResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(requests)
+      .where(and(
+        eq(requests.requestorId, ctx.user.id),
+        or(
+          eq(requests.status, "pending_l1"),
+          eq(requests.status, "pending_manual"),
+          eq(requests.status, "pending_approval")
+        )
+      ));
+    
+    return {
+      pending: Number(pendingResult[0]?.count || 0),
+      completedToday: Number(completedTodayResult[0]?.count || 0),
+      awaitingOthers: Number(awaitingOthersResult[0]?.count || 0),
+    };
   }),
   
   // Get requests pending L1 approval (legacy support + new workflow)
