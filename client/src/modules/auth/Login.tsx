@@ -193,11 +193,11 @@ export default function Login() {
                   onCheckedChange={(checked) => setRememberMe(checked === true)}
                   className="border-gray-500 data-[state=checked]:bg-[#4f008c] data-[state=checked]:border-[#4f008c]"
                 />
-                <Label htmlFor="remember" className="text-sm font-normal text-gray-400">
+                <Label htmlFor="remember" className="text-sm font-normal text-white">
                   Remember me
                 </Label>
               </div>
-              <a href="#" className="text-sm font-medium text-[#4f008c] hover:text-[#7333a3] transition-colors">
+              <a href="#" className="text-sm font-medium text-white hover:text-gray-300 transition-colors">
                 Forgot your credentials?
               </a>
             </div>
@@ -219,21 +219,7 @@ export default function Login() {
             </Button>
           </form>
 
-          {/* Footer Links */}
-          <div className="mt-8 text-center space-y-4">
-            <p className="text-gray-400 text-sm">
-              Haven't joined yet?{" "}
-              <a href="#" className="text-[#4f008c] hover:text-[#7333a3] font-medium transition-colors">
-                Register now
-              </a>
-            </p>
-            <p className="text-gray-500 text-xs">
-              To manage your own personal and business access, go to{" "}
-              <a href="#" className="text-[#4f008c] hover:text-[#7333a3] transition-colors">
-                myaccess
-              </a>
-            </p>
-          </div>
+
         </div>
       </div>
     </div>

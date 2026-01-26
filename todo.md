@@ -249,3 +249,11 @@
 - [x] Apply center3 brand colors (purple gradient)
 - [x] Add center3 logo and tagline on left side
 - [x] Style form panel with dark theme
+
+## Login Page Fixes (Jan 26, 2026)
+- [x] Remove "Haven't joined yet? Register now" footer text
+- [x] Remove "To manage your own personal and business access, go to myaccess" text
+- [x] Update logo with new high-def version
+- [x] Create white version of logo for dark backgrounds
+- [x] Fix auto-login after logout issue (added /api/auth/logout route)
+- [x] Make text color white for better visibility
