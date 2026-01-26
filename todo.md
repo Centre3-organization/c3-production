@@ -129,3 +129,6 @@
 
 ## UI Fixes (Jan 26, 2026)
 - [x] Fix Access Policies dialog - make it wider for better visibility
+
+## Bug Fixes (Jan 26, 2026)
+- [x] Fix Parent Group dropdown showing deleted groups - filter to only show active groups

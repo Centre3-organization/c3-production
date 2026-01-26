@@ -25,6 +25,7 @@ export const groupsRouter = router({
       groupType: z.enum(["internal", "external"]).optional(),
       status: z.enum(["active", "inactive"]).optional(),
       includeChildren: z.boolean().optional().default(false),
+      includeInactive: z.boolean().optional().default(false),
     }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
@@ -48,6 +49,9 @@ export const groupsRouter = router({
       
       if (input?.status) {
         conditions.push(eq(groups.status, input.status));
+      } else if (!input?.includeInactive) {
+        // By default, only show active groups unless includeInactive is true
+        conditions.push(eq(groups.status, "active"));
       }
 
       if (conditions.length > 0) {
