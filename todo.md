@@ -257,3 +257,8 @@
 - [x] Create white version of logo for dark backgrounds
 - [x] Fix auto-login after logout issue (added /api/auth/logout route)
 - [x] Make text color white for better visibility
+
+## STC Forward Font for Arabic (Jan 26, 2026)
+- [x] Add STC Forward font for Arabic text support
+- [x] Configure font-family to use STC Forward for Arabic content
+- [x] Test Arabic text rendering with the new font
