@@ -1046,7 +1046,7 @@ function GroupAccessPolicyDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl w-[90vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Access Policies - {group?.name}</DialogTitle>
           <DialogDescription>
@@ -1058,7 +1058,7 @@ function GroupAccessPolicyDialog({
           {isAddingPolicy ? (
             <Card>
               <CardContent className="pt-4 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label>Resource Type</Label>
                     <Select
@@ -1124,27 +1124,27 @@ function GroupAccessPolicyDialog({
                     </Select>
                   </div>
                 </div>
-                <div className="flex gap-6">
+                <div className="flex flex-wrap gap-x-8 gap-y-3">
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={policyForm.requiresMfa}
                       onCheckedChange={(v) => setPolicyForm({ ...policyForm, requiresMfa: v })}
                     />
-                    <Label>Requires MFA</Label>
+                    <Label className="whitespace-nowrap">Requires MFA</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={policyForm.requiresApproval}
                       onCheckedChange={(v) => setPolicyForm({ ...policyForm, requiresApproval: v })}
                     />
-                    <Label>Requires Approval</Label>
+                    <Label className="whitespace-nowrap">Requires Approval</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={policyForm.requiresEscort}
                       onCheckedChange={(v) => setPolicyForm({ ...policyForm, requiresEscort: v })}
                     />
-                    <Label>Requires Escort</Label>
+                    <Label className="whitespace-nowrap">Requires Escort</Label>
                   </div>
                 </div>
                 <div className="flex justify-end gap-2">
@@ -1169,11 +1169,11 @@ function GroupAccessPolicyDialog({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Resource Type</TableHead>
-                  <TableHead>Resource</TableHead>
-                  <TableHead>Access Level</TableHead>
-                  <TableHead>Requirements</TableHead>
-                  <TableHead className="w-20">Actions</TableHead>
+                  <TableHead className="min-w-[140px]">Resource Type</TableHead>
+                  <TableHead className="min-w-[180px]">Resource</TableHead>
+                  <TableHead className="min-w-[120px]">Access Level</TableHead>
+                  <TableHead className="min-w-[200px]">Requirements</TableHead>
+                  <TableHead className="w-24">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

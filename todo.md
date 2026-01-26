@@ -126,3 +126,6 @@
 - [x] Fix automatic user creation in SDK authenticateRequest - only update existing users  
 - [x] Clean database to keep only admin account (mohsiin@gmail.com)
 - [x] Verify no new users are created automatically on page visits
+
+## UI Fixes (Jan 26, 2026)
+- [x] Fix Access Policies dialog - make it wider for better visibility
