@@ -510,8 +510,8 @@ export const requestsRouter = router({
         siteId: input.siteId,
         requestorId: ctx.user.id,
         purpose: input.purpose,
-        startDate: new Date(input.startDate),
-        endDate: new Date(input.endDate),
+        startDate: new Date(input.startDate).toISOString().split('T')[0],
+        endDate: new Date(input.endDate).toISOString().split('T')[0],
         startTime: input.startTime,
         endTime: input.endTime,
       } as any);

@@ -57,6 +57,7 @@ import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useErrorDialog } from "@/components/ui/error-dialog";
 
 // Request type mapping
 const REQUEST_TYPE_MAP: Record<string, string> = {
@@ -175,6 +176,9 @@ export default function NewRequest() {
     return areasData && areasData.length > 0;
   }, [areasData]);
   
+  // Error dialog hook
+  const { showError, ErrorDialogComponent } = useErrorDialog();
+  
   // Create mutation
   const createRequest = trpc.requests.create.useMutation({
     onSuccess: (data) => {
@@ -182,7 +186,11 @@ export default function NewRequest() {
       navigate("/requests");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create request");
+      showError(
+        "There was an error processing your request. Please try again or contact support if the problem persists.",
+        "Request Submission Failed"
+      );
+      console.error("Request creation error:", error);
     },
   });
   
@@ -383,6 +391,8 @@ export default function NewRequest() {
   };
 
   return (
+    <>
+    <ErrorDialogComponent />
     <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#f4f4f4] font-poppins">
       {/* Top Toolbar - IBM Maximo Style */}
       <div className="bg-[#161616] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
@@ -1699,5 +1709,6 @@ export default function NewRequest() {
         </div>
       </div>
     </div>
+    </>
   );
 }

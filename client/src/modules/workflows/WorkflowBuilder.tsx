@@ -45,6 +45,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useConfirmDialog } from "@/components/ui/confirm-dialog";
+import { useErrorDialog } from "@/components/ui/error-dialog";
 
 // Process type options
 const PROCESS_TYPES = [
@@ -121,13 +123,17 @@ export function WorkflowBuilder() {
     onError: (error) => toast.error(error.message),
   });
 
+  // Confirmation and error dialogs
+  const { confirm, ConfirmDialogComponent } = useConfirmDialog();
+  const { showError, ErrorDialogComponent } = useErrorDialog();
+
   const deleteWorkflow = trpc.workflows.delete.useMutation({
     onSuccess: () => {
-      toast.success("Workflow deactivated successfully");
+      toast.success("Workflow deleted successfully");
       setSelectedWorkflow(null);
       refetch();
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => showError(error.message || "Failed to delete workflow", "Delete Failed"),
   });
 
   const addStage = trpc.workflows.addStage.useMutation({
@@ -144,8 +150,36 @@ export function WorkflowBuilder() {
       toast.success("Stage deleted successfully");
       refetchDetails();
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => showError(error.message || "Failed to delete stage", "Delete Failed"),
   });
+
+  // Handle delete workflow with confirmation
+  const handleDeleteWorkflow = async (workflowId: number, workflowName: string) => {
+    const confirmed = await confirm({
+      title: `Delete ${workflowName}`,
+      message: "Are you sure you want to delete this workflow? This action cannot be undone.",
+      variant: "danger",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+    });
+    if (confirmed) {
+      deleteWorkflow.mutate({ id: workflowId });
+    }
+  };
+
+  // Handle delete stage with confirmation
+  const handleDeleteStage = async (stageId: number, stageName: string) => {
+    const confirmed = await confirm({
+      title: `Delete ${stageName}`,
+      message: "Are you sure you want to delete this approval stage? This action cannot be undone.",
+      variant: "danger",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+    });
+    if (confirmed) {
+      deleteStage.mutate({ id: stageId });
+    }
+  };
 
   // Form state for creating workflow
   const [newWorkflow, setNewWorkflow] = useState({
@@ -216,7 +250,10 @@ export function WorkflowBuilder() {
   };
 
   return (
-    <div className="flex h-full">
+    <>
+      <ConfirmDialogComponent />
+      <ErrorDialogComponent />
+      <div className="flex h-full">
       {/* Workflow List Panel */}
       <div className="w-80 border-r bg-muted/30 flex flex-col">
         <div className="p-4 border-b">
@@ -349,7 +386,7 @@ export function WorkflowBuilder() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="text-destructive"
-                      onClick={() => deleteWorkflow.mutate({ id: selectedWorkflow })}
+                      onClick={() => handleDeleteWorkflow(selectedWorkflow!, workflowDetails?.workflow?.name || 'Workflow')}
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
                       Delete
@@ -429,7 +466,7 @@ export function WorkflowBuilder() {
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    onClick={() => deleteStage.mutate({ id: stage.id })}
+                                    onClick={() => handleDeleteStage(stage.id, stage.stageName)}
                                   >
                                     <Trash2 className="h-4 w-4" />
                                   </Button>
@@ -764,5 +801,6 @@ export function WorkflowBuilder() {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 }

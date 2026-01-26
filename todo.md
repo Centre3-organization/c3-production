@@ -221,3 +221,13 @@
 - [x] Add duplicate name validation to workflow creation
 - [x] Delete duplicate "Standard Access Request" workflows from database
 - [x] Create 5 test cases for L3 approval workflow testing
+
+## Error Handling & Dialogs (Jan 26, 2026)
+- [x] Fix date formatting issue in request submission (passing Date objects instead of strings)
+- [x] Create reusable ErrorDialog component with proper branding
+- [x] Create reusable ConfirmDialog component with proper branding
+- [x] Update request submission to use proper error dialogs
+- [x] Update user deletion to use confirmation dialogs
+- [x] Update workflow deletion to use confirmation dialogs
+- [x] Update group deletion to use confirmation dialogs
+- [x] Replace all toast.error calls with proper error dialogs for critical errors
