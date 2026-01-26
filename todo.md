@@ -86,6 +86,3 @@
 ## Font Update - STC Forward
 - [x] Add STC Forward font file to project
 - [x] Update CSS to use STC Forward as primary font with Montserrat fallback
-
-## Remove Users Module
-- [x] Remove Users module imports and navigation items from the application

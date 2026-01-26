@@ -35,6 +35,9 @@ import ViewSite from "./modules/facilities/ViewSite";
 import GlobalOverwatch from "./modules/security/GlobalOverwatch";
 import SecurityAlerts from "./modules/security/SecurityAlerts";
 
+// Users Module
+import Users from "./modules/users/Users";
+
 // Settings Module
 import Settings from "./modules/settings/Settings";
 
@@ -117,6 +120,11 @@ function Router() {
       </Route>
       
       {/* Protected Routes - Administration */}
+      <Route path="/users">
+        <Layout>
+          <Users />
+        </Layout>
+      </Route>
       <Route path="/settings">
         <Layout>
           <Settings />
