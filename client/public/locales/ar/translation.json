@@ -97,7 +97,8 @@
     "deleteConfirm": "هل أنت متأكد من حذف هذا العنصر؟",
     "unsavedChanges": "لديك تغييرات غير محفوظة. هل أنت متأكد من المغادرة؟",
     "comingSoon": "قريباً",
-    "featureNotAvailable": "هذه الميزة غير متوفرة بعد"
+    "featureNotAvailable": "هذه الميزة غير متوفرة بعد",
+    "updated": "تم التحديث"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -626,7 +627,7 @@
     "backupSettings": "إعدادات النسخ الاحتياطي",
     "integrations": "التكاملات",
     "apiSettings": "إعدادات API",
-    "webhooks": "Webhooks",
+    "webhooks": "خطافات الويب",
     "ssoSettings": "إعدادات SSO",
     "ldapSettings": "إعدادات LDAP",
     "emailSettings": "إعدادات البريد الإلكتروني",
@@ -790,7 +791,7 @@
     "systemMaintenance": "صيانة النظام مجدولة"
   },
   "language": {
-    "english": "English",
+    "english": "الإنجليزية",
     "arabic": "العربية",
     "selectLanguage": "اختر اللغة"
   },
@@ -842,5 +843,26 @@
     "termsOfUse": "شروط الاستخدام",
     "faq": "الأسئلة الشائعة",
     "copyright": "© 2026 سنتر3. جميع الحقوق محفوظة."
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "pendingL1": "بانتظار المستوى الأول",
+    "pendingL2": "بانتظار المستوى الثاني",
+    "pending_l1": "بانتظار المستوى الأول",
+    "pending_l2": "بانتظار المستوى الثاني",
+    "pending_manual": "بانتظار المستوى الثاني",
+    "pending_approval": "بانتظار الموافقة",
+    "approved": "تمت الموافقة",
+    "rejected": "مرفوض",
+    "cancelled": "ملغي",
+    "expired": "منتهي الصلاحية",
+    "completed": "مكتمل",
+    "inProgress": "قيد التنفيذ",
+    "draft": "مسودة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "scheduled": "مجدول",
+    "checkedIn": "تم تسجيل الدخول",
+    "checkedOut": "تم تسجيل الخروج"
   }
 }

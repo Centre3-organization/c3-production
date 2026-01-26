@@ -97,7 +97,8 @@
     "deleteConfirm": "Are you sure you want to delete this item?",
     "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
     "comingSoon": "Coming Soon",
-    "featureNotAvailable": "This feature is not available yet"
+    "featureNotAvailable": "This feature is not available yet",
+    "updated": "Updated"
   },
   "auth": {
     "login": "Login",
@@ -842,5 +843,26 @@
     "termsOfUse": "Terms of Use",
     "faq": "FAQ",
     "copyright": "© 2026 center3. All rights reserved."
+  },
+  "status": {
+    "pending": "Pending",
+    "pendingL1": "Pending L1",
+    "pendingL2": "Pending L2",
+    "pending_l1": "Pending L1",
+    "pending_l2": "Pending L2",
+    "pending_manual": "Pending L2",
+    "pending_approval": "Pending Approval",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "cancelled": "Cancelled",
+    "expired": "Expired",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "draft": "Draft",
+    "active": "Active",
+    "inactive": "Inactive",
+    "scheduled": "Scheduled",
+    "checkedIn": "Checked In",
+    "checkedOut": "Checked Out"
   }
 }

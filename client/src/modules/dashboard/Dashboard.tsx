@@ -105,7 +105,7 @@ export default function Home() {
                 <p className="text-xs text-muted-foreground mt-1 flex items-center">
                   <ArrowUpRight className="h-3 w-3 text-teal-600 mr-1" /> 
                   <span className="text-teal-600">+12%</span>
-                  <span className="ml-1">vs yesterday</span>
+                  <span className="ml-1">{t('common.vsYesterday')}</span>
                 </p>
               </>
             )}
@@ -130,7 +130,7 @@ export default function Home() {
                 <div className="text-2xl font-semibold text-amber-700 dark:text-amber-400">{stats?.pendingApprovals || 0}</div>
                 <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 flex items-center">
                   <AlertTriangle className="h-3 w-3 mr-1" /> 
-                  Action Required
+                  {t('common.actionRequired')}
                 </p>
               </>
             )}
@@ -153,7 +153,7 @@ export default function Home() {
             ) : (
               <>
                 <div className="text-2xl font-semibold text-foreground">{stats?.totalRequestsThisMonth || 0}</div>
-                <p className="text-xs text-muted-foreground mt-1">This Month</p>
+                <p className="text-xs text-muted-foreground mt-1">{t('common.thisMonth')}</p>
               </>
             )}
           </CardContent>
@@ -174,7 +174,7 @@ export default function Home() {
                 <div className="text-2xl font-semibold text-foreground">{stats?.approvalRate || 0}%</div>
                 <p className="text-xs text-muted-foreground mt-1 flex items-center">
                   <TrendingUp className="h-3 w-3 text-teal-600 mr-1" />
-                  +2% vs last month
+                  {t('common.vsLastMonth')}
                 </p>
               </>
             )}
@@ -194,7 +194,7 @@ export default function Home() {
             ) : (
               <>
                 <div className="text-2xl font-semibold text-rose-700 dark:text-rose-400">{stats?.securityAlerts || 0}</div>
-                <p className="text-xs text-rose-600 dark:text-rose-500 mt-1">Critical</p>
+                <p className="text-xs text-rose-600 dark:text-rose-500 mt-1">{t('common.critical')}</p>
               </>
             )}
           </CardContent>
@@ -216,7 +216,7 @@ export default function Home() {
             ) : (
               <>
                 <div className="text-2xl font-semibold text-foreground">{stats?.sites || 0}</div>
-                <p className="text-xs text-muted-foreground mt-1">{stats?.zones || 0} zones · {stats?.areas || 0} areas</p>
+                <p className="text-xs text-muted-foreground mt-1">{stats?.zones || 0} {t('nav.zones')} · {stats?.areas || 0} {t('nav.areas')}</p>
               </>
             )}
           </CardContent>
@@ -246,7 +246,7 @@ export default function Home() {
                 onClick={() => navigate("/approvals/l2")}
               >
                 <UserCheck className="h-4 w-4 mr-2" /> 
-                L2 Queue ({stats?.pendingManual || 0})
+                {t('dashboard.l2Queue')} ({stats?.pendingManual || 0})
               </Button>
               <Button 
                 size="default" 
@@ -254,7 +254,7 @@ export default function Home() {
                 onClick={() => navigate("/global-overwatch")}
               >
                 <Eye className="h-4 w-4 mr-2" /> 
-                Global Overwatch
+                {t('dashboard.globalOverwatch')}
               </Button>
             </div>
           </div>
@@ -268,9 +268,9 @@ export default function Home() {
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
                 <BarChart3 className="h-4 w-4 text-slate-500" />
-                Visitor Traffic
+                {t('dashboard.visitorTraffic')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">Hourly arrivals today</p>
+              <p className="text-xs text-muted-foreground">{t('dashboard.hourlyArrivals')}</p>
             </div>
           </CardHeader>
           <CardContent className="pt-0">
@@ -307,9 +307,9 @@ export default function Home() {
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
               <Layers className="h-4 w-4 text-slate-500" />
-              Zone Occupancy
+              {t('dashboard.zoneOccupancy')}
             </CardTitle>
-            <p className="text-xs text-muted-foreground">Current headcount by zone</p>
+            <p className="text-xs text-muted-foreground">{t('dashboard.currentHeadcount')}</p>
           </CardHeader>
           <CardContent className="pt-0">
             {zoneLoading ? (
@@ -355,9 +355,9 @@ export default function Home() {
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
               <BarChart3 className="h-4 w-4 text-slate-500" />
-              Request Status
+              {t('dashboard.requestStatus')}
             </CardTitle>
-            <p className="text-xs text-muted-foreground">Distribution breakdown</p>
+            <p className="text-xs text-muted-foreground">{t('dashboard.distributionBreakdown')}</p>
           </CardHeader>
           <CardContent className="pt-0">
             {statusLoading ? (
@@ -394,12 +394,12 @@ export default function Home() {
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
                 <Clock className="h-4 w-4 text-amber-500" />
-                Pending L1
+                {t('dashboard.pendingL1')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">Awaiting initial review</p>
+              <p className="text-xs text-muted-foreground">{t('dashboard.awaitingInitialReview')}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => navigate("/approvals/l1")} className="h-8 px-3">
-              View <ChevronRight className="h-3 w-3 ml-1" />
+              {t('common.view')} <ChevronRight className="h-3 w-3 ml-1" />
             </Button>
           </CardHeader>
           <CardContent className="pt-0">
@@ -410,7 +410,7 @@ export default function Home() {
             ) : pendingItems?.pendingL1.length === 0 ? (
               <div className="h-[150px] flex flex-col items-center justify-center text-muted-foreground">
                 <CheckCircle2 className="h-10 w-10 mb-2 text-teal-500" />
-                <p className="text-sm">All caught up!</p>
+                <p className="text-sm">{t('common.allCaughtUp')}</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -442,12 +442,12 @@ export default function Home() {
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
                 <Shield className="h-4 w-4 text-indigo-500" />
-                Pending L2
+                {t('dashboard.pendingL2')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">Awaiting final review</p>
+              <p className="text-xs text-muted-foreground">{t('dashboard.awaitingFinalReview')}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => navigate("/approvals/l2")} className="h-8 px-3">
-              View <ChevronRight className="h-3 w-3 ml-1" />
+              {t('common.view')} <ChevronRight className="h-3 w-3 ml-1" />
             </Button>
           </CardHeader>
           <CardContent className="pt-0">
@@ -458,7 +458,7 @@ export default function Home() {
             ) : pendingItems?.pendingManual.length === 0 ? (
               <div className="h-[150px] flex flex-col items-center justify-center text-muted-foreground">
                 <CheckCircle2 className="h-10 w-10 mb-2 text-teal-500" />
-                <p className="text-sm">All caught up!</p>
+                <p className="text-sm">{t('common.allCaughtUp')}</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -493,12 +493,12 @@ export default function Home() {
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-slate-500" />
-                Site Overview
+                {t('dashboard.siteOverview')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">Facility status</p>
+              <p className="text-xs text-muted-foreground">{t('dashboard.facilityStatus')}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => navigate("/sites")} className="h-8 px-3">
-              Manage <ChevronRight className="h-3 w-3 ml-1" />
+              {t('common.manage')} <ChevronRight className="h-3 w-3 ml-1" />
             </Button>
           </CardHeader>
           <CardContent className="pt-0">
@@ -550,12 +550,12 @@ export default function Home() {
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
                 <Activity className="h-4 w-4 text-slate-500" />
-                Recent Activity
+                {t('dashboard.recentActivity')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">Latest events</p>
+              <p className="text-xs text-muted-foreground">{t('dashboard.latestSystemEvents')}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => navigate("/requests")} className="h-8 px-3">
-              View All <ChevronRight className="h-3 w-3 ml-1" />
+              {t('dashboard.viewAll')} <ChevronRight className="h-3 w-3 ml-1" />
             </Button>
           </CardHeader>
           <CardContent className="pt-0">
@@ -608,12 +608,12 @@ export default function Home() {
           <div>
             <CardTitle className="text-base font-medium flex items-center gap-2">
               <FileText className="h-4 w-4 text-slate-500" />
-              Recent Requests
+              {t('dashboard.recentRequests')}
             </CardTitle>
-            <p className="text-xs text-muted-foreground">Latest access requests</p>
+            <p className="text-xs text-muted-foreground">{t('dashboard.latestAccessRequests')}</p>
           </div>
           <Button variant="outline" size="default" onClick={() => navigate("/requests")} className="h-9 px-4">
-            View All Requests
+            {t('dashboard.viewAllRequests')}
           </Button>
         </CardHeader>
         <CardContent className="pt-0">
@@ -625,11 +625,11 @@ export default function Home() {
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="text-xs">Request ID</TableHead>
-                  <TableHead className="text-xs">Type</TableHead>
-                  <TableHead className="text-xs">Visitor</TableHead>
-                  <TableHead className="text-xs">Status</TableHead>
-                  <TableHead className="text-xs">Updated</TableHead>
+                  <TableHead className="text-xs">{t('requests.requestId')}</TableHead>
+                  <TableHead className="text-xs">{t('common.type')}</TableHead>
+                  <TableHead className="text-xs">{t('requests.visitor')}</TableHead>
+                  <TableHead className="text-xs">{t('common.status')}</TableHead>
+                  <TableHead className="text-xs">{t('common.updated')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -654,9 +654,9 @@ export default function Home() {
                           "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
                         )}
                       >
-                        {row.status === "pending_l1" ? "Pending L1" :
-                         row.status === "pending_manual" ? "Pending L2" :
-                         row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+                        {row.status === "pending_l1" ? t('status.pendingL1') :
+                         row.status === "pending_manual" ? t('status.pendingL2') :
+                         t(`status.${row.status}`, row.status.charAt(0).toUpperCase() + row.status.slice(1))}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-xs text-muted-foreground">

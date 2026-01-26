@@ -318,3 +318,9 @@
 - [x] Add proper description text on left panel
 - [x] Move language selector down on white panel (below login form)
 - [x] Make language selector bigger with border styling
+
+## Translation Improvements (Jan 26, 2026)
+- [x] Fix missing translation strings (webhooks, language names)
+- [x] Add translation completeness progress bar to Translation Management
+- [ ] Implement server-side translation for dynamic database content
+- [ ] Add translatable fields to database schema (departments, sites, workflow stages)

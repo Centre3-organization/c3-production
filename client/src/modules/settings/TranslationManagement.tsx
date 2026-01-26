@@ -281,6 +281,9 @@ export default function TranslationManagement() {
     modified: translations.filter(t => t.isModified).length,
   };
 
+  // Calculate completion percentage
+  const completionPercentage = stats.total > 0 ? Math.round((stats.translated / stats.total) * 100) : 0;
+
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
@@ -307,6 +310,55 @@ export default function TranslationManagement() {
           </Button>
         </div>
       </div>
+
+      {/* Translation Completeness Progress Bar */}
+      <Card className="border-primary/20">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base font-medium flex items-center gap-2">
+              <Globe className="h-5 w-5 text-primary" />
+              {isRTL ? 'اكتمال الترجمة' : 'Translation Completeness'}
+            </CardTitle>
+            <Badge variant={completionPercentage === 100 ? 'default' : completionPercentage >= 80 ? 'secondary' : 'destructive'}>
+              {completionPercentage}%
+            </Badge>
+          </div>
+          <CardDescription>
+            {isRTL 
+              ? `${stats.translated} من ${stats.total} سلسلة مترجمة إلى العربية`
+              : `${stats.translated} of ${stats.total} strings translated to Arabic`
+            }
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
+              <div 
+                className={`h-full transition-all duration-500 rounded-full ${
+                  completionPercentage === 100 
+                    ? 'bg-green-500' 
+                    : completionPercentage >= 80 
+                      ? 'bg-blue-500' 
+                      : completionPercentage >= 50 
+                        ? 'bg-amber-500' 
+                        : 'bg-red-500'
+                }`}
+                style={{ width: `${completionPercentage}%` }}
+              />
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <CheckCircle2 className="h-3 w-3 text-green-500" />
+                {isRTL ? 'مترجم' : 'Translated'}: {stats.translated}
+              </span>
+              <span className="flex items-center gap-1">
+                <AlertCircle className="h-3 w-3 text-amber-500" />
+                {isRTL ? 'مفقود' : 'Missing'}: {stats.missing}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Statistics Cards */}
       <div className="grid gap-4 md:grid-cols-4">
