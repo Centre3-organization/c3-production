@@ -101,6 +101,7 @@
   },
   "auth": {
     "login": "Login",
+    "heroDescription": "Streamline your facility access with our enterprise-grade security platform. Manage visitor requests, approvals, and compliance in one unified system designed for data centers and critical infrastructure.",
     "logout": "Logout",
     "register": "Register",
     "forgotPassword": "Forgot your credentials?",

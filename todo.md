@@ -313,3 +313,8 @@
 - [x] Style login form like STC reference with icons and underline inputs
 - [x] Add footer links (Privacy Notice, Terms of use, FAQ)
 - [x] Remove Register tab from login screen
+
+## Login Page Additional Updates (Jan 26, 2026)
+- [x] Add proper description text on left panel
+- [x] Move language selector down on white panel (below login form)
+- [x] Make language selector bigger with border styling

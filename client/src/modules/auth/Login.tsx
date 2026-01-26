@@ -103,7 +103,7 @@ export default function Login() {
               {t('common.tagline')}
             </h2>
             <p className="text-base text-gray-300 leading-relaxed">
-              {t('common.description')}
+              {t('login.heroDescription')}
             </p>
             
             {/* Carousel Dots */}
@@ -121,11 +121,6 @@ export default function Login() {
 
       {/* Right Side - Login Form (bigger) */}
       <div className={`w-full lg:w-[55%] flex flex-col min-h-screen bg-white ${isRTL ? 'order-1' : 'order-2'}`}>
-        {/* Language Selector - Top Right */}
-        <div className="flex justify-end p-4">
-          <LanguageSelector variant="minimal" modal={true} className="text-gray-600 hover:text-gray-900" />
-        </div>
-
         {/* Main Form Container */}
         <div className="flex-1 flex items-center justify-center px-8 lg:px-16">
           <div className="w-full max-w-md">
@@ -232,6 +227,15 @@ export default function Login() {
                 )}
               </Button>
             </form>
+
+            {/* Language Selector - Below form, bigger */}
+            <div className="mt-10 flex justify-center">
+              <LanguageSelector 
+                variant="minimal" 
+                modal={true} 
+                className="text-gray-700 hover:text-gray-900 text-base px-4 py-2 border border-gray-300 rounded-lg hover:border-[#4f008c] transition-colors" 
+              />
+            </div>
           </div>
         </div>
 
