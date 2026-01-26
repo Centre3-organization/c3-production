@@ -835,5 +835,11 @@
     "errorTitle": "Error",
     "successTitle": "Success",
     "infoTitle": "Information"
+  },
+  "footer": {
+    "privacyNotice": "Privacy Notice",
+    "termsOfUse": "Terms of Use",
+    "faq": "FAQ",
+    "copyright": "© 2026 center3. All rights reserved."
   }
 }

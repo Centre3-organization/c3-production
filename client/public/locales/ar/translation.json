@@ -835,5 +835,11 @@
     "errorTitle": "خطأ",
     "successTitle": "نجاح",
     "infoTitle": "معلومات"
+  },
+  "footer": {
+    "privacyNotice": "سياسة الخصوصية",
+    "termsOfUse": "شروط الاستخدام",
+    "faq": "الأسئلة الشائعة",
+    "copyright": "© 2026 سنتر3. جميع الحقوق محفوظة."
   }
 }

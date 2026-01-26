@@ -306,3 +306,10 @@
 - [x] Add translations for Workflow Builder page
 - [x] Add translations for error messages and validation text
 - [x] Integrate useTranslation hook into all remaining components
+
+## Login Page Image & Design Update (Jan 26, 2026)
+- [x] Replace licensed data center image with new blue neon mainframe image
+- [x] Make login form panel (black part) bigger (now 55% width)
+- [x] Style login form like STC reference with icons and underline inputs
+- [x] Add footer links (Privacy Notice, Terms of use, FAQ)
+- [x] Remove Register tab from login screen
