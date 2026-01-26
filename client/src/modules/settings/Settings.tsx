@@ -52,7 +52,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
-import { Languages, ExternalLink, FileText } from "lucide-react";
+import { Languages, ExternalLink } from "lucide-react";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
@@ -413,11 +413,10 @@ export default function Settings() {
       </div>
 
       <Tabs defaultValue="general" className="w-full">
-        <TabsList className="grid w-full grid-cols-7 lg:w-[1050px]">
+        <TabsList className="grid w-full grid-cols-6 lg:w-[900px]">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="departments">Departments</TabsTrigger>
           <TabsTrigger value="masterdata">Master Data</TabsTrigger>
-          <TabsTrigger value="requesttypes">Request Types</TabsTrigger>
           <TabsTrigger value="translations">Translations</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
@@ -510,34 +509,6 @@ export default function Settings() {
                     <Languages className="h-4 w-4" />
                     Open Translation Manager
                     <ExternalLink className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="requesttypes" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-purple-600" />
-                Request Type Configuration
-              </CardTitle>
-              <CardDescription>
-                Configure request categories, types, form sections, and fields.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center justify-center py-8 space-y-4">
-                <FileText className="h-16 w-16 text-muted-foreground" />
-                <p className="text-muted-foreground text-center max-w-md">
-                  Manage request categories, permit types, form sections, and dynamic fields from the dedicated configuration page.
-                </p>
-                <Link href="/settings/request-types">
-                  <Button className="gap-2">
-                    <ExternalLink className="h-4 w-4" />
-                    Open Request Type Configuration
                   </Button>
                 </Link>
               </div>

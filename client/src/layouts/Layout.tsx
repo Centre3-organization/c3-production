@@ -181,6 +181,7 @@ export default function Layout({ children }: LayoutProps) {
       requiredPermission: "users.read",
       items: [
         { icon: Workflow, labelKey: "nav.workflows", label: "Workflow Builder", href: "/workflows", requiredPermission: "users.read" },
+        { icon: FileText, labelKey: "nav.requestTypes", label: "Request Types", href: "/settings/request-types", requiredPermission: "users.read" },
         { icon: Clock, labelKey: "nav.shiftManagement", label: "Shift Management", href: "/shifts", requiredPermission: "users.read" },
         { icon: UserCheck, labelKey: "nav.delegations", label: "Delegations", href: "/delegations" },
       ]
