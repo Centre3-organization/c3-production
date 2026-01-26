@@ -250,7 +250,7 @@ export default function Layout({ children }: LayoutProps) {
               <img 
                 src="/center3-logo-white.png" 
                 alt="center3" 
-                className="h-8 w-auto"
+                className="h-[50px] w-[200px] object-contain"
               />
             </div>
           ) : (

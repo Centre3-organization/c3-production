@@ -79,3 +79,6 @@
 - [x] Update UI components styling
 - [x] Ensure imagery follows brand guidelines
 - [x] Verify 100% brand compliance
+
+## Logo Size Update
+- [x] Increase sidebar logo size to 200x50px
