@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import { 
   ArrowLeft, 
   Save, 
@@ -72,6 +73,8 @@ const REQUEST_TYPE_MAP: Record<string, string> = {
 export default function NewRequest() {
   const [, navigate] = useLocation();
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
   
   // Form state
   const [requestType, setRequestType] = useState("Admin Visit");

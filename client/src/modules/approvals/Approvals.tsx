@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { 
   CheckCircle2, 
   XCircle, 
@@ -74,6 +75,8 @@ const levelColors: Record<number, string> = {
 };
 
 export default function Approvals() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
   const [searchQuery, setSearchQuery] = useState("");
   const [levelFilter, setLevelFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<any>(null);

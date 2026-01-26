@@ -293,3 +293,16 @@
 - [x] Add sidebar navigation translations for Arabic
 - [x] Add profile dropdown translations (Profile, Settings, Logout)
 - [x] Ensure section headers in sidebar are translated
+
+## Complete Translation Coverage (Jan 26, 2026)
+- [x] Add translations for request form (all tabs, fields, buttons)
+- [x] Add translations for visitor management dialogs
+- [x] Add translations for approval action dialogs (approve/reject)
+- [x] Add translations for L1/L2 approval pages
+- [x] Add translations for Settings page tabs (General, Departments, Master Data, etc.)
+- [x] Add translations for Sites/Zones/Areas management pages
+- [x] Add translations for Users & Roles management page
+- [x] Add translations for Groups management page
+- [x] Add translations for Workflow Builder page
+- [x] Add translations for error messages and validation text
+- [x] Integrate useTranslation hook into all remaining components

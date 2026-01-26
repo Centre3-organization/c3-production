@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { 
   Settings as SettingsIcon, 
   Building2, 
@@ -54,6 +55,9 @@ import { Link } from "wouter";
 import { Languages, ExternalLink } from "lucide-react";
 
 export default function Settings() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
+  
   // Fetch departments from backend
   const { data: departmentsData, isLoading: departmentsLoading, refetch: refetchDepartments } = trpc.departments.list.useQuery({});
   
