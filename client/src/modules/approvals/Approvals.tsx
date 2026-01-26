@@ -1,29 +1,31 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useState } from "react";
 import { 
   CheckCircle2, 
   XCircle, 
-  Eye, 
-  Filter, 
+  Clock, 
   Search, 
-  ShieldCheck,
+  Filter,
+  User,
+  Building2,
+  Calendar,
+  MapPin,
+  Shield,
+  ChevronRight,
   AlertTriangle,
-  CreditCard,
-  Scan,
-  UserCheck,
-  ArrowRight
+  Loader2,
+  RefreshCw,
+  FileText,
+  Zap,
+  ArrowUpRight,
+  GitBranch,
+  History,
+  ClipboardCheck,
+  Eye
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -32,421 +34,589 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
+import { format } from "date-fns";
 
-// Mock data for approvals
-const initialApprovals = [
-  { id: "REQ-2025-002", type: "Work Permit", requestor: "Sarah Johnson", company: "Tech Solutions", zone: "Zone C", date: "Mar 04, 2025", status: "Pending L1", priority: "High" },
-  { id: "REQ-2025-003", type: "TEP", requestor: "Mohammed Ali", company: "Audit Corp", zone: "Zone B", date: "Mar 02, 2025", status: "Pending L1", priority: "Medium" },
-  { id: "REQ-2025-008", type: "MOP", requestor: "Network Team", company: "STC Bahrain", zone: "Core Network", date: "Mar 05, 2025", status: "Pending Manual", priority: "Critical" },
-  { id: "REQ-2025-009", type: "Material Entry", requestor: "Logistics", company: "DHL", zone: "Loading Bay", date: "Mar 05, 2025", status: "Pending Manual", priority: "Low" },
-  { id: "REQ-2025-012", type: "Admin Visit", requestor: "John Doe", company: "Centre3", zone: "Zone A", date: "Mar 06, 2025", status: "Pending L1", priority: "Low" },
-];
+const typeLabels: Record<string, string> = {
+  admin_visit: "Admin Visit",
+  work_permit: "Work Permit",
+  material_entry: "Material Entry",
+  tep: "TEP",
+  mop: "MOP",
+  escort: "Escort",
+};
+
+const typeColors: Record<string, string> = {
+  admin_visit: "bg-blue-100 text-blue-800 border-blue-200",
+  work_permit: "bg-purple-100 text-purple-800 border-purple-200",
+  material_entry: "bg-amber-100 text-amber-800 border-amber-200",
+  tep: "bg-cyan-100 text-cyan-800 border-cyan-200",
+  mop: "bg-rose-100 text-rose-800 border-rose-200",
+  escort: "bg-green-100 text-green-800 border-green-200",
+};
+
+// Level badge colors
+const levelColors: Record<number, string> = {
+  1: "bg-amber-100 text-amber-800 border-amber-300",
+  2: "bg-blue-100 text-blue-800 border-blue-300",
+  3: "bg-purple-100 text-purple-800 border-purple-300",
+  4: "bg-rose-100 text-rose-800 border-rose-300",
+  5: "bg-emerald-100 text-emerald-800 border-emerald-300",
+};
 
 export default function Approvals() {
-  const [location] = useLocation();
-  const [approvals, setApprovals] = useState(initialApprovals);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [levelFilter, setLevelFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
-  const [viewOpen, setViewOpen] = useState(false);
-  const [manualEntryOpen, setManualEntryOpen] = useState(false);
-  const [entryType, setEntryType] = useState<"manual" | "rfid" | "card">("manual");
-  const [cardId, setCardId] = useState("");
-  const [notes, setNotes] = useState("");
-
-  // Determine current view based on URL query param
-  const searchParams = new URLSearchParams(window.location.search);
-  const typeParam = searchParams.get("type");
-  const isManualApproval = typeParam === "manual";
-  const pageTitle = isManualApproval ? "Manual Approvals" : "L1 Approvals";
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [processingId, setProcessingId] = useState<number | null>(null);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   
-  // Filter approvals based on current view
-  const filteredApprovals = approvals.filter(req => 
-    isManualApproval ? req.status === "Pending Manual" : req.status === "Pending L1"
-  );
-
-  const handleView = (req: any) => {
-    setSelectedRequest(req);
-    setViewOpen(true);
-    // Reset manual entry state
-    setEntryType("manual");
-    setCardId("");
-    setNotes("");
-  };
-
-  const handleL1Approve = () => {
-    if (!selectedRequest) return;
+  // Use the workflow-based pending tasks query
+  const { data: pendingTasks, isLoading, refetch } = trpc.requests.getMyPendingApprovals.useQuery();
+  const { data: stats } = trpc.requests.getStats.useQuery();
+  
+  // Use the workflow-based approval mutation
+  const approveTask = trpc.requests.approveTask.useMutation({
+    onSuccess: (result) => {
+      toast.success("Request approved", {
+        description: result.message || "Moved to next approval stage"
+      });
+      refetch();
+      setSelectedRequest(null);
+      setProcessingId(null);
+    },
+    onError: (error) => {
+      toast.error("Failed to approve", { description: error.message });
+      setProcessingId(null);
+    }
+  });
+  
+  // Use the workflow-based rejection mutation
+  const rejectTask = trpc.requests.rejectTask.useMutation({
+    onSuccess: () => {
+      toast.error("Request rejected");
+      refetch();
+      setSelectedRequest(null);
+      setRejectDialogOpen(false);
+      setRejectReason("");
+      setProcessingId(null);
+    },
+    onError: (error) => {
+      toast.error("Failed to reject", { description: error.message });
+      setProcessingId(null);
+    }
+  });
+  
+  // Group tasks by level for stats
+  const tasksByLevel = (pendingTasks || []).reduce((acc: Record<number, number>, task: any) => {
+    const level = task.stageOrder || 1;
+    acc[level] = (acc[level] || 0) + 1;
+    return acc;
+  }, {});
+  
+  // Filter by search and level
+  const filteredTasks = (pendingTasks || []).filter((task: any) => {
+    // Level filter
+    if (levelFilter !== "all") {
+      const filterLevel = parseInt(levelFilter);
+      if (task.stageOrder !== filterLevel) return false;
+    }
     
-    // Move to Manual Approval queue
-    const updatedApprovals = approvals.map(req => 
-      req.id === selectedRequest.id 
-        ? { ...req, status: "Pending Manual" } 
-        : req
+    // Search filter
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      task.request?.requestNumber?.toLowerCase().includes(query) ||
+      task.request?.visitorName?.toLowerCase().includes(query) ||
+      task.request?.visitorCompany?.toLowerCase().includes(query)
     );
-    
-    setApprovals(updatedApprovals);
-    setViewOpen(false);
-    toast.success(`Request ${selectedRequest.id} approved at L1 level`, {
-      description: "Request has been moved to Manual Approval queue."
+  });
+  
+  const handleApprove = (task: any) => {
+    setProcessingId(task.taskId);
+    approveTask.mutate({ 
+      taskId: task.taskId,
+      comments: `Approved at L${task.stageOrder} review`
     });
   };
-
-  const handleReject = () => {
-    if (!selectedRequest) return;
-    
-    const updatedApprovals = approvals.map(req => 
-      req.id === selectedRequest.id 
-        ? { ...req, status: "Rejected" } 
-        : req
-    );
-    
-    setApprovals(updatedApprovals);
-    setViewOpen(false);
-    toast.error(`Request ${selectedRequest.id} rejected`);
+  
+  const handleRejectClick = (task: any) => {
+    setSelectedRequest(task);
+    setRejectDialogOpen(true);
   };
-
-  const handleManualApproveInit = () => {
-    setManualEntryOpen(true);
-  };
-
-  const handleManualApproveConfirm = () => {
-    if (!selectedRequest) return;
-    
-    // Validation for Card/RFID
-    if ((entryType === "card" || entryType === "rfid") && !cardId) {
-      toast.error("Card/Tag ID is required for this entry type");
+  
+  const handleRejectConfirm = () => {
+    if (!selectedRequest || !rejectReason.trim()) {
+      toast.error("Please provide a rejection reason");
       return;
     }
-
-    const updatedApprovals = approvals.map(req => 
-      req.id === selectedRequest.id 
-        ? { ...req, status: "Approved" } 
-        : req
-    );
-    
-    setApprovals(updatedApprovals);
-    setManualEntryOpen(false);
-    setViewOpen(false);
-    
-    const methodText = entryType === "manual" ? "Manual Entry" : 
-                       entryType === "rfid" ? `RFID Tag (${cardId})` : 
-                       `Access Card (${cardId})`;
-                       
-    toast.success(`Access Granted for ${selectedRequest.id}`, {
-      description: `Method: ${methodText}`
+    setProcessingId(selectedRequest.taskId);
+    rejectTask.mutate({ 
+      taskId: selectedRequest.taskId, 
+      comments: rejectReason 
     });
   };
+  
+  const handleViewDetails = (task: any) => {
+    setSelectedRequest(task);
+    setDetailsDialogOpen(true);
+  };
+
+  // Get unique levels from tasks
+  const uniqueLevels = Array.from(new Set((pendingTasks || []).map((t: any) => t.stageOrder || 1))).sort();
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">{pageTitle}</h1>
-          <p className="text-muted-foreground">
-            {isManualApproval 
-              ? "Grant final entry access via Manual, RFID, or Card issuance." 
-              : "Review requests and forward for manual approval."}
+          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            <ClipboardCheck className="h-6 w-6 text-[#0f62fe]" />
+            Approvals
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            All pending approval tasks assigned to you across all workflow stages
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="relative w-64">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search approvals..." className="pl-9 bg-white" />
-          </div>
-          <Button variant="outline" size="icon">
-            <Filter className="h-4 w-4" />
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+            <GitBranch className="h-3 w-3 mr-1" />
+            Workflow-Based
+          </Badge>
+          <Button variant="outline" size="sm" onClick={() => refetch()}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3 mb-6">
-        <Card className="bg-orange-50 border-orange-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-orange-800">Pending Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-orange-900">{filteredApprovals.length}</div>
-            <p className="text-xs text-orange-700 mt-1">Requires your attention</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-blue-50 border-blue-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-blue-800">Processed Today</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-900">12</div>
-            <p className="text-xs text-blue-700 mt-1">Approved or rejected</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-red-50 border-red-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-red-800">Critical / High Priority</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-900">
-              {filteredApprovals.filter(r => r.priority === "Critical" || r.priority === "High").length}
+      {/* Stats Bar - Show counts by level */}
+      <div className="grid grid-cols-5 gap-4">
+        <Card className="bg-gradient-to-br from-gray-50 to-slate-50 border-gray-200">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-700">Total Pending</p>
+                <p className="text-3xl font-bold text-gray-900">{(pendingTasks || []).length}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center">
+                <Clock className="h-6 w-6 text-gray-600" />
+              </div>
             </div>
-            <p className="text-xs text-red-700 mt-1">SLA breach risk</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-amber-700">L1 Queue</p>
+                <p className="text-3xl font-bold text-amber-900">{tasksByLevel[1] || 0}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
+                <Badge className="bg-amber-500 text-white text-xs px-2">L1</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-blue-700">L2 Queue</p>
+                <p className="text-3xl font-bold text-blue-900">{tasksByLevel[2] || 0}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                <Badge className="bg-blue-500 text-white text-xs px-2">L2</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-purple-700">L3 Queue</p>
+                <p className="text-3xl font-bold text-purple-900">{tasksByLevel[3] || 0}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
+                <Badge className="bg-purple-500 text-white text-xs px-2">L3</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-green-700">Approved</p>
+                <p className="text-3xl font-bold text-green-900">{stats?.approved || 0}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
+                <CheckCircle2 className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="bg-white rounded-lg border shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Request ID</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Requestor</TableHead>
-              <TableHead>Zone</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Priority</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredApprovals.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                  No pending approvals found in this queue.
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredApprovals.map((req) => (
-                <TableRow key={req.id}>
-                  <TableCell className="font-medium">{req.id}</TableCell>
-                  <TableCell>{req.type}</TableCell>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{req.requestor}</span>
-                      <span className="text-xs text-muted-foreground">{req.company}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>{req.zone}</TableCell>
-                  <TableCell>{req.date}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className={
-                      req.priority === "Critical" ? "bg-red-50 text-red-700 border-red-200" :
-                      req.priority === "High" ? "bg-orange-50 text-orange-700 border-orange-200" :
-                      "bg-blue-50 text-blue-700 border-blue-200"
-                    }>
-                      {req.priority}
+      {/* Search and Filters */}
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input 
+            placeholder="Search by ID, visitor name, company..." 
+            className="pl-10 bg-white"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <Select value={levelFilter} onValueChange={setLevelFilter}>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="Filter by Level" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Levels</SelectItem>
+            <SelectItem value="1">L1 - Initial Review</SelectItem>
+            <SelectItem value="2">L2 - Security Review</SelectItem>
+            <SelectItem value="3">L3 - Final Approval</SelectItem>
+            <SelectItem value="4">L4</SelectItem>
+            <SelectItem value="5">L5</SelectItem>
+          </SelectContent>
+        </Select>
+        <Button variant="outline" size="icon">
+          <Filter className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Request Table */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : filteredTasks.length === 0 ? (
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+              <CheckCircle2 className="h-8 w-8 text-green-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground">All caught up!</h3>
+            <p className="text-muted-foreground mt-1">No pending approvals at the moment</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="bg-white border rounded-lg overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  Level
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  Request #
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  Type
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  Visitor
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  Site
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  Schedule
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  Stage
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {filteredTasks.map((task: any) => (
+                <tr key={task.taskId} className="hover:bg-gray-50 transition-colors">
+                  {/* Level Badge */}
+                  <td className="px-4 py-4">
+                    <Badge 
+                      variant="outline" 
+                      className={`font-bold ${levelColors[task.stageOrder] || levelColors[1]}`}
+                    >
+                      L{task.stageOrder || 1}
                     </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
+                  </td>
+                  
+                  {/* Request Number */}
+                  <td className="px-4 py-4">
+                    <span className="font-mono text-sm text-gray-900">
+                      {task.request?.requestNumber || '-'}
+                    </span>
+                  </td>
+                  
+                  {/* Type */}
+                  <td className="px-4 py-4">
+                    <Badge variant="outline" className={typeColors[task.request?.type] || "bg-gray-100"}>
+                      {typeLabels[task.request?.type] || task.request?.type}
+                    </Badge>
+                  </td>
+                  
+                  {/* Visitor */}
+                  <td className="px-4 py-4">
+                    <div>
+                      <p className="font-medium text-gray-900">{task.request?.visitorName || '-'}</p>
+                      <p className="text-xs text-gray-500">{task.request?.visitorCompany || '-'}</p>
+                    </div>
+                  </td>
+                  
+                  {/* Site */}
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-1.5">
+                      <Building2 className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-700">{task.request?.siteName || '-'}</span>
+                    </div>
+                  </td>
+                  
+                  {/* Schedule */}
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-1.5">
+                      <Calendar className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-700">
+                        {task.request?.startDate || '-'}
+                      </span>
+                    </div>
+                  </td>
+                  
+                  {/* Stage Name */}
+                  <td className="px-4 py-4">
+                    <span className="text-sm text-gray-600">
+                      {task.stageName || `Stage ${task.stageOrder}`}
+                    </span>
+                  </td>
+                  
+                  {/* Actions */}
+                  <td className="px-4 py-4">
                     <div className="flex items-center justify-end gap-2">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-50"
-                        onClick={() => handleView(req)}
-                        title="Review Request"
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewDetails(task)}
+                        className="text-gray-600 hover:text-gray-900"
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleApprove(task)}
+                        disabled={processingId === task.taskId}
+                        className="text-green-600 border-green-200 hover:bg-green-50"
+                      >
+                        {processingId === task.taskId ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <CheckCircle2 className="h-4 w-4" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRejectClick(task)}
+                        disabled={processingId === task.taskId}
+                        className="text-red-600 border-red-200 hover:bg-red-50"
+                      >
+                        <XCircle className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      {/* View Details Dialog */}
-      <Dialog open={viewOpen} onOpenChange={setViewOpen}>
-        <DialogContent className="max-w-3xl">
+      {/* Reject Dialog */}
+      <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              Request Details
-              <Badge variant="outline">{selectedRequest?.id}</Badge>
-              {isManualApproval && <Badge className="bg-purple-100 text-purple-800 border-purple-200">L1 Approved</Badge>}
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <XCircle className="h-5 w-5" />
+              Reject Request
             </DialogTitle>
             <DialogDescription>
-              Review the full details of this request before taking action.
+              Please provide a reason for rejecting this request. This will be visible to the requestor.
             </DialogDescription>
           </DialogHeader>
-          
-          {selectedRequest && !manualEntryOpen && (
+          <div className="space-y-4 py-4">
+            <div className="bg-gray-50 p-3 rounded-md">
+              <p className="text-sm">
+                <span className="font-medium">Request:</span> {selectedRequest?.request?.requestNumber}
+              </p>
+              <p className="text-sm">
+                <span className="font-medium">Visitor:</span> {selectedRequest?.request?.visitorName}
+              </p>
+              <p className="text-sm">
+                <span className="font-medium">Level:</span> L{selectedRequest?.stageOrder || 1}
+              </p>
+            </div>
+            <Textarea
+              placeholder="Enter rejection reason..."
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              className="min-h-[100px]"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleRejectConfirm}
+              disabled={!rejectReason.trim() || processingId !== null}
+            >
+              {processingId ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+              Confirm Rejection
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Details Dialog */}
+      <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-[#0f62fe]" />
+              Request Details
+            </DialogTitle>
+          </DialogHeader>
+          {selectedRequest && (
             <div className="space-y-6 py-4">
+              {/* Level & Status */}
+              <div className="flex items-center gap-3">
+                <Badge 
+                  variant="outline" 
+                  className={`font-bold text-lg px-3 py-1 ${levelColors[selectedRequest.stageOrder] || levelColors[1]}`}
+                >
+                  L{selectedRequest.stageOrder || 1}
+                </Badge>
+                <span className="text-gray-600">{selectedRequest.stageName}</span>
+                <Badge variant="outline" className={typeColors[selectedRequest.request?.type] || "bg-gray-100"}>
+                  {typeLabels[selectedRequest.request?.type] || selectedRequest.request?.type}
+                </Badge>
+              </div>
+
+              {/* Request Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <span className="text-xs font-medium text-muted-foreground">Request Type</span>
-                  <p className="font-medium">{selectedRequest.type}</p>
+                  <p className="text-xs font-medium text-gray-500 uppercase">Request Number</p>
+                  <p className="font-mono">{selectedRequest.request?.requestNumber}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-xs font-medium text-muted-foreground">Priority</span>
-                  <Badge variant="secondary">{selectedRequest.priority}</Badge>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-xs font-medium text-muted-foreground">Requestor</span>
-                  <p className="font-medium">{selectedRequest.requestor}</p>
-                  <p className="text-xs text-muted-foreground">{selectedRequest.company}</p>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-xs font-medium text-muted-foreground">Location</span>
-                  <p className="font-medium">{selectedRequest.zone}</p>
+                  <p className="text-xs font-medium text-gray-500 uppercase">Workflow</p>
+                  <p>{selectedRequest.workflowName}</p>
                 </div>
               </div>
 
-              <Separator />
-
-              <div className="space-y-2">
-                <h4 className="font-medium text-sm">Justification</h4>
-                <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-md">
-                  Routine maintenance of server rack 42 in Zone C. Requires access to power distribution unit for replacement of faulty breaker.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h4 className="font-medium text-sm">Visitors (2)</h4>
-                <div className="border rounded-md divide-y">
-                  <div className="flex items-center justify-between p-2 text-sm">
-                    <span>Mohammed Al-Fulan</span>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
-                      <ShieldCheck className="h-3 w-3" /> Verified
-                    </Badge>
+              {/* Visitor Info */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Visitor Information
+                </h4>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="text-gray-500">Name:</span>
+                    <p className="font-medium">{selectedRequest.request?.visitorName}</p>
                   </div>
-                  <div className="flex items-center justify-between p-2 text-sm">
-                    <span>John Smith</span>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
-                      <ShieldCheck className="h-3 w-3" /> Verified
-                    </Badge>
+                  <div>
+                    <span className="text-gray-500">Company:</span>
+                    <p className="font-medium">{selectedRequest.request?.visitorCompany || '-'}</p>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">ID Type:</span>
+                    <p className="font-medium capitalize">{selectedRequest.request?.visitorIdType?.replace('_', ' ')}</p>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">ID Number:</span>
+                    <p className="font-mono">{selectedRequest.request?.visitorIdNumber}</p>
                   </div>
                 </div>
               </div>
 
-              {selectedRequest.type === "MOP" && (
-                <div className="bg-amber-50 border border-amber-200 rounded-md p-3 flex gap-3">
-                  <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0" />
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-medium text-amber-800">High Risk Operation</h4>
-                    <p className="text-xs text-amber-700">
-                      This MOP involves critical power systems. Ensure backup generators are on standby before approval.
-                    </p>
-                  </div>
+              {/* Location & Schedule */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                    <Building2 className="h-4 w-4" />
+                    Location
+                  </h4>
+                  <p className="text-blue-900">{selectedRequest.request?.siteName}</p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-green-800 mb-2 flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    Schedule
+                  </h4>
+                  <p className="text-green-900">
+                    {selectedRequest.request?.startDate} - {selectedRequest.request?.endDate}
+                  </p>
+                </div>
+              </div>
+
+              {/* Purpose */}
+              {selectedRequest.request?.purpose && (
+                <div>
+                  <h4 className="font-bold text-gray-800 mb-2">Purpose of Visit</h4>
+                  <p className="text-gray-600 bg-gray-50 p-3 rounded-md">
+                    {selectedRequest.request?.purpose}
+                  </p>
                 </div>
               )}
             </div>
           )}
-
-          {/* Manual Entry Workflow Step */}
-          {manualEntryOpen && (
-            <div className="space-y-6 py-4">
-              <div className="bg-slate-50 p-4 rounded-lg border">
-                <h3 className="font-medium mb-4 flex items-center gap-2">
-                  <UserCheck className="h-5 w-5 text-purple-600" />
-                  Grant Entry Access
-                </h3>
-                
-                <RadioGroup value={entryType} onValueChange={(v: any) => setEntryType(v)} className="grid grid-cols-3 gap-4 mb-6">
-                  <div>
-                    <RadioGroupItem value="manual" id="manual" className="peer sr-only" />
-                    <Label
-                      htmlFor="manual"
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-purple-600 [&:has([data-state=checked])]:border-purple-600 cursor-pointer h-full"
-                    >
-                      <UserCheck className="mb-3 h-6 w-6" />
-                      <div className="text-center">
-                        <div className="font-semibold">Manual</div>
-                        <div className="text-xs text-muted-foreground mt-1">Direct Entry</div>
-                      </div>
-                    </Label>
-                  </div>
-                  <div>
-                    <RadioGroupItem value="rfid" id="rfid" className="peer sr-only" />
-                    <Label
-                      htmlFor="rfid"
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-purple-600 [&:has([data-state=checked])]:border-purple-600 cursor-pointer h-full"
-                    >
-                      <Scan className="mb-3 h-6 w-6" />
-                      <div className="text-center">
-                        <div className="font-semibold">RFID Tag</div>
-                        <div className="text-xs text-muted-foreground mt-1">Issue Tag</div>
-                      </div>
-                    </Label>
-                  </div>
-                  <div>
-                    <RadioGroupItem value="card" id="card" className="peer sr-only" />
-                    <Label
-                      htmlFor="card"
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-purple-600 [&:has([data-state=checked])]:border-purple-600 cursor-pointer h-full"
-                    >
-                      <CreditCard className="mb-3 h-6 w-6" />
-                      <div className="text-center">
-                        <div className="font-semibold">Access Card</div>
-                        <div className="text-xs text-muted-foreground mt-1">Issue Card</div>
-                      </div>
-                    </Label>
-                  </div>
-                </RadioGroup>
-
-                {(entryType === "card" || entryType === "rfid") && (
-                  <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
-                    <Label htmlFor="cardId">
-                      {entryType === "rfid" ? "RFID Tag ID" : "Card Number"} <span className="text-red-500">*</span>
-                    </Label>
-                    <div className="flex gap-2">
-                      <Input 
-                        id="cardId" 
-                        placeholder={entryType === "rfid" ? "Scan or enter RFID tag..." : "Scan or enter card number..."}
-                        value={cardId}
-                        onChange={(e) => setCardId(e.target.value)}
-                        autoFocus
-                      />
-                      <Button variant="secondary">Scan</Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Place the {entryType === "rfid" ? "tag" : "card"} on the reader to scan automatically.
-                    </p>
-                  </div>
-                )}
-
-                <div className="space-y-2 mt-4">
-                  <Label htmlFor="notes">Approval Notes (Optional)</Label>
-                  <Textarea 
-                    id="notes" 
-                    placeholder="Add any additional notes regarding this entry..."
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          <DialogFooter className="gap-2 sm:gap-0">
-            {!manualEntryOpen ? (
-              <>
-                <Button variant="outline" onClick={() => setViewOpen(false)}>Cancel</Button>
-                <div className="flex gap-2 w-full sm:w-auto justify-end">
-                  <Button variant="destructive" className="gap-2" onClick={handleReject}>
-                    <XCircle className="h-4 w-4" /> Reject
-                  </Button>
-                  
-                  {isManualApproval ? (
-                    <Button className="bg-purple-600 hover:bg-purple-700 gap-2" onClick={handleManualApproveInit}>
-                      <UserCheck className="h-4 w-4" /> Grant Entry
-                    </Button>
-                  ) : (
-                    <Button className="bg-green-600 hover:bg-green-700 gap-2" onClick={handleL1Approve}>
-                      <CheckCircle2 className="h-4 w-4" /> L1 Approve
-                    </Button>
-                  )}
-                </div>
-              </>
-            ) : (
-              <>
-                <Button variant="outline" onClick={() => setManualEntryOpen(false)}>Back</Button>
-                <Button className="bg-green-600 hover:bg-green-700 gap-2" onClick={handleManualApproveConfirm}>
-                  <CheckCircle2 className="h-4 w-4" /> Confirm & Issue
-                </Button>
-              </>
-            )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDetailsDialogOpen(false)}>
+              Close
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setDetailsDialogOpen(false);
+                handleRejectClick(selectedRequest);
+              }}
+              className="text-red-600 border-red-200 hover:bg-red-50"
+            >
+              <XCircle className="h-4 w-4 mr-2" />
+              Reject
+            </Button>
+            <Button
+              onClick={() => {
+                setDetailsDialogOpen(false);
+                handleApprove(selectedRequest);
+              }}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              <CheckCircle2 className="h-4 w-4 mr-2" />
+              Approve
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -236,3 +236,9 @@
 - [x] Fix "try again or contact administrator" error when submitting requests
 - [x] Add missing requestType field to approvalInstances insert
 - [x] Fix instanceId extraction from insert result (use correct result structure)
+
+## Approvals UI & Database Cleanup (Jan 26, 2026)
+- [x] Create Approvals page UI showing all approval tasks
+- [x] Add approval level column to show L1/L2/L3 etc.
+- [x] Add Approvals link to sidebar navigation
+- [x] Delete all existing requests from database for clean testing

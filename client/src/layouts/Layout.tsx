@@ -146,6 +146,7 @@ export default function Layout({ children }: LayoutProps) {
     {
       title: "Approvals",
       items: [
+        { icon: FileCheck, label: "Approvals", href: "/approvals", requiredPermission: "approvals.l1" },
         { icon: FileCheck, label: "L1 Approval", href: "/approvals/l1", requiredPermission: "approvals.l1" },
         { icon: FileCheck, label: "L2 Approval", href: "/approvals/l2", requiredPermission: "approvals.manual" },
       ]

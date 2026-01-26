@@ -22,6 +22,7 @@ import RequestList from "./modules/requests/RequestList";
 import RequestForm from "./modules/requests/RequestForm";
 
 // Approvals Module
+import Approvals from "./modules/approvals/Approvals";
 import L1Approval from "./modules/approvals/L1Approval";
 import L2Approval from "./modules/approvals/L2Approval";
 
@@ -82,6 +83,11 @@ function Router() {
       </Route>
       
       {/* Protected Routes - Approvals */}
+      <Route path="/approvals">
+        <Layout>
+          <Approvals />
+        </Layout>
+      </Route>
       <Route path="/approvals/l1">
         <Layout>
           <L1Approval />

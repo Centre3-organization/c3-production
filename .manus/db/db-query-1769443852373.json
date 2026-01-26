@@ -1,0 +1,26 @@
+{
+  "query": "-- First delete approval-related data\nDELETE FROM approvalHistory;\nDELETE FROM approvalTasks;\nDELETE FROM approvalInstances;\n\n-- Delete request-related data\nDELETE FROM requestZones;\nDELETE FROM requestAssets;\n\n-- Finally delete the requests themselves\nDELETE FROM requests;\n\n-- Show counts to confirm deletion\nSELECT 'requests' as tableName, COUNT(*) as count FROM requests\nUNION ALL\nSELECT 'approvalInstances', COUNT(*) FROM approvalInstances\nUNION ALL\nSELECT 'approvalTasks', COUNT(*) FROM approvalTasks\nUNION ALL\nSELECT 'approvalHistory', COUNT(*) FROM approvalHistory;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute -- First delete approval-related data\nDELETE FROM approvalHistory;\nDELETE FROM approvalTasks;\nDELETE FROM approvalInstances;\n\n-- Delete request-related data\nDELETE FROM requestZones;\nDELETE FROM requestAssets;\n\n-- Finally delete the requests themselves\nDELETE FROM requests;\n\n-- Show counts to confirm deletion\nSELECT 'requests' as tableName, COUNT(*) as count FROM requests\nUNION ALL\nSELECT 'approvalInstances', COUNT(*) FROM approvalInstances\nUNION ALL\nSELECT 'approvalTasks', COUNT(*) FROM approvalTasks\nUNION ALL\nSELECT 'approvalHistory', COUNT(*) FROM approvalHistory;",
+  "rows": [
+    {
+      "tableName": "approvalInstances",
+      "count": "0"
+    },
+    {
+      "tableName": "approvalTasks",
+      "count": "0"
+    },
+    {
+      "tableName": "approvalHistory",
+      "count": "0"
+    },
+    {
+      "tableName": "requests",
+      "count": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "tableName\tcount\napprovalInstances\t0\napprovalTasks\t0\napprovalHistory\t0\nrequests\t0\n",
+  "stderr": "",
+  "execution_time_ms": 2903
+}
