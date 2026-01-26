@@ -50,6 +50,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { Languages, ExternalLink } from "lucide-react";
 
 export default function Settings() {
   // Fetch departments from backend
@@ -407,10 +409,11 @@ export default function Settings() {
       </div>
 
       <Tabs defaultValue="general" className="w-full">
-        <TabsList className="grid w-full grid-cols-5 lg:w-[750px]">
+        <TabsList className="grid w-full grid-cols-6 lg:w-[900px]">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="departments">Departments</TabsTrigger>
           <TabsTrigger value="masterdata">Master Data</TabsTrigger>
+          <TabsTrigger value="translations">Translations</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
@@ -445,6 +448,67 @@ export default function Settings() {
                 <Save className="mr-2 h-4 w-4" /> Save Changes
               </Button>
             </CardFooter>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="translations" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Languages className="h-5 w-5 text-purple-600" />
+                Translation Management
+              </CardTitle>
+              <CardDescription>Manage multi-language support and translations for the application.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-4 md:grid-cols-2">
+                <Card className="border-dashed">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Supported Languages</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline" className="px-3 py-1">
+                        <span className="mr-2">🇬🇧</span> English (EN)
+                      </Badge>
+                      <Badge variant="outline" className="px-3 py-1">
+                        <span className="mr-2">🇸🇦</span> Arabic (AR)
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="border-dashed">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Translation Status</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>English</span>
+                        <span className="text-green-600 font-medium">100% Complete</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span>Arabic</span>
+                        <span className="text-amber-600 font-medium">~85% Complete</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              <Separator />
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-muted-foreground">
+                  Use the Translation Management tool to view, edit, and add translations for all UI strings in the application.
+                </p>
+                <Link href="/settings/translations">
+                  <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
+                    <Languages className="h-4 w-4" />
+                    Open Translation Manager
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
           </Card>
         </TabsContent>
 

@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, email, name, passwordHash, role FROM users WHERE email = 'mohsiin@gmail.com';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, email, name, passwordHash, role FROM users WHERE email = 'mohsiin@gmail.com';",
+  "rows": [
+    {
+      "id": "3",
+      "email": "mohsiin@gmail.com",
+      "name": "Mohsiin",
+      "passwordHash": "$2b$10$BYgQgi53oWHHvtxT/DFU.OfPI/bdgtHzGr/poTP3qJyO2F4Wet29u",
+      "role": "admin"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\tpasswordHash\trole\n3\tmohsiin@gmail.com\tMohsiin\t$2b$10$BYgQgi53oWHHvtxT/DFU.OfPI/bdgtHzGr/poTP3qJyO2F4Wet29u\tadmin\n",
+  "stderr": "",
+  "execution_time_ms": 1531
+}

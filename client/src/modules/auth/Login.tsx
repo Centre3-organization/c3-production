@@ -82,10 +82,19 @@ export default function Login() {
                   target.innerHTML = '<span class="text-5xl font-bold text-white">center<span class="text-[#4f008c]">3</span></span>';
                 }}
               />
-              {/* Purple accent bar */}
-              <div className={`flex items-center gap-0 mt-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <div className="h-1.5 w-32 bg-[#4f008c]"></div>
-                <div className="h-1.5 w-8 bg-[#ff375e]"></div>
+              {/* Purple accent bar - always starts from the text alignment side */}
+              <div className={`flex items-center gap-0 mt-2`}>
+                {isRTL ? (
+                  <>
+                    <div className="h-1.5 w-8 bg-[#ff375e]"></div>
+                    <div className="h-1.5 w-32 bg-[#4f008c]"></div>
+                  </>
+                ) : (
+                  <>
+                    <div className="h-1.5 w-32 bg-[#4f008c]"></div>
+                    <div className="h-1.5 w-8 bg-[#ff375e]"></div>
+                  </>
+                )}
               </div>
             </div>
             
@@ -113,9 +122,9 @@ export default function Login() {
       {/* Right Side - Login Form */}
       <div className={`w-full lg:w-[40%] flex items-center justify-center p-6 lg:p-12 bg-[#1a1a1a] ${isRTL ? 'order-1' : 'order-2'}`}>
         <div className="w-full max-w-md">
-          {/* Language Selector - Top Right */}
-          <div className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'}`}>
-            <LanguageSelector variant="minimal" className="text-white hover:text-gray-300" />
+          {/* Language Selector - Top Right (always in top-right corner regardless of RTL) */}
+          <div className="fixed top-4 right-4 z-[100]">
+            <LanguageSelector variant="minimal" modal={true} className="text-white hover:text-gray-300 bg-black/30 hover:bg-black/50" />
           </div>
 
           {/* Mobile Logo */}

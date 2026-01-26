@@ -275,3 +275,13 @@
 - [x] Integrate translations into dashboard
 - [x] Integrate translations into forms and buttons
 - [x] Store language preference in localStorage and user profile
+
+## i18n Fixes & Enhancements (Jan 26, 2026)
+- [x] Fix language dropdown on login page - ensure it works in both directions (EN→AR and AR→EN)
+- [x] Fix RTL accent bar position - move to right side in Arabic mode
+- [x] Create Translation Management page in Settings for manual string editing
+- [x] Extend Arabic translations to Requests pages
+- [x] Extend Arabic translations to Approvals pages
+- [x] Extend Arabic translations to Sites/Zones/Areas pages
+- [x] Extend Arabic translations to Settings pages
+- [x] Extend Arabic translations to sidebar navigation

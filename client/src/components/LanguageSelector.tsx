@@ -13,9 +13,11 @@ import { cn } from '@/lib/utils';
 interface LanguageSelectorProps {
   variant?: 'default' | 'minimal' | 'icon-only';
   className?: string;
+  /** Use modal mode for dropdowns inside fixed/absolute positioned containers */
+  modal?: boolean;
 }
 
-export function LanguageSelector({ variant = 'default', className }: LanguageSelectorProps) {
+export function LanguageSelector({ variant = 'default', className, modal = false }: LanguageSelectorProps) {
   const { i18n, t } = useTranslation();
   const currentLang = supportedLanguages.find(l => l.code === i18n.language) || supportedLanguages[0];
 
@@ -25,7 +27,7 @@ export function LanguageSelector({ variant = 'default', className }: LanguageSel
 
   if (variant === 'icon-only') {
     return (
-      <DropdownMenu>
+      <DropdownMenu modal={modal}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
@@ -36,7 +38,11 @@ export function LanguageSelector({ variant = 'default', className }: LanguageSel
             <Globe className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-[140px]">
+        <DropdownMenuContent 
+          align="end" 
+          className="min-w-[140px] z-[9999] bg-popover"
+          sideOffset={5}
+        >
           {supportedLanguages.map((lang) => (
             <DropdownMenuItem
               key={lang.code}
@@ -59,7 +65,7 @@ export function LanguageSelector({ variant = 'default', className }: LanguageSel
 
   if (variant === 'minimal') {
     return (
-      <DropdownMenu>
+      <DropdownMenu modal={modal}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
@@ -70,7 +76,11 @@ export function LanguageSelector({ variant = 'default', className }: LanguageSel
             <span className="text-sm font-medium uppercase">{currentLang.code}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-[140px]">
+        <DropdownMenuContent 
+          align="end" 
+          className="min-w-[140px] z-[9999] bg-popover"
+          sideOffset={5}
+        >
           {supportedLanguages.map((lang) => (
             <DropdownMenuItem
               key={lang.code}
@@ -93,7 +103,7 @@ export function LanguageSelector({ variant = 'default', className }: LanguageSel
 
   // Default variant with full language name
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={modal}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
@@ -104,7 +114,11 @@ export function LanguageSelector({ variant = 'default', className }: LanguageSel
           <span>{currentLang.nativeName}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[160px]">
+      <DropdownMenuContent 
+        align="end" 
+        className="min-w-[160px] z-[9999] bg-popover"
+        sideOffset={5}
+      >
         {supportedLanguages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
