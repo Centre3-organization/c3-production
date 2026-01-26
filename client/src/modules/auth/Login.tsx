@@ -103,7 +103,7 @@ export default function Login() {
               {t('common.tagline')}
             </h2>
             <p className="text-base text-gray-300 leading-relaxed">
-              {t('login.heroDescription')}
+              {t('auth.heroDescription')}
             </p>
             
             {/* Carousel Dots */}
