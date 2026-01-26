@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, openId, email, name, role, createdAt FROM users ORDER BY createdAt DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, openId, email, name, role, createdAt FROM users ORDER BY createdAt DESC;",
+  "rows": [
+    {
+      "id": "90176",
+      "openId": "manual_mohsiin",
+      "email": "NULL",
+      "name": "NULL",
+      "role": "user",
+      "createdAt": "2026-01-26 11:31:29"
+    },
+    {
+      "id": "90177",
+      "openId": "manual_mohsiin",
+      "email": "NULL",
+      "name": "NULL",
+      "role": "user",
+      "createdAt": "2026-01-26 11:31:29"
+    },
+    {
+      "id": "90175",
+      "openId": "manual_mohsiin",
+      "email": "NULL",
+      "name": "NULL",
+      "role": "user",
+      "createdAt": "2026-01-26 11:30:47"
+    },
+    {
+      "id": "90174",
+      "openId": "manual_mohsiin",
+      "email": "NULL",
+      "name": "NULL",
+      "role": "user",
+      "createdAt": "2026-01-26 11:30:46"
+    },
+    {
+      "id": "3",
+      "openId": "manual_mohsiin",
+      "email": "mohsiin@gmail.com",
+      "name": "Mohsiin",
+      "role": "admin",
+      "createdAt": "2026-01-24 18:46:22"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\temail\tname\trole\tcreatedAt\n90176\tmanual_mohsiin\tNULL\tNULL\tuser\t2026-01-26 11:31:29\n90177\tmanual_mohsiin\tNULL\tNULL\tuser\t2026-01-26 11:31:29\n90175\tmanual_mohsiin\tNULL\tNULL\tuser\t2026-01-26 11:30:47\n90174\tmanual_mohsiin\tNULL\tNULL\tuser\t2026-01-26 11:30:46\n3\tmanual_mohsiin\tmohsiin@gmail.com\tMohsiin\tadmin\t2026-01-24 18:46:22\n",
+  "stderr": "",
+  "execution_time_ms": 1549
+}

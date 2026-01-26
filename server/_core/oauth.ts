@@ -28,23 +28,33 @@ export function registerOAuthRoutes(app: Express) {
         return;
       }
 
-      await db.upsertUser({
-        openId: userInfo.openId,
-        name: userInfo.name || null,
-        email: userInfo.email ?? null,
-        loginMethod: userInfo.loginMethod ?? userInfo.platform ?? null,
-        lastSignedIn: new Date(),
-      });
+      // Check if user already exists - only update existing users, don't create new ones
+      const existingUser = await db.getUserByOpenId(userInfo.openId);
+      
+      if (existingUser) {
+        // Update existing user's info
+        await db.upsertUser({
+          openId: userInfo.openId,
+          name: userInfo.name || null,
+          email: userInfo.email ?? null,
+          loginMethod: userInfo.loginMethod ?? userInfo.platform ?? null,
+          lastSignedIn: new Date(),
+        });
 
-      const sessionToken = await sdk.createSessionToken(userInfo.openId, {
-        name: userInfo.name || "",
-        expiresInMs: ONE_YEAR_MS,
-      });
+        const sessionToken = await sdk.createSessionToken(userInfo.openId, {
+          name: userInfo.name || "",
+          expiresInMs: ONE_YEAR_MS,
+        });
 
-      const cookieOptions = getSessionCookieOptions(req);
-      res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+        const cookieOptions = getSessionCookieOptions(req);
+        res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
 
-      res.redirect(302, "/");
+        res.redirect(302, "/");
+      } else {
+        // User doesn't exist - redirect to access denied page
+        console.log("[OAuth] User not found in system, access denied:", userInfo.openId);
+        res.redirect(302, "/access-denied?reason=not_registered");
+      }
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
       res.status(500).json({ error: "OAuth callback failed" });

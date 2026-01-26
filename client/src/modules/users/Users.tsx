@@ -15,7 +15,8 @@ import {
   Plus,
   Loader2,
   AlertCircle,
-  Eye
+  Eye,
+  Phone
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -158,6 +159,9 @@ export default function Users() {
   // Fetch roles from backend
   const { data: rolesData, isLoading: rolesLoading, error: rolesError, refetch: refetchRoles } = trpc.roles.list.useQuery({});
 
+  // Fetch departments from backend
+  const { data: departmentsData } = trpc.departments.list.useQuery({});
+
   // Update user mutation
   const updateUserMutation = trpc.users.update.useMutation({
     onSuccess: () => {
@@ -197,47 +201,68 @@ export default function Users() {
   const createUserMutation = trpc.users.create.useMutation({
     onSuccess: () => {
       toast.success("User created successfully", {
-        description: "The new user account has been created."
+        description: "The new user account has been created. They will receive an email to set their password."
       });
       refetchUsers();
       setNewUserOpen(false);
       // Reset form
-      setNewUserForm({ firstName: "", lastName: "", email: "", role: "user" });
+      setNewUserForm({ 
+        firstName: "", 
+        lastName: "", 
+        email: "", 
+        phone: "",
+        temporaryPassword: "",
+        role: "user",
+        departmentId: null
+      });
     },
     onError: (error: any) => {
       toast.error("Failed to create user", { description: error.message });
     },
   });
 
-  // New user form state
+  // New user form state - matching the design screenshot
   const [newUserForm, setNewUserForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
+    temporaryPassword: "",
     role: "user" as "user" | "admin",
+    departmentId: null as number | null,
   });
 
   const users = usersData?.users || [];
   const roles = rolesData || [];
+  const departments = departmentsData || [];
 
   const filteredUsers = useMemo(() => {
     if (!searchTerm) return users;
     const term = searchTerm.toLowerCase();
     return users.filter(user => 
       (user.name?.toLowerCase() || "").includes(term) ||
-      (user.email?.toLowerCase() || "").includes(term)
+      (user.email?.toLowerCase() || "").includes(term) ||
+      (user.firstName?.toLowerCase() || "").includes(term) ||
+      (user.lastName?.toLowerCase() || "").includes(term)
     );
   }, [users, searchTerm]);
 
   const handleAddUser = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const fullName = `${newUserForm.firstName} ${newUserForm.lastName}`.trim();
+    if (!newUserForm.temporaryPassword || newUserForm.temporaryPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
     
     createUserMutation.mutate({
-      name: fullName,
+      firstName: newUserForm.firstName,
+      lastName: newUserForm.lastName,
       email: newUserForm.email,
+      phone: newUserForm.phone || undefined,
+      temporaryPassword: newUserForm.temporaryPassword,
       role: newUserForm.role,
+      departmentId: newUserForm.departmentId,
     });
   };
 
@@ -302,6 +327,27 @@ export default function Users() {
     });
   };
 
+  const getUserDisplayName = (user: any) => {
+    if (user.firstName && user.lastName) {
+      return `${user.firstName} ${user.lastName}`;
+    }
+    return user.name || "Unknown";
+  };
+
+  const getUserInitials = (user: any) => {
+    if (user.firstName && user.lastName) {
+      return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
+    }
+    if (user.name) {
+      const parts = user.name.split(" ");
+      if (parts.length >= 2) {
+        return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+      }
+      return user.name[0]?.toUpperCase() || "U";
+    }
+    return "U";
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -314,64 +360,121 @@ export default function Users() {
         </Button>
       </div>
 
-      {/* Add User Dialog */}
+      {/* Add User Dialog - Updated to match the design */}
       <Dialog open={newUserOpen} onOpenChange={setNewUserOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Add New User</DialogTitle>
             <DialogDescription>
-              Create a new user account. They will be able to log in via OAuth.
+              Create a new user account. They will receive an email to set their password.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleAddUser}>
             <div className="grid gap-4 py-4">
+              {/* First Name & Last Name Row */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+                  <Label htmlFor="firstName">First name</Label>
                   <Input 
                     id="firstName" 
-                    placeholder="John" 
+                    placeholder="Ahmed" 
                     value={newUserForm.firstName}
                     onChange={(e) => setNewUserForm({...newUserForm, firstName: e.target.value})}
+                    className="bg-purple-50/50 border-purple-200 focus:border-purple-400"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                  <Label htmlFor="lastName">Last name</Label>
                   <Input 
                     id="lastName" 
-                    placeholder="Doe" 
+                    placeholder="Al-Sayed" 
                     value={newUserForm.lastName}
                     onChange={(e) => setNewUserForm({...newUserForm, lastName: e.target.value})}
+                    className="bg-slate-50 border-slate-200"
                     required
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  placeholder="john.doe@company.com" 
-                  value={newUserForm.email}
-                  onChange={(e) => setNewUserForm({...newUserForm, email: e.target.value})}
-                  required
-                />
+
+              {/* Email & Phone Row */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="mohsiin@gmail.com" 
+                    value={newUserForm.email}
+                    onChange={(e) => setNewUserForm({...newUserForm, email: e.target.value})}
+                    className="bg-purple-50/50 border-purple-200 focus:border-purple-400"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input 
+                    id="phone" 
+                    type="tel" 
+                    placeholder="+966 5..." 
+                    value={newUserForm.phone}
+                    onChange={(e) => setNewUserForm({...newUserForm, phone: e.target.value})}
+                    className="bg-slate-50 border-slate-200"
+                  />
+                </div>
               </div>
+
+              {/* Temporary Password */}
               <div className="space-y-2">
-                <Label htmlFor="role">System Role</Label>
-                <Select 
-                  value={newUserForm.role} 
-                  onValueChange={(value: "user" | "admin") => setNewUserForm({...newUserForm, role: value})}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">User</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="temporaryPassword">Temporary Password</Label>
+                <Input 
+                  id="temporaryPassword" 
+                  type="password" 
+                  placeholder="••••••" 
+                  value={newUserForm.temporaryPassword}
+                  onChange={(e) => setNewUserForm({...newUserForm, temporaryPassword: e.target.value})}
+                  className="bg-purple-50/50 border-purple-200 focus:border-purple-400"
+                  required
+                  minLength={6}
+                />
+                <p className="text-xs text-muted-foreground">User can change this after first login</p>
+              </div>
+
+              {/* Role & Department Row */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="role">Role</Label>
+                  <Select 
+                    value={newUserForm.role} 
+                    onValueChange={(value: "user" | "admin") => setNewUserForm({...newUserForm, role: value})}
+                  >
+                    <SelectTrigger className="bg-slate-50 border-slate-200">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="department">Department</Label>
+                  <Select 
+                    value={newUserForm.departmentId?.toString() || ""} 
+                    onValueChange={(value) => setNewUserForm({...newUserForm, departmentId: value ? parseInt(value) : null})}
+                  >
+                    <SelectTrigger className="bg-slate-50 border-slate-200">
+                      <SelectValue placeholder="Select department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {departments.map((dept: any) => (
+                        <SelectItem key={dept.id} value={dept.id.toString()}>
+                          {dept.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
             <DialogFooter>
@@ -382,7 +485,7 @@ export default function Users() {
                 disabled={createUserMutation.isPending}
               >
                 {createUserMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Create User
+                Create Account
               </Button>
             </DialogFooter>
           </form>
@@ -430,7 +533,7 @@ export default function Users() {
               <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
                 <UsersIcon className="h-12 w-12 mb-4 opacity-50" />
                 <p className="text-lg font-medium">No users found</p>
-                <p className="text-sm">Users will appear here after they log in via OAuth.</p>
+                <p className="text-sm">Click "Add User" to create a new user account.</p>
               </div>
             ) : (
               <Table>
@@ -448,56 +551,53 @@ export default function Users() {
                     <TableRow key={user.id} className="cursor-pointer hover:bg-muted/50" onClick={() => handleViewUser(user)}>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <Avatar className="h-9 w-9">
-                            <AvatarFallback>{(user.name || "U").charAt(0)}</AvatarFallback>
+                          <Avatar className="h-10 w-10">
+                            <AvatarFallback className="bg-purple-100 text-purple-700">
+                              {getUserInitials(user)}
+                            </AvatarFallback>
                           </Avatar>
                           <div>
-                            <div className="font-medium">{user.name || "Unknown"}</div>
-                            <div className="text-xs text-muted-foreground">{user.email || "No email"}</div>
+                            <p className="font-medium">{getUserDisplayName(user)}</p>
+                            <p className="text-sm text-muted-foreground">{user.email || "No email"}</p>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {(user as any).groups && (user as any).groups.length > 0 ? (
-                            (user as any).groups.slice(0, 2).map((g: any) => (
-                              <Badge key={g.id} variant="outline" className="text-xs">
-                                {g.name}
-                              </Badge>
-                            ))
-                          ) : (
-                            <span className="text-muted-foreground text-xs">No groups</span>
-                          )}
-                          {(user as any).groups && (user as any).groups.length > 2 && (
-                            <Badge variant="secondary" className="text-xs">+{(user as any).groups.length - 2}</Badge>
-                          )}
-                        </div>
+                        <span className="text-muted-foreground text-sm">
+                          {(user as any).groups?.length > 0 
+                            ? (user as any).groups.map((g: any) => g.name).join(", ")
+                            : "No groups"
+                          }
+                        </span>
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline" className={getRoleColor(user.role)}>
                           {user.role}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-muted-foreground text-sm">
+                      <TableCell className="text-muted-foreground">
                         {formatDate(user.lastSignedIn)}
                       </TableCell>
-                      <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                      <TableCell className="text-right">
                         <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
+                          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                             <Button variant="ghost" size="icon">
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => handleViewUser(user)}>
-                              <Eye className="mr-2 h-4 w-4" /> View Details
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleViewUser(user); }}>
+                              <Eye className="h-4 w-4 mr-2" /> View Details
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => { setEditUserRoleUser(user); setEditUserRoleOpen(true); }}>
-                              <Shield className="mr-2 h-4 w-4" /> Change Role
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Mail className="mr-2 h-4 w-4" /> Email User
+                            <DropdownMenuItem onClick={(e) => { 
+                              e.stopPropagation(); 
+                              setEditUserRoleUser(user);
+                              setSelectedRoleValue(user.role);
+                              setEditUserRoleOpen(true);
+                            }}>
+                              <Edit2 className="h-4 w-4 mr-2" /> Edit Role
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -509,12 +609,14 @@ export default function Users() {
             )}
           </Card>
         </TabsContent>
-        
-        <TabsContent value="roles" className="mt-4 space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">System Roles</h2>
-            <Button onClick={handleCreateRole} className="bg-purple-600 hover:bg-purple-700 gap-2">
-              <Plus className="h-4 w-4" /> Create New Role
+
+        <TabsContent value="roles" className="mt-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              Define roles and their associated permissions
+            </p>
+            <Button onClick={handleCreateRole} className="gap-2 bg-purple-600 hover:bg-purple-700">
+              <Plus className="h-4 w-4" /> Create Role
             </Button>
           </div>
 
@@ -528,46 +630,44 @@ export default function Users() {
               <AlertCircle className="h-6 w-6 mr-2" />
               <span>Error loading roles: {rolesError.message}</span>
             </div>
+          ) : roles.length === 0 ? (
+            <Card className="p-8 text-center">
+              <Shield className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+              <p className="text-lg font-medium text-muted-foreground">No custom roles defined</p>
+              <p className="text-sm text-muted-foreground mb-4">Create roles to define specific permissions for users</p>
+              <Button onClick={handleCreateRole} className="gap-2 bg-purple-600 hover:bg-purple-700">
+                <Plus className="h-4 w-4" /> Create First Role
+              </Button>
+            </Card>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2">
-              {roles.map((role) => (
-                <Card key={role.id} className="relative overflow-hidden">
-                  <CardHeader className="pb-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {roles.map((role: any) => (
+                <Card key={role.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => handleEditRole(role)}>
+                  <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Shield className="h-5 w-5 text-purple-600" />
-                        {role.name}
-                        {role.isSystem && (
-                          <Badge variant="secondary" className="text-xs">System</Badge>
-                        )}
-                      </CardTitle>
+                      <CardTitle className="text-lg">{role.name}</CardTitle>
+                      <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                        {role.userCount || 0} users
+                      </Badge>
                     </div>
                     <CardDescription>{role.description || "No description"}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex flex-wrap gap-2">
-                        {role.permissions && Object.entries(role.permissions).map(([module, actions]) => {
-                          const enabledActions = Object.entries(actions as Record<string, boolean>)
-                            .filter(([_, enabled]) => enabled)
-                            .map(([action]) => action);
-                          
-                          if (enabledActions.length === 0) return null;
-                          
-                          return (
-                            <Badge key={module} variant="outline" className="bg-purple-50 text-purple-700 border-purple-100 capitalize">
-                              {module}: {enabledActions.length}
-                            </Badge>
-                          );
-                        })}
-                      </div>
+                    <div className="flex flex-wrap gap-1">
+                      {Object.entries(role.permissions || {} as Record<string, unknown>).slice(0, 3).map(([key, value]) => (
+                        value ? (
+                          <Badge key={key} variant="secondary" className="text-xs">
+                            {key}
+                          </Badge>
+                        ) : null
+                      ))}
+                      {Object.keys(role.permissions || {}).length > 3 && (
+                        <Badge variant="secondary" className="text-xs">
+                          +{Object.keys(role.permissions || {}).length - 3} more
+                        </Badge>
+                      )}
                     </div>
                   </CardContent>
-                  <CardFooter className="border-t pt-4 flex justify-end gap-2">
-                    <Button variant="outline" size="sm" onClick={() => handleEditRole(role)}>
-                      <Edit2 className="h-3 w-3 mr-1" /> Edit
-                    </Button>
-                  </CardFooter>
                 </Card>
               ))}
             </div>
@@ -585,33 +685,43 @@ export default function Users() {
             <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16">
-                  <AvatarFallback className="text-xl">{(selectedUser.name || "U").charAt(0)}</AvatarFallback>
+                  <AvatarFallback className="bg-purple-100 text-purple-700 text-xl">
+                    {getUserInitials(selectedUser)}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h3 className="text-xl font-semibold">{selectedUser.name || "Unknown"}</h3>
+                  <h3 className="text-xl font-semibold">{getUserDisplayName(selectedUser)}</h3>
                   <p className="text-muted-foreground">{selectedUser.email || "No email"}</p>
-                  <Badge variant="outline" className={getRoleColor(selectedUser.role)}>
-                    {selectedUser.role}
-                  </Badge>
+                  {selectedUser.phone && (
+                    <p className="text-sm text-muted-foreground flex items-center gap-1">
+                      <Phone className="h-3 w-3" /> {selectedUser.phone}
+                    </p>
+                  )}
                 </div>
               </div>
+              
               <Separator />
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-muted-foreground">System Role</Label>
-                  <p className="font-medium capitalize">{selectedUser.role}</p>
+                  <p className="font-medium">
+                    <Badge variant="outline" className={getRoleColor(selectedUser.role)}>
+                      {selectedUser.role}
+                    </Badge>
+                  </p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">Last Sign In</Label>
+                  <Label className="text-muted-foreground">Last Active</Label>
                   <p className="font-medium">{formatDate(selectedUser.lastSignedIn)}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">Created At</Label>
+                  <Label className="text-muted-foreground">Created</Label>
                   <p className="font-medium">{formatDate(selectedUser.createdAt)}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">Updated At</Label>
-                  <p className="font-medium">{formatDate(selectedUser.updatedAt)}</p>
+                  <Label className="text-muted-foreground">Login Method</Label>
+                  <p className="font-medium">{selectedUser.loginMethod || "Password"}</p>
                 </div>
               </div>
             </div>
@@ -622,67 +732,110 @@ export default function Users() {
         </DialogContent>
       </Dialog>
 
+      {/* Edit User Role Dialog */}
+      <Dialog open={editUserRoleOpen} onOpenChange={setEditUserRoleOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Edit User Role</DialogTitle>
+            <DialogDescription>
+              Change the system role for {editUserRoleUser?.name || editUserRoleUser?.email}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Label>System Role</Label>
+            <Select value={selectedRoleValue} onValueChange={setSelectedRoleValue}>
+              <SelectTrigger className="mt-2">
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="user">User</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditUserRoleOpen(false)}>Cancel</Button>
+            <Button 
+              className="bg-purple-600 hover:bg-purple-700"
+              disabled={updateUserMutation.isPending}
+              onClick={() => {
+                if (editUserRoleUser) {
+                  updateUserMutation.mutate({
+                    id: editUserRoleUser.id,
+                    role: selectedRoleValue as "user" | "admin",
+                  });
+                  setEditUserRoleOpen(false);
+                }
+              }}
+            >
+              {updateUserMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Edit Role Dialog */}
       <Dialog open={editRoleOpen} onOpenChange={setEditRoleOpen}>
         <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedRole?.isNew ? "Create New Role" : "Edit Role"}</DialogTitle>
             <DialogDescription>
-              Configure role permissions for different system modules.
+              Configure the role name, description, and permissions
             </DialogDescription>
           </DialogHeader>
           {selectedRole && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-6 py-4">
+              <div className="grid gap-4">
                 <div className="space-y-2">
-                  <Label>Role Name</Label>
+                  <Label htmlFor="roleName">Role Name</Label>
                   <Input 
-                    value={selectedRole.name} 
+                    id="roleName" 
+                    value={selectedRole.name}
                     onChange={(e) => setSelectedRole({...selectedRole, name: e.target.value})}
-                    disabled={selectedRole.isSystem}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Description</Label>
+                  <Label htmlFor="roleDescription">Description</Label>
                   <Input 
-                    value={selectedRole.description || ""} 
+                    id="roleDescription" 
+                    value={selectedRole.description || ""}
                     onChange={(e) => setSelectedRole({...selectedRole, description: e.target.value})}
                   />
                 </div>
               </div>
-              
+
               <Separator />
-              
+
               <div className="space-y-4">
                 <h4 className="font-medium">Permissions</h4>
                 {permissionModules.map((module) => (
-                  <div key={module.id} className="border rounded-lg p-4">
-                    <h5 className="font-medium mb-3">{module.label}</h5>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {module.actions.map((action) => {
-                        const isChecked = selectedRole.permissions?.[module.id]?.[action.id] || false;
-                        return (
-                          <div key={action.id} className="flex items-center space-x-2">
-                            <Checkbox 
-                              id={`${module.id}-${action.id}`}
-                              checked={isChecked}
-                              onCheckedChange={(checked) => {
-                                const newPermissions = {
+                  <div key={module.id} className="space-y-2">
+                    <Label className="text-sm font-medium">{module.label}</Label>
+                    <div className="flex flex-wrap gap-4 pl-4">
+                      {module.actions.map((action) => (
+                        <div key={action.id} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={`${module.id}-${action.id}`}
+                            checked={selectedRole.permissions?.[module.id]?.[action.id] || false}
+                            onCheckedChange={(checked) => {
+                              setSelectedRole({
+                                ...selectedRole,
+                                permissions: {
                                   ...selectedRole.permissions,
                                   [module.id]: {
                                     ...selectedRole.permissions?.[module.id],
                                     [action.id]: checked
                                   }
-                                };
-                                setSelectedRole({...selectedRole, permissions: newPermissions});
-                              }}
-                            />
-                            <Label htmlFor={`${module.id}-${action.id}`} className="text-sm">
-                              {action.label}
-                            </Label>
-                          </div>
-                        );
-                      })}
+                                }
+                              });
+                            }}
+                          />
+                          <Label htmlFor={`${module.id}-${action.id}`} className="text-sm font-normal">
+                            {action.label}
+                          </Label>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -692,81 +845,15 @@ export default function Users() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditRoleOpen(false)}>Cancel</Button>
             <Button 
-              className="bg-purple-600 hover:bg-purple-700" 
+              className="bg-purple-600 hover:bg-purple-700"
               onClick={handleSaveRole}
               disabled={createRoleMutation.isPending || updateRoleMutation.isPending}
             >
               {(createRoleMutation.isPending || updateRoleMutation.isPending) && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              <Save className="h-4 w-4 mr-2" /> Save Role
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit User Role Dialog */}
-      <Dialog open={editUserRoleOpen} onOpenChange={(open) => {
-        setEditUserRoleOpen(open);
-        if (!open) {
-          setEditUserRoleUser(null);
-          setSelectedRoleValue("");
-        }
-      }}>
-        <DialogContent className="sm:max-w-[400px]">
-          <DialogHeader>
-            <DialogTitle>Change User Role</DialogTitle>
-            <DialogDescription>
-              Update the system role for {editUserRoleUser?.name || "this user"}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>Current Role</Label>
-              <div className="text-sm text-muted-foreground capitalize">
-                {editUserRoleUser?.role || "No role assigned"}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="newRole">New Role</Label>
-              <Select 
-                value={selectedRoleValue || editUserRoleUser?.role || ""} 
-                onValueChange={setSelectedRoleValue}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="user">User</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => { setEditUserRoleOpen(false); setSelectedRoleValue(""); }}>
-              Cancel
-            </Button>
-            <Button 
-              className="bg-purple-600 hover:bg-purple-700"
-              disabled={updateUserMutation.isPending || !selectedRoleValue}
-              onClick={() => {
-                if (editUserRoleUser && selectedRoleValue) {
-                  updateUserMutation.mutate({ 
-                    id: editUserRoleUser.id, 
-                    role: selectedRoleValue as "user" | "admin"
-                  }, {
-                    onSuccess: () => {
-                      setEditUserRoleOpen(false);
-                      setSelectedRoleValue("");
-                      setEditUserRoleUser(null);
-                    }
-                  });
-                }
-              }}
-            >
-              {updateUserMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Update Role
+              <Save className="h-4 w-4 mr-2" />
+              {selectedRole?.isNew ? "Create Role" : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>

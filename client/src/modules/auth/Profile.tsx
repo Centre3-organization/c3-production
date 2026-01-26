@@ -23,7 +23,9 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [, setLocation] = useLocation();
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
   });
 
   // Fetch current user data
@@ -56,7 +58,9 @@ export default function Profile() {
     if (!isEditing && user) {
       // Initialize form with current values
       setFormData({
-        name: user.name || "",
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        phone: user.phone || "",
       });
     }
     setIsEditing(!isEditing);
@@ -64,7 +68,9 @@ export default function Profile() {
 
   const handleSave = () => {
     updateProfileMutation.mutate({
-      name: formData.name || undefined,
+      firstName: formData.firstName || undefined,
+      lastName: formData.lastName || undefined,
+      phone: formData.phone || undefined,
     });
   };
 
@@ -223,10 +229,9 @@ export default function Profile() {
                       <Label htmlFor="firstName">First Name</Label>
                       <Input 
                         id="firstName" 
-                        value={isEditing ? formData.name.split(" ")[0] || "" : firstName}
+                        value={isEditing ? formData.firstName : firstName}
                         onChange={(e) => {
-                          const lastName = formData.name.split(" ").slice(1).join(" ");
-                          setFormData({ ...formData, name: `${e.target.value} ${lastName}`.trim() });
+                          setFormData({ ...formData, firstName: e.target.value });
                         }}
                         disabled={!isEditing} 
                       />
@@ -235,10 +240,9 @@ export default function Profile() {
                       <Label htmlFor="lastName">Last Name</Label>
                       <Input 
                         id="lastName" 
-                        value={isEditing ? formData.name.split(" ").slice(1).join(" ") || "" : lastName}
+                        value={isEditing ? formData.lastName : lastName}
                         onChange={(e) => {
-                          const firstName = formData.name.split(" ")[0] || "";
-                          setFormData({ ...formData, name: `${firstName} ${e.target.value}`.trim() });
+                          setFormData({ ...formData, lastName: e.target.value });
                         }}
                         disabled={!isEditing} 
                       />

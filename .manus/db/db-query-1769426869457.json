@@ -1,0 +1,178 @@
+{
+  "query": "SELECT id, email, name, firstName, lastName, role FROM users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, email, name, firstName, lastName, role FROM users;",
+  "rows": [
+    {
+      "id": "3",
+      "email": "mohsiin@gmail.com",
+      "name": "Mohsiin",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "60001",
+      "email": "mohsiin@gmail.com",
+      "name": "Mohsin",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90149",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90150",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90151",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90152",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90153",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90154",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90155",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90156",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90157",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90158",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90159",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90160",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90161",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90162",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90163",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90164",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90165",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90166",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "90167",
+      "email": "NULL",
+      "name": "NULL",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "role": "admin"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\tfirstName\tlastName\trole\n3\tmohsiin@gmail.com\tMohsiin\tNULL\tNULL\tadmin\n60001\tmohsiin@gmail.com\tMohsin\tNULL\tNULL\tadmin\n90149\tNULL\tNULL\tNULL\tNULL\tadmin\n90150\tNULL\tNULL\tNULL\tNULL\tadmin\n90151\tNULL\tNULL\tNULL\tNULL\tadmin\n90152\tNULL\tNULL\tNULL\tNULL\tadmin\n90153\tNULL\tNULL\tNULL\tNULL\tadmin\n90154\tNULL\tNULL\tNULL\tNULL\tadmin\n90155\tNULL\tNULL\tNULL\tNULL\tadmin\n90156\tNULL\tNULL\tNULL\tNULL\tadmin\n90157\tNULL\tNULL\tNULL\tNULL\tadmin\n90158\tNULL\tNULL\tNULL\tNULL\tadmin\n90159\tNULL\tNULL\tNULL\tNULL\tadmin\n90160\tNULL\tNULL\tNULL\tNULL\tadmin\n90161\tNULL\tNULL\tNULL\tNULL\tadmin\n90162\tNULL\tNULL\tNULL\tNULL\tadmin\n90163\tNULL\tNULL\tNULL\tNULL\tadmin\n90164\tNULL\tNULL\tNULL\tNULL\tadmin\n90165\tNULL\tNULL\tNULL\tNULL\tadmin\n90166\tNULL\tNULL\tNULL\tNULL\tadmin\n90167\tNULL\tNULL\tNULL\tNULL\tadmin\n",
+  "stderr": "",
+  "execution_time_ms": 1659
+}

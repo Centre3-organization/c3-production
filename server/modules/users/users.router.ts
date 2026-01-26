@@ -9,6 +9,7 @@ import {
   getRoleById,
   getDepartmentById,
 } from "../../infra/db/connection";
+import bcrypt from "bcryptjs";
 
 export const usersRouter = router({
   // Get current authenticated user
@@ -50,16 +51,31 @@ export const usersRouter = router({
   create: adminProcedure
     .input(
       z.object({
-        name: z.string().min(1, "Name is required"),
+        firstName: z.string().min(1, "First name is required"),
+        lastName: z.string().min(1, "Last name is required"),
         email: z.string().email("Valid email is required"),
-        role: z.enum(["user", "admin"]).optional(),
+        phone: z.string().optional(),
+        temporaryPassword: z.string().min(6, "Password must be at least 6 characters"),
+        role: z.enum(["user", "admin"]).default("user"),
+        departmentId: z.number().nullable().optional(),
       })
     )
     .mutation(async ({ input }) => {
+      // Hash the temporary password
+      const passwordHash = await bcrypt.hash(input.temporaryPassword, 10);
+      
+      // Create full name from first and last name
+      const fullName = `${input.firstName} ${input.lastName}`.trim();
+      
       const userId = await createUser({
-        name: input.name,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        name: fullName,
         email: input.email,
-        role: input.role || "user",
+        phone: input.phone || null,
+        passwordHash: passwordHash,
+        role: input.role,
+        departmentId: input.departmentId || null,
       });
       return { success: true, userId };
     }),
@@ -69,14 +85,31 @@ export const usersRouter = router({
     .input(
       z.object({
         id: z.number(),
-        name: z.string().min(1).optional(),
+        firstName: z.string().min(1).optional(),
+        lastName: z.string().min(1).optional(),
         email: z.string().email().optional(),
+        phone: z.string().optional(),
         role: z.enum(["user", "admin"]).optional(),
+        departmentId: z.number().nullable().optional(),
       })
     )
     .mutation(async ({ input }) => {
-      const { id, ...data } = input;
-      await updateUser(id, data);
+      const { id, firstName, lastName, ...data } = input;
+      
+      // Update full name if first or last name changed
+      const updateData: any = { ...data };
+      if (firstName !== undefined || lastName !== undefined) {
+        const user = await getUserById(id);
+        if (user) {
+          const newFirstName = firstName ?? user.firstName ?? '';
+          const newLastName = lastName ?? user.lastName ?? '';
+          updateData.firstName = newFirstName;
+          updateData.lastName = newLastName;
+          updateData.name = `${newFirstName} ${newLastName}`.trim();
+        }
+      }
+      
+      await updateUser(id, updateData);
       return { success: true };
     }),
 
@@ -92,14 +125,24 @@ export const usersRouter = router({
   updateProfile: protectedProcedure
     .input(
       z.object({
-        name: z.string().min(1).optional(),
+        firstName: z.string().min(1).optional(),
+        lastName: z.string().min(1).optional(),
+        phone: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       if (!ctx.user) {
         throw new Error("Not authenticated");
       }
-      await updateUser(ctx.user.id, input);
+      
+      const updateData: any = { ...input };
+      if (input.firstName !== undefined || input.lastName !== undefined) {
+        const newFirstName = input.firstName ?? ctx.user.firstName ?? '';
+        const newLastName = input.lastName ?? ctx.user.lastName ?? '';
+        updateData.name = `${newFirstName} ${newLastName}`.trim();
+      }
+      
+      await updateUser(ctx.user.id, updateData);
       return { success: true };
     }),
 

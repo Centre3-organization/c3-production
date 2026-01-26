@@ -1,0 +1,26 @@
+{
+  "query": "SELECT * FROM users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT * FROM users;",
+  "rows": [
+    {
+      "id": "3",
+      "openId": "manual_mohsiin",
+      "name": "Mohsiin",
+      "email": "mohsiin@gmail.com",
+      "loginMethod": "email",
+      "role": "admin",
+      "createdAt": "2026-01-24 18:46:22",
+      "updatedAt": "2026-01-26 11:29:02",
+      "lastSignedIn": "2026-01-26 11:29:03",
+      "passwordHash": "$2b$10$BYgQgi53oWHHvtxT/DFU.OfPI/bdgtHzGr/poTP3qJyO2F4Wet29u",
+      "firstName": "NULL",
+      "lastName": "NULL",
+      "phone": "NULL",
+      "departmentId": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\tname\temail\tloginMethod\trole\tcreatedAt\tupdatedAt\tlastSignedIn\tpasswordHash\tfirstName\tlastName\tphone\tdepartmentId\n3\tmanual_mohsiin\tMohsiin\tmohsiin@gmail.com\temail\tadmin\t2026-01-24 18:46:22\t2026-01-26 11:29:02\t2026-01-26 11:29:03\t$2b$10$BYgQgi53oWHHvtxT/DFU.OfPI/bdgtHzGr/poTP3qJyO2F4Wet29u\tNULL\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1552
+}

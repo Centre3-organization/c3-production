@@ -89,4 +89,14 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function updateUser(
+  id: number,
+  data: Partial<Omit<InsertUser, "id" | "createdAt">> & { openId?: string }
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(users).set(data).where(eq(users.id, id));
+}
+
 // TODO: add feature queries here as your schema grows.

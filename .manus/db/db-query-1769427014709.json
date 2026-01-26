@@ -1,0 +1,28 @@
+{
+  "query": "SELECT id, email, name, openId FROM users ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, email, name, openId FROM users ORDER BY id;",
+  "rows": [
+    {
+      "id": "3",
+      "email": "mohsiin@gmail.com",
+      "name": "Mohsiin",
+      "openId": "manual_mohsiin"
+    },
+    {
+      "id": "90172",
+      "email": "NULL",
+      "name": "NULL",
+      "openId": "manual_mohsiin"
+    },
+    {
+      "id": "90173",
+      "email": "NULL",
+      "name": "NULL",
+      "openId": "manual_mohsiin"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\topenId\n3\tmohsiin@gmail.com\tMohsiin\tmanual_mohsiin\n90172\tNULL\tNULL\tmanual_mohsiin\n90173\tNULL\tNULL\tmanual_mohsiin\n",
+  "stderr": "",
+  "execution_time_ms": 1598
+}

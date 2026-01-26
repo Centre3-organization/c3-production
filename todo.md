@@ -114,3 +114,15 @@
 - [x] Add Groups column to Users table
 - [x] Add group-based access evaluation logic
 - [x] Write and pass unit tests for Groups module
+
+## User Management Updates
+- [x] Remove all unknown users from database (keep only mohsiin@gmail.com)
+- [x] Update users table schema to add firstName, lastName, phone, departmentId fields
+- [ ] Update Add User form with: First name, Last name, Email, Phone Number, Temporary Password, Role, Department
+- [ ] Update backend to handle new user fields
+
+## Fix Automatic User Creation (Jan 26, 2026)
+- [x] Fix automatic user creation on OAuth callback - only update existing users
+- [x] Fix automatic user creation in SDK authenticateRequest - only update existing users  
+- [x] Clean database to keep only admin account (mohsiin@gmail.com)
+- [x] Verify no new users are created automatically on page visits
