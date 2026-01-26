@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `groupSecuritySettings` (\n  `id` INT AUTO_INCREMENT PRIMARY KEY,\n  `groupId` INT NOT NULL UNIQUE,\n  `sessionTimeoutMinutes` INT NOT NULL DEFAULT 30,\n  `passwordComplexityLevel` ENUM('basic', 'standard', 'high') NOT NULL DEFAULT 'standard',\n  `mfaRequired` BOOLEAN NOT NULL DEFAULT FALSE,\n  `allowedIpRanges` JSON,\n  `allowedLocations` JSON,\n  `auditLevel` ENUM('basic', 'detailed', 'comprehensive') NOT NULL DEFAULT 'basic',\n  `accessReviewFrequency` ENUM('monthly', 'quarterly', 'annually', 'never') NOT NULL DEFAULT 'quarterly',\n  `maxConcurrentSessions` INT NOT NULL DEFAULT 3,\n  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute CREATE TABLE IF NOT EXISTS `groupSecuritySettings` (\n  `id` INT AUTO_INCREMENT PRIMARY KEY,\n  `groupId` INT NOT NULL UNIQUE,\n  `sessionTimeoutMinutes` INT NOT NULL DEFAULT 30,\n  `passwordComplexityLevel` ENUM('basic', 'standard', 'high') NOT NULL DEFAULT 'standard',\n  `mfaRequired` BOOLEAN NOT NULL DEFAULT FALSE,\n  `allowedIpRanges` JSON,\n  `allowedLocations` JSON,\n  `auditLevel` ENUM('basic', 'detailed', 'comprehensive') NOT NULL DEFAULT 'basic',\n  `accessReviewFrequency` ENUM('monthly', 'quarterly', 'annually', 'never') NOT NULL DEFAULT 'quarterly',\n  `maxConcurrentSessions` INT NOT NULL DEFAULT 3,\n  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1832
+}

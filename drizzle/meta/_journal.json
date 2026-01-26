@@ -15,6 +15,13 @@
       "when": 1769280860156,
       "tag": "0001_overjoyed_hemingway",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1769426105909,
+      "tag": "0002_lush_talos",
+      "breakpoints": true
     }
   ]
 }

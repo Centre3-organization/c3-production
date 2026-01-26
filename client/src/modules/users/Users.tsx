@@ -437,6 +437,7 @@ export default function Users() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>User</TableHead>
+                    <TableHead>Groups</TableHead>
                     <TableHead>System Role</TableHead>
                     <TableHead>Last Active</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -454,6 +455,22 @@ export default function Users() {
                             <div className="font-medium">{user.name || "Unknown"}</div>
                             <div className="text-xs text-muted-foreground">{user.email || "No email"}</div>
                           </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {(user as any).groups && (user as any).groups.length > 0 ? (
+                            (user as any).groups.slice(0, 2).map((g: any) => (
+                              <Badge key={g.id} variant="outline" className="text-xs">
+                                {g.name}
+                              </Badge>
+                            ))
+                          ) : (
+                            <span className="text-muted-foreground text-xs">No groups</span>
+                          )}
+                          {(user as any).groups && (user as any).groups.length > 2 && (
+                            <Badge variant="secondary" className="text-xs">+{(user as any).groups.length - 2}</Badge>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell>

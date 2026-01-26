@@ -328,3 +328,132 @@ export const systemSettings = mysqlTable("systemSettings", {
 
 export type SystemSetting = typeof systemSettings.$inferSelect;
 export type InsertSystemSetting = typeof systemSettings.$inferInsert;
+
+// ============================================================================
+// GROUP MANAGEMENT SYSTEM TABLES
+// ============================================================================
+
+/**
+ * Groups table - Hierarchical organizational structure
+ * Supports internal departments and external vendor organizations
+ */
+export const groups = mysqlTable("groups", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  groupType: mysqlEnum("groupType", ["internal", "external"]).notNull(),
+  parentGroupId: int("parentGroupId"),
+  description: text("description"),
+  status: mysqlEnum("status", ["active", "inactive"]).default("active").notNull(),
+  createdBy: int("createdBy"),
+  metadata: json("metadata").$type<{
+    contactEmail?: string;
+    contactPhone?: string;
+    contractNumber?: string;
+    contractStartDate?: string;
+    contractEndDate?: string;
+    notes?: string;
+  }>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Group = typeof groups.$inferSelect;
+export type InsertGroup = typeof groups.$inferInsert;
+
+/**
+ * User-Group Membership table
+ * Links users to groups with membership details
+ */
+export const userGroupMembership = mysqlTable("userGroupMembership", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  groupId: int("groupId").notNull(),
+  isPrimaryGroup: boolean("isPrimaryGroup").default(false).notNull(),
+  assignedBy: int("assignedBy"),
+  status: mysqlEnum("status", ["active", "inactive", "pending"]).default("active").notNull(),
+  validFrom: timestamp("validFrom"),
+  validUntil: timestamp("validUntil"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserGroupMembership = typeof userGroupMembership.$inferSelect;
+export type InsertUserGroupMembership = typeof userGroupMembership.$inferInsert;
+
+/**
+ * Group Access Policy table
+ * Defines what resources a group can access and at what level
+ */
+export const groupAccessPolicy = mysqlTable("groupAccessPolicy", {
+  id: int("id").autoincrement().primaryKey(),
+  groupId: int("groupId").notNull(),
+  resourceType: mysqlEnum("resourceType", [
+    "site", 
+    "zone", 
+    "area", 
+    "system", 
+    "application", 
+    "data"
+  ]).notNull(),
+  resourceId: int("resourceId"),
+  accessLevel: mysqlEnum("accessLevel", [
+    "none", 
+    "read", 
+    "write", 
+    "execute", 
+    "delete", 
+    "admin"
+  ]).default("read").notNull(),
+  timeRestriction: json("timeRestriction").$type<{
+    daysOfWeek?: number[];
+    startTime?: string;
+    endTime?: string;
+    timezone?: string;
+  }>(),
+  ipRestrictions: json("ipRestrictions").$type<string[]>(),
+  requiresMfa: boolean("requiresMfa").default(false).notNull(),
+  requiresApproval: boolean("requiresApproval").default(false).notNull(),
+  requiresEscort: boolean("requiresEscort").default(false).notNull(),
+  validFrom: timestamp("validFrom"),
+  validUntil: timestamp("validUntil"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GroupAccessPolicy = typeof groupAccessPolicy.$inferSelect;
+export type InsertGroupAccessPolicy = typeof groupAccessPolicy.$inferInsert;
+
+/**
+ * Group Security Settings table
+ * Defines security requirements for a group
+ */
+export const groupSecuritySettings = mysqlTable("groupSecuritySettings", {
+  id: int("id").autoincrement().primaryKey(),
+  groupId: int("groupId").notNull().unique(),
+  sessionTimeoutMinutes: int("sessionTimeoutMinutes").default(30).notNull(),
+  passwordComplexityLevel: mysqlEnum("passwordComplexityLevel", [
+    "basic", 
+    "standard", 
+    "high"
+  ]).default("standard").notNull(),
+  mfaRequired: boolean("mfaRequired").default(false).notNull(),
+  allowedIpRanges: json("allowedIpRanges").$type<string[]>(),
+  allowedLocations: json("allowedLocations").$type<string[]>(),
+  auditLevel: mysqlEnum("auditLevel", [
+    "basic", 
+    "detailed", 
+    "comprehensive"
+  ]).default("basic").notNull(),
+  accessReviewFrequency: mysqlEnum("accessReviewFrequency", [
+    "monthly", 
+    "quarterly", 
+    "annually", 
+    "never"
+  ]).default("quarterly").notNull(),
+  maxConcurrentSessions: int("maxConcurrentSessions").default(3).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GroupSecuritySettings = typeof groupSecuritySettings.$inferSelect;
+export type InsertGroupSecuritySettings = typeof groupSecuritySettings.$inferInsert;

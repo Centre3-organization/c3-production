@@ -38,6 +38,9 @@ import SecurityAlerts from "./modules/security/SecurityAlerts";
 // Users Module
 import Users from "./modules/users/Users";
 
+// Groups Module
+import Groups from "./modules/groups/Groups";
+
 // Settings Module
 import Settings from "./modules/settings/Settings";
 
@@ -120,6 +123,11 @@ function Router() {
       </Route>
       
       {/* Protected Routes - Administration */}
+      <Route path="/groups">
+        <Layout>
+          <Groups />
+        </Layout>
+      </Route>
       <Route path="/users">
         <Layout>
           <Users />

@@ -28,6 +28,9 @@ import { dashboardRouter } from "./modules/dashboard/dashboard.router";
 // Security Module
 import { securityAlertsRouter } from "./modules/security/alerts.router";
 
+// Groups Module
+import { groupsRouter } from "./modules/groups/groups.router";
+
 import { seedDefaultRoles, seedDefaultDepartments } from "./infra/db/connection";
 
 // Initialize default data on server start
@@ -139,6 +142,9 @@ export const appRouter = router({
   
   // Security Module
   securityAlerts: securityAlertsRouter,
+  
+  // Groups Module
+  groups: groupsRouter,
 });
 
 export type AppRouter = typeof appRouter;

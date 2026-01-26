@@ -24,7 +24,8 @@ import {
   FileCheck,
   ShieldAlert,
   User,
-  Loader2
+  Loader2,
+  FolderTree
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -166,6 +167,7 @@ export default function Layout({ children }: LayoutProps) {
       title: "Administration",
       requiredPermission: "users.read",
       items: [
+        { icon: FolderTree, label: "Groups", href: "/groups", requiredPermission: "users.read" },
         { icon: Users, label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
         { icon: Settings, label: "Settings", href: "/settings", requiredPermission: "users.read" },
       ]
