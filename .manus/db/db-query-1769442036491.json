@@ -1,0 +1,29 @@
+{
+  "query": "SHOW CREATE TABLE approvalInstances;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SHOW CREATE TABLE approvalInstances;",
+  "rows": [
+    {
+      "Table": "approvalInstances",
+      "Create Table": "CREATE TABLE `approvalInstances` ("
+    }
+  ],
+  "messages": [
+    "  `id` int(11) NOT NULL AUTO_INCREMENT,",
+    "  `requestId` int(11) NOT NULL,",
+    "  `requestType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,",
+    "  `workflowId` int(11) NOT NULL,",
+    "  `currentStageId` int(11) DEFAULT NULL,",
+    "  `currentStageOrder` int(11) NOT NULL DEFAULT '1',",
+    "  `status` enum('pending','in_progress','approved','rejected','cancelled','info_requested') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',",
+    "  `startedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,",
+    "  `completedAt` timestamp NULL DEFAULT NULL,",
+    "  `metadata` json DEFAULT NULL,",
+    "  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,",
+    "  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,",
+    "  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */",
+    ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+  ],
+  "stdout": "Table\tCreate Table\napprovalInstances\tCREATE TABLE `approvalInstances` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `requestId` int(11) NOT NULL,\n  `requestType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,\n  `workflowId` int(11) NOT NULL,\n  `currentStageId` int(11) DEFAULT NULL,\n  `currentStageOrder` int(11) NOT NULL DEFAULT '1',\n  `status` enum('pending','in_progress','approved','rejected','cancelled','info_requested') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',\n  `startedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `completedAt` timestamp NULL DEFAULT NULL,\n  `metadata` json DEFAULT NULL,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci\n",
+  "stderr": "",
+  "execution_time_ms": 1522
+}

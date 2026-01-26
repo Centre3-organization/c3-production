@@ -231,3 +231,8 @@
 - [x] Update workflow deletion to use confirmation dialogs
 - [x] Update group deletion to use confirmation dialogs
 - [x] Replace all toast.error calls with proper error dialogs for critical errors
+
+## Request Submission Bug Fix (Jan 26, 2026)
+- [x] Fix "try again or contact administrator" error when submitting requests
+- [x] Add missing requestType field to approvalInstances insert
+- [x] Fix instanceId extraction from insert result (use correct result structure)

@@ -1280,13 +1280,14 @@ async function startWorkflowForRequest(
   // Create approval instance
   const instanceResult = await db.insert(approvalInstances).values({
     requestId,
+    requestType: processType,
     workflowId: selectedWorkflow.id,
     currentStageId: firstStage[0].id,
     status: "in_progress",
     startedAt: new Date(),
   });
   
-  const instanceId = Number(instanceResult.insertId);
+  const instanceId = Number((instanceResult as any).insertId || (instanceResult as any)[0]?.insertId);
   
   // Create tasks for first stage
   await createTasksForStage(db, instanceId, firstStage[0].id, requestId);
