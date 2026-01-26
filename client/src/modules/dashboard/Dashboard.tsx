@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 import { 
   Users, 
   Clock, 
@@ -39,6 +40,7 @@ import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 
 export default function Home() {
+  const { t } = useTranslation();
   const [, navigate] = useLocation();
   
   // Fetch live data from dashboard API
@@ -71,8 +73,8 @@ export default function Home() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Command Center</h1>
-          <p className="text-sm text-muted-foreground">Real-time operational visibility & control</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">{t('dashboard.title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('dashboard.subtitle')}</p>
         </div>
         <Button 
           variant="outline" 
@@ -81,7 +83,7 @@ export default function Home() {
           className="gap-2 h-10 px-4"
         >
           <RefreshCw className="h-4 w-4" />
-          Refresh Data
+          {t('dashboard.refreshData')}
         </Button>
       </div>
 
@@ -89,7 +91,7 @@ export default function Home() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <Card className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Active Visitors</CardTitle>
+            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.activeVisitors')}</CardTitle>
             <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
               <Users className="h-4 w-4 text-slate-600 dark:text-slate-400" />
             </div>
@@ -115,7 +117,7 @@ export default function Home() {
           onClick={() => navigate("/approvals/l1")}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-amber-700 dark:text-amber-400 uppercase tracking-wider">Pending Approvals</CardTitle>
+            <CardTitle className="text-xs font-medium text-amber-700 dark:text-amber-400 uppercase tracking-wider">{t('dashboard.pendingApprovals')}</CardTitle>
             <div className="p-2 bg-amber-100 dark:bg-amber-900/50 rounded-lg">
               <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
             </div>
@@ -140,7 +142,7 @@ export default function Home() {
           onClick={() => navigate("/requests")}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Total Requests</CardTitle>
+            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.totalRequests')}</CardTitle>
             <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
               <FileText className="h-4 w-4 text-slate-600 dark:text-slate-400" />
             </div>
@@ -159,7 +161,7 @@ export default function Home() {
 
         <Card className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Approval Rate</CardTitle>
+            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.approvalRate')}</CardTitle>
             <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
               <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
             </div>
@@ -181,7 +183,7 @@ export default function Home() {
 
         <Card className="border border-rose-200 dark:border-rose-800/50 bg-rose-50/50 dark:bg-rose-950/20 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-rose-700 dark:text-rose-400 uppercase tracking-wider">Security Alerts</CardTitle>
+            <CardTitle className="text-xs font-medium text-rose-700 dark:text-rose-400 uppercase tracking-wider">{t('dashboard.securityAlerts')}</CardTitle>
             <div className="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-lg">
               <ShieldAlert className="h-4 w-4 text-rose-600 dark:text-rose-400" />
             </div>
@@ -203,7 +205,7 @@ export default function Home() {
           onClick={() => navigate("/sites")}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Facilities</CardTitle>
+            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.facilities')}</CardTitle>
             <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
               <Building2 className="h-4 w-4 text-slate-600 dark:text-slate-400" />
             </div>
@@ -227,7 +229,7 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <Activity className="h-5 w-5 text-white/80" />
-              <span className="font-medium text-slate-100">Quick Actions</span>
+              <span className="font-medium text-slate-100">{t('dashboard.quickActions')}</span>
             </div>
             <div className="flex flex-wrap gap-3">
               <Button 
@@ -236,7 +238,7 @@ export default function Home() {
                 onClick={() => navigate("/approvals/l1")}
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" /> 
-                L1 Queue ({stats?.pendingL1 || 0})
+                {t('dashboard.l1Queue')} ({stats?.pendingL1 || 0})
               </Button>
               <Button 
                 size="default" 

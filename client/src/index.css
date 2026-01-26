@@ -302,6 +302,43 @@
   }
 }
 
+/* RTL Support - Logical Properties */
+@layer utilities {
+  /* Direction-aware margin and padding */
+  .ms-auto { margin-inline-start: auto; }
+  .me-auto { margin-inline-end: auto; }
+  .ps-0 { padding-inline-start: 0; }
+  .pe-0 { padding-inline-end: 0; }
+  
+  /* RTL-aware text alignment */
+  .text-start { text-align: start; }
+  .text-end { text-align: end; }
+  
+  /* RTL-aware flex direction */
+  [dir="rtl"] .rtl\:flex-row-reverse { flex-direction: row-reverse; }
+  [dir="rtl"] .rtl\:space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+  
+  /* RTL-aware positioning */
+  [dir="rtl"] .rtl\:right-0 { right: 0; left: auto; }
+  [dir="rtl"] .rtl\:left-0 { left: 0; right: auto; }
+  [dir="rtl"] .rtl\:right-auto { right: auto; }
+  [dir="rtl"] .rtl\:left-auto { left: auto; }
+  
+  /* RTL sidebar positioning */
+  [dir="rtl"] .sidebar-rtl {
+    left: auto;
+    right: 0;
+  }
+  
+  /* RTL main content margin */
+  [dir="rtl"] .main-content-rtl {
+    margin-left: 0;
+    margin-right: var(--sidebar-width, 16rem);
+  }
+}
+
 /* Utility classes for Center3 brand colors */
 @layer utilities {
   .text-center3-purple {

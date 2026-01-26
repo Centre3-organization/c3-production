@@ -43,6 +43,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -419,6 +421,8 @@ export default function Layout({ children }: LayoutProps) {
           </div>
 
           <div className="flex items-center gap-3">
+            <LanguageSelector variant="minimal" />
+            
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
