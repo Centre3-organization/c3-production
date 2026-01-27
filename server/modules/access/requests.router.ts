@@ -248,10 +248,14 @@ export const requestsRouter = router({
           status: requests.status,
           visitorName: requests.visitorName,
           visitorCompany: requests.visitorCompany,
+          visitorPhone: requests.visitorPhone,
+          visitorEmail: requests.visitorEmail,
           purpose: requests.purpose,
           siteId: requests.siteId,
           siteName: sites.name,
           createdAt: requests.createdAt,
+          startDate: requests.startDate,
+          endDate: requests.endDate,
         })
         .from(requests)
         .leftJoin(sites, eq(requests.siteId, sites.id))
@@ -259,11 +263,51 @@ export const requestsRouter = router({
       
       const requestsMap = new Map(requestsData.map(r => [r.id, r]));
       
-      return tasks.map(task => ({
-        ...task,
-        totalStages: stageCountMap.get(task.workflowId) || 1,
-        request: requestsMap.get(task.requestId),
-      }));
+      // Get access method data from approval instances
+      const instanceIds = Array.from(new Set(tasks.map(t => t.instanceId)));
+      const instancesData = await db
+        .select({
+          id: approvalInstances.id,
+          entryMethod: approvalInstances.entryMethod,
+          qrCodeData: approvalInstances.qrCodeData,
+          rfidTag: approvalInstances.rfidTag,
+          cardNumber: approvalInstances.cardNumber,
+          accessGrantedBy: approvalInstances.accessGrantedBy,
+          accessGrantedAt: approvalInstances.accessGrantedAt,
+        })
+        .from(approvalInstances)
+        .where(inArray(approvalInstances.id, instanceIds));
+      
+      const instancesMap = new Map(instancesData.map(i => [i.id, i]));
+      
+      // Get access granted by user names
+      const grantedByIds = instancesData.filter(i => i.accessGrantedBy).map(i => i.accessGrantedBy!);
+      let grantedByMap = new Map<number, string | null>();
+      if (grantedByIds.length > 0) {
+        const grantedByUsers = await db
+          .select({ id: users.id, name: users.name })
+          .from(users)
+          .where(inArray(users.id, grantedByIds));
+        grantedByMap = new Map(grantedByUsers.map(u => [u.id, u.name]));
+      }
+      
+      return tasks.map(task => {
+        const instance = instancesMap.get(task.instanceId);
+        return {
+          ...task,
+          totalStages: stageCountMap.get(task.workflowId) || 1,
+          request: requestsMap.get(task.requestId),
+          accessMethod: instance ? {
+            entryMethod: instance.entryMethod,
+            qrCodeData: instance.qrCodeData,
+            rfidTag: instance.rfidTag,
+            cardNumber: instance.cardNumber,
+            accessGrantedBy: instance.accessGrantedBy,
+            accessGrantedByName: instance.accessGrantedBy ? grantedByMap.get(instance.accessGrantedBy) : null,
+            accessGrantedAt: instance.accessGrantedAt,
+          } : null,
+        };
+      });
     }),
   
   // Get approval statistics for dashboard

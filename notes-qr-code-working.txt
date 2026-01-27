@@ -1,0 +1,14 @@
+QR Code Feature Testing - Jan 27, 2026
+
+The Request Details page (RequestList.tsx) is working correctly:
+- Shows Access Method section with QR Code badge
+- Displays the QR code image
+- Shows QR Code Data: CENTRE3-30024-MKWE3...-4VE3CY
+- Shows Granted by Mohsiin
+- Has Change Method button
+- Has Regenerate QR button
+- Has Resend dropdown for Email/SMS/WhatsApp
+
+The issue is that the Approval History page (ApprovalHistory.tsx) needs to be updated to show the same Access Method section for approved requests that have an entry method set.
+
+The data is being returned from the backend (accessMethod object is present), but the condition in ApprovalHistory.tsx needs to check if the request has an entryMethod set.

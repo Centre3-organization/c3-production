@@ -1,0 +1,65 @@
+{
+  "query": "SELECT ai.id, ai.requestId, ai.status, ai.entryMethod, ai.qrCodeData, ai.rfidTag, ai.cardNumber, r.requestNumber, r.status as requestStatus FROM approvalInstances ai JOIN requests r ON ai.requestId = r.id WHERE ai.status = 'approved' LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT ai.id, ai.requestId, ai.status, ai.entryMethod, ai.qrCodeData, ai.rfidTag, ai.cardNumber, r.requestNumber, r.status as requestStatus FROM approvalInstances ai JOIN requests r ON ai.requestId = r.id WHERE ai.status = 'approved' LIMIT 10;",
+  "rows": [
+    {
+      "id": "4",
+      "requestId": "30008",
+      "status": "approved",
+      "entryMethod": "NULL",
+      "qrCodeData": "NULL",
+      "rfidTag": "NULL",
+      "cardNumber": "NULL",
+      "requestNumber": "REQ-20260126-60UFF8",
+      "requestStatus": "approved"
+    },
+    {
+      "id": "5",
+      "requestId": "30010",
+      "status": "approved",
+      "entryMethod": "NULL",
+      "qrCodeData": "NULL",
+      "rfidTag": "NULL",
+      "cardNumber": "NULL",
+      "requestNumber": "REQ-20260126-2LMV6U",
+      "requestStatus": "approved"
+    },
+    {
+      "id": "6",
+      "requestId": "30015",
+      "status": "approved",
+      "entryMethod": "NULL",
+      "qrCodeData": "NULL",
+      "rfidTag": "NULL",
+      "cardNumber": "NULL",
+      "requestNumber": "REQ-20260126-LDGBBQ",
+      "requestStatus": "approved"
+    },
+    {
+      "id": "7",
+      "requestId": "30020",
+      "status": "approved",
+      "entryMethod": "NULL",
+      "qrCodeData": "NULL",
+      "rfidTag": "NULL",
+      "cardNumber": "NULL",
+      "requestNumber": "REQ-20260126-HZ57YD",
+      "requestStatus": "approved"
+    },
+    {
+      "id": "8",
+      "requestId": "30024",
+      "status": "approved",
+      "entryMethod": "qr_code",
+      "qrCodeData": "CENTRE3-30024-MKWE3CWE-4VE3CY",
+      "rfidTag": "NULL",
+      "cardNumber": "NULL",
+      "requestNumber": "REQ-20260126-S98MQH",
+      "requestStatus": "approved"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\trequestId\tstatus\tentryMethod\tqrCodeData\trfidTag\tcardNumber\trequestNumber\trequestStatus\n4\t30008\tapproved\tNULL\tNULL\tNULL\tNULL\tREQ-20260126-60UFF8\tapproved\n5\t30010\tapproved\tNULL\tNULL\tNULL\tNULL\tREQ-20260126-2LMV6U\tapproved\n6\t30015\tapproved\tNULL\tNULL\tNULL\tNULL\tREQ-20260126-LDGBBQ\tapproved\n7\t30020\tapproved\tNULL\tNULL\tNULL\tNULL\tREQ-20260126-HZ57YD\tapproved\n8\t30024\tapproved\tqr_code\tCENTRE3-30024-MKWE3CWE-4VE3CY\tNULL\tNULL\tREQ-20260126-S98MQH\tapproved\n",
+  "stderr": "",
+  "execution_time_ms": 1595
+}

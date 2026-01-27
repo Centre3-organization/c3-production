@@ -1,0 +1,20 @@
+Approval History Dialog Testing - Jan 27, 2026
+
+Current State:
+- The Decision Details dialog opens correctly
+- Shows request number: REQ-20260127-2CMAU6
+- Shows L3 Approved badge with 3/3 progress
+- Shows visitor: Mohsiin, Company: N/A
+- Shows workflow: Standard Access Request
+- Shows assigned at: Jan 27, 2026 09:44
+- Shows decided at: N/A (issue - should show decision time)
+
+Issue Found:
+- The Access Method section is NOT showing even though this is an L3 (final stage) approved request
+- The condition checks for selectedTask.request?.status === 'approved' but the request status may not be 'approved' yet
+- Need to check if the access method data is being returned from the backend
+
+Next Steps:
+1. Check if the accessMethod data is being returned from getMyApprovalHistory
+2. The condition may need to be adjusted - it should show for any L3 approved task where the overall request is approved
+3. May need to check if the entryMethod was actually set during the approval process

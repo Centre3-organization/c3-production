@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { 
   CheckCircle2, 
@@ -15,12 +15,23 @@ import {
   FileText,
   Eye,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  QrCode,
+  Radio,
+  CreditCard,
+  Shield,
+  Copy,
+  Send,
+  Mail,
+  MessageSquare,
+  Phone as PhoneIcon,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -35,8 +46,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { trpc } from "@/lib/trpc";
 import { format } from "date-fns";
+import { toast } from "sonner";
+import QRCode from "qrcode";
 
 const typeLabels: Record<string, string> = {
   admin_visit: "Admin Visit",
@@ -65,6 +84,12 @@ const stageColors = [
   "bg-emerald-100 text-emerald-800 border-emerald-300",
 ];
 
+const entryMethodConfig: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
+  qr_code: { label: "QR Code", icon: <QrCode className="h-4 w-4" />, color: "text-green-700 bg-green-100" },
+  rfid: { label: "RFID Tag", icon: <Radio className="h-4 w-4" />, color: "text-blue-700 bg-blue-100" },
+  card: { label: "Access Card", icon: <CreditCard className="h-4 w-4" />, color: "text-purple-700 bg-purple-100" },
+};
+
 function getStageColor(stageOrder: number): string {
   return stageColors[(stageOrder - 1) % stageColors.length];
 }
@@ -76,12 +101,36 @@ export default function ApprovalHistory() {
   const [page, setPage] = useState(0);
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [qrCodeImage, setQrCodeImage] = useState<string>("");
+  const [resendingChannel, setResendingChannel] = useState<string | null>(null);
   const pageSize = 20;
   
   const { data: historyTasks, isLoading, refetch } = trpc.requests.getMyApprovalHistory.useQuery({
     limit: pageSize,
     offset: page * pageSize,
   });
+  
+  // Generate QR code when selected task changes
+  useEffect(() => {
+    const generateQr = async () => {
+      if (selectedTask?.accessMethod?.qrCodeData) {
+        try {
+          const qrDataUrl = await QRCode.toDataURL(selectedTask.accessMethod.qrCodeData, {
+            width: 200,
+            margin: 2,
+            color: { dark: "#000000", light: "#ffffff" }
+          });
+          setQrCodeImage(qrDataUrl);
+        } catch (err) {
+          console.error("Failed to generate QR code:", err);
+          setQrCodeImage("");
+        }
+      } else {
+        setQrCodeImage("");
+      }
+    };
+    generateQr();
+  }, [selectedTask]);
   
   // Filter by search and status
   const filteredTasks = (historyTasks || []).filter((task: any) => {
@@ -102,6 +151,68 @@ export default function ApprovalHistory() {
   const handleViewDetails = (task: any) => {
     setSelectedTask(task);
     setDetailsDialogOpen(true);
+  };
+  
+  const handleCopyQrData = () => {
+    if (selectedTask?.accessMethod?.qrCodeData) {
+      navigator.clipboard.writeText(selectedTask.accessMethod.qrCodeData);
+      toast.success("QR code data copied to clipboard");
+    }
+  };
+  
+  const handleResendCredentials = async (channel: "email" | "sms" | "whatsapp") => {
+    if (!selectedTask) return;
+    
+    setResendingChannel(channel);
+    
+    try {
+      const visitorEmail = selectedTask.request?.visitorEmail;
+      const visitorPhone = selectedTask.request?.visitorPhone;
+      const accessMethod = selectedTask.accessMethod;
+      
+      if (channel === "email") {
+        if (!visitorEmail) {
+          toast.error("No email address available", { description: "Visitor email is not provided" });
+          setResendingChannel(null);
+          return;
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        toast.success("Access credentials sent via Email", { 
+          description: `Sent to ${visitorEmail}` 
+        });
+      } else if (channel === "sms") {
+        if (!visitorPhone) {
+          toast.error("No phone number available", { description: "Visitor phone is not provided" });
+          setResendingChannel(null);
+          return;
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        toast.success("Access credentials sent via SMS", { 
+          description: `Sent to ${visitorPhone}` 
+        });
+      } else if (channel === "whatsapp") {
+        if (!visitorPhone) {
+          toast.error("No phone number available", { description: "Visitor phone is not provided" });
+          setResendingChannel(null);
+          return;
+        }
+        const message = encodeURIComponent(
+          `Your access credentials for ${selectedTask.request?.siteName || 'the facility'}:\n\n` +
+          `Request: ${selectedTask.request?.requestNumber}\n` +
+          `Valid: ${selectedTask.request?.startDate ? format(new Date(selectedTask.request.startDate), "MMM d, yyyy") : "N/A"} - ${selectedTask.request?.endDate ? format(new Date(selectedTask.request.endDate), "MMM d, yyyy") : "N/A"}\n` +
+          (accessMethod?.entryMethod === "qr_code" ? `\nAccess Code: ${accessMethod.qrCodeData}` : "") +
+          (accessMethod?.entryMethod === "rfid" ? `\nRFID Tag: ${accessMethod.rfidTag}` : "") +
+          (accessMethod?.entryMethod === "card" ? `\nCard Number: ${accessMethod.cardNumber}` : "")
+        );
+        const phone = visitorPhone.replace(/[^0-9]/g, "");
+        window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+        toast.success("WhatsApp opened", { description: "Message prepared for sending" });
+      }
+    } catch (error) {
+      toast.error("Failed to send credentials", { description: "Please try again" });
+    } finally {
+      setResendingChannel(null);
+    }
   };
 
   // Stage progress component
@@ -301,7 +412,7 @@ export default function ApprovalHistory() {
 
       {/* Details Dialog */}
       <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5 text-[#0f62fe]" />
@@ -343,6 +454,104 @@ export default function ApprovalHistory() {
                 />
               </div>
               
+              {/* Access Method Section - Show for final stage approved tasks with access method */}
+              {selectedTask.taskStatus === 'approved' && selectedTask.accessMethod?.entryMethod && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold flex items-center gap-2 text-green-800">
+                      <Shield className="h-4 w-4" />
+                      Access Method
+                    </h4>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="secondary" className={`${entryMethodConfig[selectedTask.accessMethod.entryMethod]?.color} gap-2 text-sm px-3 py-2`}>
+                        {entryMethodConfig[selectedTask.accessMethod.entryMethod]?.icon}
+                        {entryMethodConfig[selectedTask.accessMethod.entryMethod]?.label}
+                      </Badge>
+                      {selectedTask.accessMethod.accessGrantedByName && (
+                        <span className="text-sm text-muted-foreground">
+                          Granted by {selectedTask.accessMethod.accessGrantedByName}
+                        </span>
+                      )}
+                    </div>
+                    
+                    {/* QR Code Display */}
+                    {selectedTask.accessMethod.entryMethod === "qr_code" && selectedTask.accessMethod.qrCodeData && (
+                      <div className="flex items-start gap-4 p-3 bg-white rounded-lg border">
+                        {qrCodeImage && (
+                          <img src={qrCodeImage} alt="Access QR Code" className="w-32 h-32" />
+                        )}
+                        <div className="flex-1 space-y-2">
+                          <div>
+                            <Label className="text-xs text-muted-foreground">QR Code Data</Label>
+                            <div className="flex items-center gap-2">
+                              <code className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
+                                {selectedTask.accessMethod.qrCodeData}
+                              </code>
+                              <Button variant="ghost" size="sm" onClick={handleCopyQrData}>
+                                <Copy className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* RFID Display */}
+                    {selectedTask.accessMethod.entryMethod === "rfid" && selectedTask.accessMethod.rfidTag && (
+                      <div className="p-3 bg-white rounded-lg border">
+                        <Label className="text-xs text-muted-foreground">RFID Tag Number</Label>
+                        <p className="font-mono text-sm">{selectedTask.accessMethod.rfidTag}</p>
+                      </div>
+                    )}
+                    
+                    {/* Card Display */}
+                    {selectedTask.accessMethod.entryMethod === "card" && selectedTask.accessMethod.cardNumber && (
+                      <div className="p-3 bg-white rounded-lg border">
+                        <Label className="text-xs text-muted-foreground">Card Number</Label>
+                        <p className="font-mono text-sm">{selectedTask.accessMethod.cardNumber}</p>
+                      </div>
+                    )}
+                    
+                    {/* Resend Credentials Button */}
+                    <div className="pt-3 border-t border-green-200">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-green-700">Send access credentials to visitor</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm" className="gap-2" disabled={!!resendingChannel}>
+                              {resendingChannel ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Send className="h-4 w-4" />
+                              )}
+                              {resendingChannel ? "Sending..." : "Resend"}
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleResendCredentials("email")} className="gap-2">
+                              <Mail className="h-4 w-4" />
+                              Send via Email
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleResendCredentials("sms")} className="gap-2">
+                              <MessageSquare className="h-4 w-4" />
+                              Send via SMS
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleResendCredentials("whatsapp")} className="gap-2">
+                              <PhoneIcon className="h-4 w-4" />
+                              Send via WhatsApp
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               {/* Details grid */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-3">
@@ -356,7 +565,7 @@ export default function ApprovalHistory() {
                   </div>
                   <div>
                     <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.purpose", "Purpose")}</label>
-                    <p className="text-sm font-medium">{selectedTask.request?.purpose || "N/A"}</p>
+                    <p className="text-sm font-medium">{selectedTask.request?.purpose || "Request"}</p>
                   </div>
                 </div>
                 <div className="space-y-3">

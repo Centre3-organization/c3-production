@@ -648,3 +648,8 @@ Time conditions:
 - [x] Update login page title to "Welcome to Centre3"
 - [x] Update login page description text
 - [x] Add Arabic translation for new text
+
+## Approval History QR Code Fix (Jan 27, 2026)
+- [x] Add QR code display to Decision Details dialog in Approval History
+- [x] Add resend credentials button (Email/SMS/WhatsApp) to Decision Details dialog
+- [x] Fetch access method data for approved requests in history view

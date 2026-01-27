@@ -1,0 +1,40 @@
+{
+  "query": "SELECT ai.id, ai.entryMethod, ai.qrCodeData, r.requestNumber FROM approvalInstances ai JOIN requests r ON ai.requestId = r.id WHERE ai.status = 'approved';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT ai.id, ai.entryMethod, ai.qrCodeData, r.requestNumber FROM approvalInstances ai JOIN requests r ON ai.requestId = r.id WHERE ai.status = 'approved';",
+  "rows": [
+    {
+      "id": "4",
+      "entryMethod": "NULL",
+      "qrCodeData": "NULL",
+      "requestNumber": "REQ-20260126-60UFF8"
+    },
+    {
+      "id": "5",
+      "entryMethod": "NULL",
+      "qrCodeData": "NULL",
+      "requestNumber": "REQ-20260126-2LMV6U"
+    },
+    {
+      "id": "6",
+      "entryMethod": "NULL",
+      "qrCodeData": "NULL",
+      "requestNumber": "REQ-20260126-LDGBBQ"
+    },
+    {
+      "id": "7",
+      "entryMethod": "NULL",
+      "qrCodeData": "NULL",
+      "requestNumber": "REQ-20260126-HZ57YD"
+    },
+    {
+      "id": "8",
+      "entryMethod": "qr_code",
+      "qrCodeData": "CENTRE3-30024-MKWE3CWE-4VE3CY",
+      "requestNumber": "REQ-20260126-S98MQH"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tentryMethod\tqrCodeData\trequestNumber\n4\tNULL\tNULL\tREQ-20260126-60UFF8\n5\tNULL\tNULL\tREQ-20260126-2LMV6U\n6\tNULL\tNULL\tREQ-20260126-LDGBBQ\n7\tNULL\tNULL\tREQ-20260126-HZ57YD\n8\tqr_code\tCENTRE3-30024-MKWE3CWE-4VE3CY\tREQ-20260126-S98MQH\n",
+  "stderr": "",
+  "execution_time_ms": 1521
+}
