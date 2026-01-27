@@ -596,6 +596,41 @@ export const requestsRouter = router({
         }
       }
       
+      // Get access method info from workflow instance
+      let accessMethod: {
+        entryMethod: string | null;
+        qrCodeData: string | null;
+        rfidTag: string | null;
+        cardNumber: string | null;
+        accessGrantedBy: number | null;
+        accessGrantedByName: string | null;
+        accessGrantedAt: Date | null;
+      } | null = null;
+      
+      if (workflowInstance.length > 0 && workflowInstance[0].status === "approved") {
+        const instance = workflowInstance[0];
+        let grantedByName: string | null = null;
+        
+        if (instance.accessGrantedBy) {
+          const grantedByUser = await db
+            .select({ name: users.name })
+            .from(users)
+            .where(eq(users.id, instance.accessGrantedBy))
+            .limit(1);
+          grantedByName = grantedByUser[0]?.name || null;
+        }
+        
+        accessMethod = {
+          entryMethod: instance.entryMethod,
+          qrCodeData: instance.qrCodeData,
+          rfidTag: instance.rfidTag,
+          cardNumber: instance.cardNumber,
+          accessGrantedBy: instance.accessGrantedBy,
+          accessGrantedByName: grantedByName,
+          accessGrantedAt: instance.accessGrantedAt,
+        };
+      }
+      
       return {
         ...request,
         zones: zonesData.map(z => ({
@@ -608,6 +643,7 @@ export const requestsRouter = router({
         approvals: approvalsData,
         workflowHistory,
         currentStage,
+        accessMethod,
       };
     }),
   
@@ -846,8 +882,12 @@ export const requestsRouter = router({
     .input(z.object({
       taskId: z.number(),
       comments: z.string().optional(),
-      entryMethod: z.enum(["manual", "rfid", "card"]).optional(),
-      cardNumber: z.string().max(50).optional(),
+      // Entry method for final approval stage
+      entryMethod: z.enum(["qr_code", "rfid", "card"]).optional(),
+      rfidTag: z.string().max(100).optional(),
+      cardNumber: z.string().max(100).optional(),
+      // Flag to indicate this is the final approval
+      isFinalApproval: z.boolean().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       const db = await getDb();
@@ -939,9 +979,25 @@ export const requestsRouter = router({
           return { success: true, message: `Approved. Request moved to ${nextStage[0].stageName}` };
         } else {
           // No more stages - request is fully approved
+          // Generate QR code data if QR method selected
+          let qrCodeData: string | undefined;
+          if (input.entryMethod === "qr_code") {
+            // Generate unique QR code: REQ-{requestId}-{timestamp}-{random}
+            const timestamp = Date.now().toString(36);
+            const random = Math.random().toString(36).slice(2, 8);
+            qrCodeData = `CENTRE3-${instance.requestId}-${timestamp}-${random}`.toUpperCase();
+          }
+          
           await db.update(approvalInstances)
             .set({ 
-              status: "approved"
+              status: "approved",
+              completedAt: new Date(),
+              entryMethod: input.entryMethod || null,
+              qrCodeData: qrCodeData || null,
+              rfidTag: input.rfidTag || null,
+              cardNumber: input.cardNumber || null,
+              accessGrantedBy: ctx.user.id,
+              accessGrantedAt: new Date(),
             })
             .where(eq(approvalInstances.id, instance.id));
           
@@ -954,10 +1010,22 @@ export const requestsRouter = router({
             instanceId: instance.id,
             actionType: "workflow_completed",
             actionBy: ctx.user.id,
-            details: { newStatus: "approved" },
+            details: { 
+              newStatus: "approved",
+              entryMethod: input.entryMethod,
+              qrCodeData: qrCodeData,
+              rfidTag: input.rfidTag,
+              cardNumber: input.cardNumber,
+            },
           });
           
-          return { success: true, message: "Request fully approved" };
+          return { 
+            success: true, 
+            message: "Request fully approved",
+            entryMethod: input.entryMethod,
+            qrCodeData: qrCodeData,
+            isFinalApproval: true,
+          };
         }
       }
       
@@ -1104,6 +1172,71 @@ export const requestsRouter = router({
       });
       
       return { success: true, message: "Rejection recorded" };
+    }),
+  
+  // Update access method for an approved request
+  updateAccessMethod: protectedProcedure
+    .input(z.object({
+      requestId: z.number(),
+      entryMethod: z.enum(["qr_code", "rfid", "card"]),
+      rfidTag: z.string().max(100).optional(),
+      cardNumber: z.string().max(100).optional(),
+      regenerateQr: z.boolean().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      // Get the approval instance for this request
+      const instance = await db
+        .select()
+        .from(approvalInstances)
+        .where(eq(approvalInstances.requestId, input.requestId))
+        .limit(1);
+      
+      if (instance.length === 0) throw new Error("No approval instance found for this request");
+      if (instance[0].status !== "approved") throw new Error("Request is not approved");
+      
+      // Generate new QR code if requested or if switching to QR method
+      let qrCodeData = instance[0].qrCodeData;
+      if (input.entryMethod === "qr_code" && (input.regenerateQr || !qrCodeData)) {
+        const timestamp = Date.now().toString(36);
+        const random = Math.random().toString(36).slice(2, 8);
+        qrCodeData = `CENTRE3-${input.requestId}-${timestamp}-${random}`.toUpperCase();
+      }
+      
+      // Update the instance with new access method
+      await db.update(approvalInstances)
+        .set({
+          entryMethod: input.entryMethod,
+          qrCodeData: input.entryMethod === "qr_code" ? qrCodeData || null : null,
+          rfidTag: input.entryMethod === "rfid" ? (input.rfidTag || null) : null,
+          cardNumber: input.entryMethod === "card" ? (input.cardNumber || null) : null,
+          accessGrantedBy: ctx.user.id,
+          accessGrantedAt: new Date(),
+        })
+        .where(eq(approvalInstances.id, instance[0].id));
+      
+      // Record history
+      await db.insert(approvalHistory).values({
+        instanceId: instance[0].id,
+        actionType: "decision_made",
+        actionBy: ctx.user.id,
+        details: {
+          previousStatus: "access_method_updated",
+          entryMethod: input.entryMethod,
+          qrCodeData: input.entryMethod === "qr_code" && qrCodeData ? qrCodeData : undefined,
+          rfidTag: input.entryMethod === "rfid" && input.rfidTag ? input.rfidTag : undefined,
+          cardNumber: input.entryMethod === "card" && input.cardNumber ? input.cardNumber : undefined,
+        },
+      });
+      
+      return {
+        success: true,
+        message: "Access method updated",
+        entryMethod: input.entryMethod,
+        qrCodeData: input.entryMethod === "qr_code" ? qrCodeData : null,
+      };
     }),
   
   // ============================================================================

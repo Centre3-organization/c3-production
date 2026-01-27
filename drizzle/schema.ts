@@ -887,6 +887,13 @@ export const approvalInstances = mysqlTable("approvalInstances", {
     "cancelled",
     "info_requested"
   ]).default("pending").notNull(),
+  // Access grant fields - set on final approval
+  entryMethod: mysqlEnum("entryMethod", ["qr_code", "rfid", "card"]),
+  qrCodeData: varchar("qrCodeData", { length: 500 }), // Unique QR code identifier
+  rfidTag: varchar("rfidTag", { length: 100 }),
+  cardNumber: varchar("cardNumber", { length: 100 }),
+  accessGrantedBy: int("accessGrantedBy"),
+  accessGrantedAt: timestamp("accessGrantedAt"),
   startedAt: timestamp("startedAt").defaultNow().notNull(),
   completedAt: timestamp("completedAt"),
   metadata: json("metadata").$type<{
@@ -992,6 +999,8 @@ export const approvalHistory = mysqlTable("approvalHistory", {
     completedStages?: number;
     entryMethod?: string;
     cardNumber?: string;
+    qrCodeData?: string;
+    rfidTag?: string;
   }>(),
   ipAddress: varchar("ipAddress", { length: 45 }),
   userAgent: text("userAgent"),

@@ -69,7 +69,7 @@ export default function ManualApproval() {
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
   const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
-  const [entryMethod, setEntryMethod] = useState<"manual" | "rfid" | "card">("manual");
+  const [entryMethod, setEntryMethod] = useState<"qr_code" | "rfid" | "card">("qr_code");
   const [cardNumber, setCardNumber] = useState("");
   const [comments, setComments] = useState("");
   const [rejectReason, setRejectReason] = useState("");
@@ -83,7 +83,7 @@ export default function ManualApproval() {
   const approveTask = trpc.requests.approveTask.useMutation({
     onSuccess: (result) => {
       toast.success("Access Granted", {
-        description: result.message || `Entry method: ${entryMethod === "manual" ? "Manual Entry" : entryMethod === "rfid" ? "RFID Tag" : "Access Card"}`
+        description: result.message || `Entry method: ${entryMethod === "qr_code" ? "QR Code" : entryMethod === "rfid" ? "RFID Tag" : "Access Card"}`
       });
       refetch();
       setSelectedRequest(null);
@@ -114,7 +114,7 @@ export default function ManualApproval() {
   });
   
   const resetForm = () => {
-    setEntryMethod("manual");
+    setEntryMethod("qr_code");
     setCardNumber("");
     setComments("");
     setRejectReason("");
@@ -154,7 +154,7 @@ export default function ManualApproval() {
     setProcessingId(selectedRequest.taskId);
     approveTask.mutate({
       taskId: selectedRequest.taskId,
-      comments: comments || `Approved with ${entryMethod === "manual" ? "Manual Entry" : entryMethod === "rfid" ? "RFID Tag" : "Access Card"}`,
+      comments: comments || `Approved with ${entryMethod === "qr_code" ? "QR Code" : entryMethod === "rfid" ? "RFID Tag" : "Access Card"}`,
       entryMethod,
       cardNumber: cardNumber || undefined,
     });
@@ -458,17 +458,17 @@ export default function ManualApproval() {
               <Label className="text-sm font-medium">Entry Method</Label>
               <RadioGroup 
                 value={entryMethod} 
-                onValueChange={(v) => setEntryMethod(v as "manual" | "rfid" | "card")}
+                onValueChange={(v) => setEntryMethod(v as "qr_code" | "rfid" | "card")}
                 className="grid grid-cols-3 gap-3"
               >
                 <div className="relative">
-                  <RadioGroupItem value="manual" id="manual" className="peer sr-only" />
+                  <RadioGroupItem value="qr_code" id="qr_code" className="peer sr-only" />
                   <Label 
-                    htmlFor="manual" 
+                    htmlFor="qr_code" 
                     className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-indigo-600 cursor-pointer"
                   >
-                    <Fingerprint className="h-6 w-6 mb-2" />
-                    <span className="text-xs font-medium">Manual</span>
+                    <Scan className="h-6 w-6 mb-2" />
+                    <span className="text-xs font-medium">QR Code</span>
                   </Label>
                 </div>
                 <div className="relative">

@@ -601,3 +601,32 @@ Time conditions:
 - [x] Created 16 unit tests for workflow conditions
 - [x] All tests passing
 - [x] Verified UI works correctly in browser
+
+
+## Access Grant Options Feature (Jan 27, 2026)
+
+### Phase 1: Database & Backend
+- [x] Add entryMethod field to approvalInstances table (qr_code, rfid, card)
+- [x] Add qrCodeData field to store generated QR code information
+- [x] Add cardNumber field for card-based access
+- [x] Add rfidTag field for RFID-based access
+- [x] Add accessGrantedBy and accessGrantedAt fields
+- [x] Create QR code generation utility (using qrcode npm package)
+- [x] Update approval completion endpoint to accept entry method
+- [x] Create updateAccessMethod endpoint for changing method on approved requests
+
+### Phase 2: Final Approval UI
+- [x] Add entry method selection dialog on final stage approval
+- [x] Implement QR Code option with generation
+- [x] Implement RFID option with tag input
+- [x] Implement Card option with card number input
+- [x] Show generated QR code after approval
+
+### Phase 3: Approved Request View
+- [x] Add "Access Method" section to request details (green highlighted box)
+- [x] Display current entry method (QR/RFID/Card) with icon badges
+- [x] Show QR code image if QR method selected
+- [x] Add "Change Method" button to modify entry method
+- [x] Add "Regenerate QR" button for QR method
+- [x] Show who granted access and when
+- [x] Copy QR code data to clipboard functionality

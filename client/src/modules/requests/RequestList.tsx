@@ -19,7 +19,13 @@ import {
   Loader2,
   Building2,
   User,
-  Briefcase
+  Briefcase,
+  QrCode,
+  Radio,
+  CreditCard,
+  Copy,
+  RotateCcw,
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,10 +52,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { format } from "date-fns";
+import { toast } from "sonner";
+import QRCode from "qrcode";
 
 const typeLabels: Record<string, string> = {
   admin_visit: "Admin Visit",
@@ -64,10 +75,17 @@ const statusConfig: Record<string, { label: string; icon: React.ReactNode; color
   draft: { label: "Draft", icon: <FileText className="h-3 w-3" />, color: "text-muted-foreground bg-muted" },
   pending_l1: { label: "Pending L1", icon: <Clock className="h-3 w-3" />, color: "text-amber-700 bg-amber-100" },
   pending_manual: { label: "Pending Manual", icon: <AlertCircle className="h-3 w-3" />, color: "text-blue-700 bg-blue-100" },
+  pending_approval: { label: "Pending Approval", icon: <Clock className="h-3 w-3" />, color: "text-amber-700 bg-amber-100" },
   approved: { label: "Approved", icon: <CheckCircle2 className="h-3 w-3" />, color: "text-green-700 bg-green-100" },
   rejected: { label: "Rejected", icon: <XCircle className="h-3 w-3" />, color: "text-red-700 bg-red-100" },
   cancelled: { label: "Cancelled", icon: <XCircle className="h-3 w-3" />, color: "text-gray-700 bg-gray-100" },
   expired: { label: "Expired", icon: <Clock className="h-3 w-3" />, color: "text-gray-700 bg-gray-100" },
+};
+
+const entryMethodConfig: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
+  qr_code: { label: "QR Code", icon: <QrCode className="h-4 w-4" />, color: "text-green-700 bg-green-100" },
+  rfid: { label: "RFID Tag", icon: <Radio className="h-4 w-4" />, color: "text-blue-700 bg-blue-100" },
+  card: { label: "Access Card", icon: <CreditCard className="h-4 w-4" />, color: "text-purple-700 bg-purple-100" },
 };
 
 export default function Requests() {
@@ -76,18 +94,48 @@ export default function Requests() {
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<number | null>(null);
   
+  // Access method edit state
+  const [editAccessMethodOpen, setEditAccessMethodOpen] = useState(false);
+  const [newEntryMethod, setNewEntryMethod] = useState<"qr_code" | "rfid" | "card">("qr_code");
+  const [newRfidTag, setNewRfidTag] = useState("");
+  const [newCardNumber, setNewCardNumber] = useState("");
+  const [qrCodeImage, setQrCodeImage] = useState<string>("");
+  
   const { data, isLoading, refetch } = trpc.requests.getAll.useQuery({
     status: statusFilter !== "all" ? statusFilter as any : undefined,
     type: typeFilter !== "all" ? typeFilter as any : undefined,
     limit: 100,
   });
   
-  const { data: requestDetail, isLoading: detailLoading } = trpc.requests.getById.useQuery(
+  const { data: requestDetail, isLoading: detailLoading, refetch: refetchDetail } = trpc.requests.getById.useQuery(
     { id: selectedRequest! },
     { enabled: !!selectedRequest }
   );
   
   const { data: sites } = trpc.sites.getForDropdown.useQuery();
+  
+  const updateAccessMethod = trpc.requests.updateAccessMethod.useMutation({
+    onSuccess: async (result: any) => {
+      toast.success("Access method updated");
+      if (result.entryMethod === "qr_code" && result.qrCodeData) {
+        try {
+          const qrDataUrl = await QRCode.toDataURL(result.qrCodeData, {
+            width: 300,
+            margin: 2,
+            color: { dark: "#000000", light: "#ffffff" }
+          });
+          setQrCodeImage(qrDataUrl);
+        } catch (err) {
+          console.error("Failed to generate QR code:", err);
+        }
+      }
+      refetchDetail();
+      setEditAccessMethodOpen(false);
+    },
+    onError: (error) => {
+      toast.error("Failed to update access method", { description: error.message });
+    }
+  });
   
   const requests = data?.requests || [];
   
@@ -98,22 +146,82 @@ export default function Requests() {
     return (
       req.requestNumber.toLowerCase().includes(query) ||
       req.visitorName.toLowerCase().includes(query) ||
-      (req.visitorCompany?.toLowerCase().includes(query)) ||
-      (req.siteName?.toLowerCase().includes(query))
+      req.visitorCompany?.toLowerCase().includes(query) ||
+      req.siteName?.toLowerCase().includes(query)
     );
   });
+  
+  const handleOpenAccessMethodEdit = () => {
+    if (requestDetail?.accessMethod) {
+      setNewEntryMethod(requestDetail.accessMethod.entryMethod as any || "qr_code");
+      setNewRfidTag(requestDetail.accessMethod.rfidTag || "");
+      setNewCardNumber(requestDetail.accessMethod.cardNumber || "");
+    }
+    setEditAccessMethodOpen(true);
+  };
+  
+  const handleSaveAccessMethod = () => {
+    if (!selectedRequest) return;
+    
+    if (newEntryMethod === "rfid" && !newRfidTag.trim()) {
+      toast.error("Please enter the RFID tag number");
+      return;
+    }
+    if (newEntryMethod === "card" && !newCardNumber.trim()) {
+      toast.error("Please enter the card number");
+      return;
+    }
+    
+    updateAccessMethod.mutate({
+      requestId: selectedRequest,
+      entryMethod: newEntryMethod,
+      rfidTag: newEntryMethod === "rfid" ? newRfidTag : undefined,
+      cardNumber: newEntryMethod === "card" ? newCardNumber : undefined,
+    });
+  };
+  
+  const handleRegenerateQr = () => {
+    if (!selectedRequest) return;
+    updateAccessMethod.mutate({
+      requestId: selectedRequest,
+      entryMethod: "qr_code",
+      regenerateQr: true,
+    });
+  };
+  
+  const handleCopyQrData = () => {
+    if (requestDetail?.accessMethod?.qrCodeData) {
+      navigator.clipboard.writeText(requestDetail.accessMethod.qrCodeData);
+      toast.success("QR code data copied to clipboard");
+    }
+  };
+  
+  // Generate QR code image when request detail loads
+  const generateQrImage = async (qrData: string) => {
+    try {
+      const qrDataUrl = await QRCode.toDataURL(qrData, {
+        width: 200,
+        margin: 2,
+        color: { dark: "#000000", light: "#ffffff" }
+      });
+      setQrCodeImage(qrDataUrl);
+    } catch (err) {
+      console.error("Failed to generate QR code:", err);
+    }
+  };
+  
+  // Effect to generate QR when detail loads
+  if (requestDetail?.accessMethod?.qrCodeData && !qrCodeImage) {
+    generateQrImage(requestDetail.accessMethod.qrCodeData);
+  }
 
   return (
-    <div className="space-y-4 font-sans">
-      {/* Header Section */}
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-xl text-foreground">All Requests</span>
-            <Badge variant="secondary" className="font-normal">
-              {data?.total || 0} total
-            </Badge>
-          </div>
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Requests</h1>
+          <p className="text-sm text-muted-foreground">Manage and track all access requests</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => refetch()}>
@@ -121,84 +229,51 @@ export default function Requests() {
             Refresh
           </Button>
           <Link href="/requests/new">
-            <Button size="sm" className="bg-primary text-primary-foreground">
+            <Button size="sm">
               New Request
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <div className="bg-white p-4 rounded-lg border shadow-sm">
-        <div className="flex items-end gap-4 flex-wrap">
-          <div className="flex-1 min-w-[200px]">
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Search</label>
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Search by ID, visitor, company..." 
-                className="pl-9 bg-muted/30"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </div>
-          
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-muted-foreground">Status</label>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px] bg-muted/30">
-                <SelectValue placeholder="All Statuses" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="pending_l1">Pending L1</SelectItem>
-                <SelectItem value="pending_manual">Pending Manual</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-muted-foreground">Request Type</label>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[180px] bg-muted/30">
-                <SelectValue placeholder="All Types" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="admin_visit">Admin Visit</SelectItem>
-                <SelectItem value="work_permit">Work Permit</SelectItem>
-                <SelectItem value="material_entry">Material Entry</SelectItem>
-                <SelectItem value="tep">TEP</SelectItem>
-                <SelectItem value="mop">MOP</SelectItem>
-                <SelectItem value="escort">Escort</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by request number, visitor, or company..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
         </div>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-[180px]">
+            <Filter className="h-4 w-4 mr-2" />
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            {Object.entries(statusConfig).map(([key, config]) => (
+              <SelectItem key={key} value={key}>{config.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Types</SelectItem>
+            {Object.entries(typeLabels).map(([key, label]) => (
+              <SelectItem key={key} value={key}>{label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Table Section */}
-      <div className="bg-white rounded-lg border shadow-sm">
-        {/* Table Toolbar */}
-        <div className="p-2 border-b flex items-center justify-between bg-muted/10">
-          <div className="flex items-center gap-2 px-2">
-            <span className="font-semibold text-sm">Requests ({filteredRequests.length})</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
-              <Filter className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
-              <Download className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
+      {/* Table Container */}
+      <div className="border rounded-lg bg-card">
         {/* Data Table */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
@@ -236,7 +311,10 @@ export default function Requests() {
                     <TableCell>
                       <Checkbox />
                     </TableCell>
-                    <TableCell className="font-medium text-primary cursor-pointer hover:underline" onClick={() => setSelectedRequest(req.id)}>
+                    <TableCell className="font-medium text-primary cursor-pointer hover:underline" onClick={() => {
+                      setSelectedRequest(req.id);
+                      setQrCodeImage("");
+                    }}>
                       {req.requestNumber}
                     </TableCell>
                     <TableCell>
@@ -262,7 +340,10 @@ export default function Requests() {
                         variant="ghost" 
                         size="icon" 
                         className="h-8 w-8 text-muted-foreground hover:text-primary"
-                        onClick={() => setSelectedRequest(req.id)}
+                        onClick={() => {
+                          setSelectedRequest(req.id);
+                          setQrCodeImage("");
+                        }}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -276,7 +357,12 @@ export default function Requests() {
       </div>
 
       {/* Request Detail Dialog */}
-      <Dialog open={!!selectedRequest} onOpenChange={(open) => !open && setSelectedRequest(null)}>
+      <Dialog open={!!selectedRequest} onOpenChange={(open) => {
+        if (!open) {
+          setSelectedRequest(null);
+          setQrCodeImage("");
+        }
+      }}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -304,6 +390,87 @@ export default function Requests() {
                   {typeLabels[requestDetail.type] || requestDetail.type}
                 </Badge>
               </div>
+              
+              {/* Access Method Section - Only for approved requests */}
+              {requestDetail.status === "approved" && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold flex items-center gap-2 text-green-800">
+                      <Shield className="h-4 w-4" />
+                      Access Method
+                    </h4>
+                    <Button variant="outline" size="sm" onClick={handleOpenAccessMethodEdit}>
+                      <Settings className="h-4 w-4 mr-2" />
+                      Change Method
+                    </Button>
+                  </div>
+                  
+                  {requestDetail.accessMethod?.entryMethod ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="secondary" className={`${entryMethodConfig[requestDetail.accessMethod.entryMethod]?.color} gap-2 text-sm px-3 py-2`}>
+                          {entryMethodConfig[requestDetail.accessMethod.entryMethod]?.icon}
+                          {entryMethodConfig[requestDetail.accessMethod.entryMethod]?.label}
+                        </Badge>
+                        {requestDetail.accessMethod.accessGrantedByName && (
+                          <span className="text-sm text-muted-foreground">
+                            Granted by {requestDetail.accessMethod.accessGrantedByName}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* QR Code Display */}
+                      {requestDetail.accessMethod.entryMethod === "qr_code" && requestDetail.accessMethod.qrCodeData && (
+                        <div className="flex items-start gap-4 p-3 bg-white rounded-lg border">
+                          {qrCodeImage && (
+                            <img src={qrCodeImage} alt="Access QR Code" className="w-32 h-32" />
+                          )}
+                          <div className="flex-1 space-y-2">
+                            <div>
+                              <Label className="text-xs text-muted-foreground">QR Code Data</Label>
+                              <div className="flex items-center gap-2">
+                                <code className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
+                                  {requestDetail.accessMethod.qrCodeData}
+                                </code>
+                                <Button variant="ghost" size="sm" onClick={handleCopyQrData}>
+                                  <Copy className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                            <Button variant="outline" size="sm" onClick={handleRegenerateQr}>
+                              <RotateCcw className="h-4 w-4 mr-2" />
+                              Regenerate QR
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* RFID Display */}
+                      {requestDetail.accessMethod.entryMethod === "rfid" && requestDetail.accessMethod.rfidTag && (
+                        <div className="p-3 bg-white rounded-lg border">
+                          <Label className="text-xs text-muted-foreground">RFID Tag Number</Label>
+                          <p className="font-mono text-sm">{requestDetail.accessMethod.rfidTag}</p>
+                        </div>
+                      )}
+                      
+                      {/* Card Display */}
+                      {requestDetail.accessMethod.entryMethod === "card" && requestDetail.accessMethod.cardNumber && (
+                        <div className="p-3 bg-white rounded-lg border">
+                          <Label className="text-xs text-muted-foreground">Card Number</Label>
+                          <p className="font-mono text-sm">{requestDetail.accessMethod.cardNumber}</p>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-4">
+                      <p className="text-sm text-muted-foreground mb-3">No access method assigned yet</p>
+                      <Button variant="outline" size="sm" onClick={handleOpenAccessMethodEdit}>
+                        Assign Access Method
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
               
               {/* Visitor Info */}
               <div className="bg-muted/30 rounded-lg p-4 space-y-3">
@@ -415,6 +582,107 @@ export default function Requests() {
               )}
             </div>
           ) : null}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Access Method Dialog */}
+      <Dialog open={editAccessMethodOpen} onOpenChange={setEditAccessMethodOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5" />
+              Change Access Method
+            </DialogTitle>
+            <DialogDescription>
+              Update the access method for this approved request
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            {/* Entry Method Selection */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">Select Entry Method</Label>
+              <RadioGroup value={newEntryMethod} onValueChange={(v) => setNewEntryMethod(v as any)} className="grid gap-3">
+                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "qr_code" ? "border-green-500 bg-green-50" : "hover:bg-gray-50"}`}>
+                  <RadioGroupItem value="qr_code" id="edit_qr_code" />
+                  <Label htmlFor="edit_qr_code" className="flex items-center gap-3 cursor-pointer flex-1">
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <QrCode className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium">QR Code</p>
+                      <p className="text-xs text-muted-foreground">Generate a unique QR code for visitor check-in</p>
+                    </div>
+                  </Label>
+                </div>
+                
+                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "rfid" ? "border-blue-500 bg-blue-50" : "hover:bg-gray-50"}`}>
+                  <RadioGroupItem value="rfid" id="edit_rfid" />
+                  <Label htmlFor="edit_rfid" className="flex items-center gap-3 cursor-pointer flex-1">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <Radio className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium">RFID Tag</p>
+                      <p className="text-xs text-muted-foreground">Assign an RFID tag for contactless access</p>
+                    </div>
+                  </Label>
+                </div>
+                
+                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "card" ? "border-purple-500 bg-purple-50" : "hover:bg-gray-50"}`}>
+                  <RadioGroupItem value="card" id="edit_card" />
+                  <Label htmlFor="edit_card" className="flex items-center gap-3 cursor-pointer flex-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <CreditCard className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Access Card</p>
+                      <p className="text-xs text-muted-foreground">Issue a physical access card</p>
+                    </div>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+            
+            {/* Conditional Input Fields */}
+            {newEntryMethod === "rfid" && (
+              <div className="space-y-2">
+                <Label htmlFor="newRfidTag">RFID Tag Number</Label>
+                <Input
+                  id="newRfidTag"
+                  placeholder="Enter RFID tag number..."
+                  value={newRfidTag}
+                  onChange={(e) => setNewRfidTag(e.target.value)}
+                />
+              </div>
+            )}
+            
+            {newEntryMethod === "card" && (
+              <div className="space-y-2">
+                <Label htmlFor="newCardNumber">Card Number</Label>
+                <Input
+                  id="newCardNumber"
+                  placeholder="Enter access card number..."
+                  value={newCardNumber}
+                  onChange={(e) => setNewCardNumber(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditAccessMethodOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveAccessMethod} disabled={updateAccessMethod.isPending}>
+              {updateAccessMethod.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+              )}
+              Save Changes
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
