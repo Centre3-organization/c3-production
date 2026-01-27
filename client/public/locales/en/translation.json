@@ -1,8 +1,8 @@
 {
   "common": {
     "appName": "center3",
-    "tagline": "The Future of Access Control",
-    "description": "Enterprise-grade security operations and access governance platform, navigating data centers and organizations towards secure and efficient operations.",
+    "tagline": "Welcome to Centre3",
+    "description": "Your access to secure, well-governed facilities starts here. Centre3 ensures a smooth, approved, and compliant visit to critical infrastructure.",
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
@@ -102,7 +102,7 @@
   },
   "auth": {
     "login": "Login",
-    "heroDescription": "Streamline your facility access with our enterprise-grade security platform. Manage visitor requests, approvals, and compliance in one unified system designed for data centers and critical infrastructure.",
+    "heroDescription": "Your access to secure, well-governed facilities starts here. Centre3 ensures a smooth, approved, and compliant visit to critical infrastructure.",
     "logout": "Logout",
     "register": "Register",
     "forgotPassword": "Forgot your credentials?",

@@ -643,3 +643,8 @@ Time conditions:
 - [x] Email option - validates visitor email before sending
 - [x] SMS option - validates visitor phone before sending  
 - [x] WhatsApp option - opens WhatsApp with pre-filled message containing access details
+
+## Login Page Text Update (Jan 27, 2026)
+- [x] Update login page title to "Welcome to Centre3"
+- [x] Update login page description text
+- [x] Add Arabic translation for new text
