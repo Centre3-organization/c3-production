@@ -15,6 +15,7 @@ export const users = mysqlTable("users", {
   passwordHash: varchar("passwordHash", { length: 255 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  status: mysqlEnum("status", ["active", "inactive"]).default("active").notNull(),
   departmentId: int("departmentId"),
   // Approval management fields
   managerId: int("managerId"),

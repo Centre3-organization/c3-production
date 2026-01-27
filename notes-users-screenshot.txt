@@ -1,0 +1,31 @@
+Users Page Screenshot Analysis:
+
+TABLE COLUMNS:
+1. User (name + email with avatar)
+2. Role (Administrator, Requestor, Security Guard, etc.)
+3. Department (Administration, Engineering, etc. - with lock icon)
+4. Status (active/inactive badges - green for active, gray for inactive)
+5. Last Active (date format: 1/16/2026, "16h ago", "Just now")
+6. Actions (three dots menu)
+
+ACTION MENU ITEMS:
+- Actions (header)
+- View Details (eye icon)
+- Change Role (circle icon)
+- Email User (mail icon)
+- Change Password (key icon)
+- Change Status (section header)
+- Activate (green check icon)
+- Deactivate (red X icon)
+
+TABS:
+- Users Directory
+- Roles & Permissions
+
+FILTERS:
+- Search users... (search input)
+- Filter button (funnel icon)
+
+STATUS BADGES:
+- active: green background
+- inactive: gray background

@@ -118,8 +118,8 @@
 ## User Management Updates
 - [x] Remove all unknown users from database (keep only mohsiin@gmail.com)
 - [x] Update users table schema to add firstName, lastName, phone, departmentId fields
-- [ ] Update Add User form with: First name, Last name, Email, Phone Number, Temporary Password, Role, Department
-- [ ] Update backend to handle new user fields
+- [x] Update Add User form with: First name, Last name, Email, Phone Number, Temporary Password, Role, Department
+- [x] Update backend to handle new user fields
 
 ## Fix Automatic User Creation (Jan 26, 2026)
 - [x] Fix automatic user creation on OAuth callback - only update existing users
@@ -500,3 +500,19 @@
 - [x] Add site_type, zone_type, area_type field types to FieldRenderer
 - [x] Show parent → child dropdown chain with breadcrumb path
 - [x] Store selected type ID and path in form data
+
+
+## User Management Enhancements (Jan 27, 2026)
+
+### Phase 1: New User Actions
+- [x] Add "Email User" action to dropdown menu
+- [x] Add "Change Password" action with dialog
+- [x] Add "Activate" action for inactive users
+- [x] Add "Deactivate" action for active users
+
+### Phase 2: Filters
+- [x] Add Groups filter dropdown
+- [x] Add Status filter (Active/Inactive/All)
+- [x] Add Role filter dropdown
+- [x] Add Department filter dropdown
+- [x] Add clear filters button

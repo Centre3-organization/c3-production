@@ -25,6 +25,10 @@ export const usersRouter = router({
     .input(
       z.object({
         search: z.string().optional(),
+        status: z.enum(["active", "inactive", "all"]).optional(),
+        role: z.enum(["user", "admin", "all"]).optional(),
+        departmentId: z.number().optional(),
+        groupId: z.number().optional(),
         limit: z.number().min(1).max(100).optional(),
         offset: z.number().min(0).optional(),
       }).optional()
@@ -143,6 +147,36 @@ export const usersRouter = router({
       }
       
       await updateUser(ctx.user.id, updateData);
+      return { success: true };
+    }),
+
+  // Change user password (admin only)
+  changePassword: adminProcedure
+    .input(
+      z.object({
+        userId: z.number(),
+        newPassword: z.string().min(6, "Password must be at least 6 characters"),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const passwordHash = await bcrypt.hash(input.newPassword, 10);
+      await updateUser(input.userId, { passwordHash });
+      return { success: true };
+    }),
+
+  // Activate user (admin only)
+  activate: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      await updateUser(input.id, { status: "active" } as any);
+      return { success: true };
+    }),
+
+  // Deactivate user (admin only)
+  deactivate: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      await updateUser(input.id, { status: "inactive" } as any);
       return { success: true };
     }),
 

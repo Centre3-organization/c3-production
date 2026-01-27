@@ -124,6 +124,10 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 
 export async function listUsers(options?: {
   search?: string;
+  status?: "active" | "inactive" | "all";
+  role?: "user" | "admin" | "all";
+  departmentId?: number;
+  groupId?: number;
   limit?: number;
   offset?: number;
 }): Promise<{ users: User[]; total: number }> {
@@ -134,29 +138,58 @@ export async function listUsers(options?: {
   
   if (options?.search) {
     conditions.push(
-      sql`(${users.name} LIKE ${`%${options.search}%`} OR ${users.email} LIKE ${`%${options.search}%`})`
+      sql`(${users.name} LIKE ${`%${options.search}%`} OR ${users.email} LIKE ${`%${options.search}%`} OR ${users.firstName} LIKE ${`%${options.search}%`} OR ${users.lastName} LIKE ${`%${options.search}%`})`
     );
+  }
+
+  // Status filter
+  if (options?.status && options.status !== "all") {
+    conditions.push(sql`${users.status} = ${options.status}`);
+  }
+
+  // Role filter
+  if (options?.role && options.role !== "all") {
+    conditions.push(eq(users.role, options.role));
+  }
+
+  // Department filter
+  if (options?.departmentId) {
+    conditions.push(eq(users.departmentId, options.departmentId));
   }
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
+  let query = db
+    .select()
+    .from(users)
+    .where(whereClause)
+    .orderBy(desc(users.createdAt))
+    .limit(options?.limit || 50)
+    .offset(options?.offset || 0);
+
   const [result, countResult] = await Promise.all([
-    db
-      .select()
-      .from(users)
-      .where(whereClause)
-      .orderBy(desc(users.createdAt))
-      .limit(options?.limit || 50)
-      .offset(options?.offset || 0),
+    query,
     db
       .select({ count: sql<number>`COUNT(*)` })
       .from(users)
       .where(whereClause),
   ]);
 
+  // If groupId filter is specified, filter in memory (join would be complex)
+  let filteredResult = result;
+  if (options?.groupId) {
+    // Get user IDs that belong to the group
+    const groupMembers = await db.execute(
+      sql`SELECT userId FROM userGroupMembership WHERE groupId = ${options.groupId} AND isActive = 1`
+    );
+    const rows = (groupMembers as unknown as any[][])[0] || [];
+    const memberIds = new Set(rows.map((m: any) => m.userId));
+    filteredResult = result.filter(u => memberIds.has(u.id));
+  }
+
   return {
-    users: result,
-    total: countResult[0]?.count || 0,
+    users: filteredResult,
+    total: options?.groupId ? filteredResult.length : (countResult[0]?.count || 0),
   };
 }
 

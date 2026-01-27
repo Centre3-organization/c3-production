@@ -16,7 +16,12 @@ import {
   Loader2,
   AlertCircle,
   Eye,
-  Phone
+  Phone,
+  Key,
+  UserCheck,
+  UserX,
+  X,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,6 +58,11 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { trpc } from "@/utils/trpc";
 
 // Permission definitions for the UI
@@ -150,10 +160,27 @@ export default function Users() {
   const [editUserRoleOpen, setEditUserRoleOpen] = useState(false);
   const [editUserRoleUser, setEditUserRoleUser] = useState<any>(null);
   const [selectedRoleValue, setSelectedRoleValue] = useState<string>("");
+  
+  // New state for filters
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+  const [roleFilter, setRoleFilter] = useState<"all" | "user" | "admin">("all");
+  const [departmentFilter, setDepartmentFilter] = useState<number | null>(null);
+  const [groupFilter, setGroupFilter] = useState<number | null>(null);
+  
+  // New state for dialogs
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+  const [changePasswordUser, setChangePasswordUser] = useState<any>(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Fetch users from backend
+  // Fetch users from backend with filters
   const { data: usersData, isLoading: usersLoading, error: usersError, refetch: refetchUsers } = trpc.users.list.useQuery({
     search: searchTerm || undefined,
+    status: statusFilter !== "all" ? statusFilter : undefined,
+    role: roleFilter !== "all" ? roleFilter : undefined,
+    departmentId: departmentFilter || undefined,
+    groupId: groupFilter || undefined,
   });
 
   // Fetch roles from backend
@@ -161,6 +188,9 @@ export default function Users() {
 
   // Fetch departments from backend
   const { data: departmentsData } = trpc.departments.list.useQuery({});
+
+  // Fetch groups from backend
+  const { data: groupsData } = trpc.groups.list.useQuery({});
 
   // Update user mutation
   const updateUserMutation = trpc.users.update.useMutation({
@@ -170,6 +200,42 @@ export default function Users() {
     },
     onError: (error: any) => {
       toast.error("Failed to update user", { description: error.message });
+    },
+  });
+
+  // Change password mutation
+  const changePasswordMutation = trpc.users.changePassword.useMutation({
+    onSuccess: () => {
+      toast.success("Password changed successfully");
+      setChangePasswordOpen(false);
+      setChangePasswordUser(null);
+      setNewPassword("");
+      setConfirmPassword("");
+    },
+    onError: (error: any) => {
+      toast.error("Failed to change password", { description: error.message });
+    },
+  });
+
+  // Activate user mutation
+  const activateMutation = trpc.users.activate.useMutation({
+    onSuccess: () => {
+      toast.success("User activated successfully");
+      refetchUsers();
+    },
+    onError: (error: any) => {
+      toast.error("Failed to activate user", { description: error.message });
+    },
+  });
+
+  // Deactivate user mutation
+  const deactivateMutation = trpc.users.deactivate.useMutation({
+    onSuccess: () => {
+      toast.success("User deactivated successfully");
+      refetchUsers();
+    },
+    onError: (error: any) => {
+      toast.error("Failed to deactivate user", { description: error.message });
     },
   });
 
@@ -235,6 +301,7 @@ export default function Users() {
   const users = usersData?.users || [];
   const roles = rolesData || [];
   const departments = departmentsData || [];
+  const groups = groupsData || [];
 
   const filteredUsers = useMemo(() => {
     if (!searchTerm) return users;
@@ -307,6 +374,57 @@ export default function Users() {
     }
   };
 
+  const handleEmailUser = (user: any) => {
+    if (user.email) {
+      window.location.href = `mailto:${user.email}`;
+    } else {
+      toast.error("User does not have an email address");
+    }
+  };
+
+  const handleChangePassword = (user: any) => {
+    setChangePasswordUser(user);
+    setNewPassword("");
+    setConfirmPassword("");
+    setChangePasswordOpen(true);
+  };
+
+  const handleSubmitPasswordChange = () => {
+    if (!changePasswordUser) return;
+    
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    
+    changePasswordMutation.mutate({
+      userId: changePasswordUser.id,
+      newPassword: newPassword,
+    });
+  };
+
+  const handleActivateUser = (user: any) => {
+    activateMutation.mutate({ id: user.id });
+  };
+
+  const handleDeactivateUser = (user: any) => {
+    deactivateMutation.mutate({ id: user.id });
+  };
+
+  const clearFilters = () => {
+    setStatusFilter("all");
+    setRoleFilter("all");
+    setDepartmentFilter(null);
+    setGroupFilter(null);
+  };
+
+  const hasActiveFilters = statusFilter !== "all" || roleFilter !== "all" || departmentFilter !== null || groupFilter !== null;
+
   const getRoleColor = (role: string) => {
     switch (role) {
       case "admin": return "bg-purple-100 text-purple-700 border-purple-200";
@@ -315,15 +433,31 @@ export default function Users() {
     }
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active": return "bg-green-100 text-green-700 border-green-200";
+      case "inactive": return "bg-gray-100 text-gray-500 border-gray-200";
+      default: return "bg-slate-100 text-slate-600 border-slate-200";
+    }
+  };
+
   const formatDate = (date: Date | string | null) => {
     if (!date) return "Never";
     const d = new Date(date);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMs < 60000) return "Just now";
+    if (diffHours < 1) return `${Math.floor(diffMs / 60000)}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    
     return d.toLocaleDateString("en-US", { 
       year: "numeric", 
-      month: "short", 
+      month: "numeric", 
       day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
     });
   };
 
@@ -348,12 +482,18 @@ export default function Users() {
     return "U";
   };
 
+  const getDepartmentName = (departmentId: number | null) => {
+    if (!departmentId) return "—";
+    const dept = departments.find((d: any) => d.id === departmentId);
+    return dept?.name || "—";
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">User Management</h1>
-          <p className="text-muted-foreground">Manage users and roles for the system</p>
+          <p className="text-muted-foreground">Manage system access, roles, and permissions.</p>
         </div>
         <Button onClick={() => setNewUserOpen(true)} className="bg-purple-600 hover:bg-purple-700 gap-2">
           <UserPlus className="h-4 w-4" /> Add User
@@ -492,13 +632,60 @@ export default function Users() {
         </DialogContent>
       </Dialog>
 
+      {/* Change Password Dialog */}
+      <Dialog open={changePasswordOpen} onOpenChange={setChangePasswordOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Change Password</DialogTitle>
+            <DialogDescription>
+              Set a new password for {changePasswordUser?.name || changePasswordUser?.email}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">New Password</Label>
+              <Input 
+                id="newPassword" 
+                type="password" 
+                placeholder="••••••" 
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                minLength={6}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input 
+                id="confirmPassword" 
+                type="password" 
+                placeholder="••••••" 
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                minLength={6}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setChangePasswordOpen(false)}>Cancel</Button>
+            <Button 
+              className="bg-purple-600 hover:bg-purple-700"
+              disabled={changePasswordMutation.isPending}
+              onClick={handleSubmitPasswordChange}
+            >
+              {changePasswordMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Change Password
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Tabs defaultValue="users" className="w-full">
         <TabsList className="bg-muted/50">
           <TabsTrigger value="users" className="gap-2">
-            <UsersIcon className="h-4 w-4" /> Users
+            Users Directory
           </TabsTrigger>
           <TabsTrigger value="roles" className="gap-2">
-            <Shield className="h-4 w-4" /> Roles
+            Roles & Permissions
           </TabsTrigger>
         </TabsList>
         
@@ -513,10 +700,127 @@ export default function Users() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="icon">
-              <Filter className="h-4 w-4" />
-            </Button>
+            
+            {/* Filter Popover */}
+            <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon" className={hasActiveFilters ? "border-purple-500 text-purple-600" : ""}>
+                  <Filter className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80" align="end">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium">Filters</h4>
+                    {hasActiveFilters && (
+                      <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 text-xs">
+                        Clear all
+                      </Button>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-sm">Status</Label>
+                    <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All statuses" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Statuses</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-sm">Role</Label>
+                    <Select value={roleFilter} onValueChange={(v: any) => setRoleFilter(v)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All roles" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Roles</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="user">User</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-sm">Department</Label>
+                    <Select 
+                      value={departmentFilter?.toString() || "all"} 
+                      onValueChange={(v) => setDepartmentFilter(v === "all" ? null : parseInt(v))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="All departments" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Departments</SelectItem>
+                        {departments.map((dept: any) => (
+                          <SelectItem key={dept.id} value={dept.id.toString()}>
+                            {dept.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-sm">Group</Label>
+                    <Select 
+                      value={groupFilter?.toString() || "all"} 
+                      onValueChange={(v) => setGroupFilter(v === "all" ? null : parseInt(v))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="All groups" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Groups</SelectItem>
+                        {groups.map((group: any) => (
+                          <SelectItem key={group.id} value={group.id.toString()}>
+                            {group.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
+
+          {/* Active Filters Display */}
+          {hasActiveFilters && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm text-muted-foreground">Active filters:</span>
+              {statusFilter !== "all" && (
+                <Badge variant="secondary" className="gap-1">
+                  Status: {statusFilter}
+                  <X className="h-3 w-3 cursor-pointer" onClick={() => setStatusFilter("all")} />
+                </Badge>
+              )}
+              {roleFilter !== "all" && (
+                <Badge variant="secondary" className="gap-1">
+                  Role: {roleFilter}
+                  <X className="h-3 w-3 cursor-pointer" onClick={() => setRoleFilter("all")} />
+                </Badge>
+              )}
+              {departmentFilter && (
+                <Badge variant="secondary" className="gap-1">
+                  Department: {getDepartmentName(departmentFilter)}
+                  <X className="h-3 w-3 cursor-pointer" onClick={() => setDepartmentFilter(null)} />
+                </Badge>
+              )}
+              {groupFilter && (
+                <Badge variant="secondary" className="gap-1">
+                  Group: {groups.find((g: any) => g.id === groupFilter)?.name || groupFilter}
+                  <X className="h-3 w-3 cursor-pointer" onClick={() => setGroupFilter(null)} />
+                </Badge>
+              )}
+            </div>
+          )}
 
           <Card>
             {usersLoading ? (
@@ -540,8 +844,9 @@ export default function Users() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>User</TableHead>
-                    <TableHead>Groups</TableHead>
-                    <TableHead>System Role</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Department</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead>Last Active</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -563,16 +868,17 @@ export default function Users() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className="text-muted-foreground text-sm">
-                          {(user as any).groups?.length > 0 
-                            ? (user as any).groups.map((g: any) => g.name).join(", ")
-                            : "No groups"
-                          }
-                        </span>
+                        <span className="text-sm">{user.role === "admin" ? "Administrator" : "Requestor"}</span>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className={getRoleColor(user.role)}>
-                          {user.role}
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                          <Building2 className="h-3.5 w-3.5" />
+                          {getDepartmentName(user.departmentId)}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={getStatusColor((user as any).status || "active")}>
+                          {(user as any).status || "active"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">
@@ -585,7 +891,7 @@ export default function Users() {
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent align="end" className="w-48">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleViewUser(user); }}>
@@ -597,7 +903,29 @@ export default function Users() {
                               setSelectedRoleValue(user.role);
                               setEditUserRoleOpen(true);
                             }}>
-                              <Edit2 className="h-4 w-4 mr-2" /> Edit Role
+                              <Edit2 className="h-4 w-4 mr-2" /> Change Role
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleEmailUser(user); }}>
+                              <Mail className="h-4 w-4 mr-2" /> Email User
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleChangePassword(user); }}>
+                              <Key className="h-4 w-4 mr-2" /> Change Password
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Change Status</DropdownMenuLabel>
+                            <DropdownMenuItem 
+                              onClick={(e) => { e.stopPropagation(); handleActivateUser(user); }}
+                              className="text-green-600"
+                              disabled={(user as any).status === "active"}
+                            >
+                              <CheckCircle2 className="h-4 w-4 mr-2" /> Activate
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={(e) => { e.stopPropagation(); handleDeactivateUser(user); }}
+                              className="text-red-600"
+                              disabled={(user as any).status === "inactive"}
+                            >
+                              <XCircle className="h-4 w-4 mr-2" /> Deactivate
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -710,6 +1038,18 @@ export default function Users() {
                       {selectedUser.role}
                     </Badge>
                   </p>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground">Status</Label>
+                  <p className="font-medium">
+                    <Badge variant="outline" className={getStatusColor((selectedUser as any).status || "active")}>
+                      {(selectedUser as any).status || "active"}
+                    </Badge>
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground">Department</Label>
+                  <p className="font-medium">{getDepartmentName(selectedUser.departmentId)}</p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Last Active</Label>
