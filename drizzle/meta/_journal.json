@@ -71,6 +71,13 @@
       "when": 1769503175424,
       "tag": "0009_youthful_rhodey",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1769503708830,
+      "tag": "0010_sweet_veda",
+      "breakpoints": true
     }
   ]
 }

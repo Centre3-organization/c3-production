@@ -516,3 +516,88 @@
 - [x] Add Role filter dropdown
 - [x] Add Department filter dropdown
 - [x] Add clear filters button
+
+
+## Workflow Builder Condition Enhancement (Jan 27, 2026)
+
+### Phase 1: Investigation
+- [ ] Review current workflow condition implementation
+- [ ] Identify issues with Add Condition functionality
+
+### Phase 2: Enhanced Condition Types
+- [ ] Add Site condition type
+- [ ] Add Zone condition type  
+- [ ] Add Area condition type
+- [ ] Add Group condition type
+- [ ] Add Process/Request Type condition type
+- [ ] Add User Role condition type
+- [ ] Add Department condition type
+- [ ] Add Time-based conditions (working hours, shifts)
+- [ ] Add Value-based conditions (visitor count, duration)
+
+### Phase 3: Condition Builder UI
+- [ ] Fix Add Condition button functionality
+- [ ] Create condition type selector dropdown
+- [ ] Create dynamic value selector based on condition type
+- [ ] Add condition operator selection (equals, contains, greater than, etc.)
+- [ ] Add condition grouping (AND/OR logic)
+- [ ] Add condition preview/summary
+
+### Phase 4: Backend Updates
+- [ ] Update workflow conditions schema if needed
+- [ ] Add condition evaluation logic for all types
+- [ ] Add validation for condition configurations
+
+
+## Workflow Builder Condition Enhancement - COMPLETED (Jan 27, 2026)
+
+### Phase 1: Fix Add Condition Dialog
+- [x] Investigated why Add Condition wasn't working
+- [x] Fixed the condition dialog to open properly
+- [x] Ensured condition type dropdown shows all options
+
+### Phase 2: Enhanced Condition Types (All 23 types now available)
+Location conditions:
+- [x] Site
+- [x] Zone
+- [x] Area
+- [x] Region
+
+Request conditions:
+- [x] Process Type
+- [x] Category
+- [x] Sub-Category
+- [x] Activity Risk Level
+- [x] Visitor Count
+- [x] Request Duration (hours)
+- [x] VIP Visit
+- [x] Escort Required
+- [x] Access Level
+
+Requester conditions:
+- [x] Requester Group
+- [x] Requester Type
+- [x] Requester Department
+- [x] Requester Role
+
+Special conditions:
+- [x] Has MOP
+- [x] Has MHV
+
+Time conditions:
+- [x] Time Range
+- [x] Working Hours
+- [x] Shift
+- [x] Day of Week
+
+### Phase 3: UI Improvements
+- [x] Added categorized condition type dropdown with icons
+- [x] Added dynamic value selection based on condition type
+- [x] Added logical grouping (AND/OR) support with Group 0, 1, 2, etc.
+- [x] Display conditions with proper labels in table format
+- [x] Added delete button for each condition
+
+### Phase 4: Testing
+- [x] Created 16 unit tests for workflow conditions
+- [x] All tests passing
+- [x] Verified UI works correctly in browser

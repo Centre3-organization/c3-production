@@ -1,0 +1,52 @@
+Workflow Builder - Add Condition Issue Analysis
+==============================================
+
+PROBLEM:
+- The "Add Condition" button on the Workflow Builder page does NOT open a dialog
+- The button has no onClick handler - it's just a static button with no functionality
+- Looking at line 519-522 in WorkflowBuilder.tsx:
+  <Button>
+    <Plus className="h-4 w-4 mr-2" />
+    Add Condition
+  </Button>
+- There is NO onClick handler attached to this button
+
+CURRENT CONDITION TYPES IN SCHEMA (workflowConditions table):
+1. process_type
+2. category
+3. sub_category
+4. site_id
+5. region
+6. zone_id
+7. requester_group
+8. requester_type
+9. activity_risk
+10. has_mop
+11. has_mhv
+12. visitor_count
+13. time_range
+14. request_duration
+15. vip_visit
+
+MISSING CONDITION TYPES (requested by user):
+- area_id (Area selection)
+- group_id (User Group)
+- department_id (Department)
+- role_id (User Role)
+- shift_id (Shift-based)
+- working_hours (Time-based)
+
+REQUIRED FIXES:
+1. Add onClick handler to "Add Condition" button
+2. Create AddConditionDialog component
+3. Add dynamic value selectors for each condition type:
+   - Site: dropdown from sites table
+   - Zone: dropdown from zones table (filtered by site)
+   - Area: dropdown from areas table (filtered by zone)
+   - Group: dropdown from groups table
+   - Process Type: dropdown from PROCESS_TYPES constant
+   - Department: dropdown from departments table
+   - Role: dropdown from roles table
+4. Add condition operators appropriate for each type
+5. Add logical grouping (AND/OR)
+6. Update schema to add new condition types

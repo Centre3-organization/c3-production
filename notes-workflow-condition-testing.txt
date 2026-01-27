@@ -1,0 +1,47 @@
+Workflow Condition Dialog Testing - Jan 27, 2026
+================================================
+
+SUCCESS: The Add Condition dialog now opens and shows all condition types!
+
+CONDITION TYPES AVAILABLE (grouped by category):
+
+Location:
+- Site
+- Zone
+- Area
+- Region
+
+Request:
+- Process Type
+- Category
+- Sub-Category
+- Activity Risk Level
+- Visitor Count
+- Request Duration (hours)
+- VIP Visit
+- Escort Required
+- Access Level
+
+Requester:
+- Requester Group
+- Requester Type
+- Requester Department
+- Requester Role
+
+Special:
+- Has MOP
+- Has MHV
+
+Time:
+- Time Range
+- Working Hours
+- Shift
+- Day of Week
+
+The dialog includes:
+1. Condition Type dropdown with categorized options
+2. Operator dropdown (Equals, Not Equals, In, Not In, etc.)
+3. Value input (dynamic based on condition type)
+4. Logical Group selector (for AND/OR grouping)
+
+All condition types from the schema are now available in the UI.
