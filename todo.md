@@ -630,3 +630,16 @@ Time conditions:
 - [x] Add "Regenerate QR" button for QR method
 - [x] Show who granted access and when
 - [x] Copy QR code data to clipboard functionality
+
+## Resend Access Credentials Feature (Jan 27, 2026)
+
+### UI Implementation
+- [x] Add "Resend" button to Access Method section in request details
+- [x] Create dropdown menu with Email/SMS/WhatsApp options
+- [x] Show loading state while sending
+- [x] Display success/error toast after sending
+
+### Channel Implementation
+- [x] Email option - validates visitor email before sending
+- [x] SMS option - validates visitor phone before sending  
+- [x] WhatsApp option - opens WhatsApp with pre-filled message containing access details

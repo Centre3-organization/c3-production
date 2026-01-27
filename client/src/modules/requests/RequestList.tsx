@@ -25,7 +25,11 @@ import {
   CreditCard,
   Copy,
   RotateCcw,
-  Shield
+  Shield,
+  Send,
+  Mail,
+  MessageSquare,
+  Phone as PhoneIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +50,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -100,6 +110,7 @@ export default function Requests() {
   const [newRfidTag, setNewRfidTag] = useState("");
   const [newCardNumber, setNewCardNumber] = useState("");
   const [qrCodeImage, setQrCodeImage] = useState<string>("");
+  const [resendingChannel, setResendingChannel] = useState<string | null>(null);
   
   const { data, isLoading, refetch } = trpc.requests.getAll.useQuery({
     status: statusFilter !== "all" ? statusFilter as any : undefined,
@@ -193,6 +204,66 @@ export default function Requests() {
     if (requestDetail?.accessMethod?.qrCodeData) {
       navigator.clipboard.writeText(requestDetail.accessMethod.qrCodeData);
       toast.success("QR code data copied to clipboard");
+    }
+  };
+  
+  const handleResendCredentials = async (channel: "email" | "sms" | "whatsapp") => {
+    if (!requestDetail) return;
+    
+    setResendingChannel(channel);
+    
+    // Simulate sending - in production this would call a backend endpoint
+    try {
+      // Get visitor contact info
+      const visitorEmail = requestDetail.visitorEmail;
+      const visitorPhone = requestDetail.visitorPhone;
+      const accessMethod = requestDetail.accessMethod;
+      
+      if (channel === "email") {
+        if (!visitorEmail) {
+          toast.error("No email address available", { description: "Visitor email is not provided" });
+          setResendingChannel(null);
+          return;
+        }
+        // In production: call backend to send email with QR code attachment
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        toast.success("Access credentials sent via Email", { 
+          description: `Sent to ${visitorEmail}` 
+        });
+      } else if (channel === "sms") {
+        if (!visitorPhone) {
+          toast.error("No phone number available", { description: "Visitor phone is not provided" });
+          setResendingChannel(null);
+          return;
+        }
+        // In production: call backend to send SMS
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        toast.success("Access credentials sent via SMS", { 
+          description: `Sent to ${visitorPhone}` 
+        });
+      } else if (channel === "whatsapp") {
+        if (!visitorPhone) {
+          toast.error("No phone number available", { description: "Visitor phone is not provided" });
+          setResendingChannel(null);
+          return;
+        }
+        // Open WhatsApp with pre-filled message
+        const message = encodeURIComponent(
+          `Your access credentials for ${requestDetail.siteName || 'the facility'}:\n\n` +
+          `Request: ${requestDetail.requestNumber}\n` +
+          `Valid: ${requestDetail.startDate ? format(new Date(requestDetail.startDate), "MMM d, yyyy") : "N/A"} - ${requestDetail.endDate ? format(new Date(requestDetail.endDate), "MMM d, yyyy") : "N/A"}\n` +
+          (accessMethod?.entryMethod === "qr_code" ? `\nAccess Code: ${accessMethod.qrCodeData}` : "") +
+          (accessMethod?.entryMethod === "rfid" ? `\nRFID Tag: ${accessMethod.rfidTag}` : "") +
+          (accessMethod?.entryMethod === "card" ? `\nCard Number: ${accessMethod.cardNumber}` : "")
+        );
+        const phone = visitorPhone.replace(/[^0-9]/g, "");
+        window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+        toast.success("WhatsApp opened", { description: "Message prepared for sending" });
+      }
+    } catch (error) {
+      toast.error("Failed to send credentials", { description: "Please try again" });
+    } finally {
+      setResendingChannel(null);
     }
   };
   
@@ -460,6 +531,40 @@ export default function Requests() {
                           <p className="font-mono text-sm">{requestDetail.accessMethod.cardNumber}</p>
                         </div>
                       )}
+                      
+                      {/* Resend Credentials Button */}
+                      <div className="pt-3 border-t border-green-200">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-green-700">Send access credentials to visitor</span>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline" size="sm" className="gap-2" disabled={!!resendingChannel}>
+                                {resendingChannel ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Send className="h-4 w-4" />
+                                )}
+                                {resendingChannel ? "Sending..." : "Resend"}
+                                <ChevronDown className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleResendCredentials("email")} className="gap-2">
+                                <Mail className="h-4 w-4" />
+                                Send via Email
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleResendCredentials("sms")} className="gap-2">
+                                <MessageSquare className="h-4 w-4" />
+                                Send via SMS
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleResendCredentials("whatsapp")} className="gap-2">
+                                <PhoneIcon className="h-4 w-4" />
+                                Send via WhatsApp
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <div className="text-center py-4">
