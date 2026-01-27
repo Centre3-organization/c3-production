@@ -468,3 +468,35 @@
 - [x] Add pagination support
 - [x] Add status filter (approved/rejected)
 - [x] Show decision date and details
+
+
+## Hierarchical Master Data Types (Jan 27, 2026)
+
+### Phase 1: Database Schema
+- [x] Add parentId column to siteTypes table for self-referencing hierarchy
+- [x] Add parentId column to zoneTypes table for self-referencing hierarchy
+- [x] Add parentId column to areaTypes table for self-referencing hierarchy
+- [x] Add level/depth column to track hierarchy depth
+- [x] Add nameAr column for Arabic translations
+- [x] Add sortOrder column for ordering
+
+### Phase 2: Backend APIs
+- [x] Update siteTypes router to support parent-child CRUD
+- [x] Update zoneTypes router to support parent-child CRUD
+- [x] Update areaTypes router to support parent-child CRUD
+- [x] Add getHierarchy endpoint to return tree structure (getSiteTypesTree, etc.)
+- [x] Add getChildren endpoint to get children of a parent type
+- [x] Add updateOrder endpoint for drag-and-drop reordering
+
+### Phase 3: Master Data UI
+- [x] Redesign type management with tree/hierarchy view
+- [x] Add expand/collapse for parent types
+- [x] Add "Add Child" action to parent types
+- [x] Show level indicator (L0, L1, L2, etc.)
+- [x] Support Arabic name display
+
+### Phase 4: Request Creation Integration
+- [x] Create HierarchicalTypeSelector component for cascading selection
+- [x] Add site_type, zone_type, area_type field types to FieldRenderer
+- [x] Show parent → child dropdown chain with breadcrumb path
+- [x] Store selected type ID and path in form data

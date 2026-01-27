@@ -53,9 +53,13 @@ export type InsertApproval = typeof approvals.$inferInsert;
 
 export const areaTypes = mysqlTable("areaTypes", {
   id: int("id").autoincrement().primaryKey(),
+  parentId: int("parentId"),
   code: varchar("code", { length: 20 }).notNull().unique(),
   name: varchar("name", { length: 100 }).notNull(),
+  nameAr: varchar("nameAr", { length: 100 }),
   description: text("description"),
+  level: int("level").default(0).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
   isActive: boolean("isActive").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
@@ -129,9 +133,13 @@ export type InsertCity = typeof cities.$inferInsert;
 
 export const siteTypes = mysqlTable("siteTypes", {
   id: int("id").autoincrement().primaryKey(),
+  parentId: int("parentId"),
   code: varchar("code", { length: 20 }).notNull().unique(),
   name: varchar("name", { length: 100 }).notNull(),
+  nameAr: varchar("nameAr", { length: 100 }),
   description: text("description"),
+  level: int("level").default(0).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
   isActive: boolean("isActive").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
@@ -141,9 +149,13 @@ export type InsertSiteType = typeof siteTypes.$inferInsert;
 
 export const zoneTypes = mysqlTable("zoneTypes", {
   id: int("id").autoincrement().primaryKey(),
+  parentId: int("parentId"),
   code: varchar("code", { length: 20 }).notNull().unique(),
   name: varchar("name", { length: 100 }).notNull(),
+  nameAr: varchar("nameAr", { length: 100 }),
   description: text("description"),
+  level: int("level").default(0).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
   isActive: boolean("isActive").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });

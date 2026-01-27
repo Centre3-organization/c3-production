@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
+import { HierarchicalTypeSelector } from "./HierarchicalTypeSelector";
 
 interface FieldOption {
   value: string;
@@ -71,6 +72,201 @@ interface FieldRendererProps {
   formValues: Record<string, any>;
   disabled?: boolean;
   error?: string;
+}
+
+// Site Type Field Component
+function SiteTypeField({
+  field,
+  value,
+  onChange,
+  disabled,
+  error,
+  isRTL,
+  getLabel,
+  getHelpText,
+}: {
+  field: FormField;
+  value: any;
+  onChange: (value: any) => void;
+  disabled: boolean;
+  error?: string;
+  isRTL: boolean;
+  getLabel: () => string;
+  getHelpText: () => string | undefined;
+}) {
+  const { data: siteTypes, isLoading } = trpc.masterData.getSiteTypes.useQuery();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-1.5">
+        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          {getLabel()}
+          {field.isRequired && <span className="text-red-600">*</span>}
+        </Label>
+        <div className="flex items-center justify-center p-4 border rounded-md">
+          <Loader2 className="h-4 w-4 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  const types = (siteTypes || []).map((t: any) => ({
+    id: t.id,
+    parentId: t.parentId ?? null,
+    code: t.code,
+    name: t.name,
+    nameAr: t.nameAr ?? null,
+    level: t.level ?? 0,
+    sortOrder: t.sortOrder ?? 0,
+    isActive: t.isActive !== false,
+  }));
+
+  return (
+    <div className="space-y-1.5">
+      <HierarchicalTypeSelector
+        label={getLabel()}
+        types={types}
+        value={value?.id ?? value ?? null}
+        onChange={(id, path) => onChange({ id, path })}
+        required={field.isRequired}
+        isRTL={isRTL}
+      />
+      {getHelpText() && (
+        <p className="text-xs text-gray-500">{getHelpText()}</p>
+      )}
+      {error && <p className="text-xs text-red-600">{error}</p>}
+    </div>
+  );
+}
+
+// Zone Type Field Component
+function ZoneTypeField({
+  field,
+  value,
+  onChange,
+  disabled,
+  error,
+  isRTL,
+  getLabel,
+  getHelpText,
+}: {
+  field: FormField;
+  value: any;
+  onChange: (value: any) => void;
+  disabled: boolean;
+  error?: string;
+  isRTL: boolean;
+  getLabel: () => string;
+  getHelpText: () => string | undefined;
+}) {
+  const { data: zoneTypes, isLoading } = trpc.masterData.getZoneTypes.useQuery();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-1.5">
+        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          {getLabel()}
+          {field.isRequired && <span className="text-red-600">*</span>}
+        </Label>
+        <div className="flex items-center justify-center p-4 border rounded-md">
+          <Loader2 className="h-4 w-4 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  const types = (zoneTypes || []).map((t: any) => ({
+    id: t.id,
+    parentId: t.parentId ?? null,
+    code: t.code,
+    name: t.name,
+    nameAr: t.nameAr ?? null,
+    level: t.level ?? 0,
+    sortOrder: t.sortOrder ?? 0,
+    isActive: t.isActive !== false,
+  }));
+
+  return (
+    <div className="space-y-1.5">
+      <HierarchicalTypeSelector
+        label={getLabel()}
+        types={types}
+        value={value?.id ?? value ?? null}
+        onChange={(id, path) => onChange({ id, path })}
+        required={field.isRequired}
+        isRTL={isRTL}
+      />
+      {getHelpText() && (
+        <p className="text-xs text-gray-500">{getHelpText()}</p>
+      )}
+      {error && <p className="text-xs text-red-600">{error}</p>}
+    </div>
+  );
+}
+
+// Area Type Field Component
+function AreaTypeField({
+  field,
+  value,
+  onChange,
+  disabled,
+  error,
+  isRTL,
+  getLabel,
+  getHelpText,
+}: {
+  field: FormField;
+  value: any;
+  onChange: (value: any) => void;
+  disabled: boolean;
+  error?: string;
+  isRTL: boolean;
+  getLabel: () => string;
+  getHelpText: () => string | undefined;
+}) {
+  const { data: areaTypes, isLoading } = trpc.masterData.getAreaTypes.useQuery();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-1.5">
+        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          {getLabel()}
+          {field.isRequired && <span className="text-red-600">*</span>}
+        </Label>
+        <div className="flex items-center justify-center p-4 border rounded-md">
+          <Loader2 className="h-4 w-4 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  const types = (areaTypes || []).map((t: any) => ({
+    id: t.id,
+    parentId: t.parentId ?? null,
+    code: t.code,
+    name: t.name,
+    nameAr: t.nameAr ?? null,
+    level: t.level ?? 0,
+    sortOrder: t.sortOrder ?? 0,
+    isActive: t.isActive !== false,
+  }));
+
+  return (
+    <div className="space-y-1.5">
+      <HierarchicalTypeSelector
+        label={getLabel()}
+        types={types}
+        value={value?.id ?? value ?? null}
+        onChange={(id, path) => onChange({ id, path })}
+        required={field.isRequired}
+        isRTL={isRTL}
+      />
+      {getHelpText() && (
+        <p className="text-xs text-gray-500">{getHelpText()}</p>
+      )}
+      {error && <p className="text-xs text-red-600">{error}</p>}
+    </div>
+  );
 }
 
 export function FieldRenderer({
@@ -594,6 +790,48 @@ export function FieldRenderer({
             <p className="text-xs text-gray-500">{getHelpText()}</p>
           )}
         </div>
+      );
+
+    case "site_type":
+      return (
+        <SiteTypeField
+          field={field}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          error={error}
+          isRTL={isRTL}
+          getLabel={getLabel}
+          getHelpText={getHelpText}
+        />
+      );
+
+    case "zone_type":
+      return (
+        <ZoneTypeField
+          field={field}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          error={error}
+          isRTL={isRTL}
+          getLabel={getLabel}
+          getHelpText={getHelpText}
+        />
+      );
+
+    case "area_type":
+      return (
+        <AreaTypeField
+          field={field}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          error={error}
+          isRTL={isRTL}
+          getLabel={getLabel}
+          getHelpText={getHelpText}
+        />
       );
 
     default:

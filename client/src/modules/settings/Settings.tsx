@@ -43,6 +43,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/lib/trpc";
+import { HierarchicalTypeManager } from "./components/HierarchicalTypeManager";
 import {
   Select,
   SelectContent,
@@ -1001,293 +1002,47 @@ export default function Settings() {
 
                 {/* Site Types Tab */}
                 <TabsContent value="sitetypes">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Site Types</h3>
-                    <Dialog open={newSiteTypeOpen} onOpenChange={setNewSiteTypeOpen}>
-                      <DialogTrigger asChild>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
-                          <Plus className="h-4 w-4" /> Add Site Type
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <form onSubmit={(e) => { e.preventDefault(); createSiteTypeMutation.mutate(newSiteType); }}>
-                          <DialogHeader>
-                            <DialogTitle>Add New Site Type</DialogTitle>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Code</Label>
-                                <Input 
-                                  placeholder="e.g. DC" 
-                                  value={newSiteType.code}
-                                  onChange={e => setNewSiteType({...newSiteType, code: e.target.value.toUpperCase()})}
-                                  required 
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Name</Label>
-                                <Input 
-                                  placeholder="e.g. Data Center" 
-                                  value={newSiteType.name}
-                                  onChange={e => setNewSiteType({...newSiteType, name: e.target.value})}
-                                  required 
-                                />
-                              </div>
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Description</Label>
-                              <Input 
-                                placeholder="Optional description" 
-                                value={newSiteType.description}
-                                onChange={e => setNewSiteType({...newSiteType, description: e.target.value})}
-                              />
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => setNewSiteTypeOpen(false)}>Cancel</Button>
-                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createSiteTypeMutation.isPending}>
-                              {createSiteTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                              Create
-                            </Button>
-                          </DialogFooter>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  {siteTypesLoading ? (
-                    <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
-                    </div>
-                  ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Code</TableHead>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Description</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {(siteTypesData || []).map((type) => (
-                          <TableRow key={type.id}>
-                            <TableCell className="font-mono">{type.code}</TableCell>
-                            <TableCell>{type.name}</TableCell>
-                            <TableCell className="text-muted-foreground">{type.description || "—"}</TableCell>
-                            <TableCell>
-                              <Badge variant={type.isActive ? "default" : "secondary"}>
-                                {type.isActive ? "Active" : "Inactive"}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditingSiteType(type); setEditSiteTypeOpen(true); }}>
-                                <Edit2 className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => { if(confirm("Delete this site type?")) deleteSiteTypeMutation.mutate({ id: type.id }); }}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  )}
+                  <HierarchicalTypeManager
+                    title="Site Types"
+                    data={(siteTypesData || []).map(t => ({ ...t, parentId: t.parentId ?? null, level: t.level ?? 0, sortOrder: t.sortOrder ?? 0, nameAr: t.nameAr ?? null }))}
+                    isLoading={siteTypesLoading}
+                    onCreate={(data) => createSiteTypeMutation.mutate(data)}
+                    onUpdate={(data) => updateSiteTypeMutation.mutate(data)}
+                    onDelete={(id) => deleteSiteTypeMutation.mutate({ id })}
+                    isCreating={createSiteTypeMutation.isPending}
+                    isUpdating={updateSiteTypeMutation.isPending}
+                    isDeleting={deleteSiteTypeMutation.isPending}
+                  />
                 </TabsContent>
 
                 {/* Zone Types Tab */}
                 <TabsContent value="zonetypes">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Zone Types</h3>
-                    <Dialog open={newZoneTypeOpen} onOpenChange={setNewZoneTypeOpen}>
-                      <DialogTrigger asChild>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
-                          <Plus className="h-4 w-4" /> Add Zone Type
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <form onSubmit={(e) => { e.preventDefault(); createZoneTypeMutation.mutate(newZoneType); }}>
-                          <DialogHeader>
-                            <DialogTitle>Add New Zone Type</DialogTitle>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Code</Label>
-                                <Input 
-                                  placeholder="e.g. SR" 
-                                  value={newZoneType.code}
-                                  onChange={e => setNewZoneType({...newZoneType, code: e.target.value.toUpperCase()})}
-                                  required 
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Name</Label>
-                                <Input 
-                                  placeholder="e.g. Server Room" 
-                                  value={newZoneType.name}
-                                  onChange={e => setNewZoneType({...newZoneType, name: e.target.value})}
-                                  required 
-                                />
-                              </div>
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Description</Label>
-                              <Input 
-                                placeholder="Optional description" 
-                                value={newZoneType.description}
-                                onChange={e => setNewZoneType({...newZoneType, description: e.target.value})}
-                              />
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => setNewZoneTypeOpen(false)}>Cancel</Button>
-                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createZoneTypeMutation.isPending}>
-                              {createZoneTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                              Create
-                            </Button>
-                          </DialogFooter>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  {zoneTypesLoading ? (
-                    <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
-                    </div>
-                  ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Code</TableHead>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Description</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {(zoneTypesData || []).map((type) => (
-                          <TableRow key={type.id}>
-                            <TableCell className="font-mono">{type.code}</TableCell>
-                            <TableCell>{type.name}</TableCell>
-                            <TableCell className="text-muted-foreground">{type.description || "—"}</TableCell>
-                            <TableCell>
-                              <Badge variant={type.isActive ? "default" : "secondary"}>
-                                {type.isActive ? "Active" : "Inactive"}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditingZoneType(type); setEditZoneTypeOpen(true); }}>
-                                <Edit2 className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => { if(confirm("Delete this zone type?")) deleteZoneTypeMutation.mutate({ id: type.id }); }}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  )}
+                  <HierarchicalTypeManager
+                    title="Zone Types"
+                    data={(zoneTypesData || []).map(t => ({ ...t, parentId: t.parentId ?? null, level: t.level ?? 0, sortOrder: t.sortOrder ?? 0, nameAr: t.nameAr ?? null }))}
+                    isLoading={zoneTypesLoading}
+                    onCreate={(data) => createZoneTypeMutation.mutate(data)}
+                    onUpdate={(data) => updateZoneTypeMutation.mutate(data)}
+                    onDelete={(id) => deleteZoneTypeMutation.mutate({ id })}
+                    isCreating={createZoneTypeMutation.isPending}
+                    isUpdating={updateZoneTypeMutation.isPending}
+                    isDeleting={deleteZoneTypeMutation.isPending}
+                  />
                 </TabsContent>
 
                 {/* Area Types Tab */}
                 <TabsContent value="areatypes">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Area Types</h3>
-                    <Dialog open={newAreaTypeOpen} onOpenChange={setNewAreaTypeOpen}>
-                      <DialogTrigger asChild>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
-                          <Plus className="h-4 w-4" /> Add Area Type
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <form onSubmit={(e) => { e.preventDefault(); createAreaTypeMutation.mutate(newAreaType); }}>
-                          <DialogHeader>
-                            <DialogTitle>Add New Area Type</DialogTitle>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Code</Label>
-                                <Input 
-                                  placeholder="e.g. RR" 
-                                  value={newAreaType.code}
-                                  onChange={e => setNewAreaType({...newAreaType, code: e.target.value.toUpperCase()})}
-                                  required 
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Name</Label>
-                                <Input 
-                                  placeholder="e.g. Rack Row" 
-                                  value={newAreaType.name}
-                                  onChange={e => setNewAreaType({...newAreaType, name: e.target.value})}
-                                  required 
-                                />
-                              </div>
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Description</Label>
-                              <Input 
-                                placeholder="Optional description" 
-                                value={newAreaType.description}
-                                onChange={e => setNewAreaType({...newAreaType, description: e.target.value})}
-                              />
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => setNewAreaTypeOpen(false)}>Cancel</Button>
-                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createAreaTypeMutation.isPending}>
-                              {createAreaTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                              Create
-                            </Button>
-                          </DialogFooter>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  {areaTypesLoading ? (
-                    <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
-                    </div>
-                  ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Code</TableHead>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Description</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {(areaTypesData || []).map((type) => (
-                          <TableRow key={type.id}>
-                            <TableCell className="font-mono">{type.code}</TableCell>
-                            <TableCell>{type.name}</TableCell>
-                            <TableCell className="text-muted-foreground">{type.description || "—"}</TableCell>
-                            <TableCell>
-                              <Badge variant={type.isActive ? "default" : "secondary"}>
-                                {type.isActive ? "Active" : "Inactive"}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditingAreaType(type); setEditAreaTypeOpen(true); }}>
-                                <Edit2 className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => { if(confirm("Delete this area type?")) deleteAreaTypeMutation.mutate({ id: type.id }); }}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  )}
+                  <HierarchicalTypeManager
+                    title="Area Types"
+                    data={(areaTypesData || []).map(t => ({ ...t, parentId: t.parentId ?? null, level: t.level ?? 0, sortOrder: t.sortOrder ?? 0, nameAr: t.nameAr ?? null }))}
+                    isLoading={areaTypesLoading}
+                    onCreate={(data) => createAreaTypeMutation.mutate(data)}
+                    onUpdate={(data) => updateAreaTypeMutation.mutate(data)}
+                    onDelete={(id) => deleteAreaTypeMutation.mutate({ id })}
+                    isCreating={createAreaTypeMutation.isPending}
+                    isUpdating={updateAreaTypeMutation.isPending}
+                    isDeleting={deleteAreaTypeMutation.isPending}
+                  />
                 </TabsContent>
               </Tabs>
             </CardContent>

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, and } from "drizzle-orm";
+import { eq, and, isNull, asc } from "drizzle-orm";
 import { getDb } from "../../infra/db/connection";
 import { 
   countries, 
@@ -10,6 +10,52 @@ import {
   areaTypes 
 } from "../../../drizzle/schema";
 import { adminProcedure, publicProcedure, router } from "../../_core/trpc";
+
+// Helper function to build tree structure from flat list
+function buildTree<T extends { id: number; parentId: number | null }>(items: T[]): (T & { children: T[] })[] {
+  const itemMap = new Map<number, T & { children: T[] }>();
+  const roots: (T & { children: T[] })[] = [];
+
+  // First pass: create all nodes with empty children arrays
+  items.forEach(item => {
+    itemMap.set(item.id, { ...item, children: [] });
+  });
+
+  // Second pass: build the tree
+  items.forEach(item => {
+    const node = itemMap.get(item.id)!;
+    if (item.parentId === null) {
+      roots.push(node);
+    } else {
+      const parent = itemMap.get(item.parentId);
+      if (parent) {
+        parent.children.push(node);
+      } else {
+        // Parent doesn't exist, treat as root
+        roots.push(node);
+      }
+    }
+  });
+
+  return roots;
+}
+
+// Helper function to get all descendants of a type
+async function getDescendantIds(db: any, table: any, parentId: number): Promise<number[]> {
+  const descendants: number[] = [];
+  const queue = [parentId];
+  
+  while (queue.length > 0) {
+    const currentId = queue.shift()!;
+    const children = await db.select({ id: table.id }).from(table).where(eq(table.parentId, currentId));
+    for (const child of children) {
+      descendants.push(child.id);
+      queue.push(child.id);
+    }
+  }
+  
+  return descendants;
+}
 
 export const masterDataRouter = router({
   // ============================================================================
@@ -236,41 +282,102 @@ export const masterDataRouter = router({
     }),
   
   // ============================================================================
-  // SITE TYPES
+  // SITE TYPES (with hierarchical support)
   // ============================================================================
   
-  // Get active site types for dropdowns
+  // Get active site types for dropdowns (flat list)
   getSiteTypes: publicProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
     
-    const result = await db.select().from(siteTypes).where(eq(siteTypes.isActive, true));
+    const result = await db.select().from(siteTypes)
+      .where(eq(siteTypes.isActive, true))
+      .orderBy(asc(siteTypes.level), asc(siteTypes.sortOrder));
     return result;
   }),
+  
+  // Get site types as tree structure
+  getSiteTypesTree: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(siteTypes)
+      .where(eq(siteTypes.isActive, true))
+      .orderBy(asc(siteTypes.level), asc(siteTypes.sortOrder));
+    
+    return buildTree(result);
+  }),
+  
+  // Get children of a specific site type
+  getSiteTypeChildren: publicProcedure
+    .input(z.object({ parentId: z.number().nullable() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      if (input.parentId === null) {
+        return await db.select().from(siteTypes)
+          .where(and(isNull(siteTypes.parentId), eq(siteTypes.isActive, true)))
+          .orderBy(asc(siteTypes.sortOrder));
+      }
+      
+      return await db.select().from(siteTypes)
+        .where(and(eq(siteTypes.parentId, input.parentId), eq(siteTypes.isActive, true)))
+        .orderBy(asc(siteTypes.sortOrder));
+    }),
   
   // Get all site types for admin management (including inactive)
   getAllSiteTypes: adminProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
     
-    const result = await db.select().from(siteTypes);
+    const result = await db.select().from(siteTypes)
+      .orderBy(asc(siteTypes.level), asc(siteTypes.sortOrder));
     return result;
+  }),
+  
+  // Get all site types as tree for admin
+  getAllSiteTypesTree: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(siteTypes)
+      .orderBy(asc(siteTypes.level), asc(siteTypes.sortOrder));
+    
+    return buildTree(result);
   }),
   
   createSiteType: adminProcedure
     .input(z.object({
+      parentId: z.number().nullable().optional(),
       code: z.string().min(1).max(20),
       name: z.string().min(1).max(100),
+      nameAr: z.string().max(100).optional(),
       description: z.string().optional(),
+      sortOrder: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
+      // Calculate level based on parent
+      let level = 0;
+      if (input.parentId) {
+        const parent = await db.select({ level: siteTypes.level }).from(siteTypes)
+          .where(eq(siteTypes.id, input.parentId)).limit(1);
+        if (parent.length > 0) {
+          level = parent[0].level + 1;
+        }
+      }
+      
       await db.insert(siteTypes).values({
+        parentId: input.parentId || null,
         code: input.code.toUpperCase(),
         name: input.name,
+        nameAr: input.nameAr,
         description: input.description,
+        level,
+        sortOrder: input.sortOrder || 0,
       });
       
       return { success: true, message: "Site type created successfully" };
@@ -279,18 +386,37 @@ export const masterDataRouter = router({
   updateSiteType: adminProcedure
     .input(z.object({
       id: z.number(),
+      parentId: z.number().nullable().optional(),
       code: z.string().min(1).max(20).optional(),
       name: z.string().min(1).max(100).optional(),
-      description: z.string().optional(),
+      nameAr: z.string().max(100).optional().nullable(),
+      description: z.string().optional().nullable(),
+      sortOrder: z.number().optional(),
       isActive: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const { id, ...data } = input;
+      const { id, parentId, ...data } = input;
       if (data.code) data.code = data.code.toUpperCase();
-      await db.update(siteTypes).set(data).where(eq(siteTypes.id, id));
+      
+      // If parentId is being changed, recalculate level
+      const updateData: any = { ...data };
+      if (parentId !== undefined) {
+        updateData.parentId = parentId;
+        if (parentId === null) {
+          updateData.level = 0;
+        } else {
+          const parent = await db.select({ level: siteTypes.level }).from(siteTypes)
+            .where(eq(siteTypes.id, parentId)).limit(1);
+          if (parent.length > 0) {
+            updateData.level = parent[0].level + 1;
+          }
+        }
+      }
+      
+      await db.update(siteTypes).set(updateData).where(eq(siteTypes.id, id));
       
       return { success: true, message: "Site type updated successfully" };
     }),
@@ -301,47 +427,131 @@ export const masterDataRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      await db.update(siteTypes).set({ isActive: false }).where(eq(siteTypes.id, input.id));
+      // Soft delete the type and all its descendants
+      const descendantIds = await getDescendantIds(db, siteTypes, input.id);
+      const allIds = [input.id, ...descendantIds];
       
-      return { success: true, message: "Site type deleted successfully" };
+      for (const id of allIds) {
+        await db.update(siteTypes).set({ isActive: false }).where(eq(siteTypes.id, id));
+      }
+      
+      return { success: true, message: "Site type and its children deleted successfully" };
+    }),
+  
+  // Update sort order for multiple site types
+  updateSiteTypeOrder: adminProcedure
+    .input(z.array(z.object({
+      id: z.number(),
+      sortOrder: z.number(),
+    })))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      for (const item of input) {
+        await db.update(siteTypes).set({ sortOrder: item.sortOrder }).where(eq(siteTypes.id, item.id));
+      }
+      
+      return { success: true, message: "Sort order updated successfully" };
     }),
   
   // ============================================================================
-  // ZONE TYPES
+  // ZONE TYPES (with hierarchical support)
   // ============================================================================
   
-  // Get active zone types for dropdowns
+  // Get active zone types for dropdowns (flat list)
   getZoneTypes: publicProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
     
-    const result = await db.select().from(zoneTypes).where(eq(zoneTypes.isActive, true));
+    const result = await db.select().from(zoneTypes)
+      .where(eq(zoneTypes.isActive, true))
+      .orderBy(asc(zoneTypes.level), asc(zoneTypes.sortOrder));
     return result;
   }),
+  
+  // Get zone types as tree structure
+  getZoneTypesTree: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(zoneTypes)
+      .where(eq(zoneTypes.isActive, true))
+      .orderBy(asc(zoneTypes.level), asc(zoneTypes.sortOrder));
+    
+    return buildTree(result);
+  }),
+  
+  // Get children of a specific zone type
+  getZoneTypeChildren: publicProcedure
+    .input(z.object({ parentId: z.number().nullable() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      if (input.parentId === null) {
+        return await db.select().from(zoneTypes)
+          .where(and(isNull(zoneTypes.parentId), eq(zoneTypes.isActive, true)))
+          .orderBy(asc(zoneTypes.sortOrder));
+      }
+      
+      return await db.select().from(zoneTypes)
+        .where(and(eq(zoneTypes.parentId, input.parentId), eq(zoneTypes.isActive, true)))
+        .orderBy(asc(zoneTypes.sortOrder));
+    }),
   
   // Get all zone types for admin management (including inactive)
   getAllZoneTypes: adminProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
     
-    const result = await db.select().from(zoneTypes);
+    const result = await db.select().from(zoneTypes)
+      .orderBy(asc(zoneTypes.level), asc(zoneTypes.sortOrder));
     return result;
+  }),
+  
+  // Get all zone types as tree for admin
+  getAllZoneTypesTree: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(zoneTypes)
+      .orderBy(asc(zoneTypes.level), asc(zoneTypes.sortOrder));
+    
+    return buildTree(result);
   }),
   
   createZoneType: adminProcedure
     .input(z.object({
+      parentId: z.number().nullable().optional(),
       code: z.string().min(1).max(20),
       name: z.string().min(1).max(100),
+      nameAr: z.string().max(100).optional(),
       description: z.string().optional(),
+      sortOrder: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
+      // Calculate level based on parent
+      let level = 0;
+      if (input.parentId) {
+        const parent = await db.select({ level: zoneTypes.level }).from(zoneTypes)
+          .where(eq(zoneTypes.id, input.parentId)).limit(1);
+        if (parent.length > 0) {
+          level = parent[0].level + 1;
+        }
+      }
+      
       await db.insert(zoneTypes).values({
+        parentId: input.parentId || null,
         code: input.code.toUpperCase(),
         name: input.name,
+        nameAr: input.nameAr,
         description: input.description,
+        level,
+        sortOrder: input.sortOrder || 0,
       });
       
       return { success: true, message: "Zone type created successfully" };
@@ -350,18 +560,37 @@ export const masterDataRouter = router({
   updateZoneType: adminProcedure
     .input(z.object({
       id: z.number(),
+      parentId: z.number().nullable().optional(),
       code: z.string().min(1).max(20).optional(),
       name: z.string().min(1).max(100).optional(),
-      description: z.string().optional(),
+      nameAr: z.string().max(100).optional().nullable(),
+      description: z.string().optional().nullable(),
+      sortOrder: z.number().optional(),
       isActive: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const { id, ...data } = input;
+      const { id, parentId, ...data } = input;
       if (data.code) data.code = data.code.toUpperCase();
-      await db.update(zoneTypes).set(data).where(eq(zoneTypes.id, id));
+      
+      // If parentId is being changed, recalculate level
+      const updateData: any = { ...data };
+      if (parentId !== undefined) {
+        updateData.parentId = parentId;
+        if (parentId === null) {
+          updateData.level = 0;
+        } else {
+          const parent = await db.select({ level: zoneTypes.level }).from(zoneTypes)
+            .where(eq(zoneTypes.id, parentId)).limit(1);
+          if (parent.length > 0) {
+            updateData.level = parent[0].level + 1;
+          }
+        }
+      }
+      
+      await db.update(zoneTypes).set(updateData).where(eq(zoneTypes.id, id));
       
       return { success: true, message: "Zone type updated successfully" };
     }),
@@ -372,47 +601,131 @@ export const masterDataRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      await db.update(zoneTypes).set({ isActive: false }).where(eq(zoneTypes.id, input.id));
+      // Soft delete the type and all its descendants
+      const descendantIds = await getDescendantIds(db, zoneTypes, input.id);
+      const allIds = [input.id, ...descendantIds];
       
-      return { success: true, message: "Zone type deleted successfully" };
+      for (const id of allIds) {
+        await db.update(zoneTypes).set({ isActive: false }).where(eq(zoneTypes.id, id));
+      }
+      
+      return { success: true, message: "Zone type and its children deleted successfully" };
+    }),
+  
+  // Update sort order for multiple zone types
+  updateZoneTypeOrder: adminProcedure
+    .input(z.array(z.object({
+      id: z.number(),
+      sortOrder: z.number(),
+    })))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      for (const item of input) {
+        await db.update(zoneTypes).set({ sortOrder: item.sortOrder }).where(eq(zoneTypes.id, item.id));
+      }
+      
+      return { success: true, message: "Sort order updated successfully" };
     }),
   
   // ============================================================================
-  // AREA TYPES
+  // AREA TYPES (with hierarchical support)
   // ============================================================================
   
-  // Get active area types for dropdowns
+  // Get active area types for dropdowns (flat list)
   getAreaTypes: publicProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
     
-    const result = await db.select().from(areaTypes).where(eq(areaTypes.isActive, true));
+    const result = await db.select().from(areaTypes)
+      .where(eq(areaTypes.isActive, true))
+      .orderBy(asc(areaTypes.level), asc(areaTypes.sortOrder));
     return result;
   }),
+  
+  // Get area types as tree structure
+  getAreaTypesTree: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(areaTypes)
+      .where(eq(areaTypes.isActive, true))
+      .orderBy(asc(areaTypes.level), asc(areaTypes.sortOrder));
+    
+    return buildTree(result);
+  }),
+  
+  // Get children of a specific area type
+  getAreaTypeChildren: publicProcedure
+    .input(z.object({ parentId: z.number().nullable() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      if (input.parentId === null) {
+        return await db.select().from(areaTypes)
+          .where(and(isNull(areaTypes.parentId), eq(areaTypes.isActive, true)))
+          .orderBy(asc(areaTypes.sortOrder));
+      }
+      
+      return await db.select().from(areaTypes)
+        .where(and(eq(areaTypes.parentId, input.parentId), eq(areaTypes.isActive, true)))
+        .orderBy(asc(areaTypes.sortOrder));
+    }),
   
   // Get all area types for admin management (including inactive)
   getAllAreaTypes: adminProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
     
-    const result = await db.select().from(areaTypes);
+    const result = await db.select().from(areaTypes)
+      .orderBy(asc(areaTypes.level), asc(areaTypes.sortOrder));
     return result;
+  }),
+  
+  // Get all area types as tree for admin
+  getAllAreaTypesTree: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(areaTypes)
+      .orderBy(asc(areaTypes.level), asc(areaTypes.sortOrder));
+    
+    return buildTree(result);
   }),
   
   createAreaType: adminProcedure
     .input(z.object({
+      parentId: z.number().nullable().optional(),
       code: z.string().min(1).max(20),
       name: z.string().min(1).max(100),
+      nameAr: z.string().max(100).optional(),
       description: z.string().optional(),
+      sortOrder: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
+      // Calculate level based on parent
+      let level = 0;
+      if (input.parentId) {
+        const parent = await db.select({ level: areaTypes.level }).from(areaTypes)
+          .where(eq(areaTypes.id, input.parentId)).limit(1);
+        if (parent.length > 0) {
+          level = parent[0].level + 1;
+        }
+      }
+      
       await db.insert(areaTypes).values({
+        parentId: input.parentId || null,
         code: input.code.toUpperCase(),
         name: input.name,
+        nameAr: input.nameAr,
         description: input.description,
+        level,
+        sortOrder: input.sortOrder || 0,
       });
       
       return { success: true, message: "Area type created successfully" };
@@ -421,18 +734,37 @@ export const masterDataRouter = router({
   updateAreaType: adminProcedure
     .input(z.object({
       id: z.number(),
+      parentId: z.number().nullable().optional(),
       code: z.string().min(1).max(20).optional(),
       name: z.string().min(1).max(100).optional(),
-      description: z.string().optional(),
+      nameAr: z.string().max(100).optional().nullable(),
+      description: z.string().optional().nullable(),
+      sortOrder: z.number().optional(),
       isActive: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const { id, ...data } = input;
+      const { id, parentId, ...data } = input;
       if (data.code) data.code = data.code.toUpperCase();
-      await db.update(areaTypes).set(data).where(eq(areaTypes.id, id));
+      
+      // If parentId is being changed, recalculate level
+      const updateData: any = { ...data };
+      if (parentId !== undefined) {
+        updateData.parentId = parentId;
+        if (parentId === null) {
+          updateData.level = 0;
+        } else {
+          const parent = await db.select({ level: areaTypes.level }).from(areaTypes)
+            .where(eq(areaTypes.id, parentId)).limit(1);
+          if (parent.length > 0) {
+            updateData.level = parent[0].level + 1;
+          }
+        }
+      }
+      
+      await db.update(areaTypes).set(updateData).where(eq(areaTypes.id, id));
       
       return { success: true, message: "Area type updated successfully" };
     }),
@@ -443,8 +775,31 @@ export const masterDataRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      await db.update(areaTypes).set({ isActive: false }).where(eq(areaTypes.id, input.id));
+      // Soft delete the type and all its descendants
+      const descendantIds = await getDescendantIds(db, areaTypes, input.id);
+      const allIds = [input.id, ...descendantIds];
       
-      return { success: true, message: "Area type deleted successfully" };
+      for (const id of allIds) {
+        await db.update(areaTypes).set({ isActive: false }).where(eq(areaTypes.id, id));
+      }
+      
+      return { success: true, message: "Area type and its children deleted successfully" };
+    }),
+  
+  // Update sort order for multiple area types
+  updateAreaTypeOrder: adminProcedure
+    .input(z.array(z.object({
+      id: z.number(),
+      sortOrder: z.number(),
+    })))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      for (const item of input) {
+        await db.update(areaTypes).set({ sortOrder: item.sortOrder }).where(eq(areaTypes.id, item.id));
+      }
+      
+      return { success: true, message: "Sort order updated successfully" };
     }),
 });

@@ -57,6 +57,13 @@
       "when": 1769452336098,
       "tag": "0007_pale_thor_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1769463544074,
+      "tag": "0008_wise_veda",
+      "breakpoints": true
     }
   ]
 }
