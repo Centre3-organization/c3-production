@@ -1,0 +1,95 @@
+{
+  "query": "SELECT s.name as site_name, s.code as site_code, COUNT(z.id) as zone_count \nFROM sites s \nLEFT JOIN zones z ON z.siteId = s.id \nGROUP BY s.id \nORDER BY s.name;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT s.name as site_name, s.code as site_code, COUNT(z.id) as zone_count \nFROM sites s \nLEFT JOIN zones z ON z.siteId = s.id \nGROUP BY s.id \nORDER BY s.name;",
+  "rows": [
+    {
+      "site_name": "DDC21 Data Centre",
+      "site_code": "DDC21",
+      "zone_count": "3"
+    },
+    {
+      "site_name": "DDC352 Data Centre",
+      "site_code": "DDC352",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "DDC371 Data Centre",
+      "site_code": "DDC371",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "ITCC Data Centre",
+      "site_code": "ITCC",
+      "zone_count": "4"
+    },
+    {
+      "site_name": "JDC04 Data Centre",
+      "site_code": "JDC04",
+      "zone_count": "3"
+    },
+    {
+      "site_name": "JDC203 Data Centre",
+      "site_code": "JDC203",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "JDC55 Data Centre",
+      "site_code": "JDC55",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "MDC20 Data Centre",
+      "site_code": "MDC20",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "MKDC34 Data Centre",
+      "site_code": "MKDC34",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "QDC26 Data Centre",
+      "site_code": "QDC26",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "RDC05 Data Centre",
+      "site_code": "RDC05",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "RDC102 Data Centre",
+      "site_code": "RDC102",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "RDC103 Data Centre",
+      "site_code": "RDC103",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "RDC104 Data Centre",
+      "site_code": "RDC104",
+      "zone_count": "2"
+    },
+    {
+      "site_name": "RDC301 Data Centre",
+      "site_code": "RDC301",
+      "zone_count": "3"
+    },
+    {
+      "site_name": "RDC46 Data Centre",
+      "site_code": "RDC46",
+      "zone_count": "5"
+    },
+    {
+      "site_name": "RDCKAFD Data Centre",
+      "site_code": "RDCKAFD",
+      "zone_count": "4"
+    }
+  ],
+  "messages": [],
+  "stdout": "site_name\tsite_code\tzone_count\nDDC21 Data Centre\tDDC21\t3\nDDC352 Data Centre\tDDC352\t2\nDDC371 Data Centre\tDDC371\t2\nITCC Data Centre\tITCC\t4\nJDC04 Data Centre\tJDC04\t3\nJDC203 Data Centre\tJDC203\t2\nJDC55 Data Centre\tJDC55\t2\nMDC20 Data Centre\tMDC20\t2\nMKDC34 Data Centre\tMKDC34\t2\nQDC26 Data Centre\tQDC26\t2\nRDC05 Data Centre\tRDC05\t2\nRDC102 Data Centre\tRDC102\t2\nRDC103 Data Centre\tRDC103\t2\nRDC104 Data Centre\tRDC104\t2\nRDC301 Data Centre\tRDC301\t3\nRDC46 Data Centre\tRDC46\t5\nRDCKAFD Data Centre\tRDCKAFD\t4\n",
+  "stderr": "",
+  "execution_time_ms": 1517
+}

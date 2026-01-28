@@ -1,0 +1,15 @@
+{
+  "query": "SELECT \n  (SELECT COUNT(*) FROM sites) as total_sites,\n  (SELECT COUNT(*) FROM zones) as total_zones,\n  (SELECT COUNT(*) FROM areas) as total_areas;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT \n  (SELECT COUNT(*) FROM sites) as total_sites,\n  (SELECT COUNT(*) FROM zones) as total_zones,\n  (SELECT COUNT(*) FROM areas) as total_areas;",
+  "rows": [
+    {
+      "total_sites": "17",
+      "total_zones": "44",
+      "total_areas": "300"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_sites\ttotal_zones\ttotal_areas\n17\t44\t300\n",
+  "stderr": "",
+  "execution_time_ms": 1483
+}

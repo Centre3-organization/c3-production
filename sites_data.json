@@ -1,0 +1,623 @@
+{
+  "sites": [
+    {
+      "name": "RDC46",
+      "region": "Central",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "NOC",
+          "SOC",
+          "Loading Area",
+          "RDC46_0_A-ER",
+          "RDC46_0_A-TR",
+          "RDC46_0_B-ER",
+          "RDC46_0_B-TR"
+        ],
+        "1F": [
+          "RDC46_1_A",
+          "RDC46_1_A-TR",
+          "RDC46_1_B",
+          "RDC46_1_B-TR"
+        ],
+        "2F": [
+          "RDC46_2_A",
+          "RDC46_2_A-TR",
+          "RDC46_2_B",
+          "RDC46_2_B-TR"
+        ],
+        "3F": [
+          "RDC46_3_A",
+          "RDC46_3_A-TR",
+          "RDC46_3_B",
+          "RDC46_3_B-TR"
+        ],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "RDC05",
+      "region": "Central",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "RDC05_DH",
+          "RDC05_NW",
+          "Loading Area"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "RDC301",
+      "region": "Central",
+      "zones": {
+        "GF": [
+          "Employee Office",
+          "Loading Area",
+          "RDC301_0_1",
+          "RDC301_0_2",
+          "RDC301_0_3",
+          "RDC301_0_4",
+          "RDC301_0_A-MMR",
+          "RDC301_0_B-MMR",
+          "RDC301_0_C-MMR"
+        ],
+        "1F": [
+          "RDC301_0_5",
+          "RDC301_0_6",
+          "RDC301_0_7",
+          "RDC301_0_8"
+        ],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "ITCC",
+      "region": "Central",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "RDCITCC_0_A-TR",
+          "RDCITCC_0_B-TR",
+          "RDCITCC_0_A"
+        ],
+        "1F": [
+          "RDCITCC_1_A",
+          "RDCITCC_1_A-TR",
+          "RDCITCC_1_B-TR"
+        ],
+        "2F": [
+          "RDCITCC_2_A",
+          "RDCITCC_2_A-TR",
+          "RDCITCC_2_B-TR"
+        ],
+        "3F": [],
+        "Others": [
+          "Loading Area",
+          "Rooftop",
+          "Building Facilities",
+          "RDCITCC_B_B-TR",
+          "RDCITCC_B_A1-MMR",
+          "RDCITCC_B_A2-MMR",
+          "RDCITCC_B_A3-MMR",
+          "RDCITCC_B_A4-MMR",
+          "RDCITCC_B_A5-MMR",
+          "RDCITCC_B_A6-MMR",
+          "RDCITCC_B_B1-MMR",
+          "RDCITCC_B_B2-MMR",
+          "RDCITCC_B_B3-MMR",
+          "RDCITCC_B_B4-MMR",
+          "RDCITCC_B_B5-MMR",
+          "RDCITCC_B_B6-MMR"
+        ]
+      }
+    },
+    {
+      "name": "RDCKAFD",
+      "region": "Central",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "RDCKAFD_0_A",
+          "RDCKAFD_0_A-TR",
+          "RDCKAFD_0_B-TR"
+        ],
+        "1F": [
+          "RDCKAFD_1_A",
+          "RDCKAFD_1_A-TR",
+          "RDCKAFD_1_B-TR"
+        ],
+        "2F": [
+          "RDCKAFD_2_A",
+          "RDCKAFD_2_A-TR",
+          "RDCKAFD_2_B-TR"
+        ],
+        "3F": [],
+        "Others": [
+          "Building Facilities",
+          "Rooftop",
+          "Loading Area",
+          "RDCKAFD_B_B-TR",
+          "RDCKAFD_B_A1-MMR",
+          "RDCKAFD_B_A2-MMR",
+          "RDCKAFD_B_A3-MMR",
+          "RDCKAFD_B_A4-MMR",
+          "RDCKAFD_B_A5-MMR",
+          "RDCKAFD_B_A6-MMR",
+          "RDCKAFD_B_B1-MMR",
+          "RDCKAFD_B_B2-MMR",
+          "RDCKAFD_B_B3-MMR",
+          "RDCKAFD_B_B4-MMR",
+          "RDCKAFD_B_B5-MMR",
+          "RDCKAFD_B_B6-MMR"
+        ]
+      }
+    },
+    {
+      "name": "RDC102",
+      "region": "Central",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "RDC102_0_1",
+          "RDC102_0_2",
+          "RDC102_0_3",
+          "RDC102_0_4",
+          "RDC102_0_5",
+          "RDC102_0_6",
+          "RDC102_0_7",
+          "RDC102_0_8",
+          "RDC102_0_9",
+          "RDC102_0_10",
+          "RDC102_0_11",
+          "RDC102_0_12",
+          "RDC102_0_A-MMR",
+          "RDC102_0_B-MMR",
+          "RDC102_0_C-MMR",
+          "Loading Area"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "RDC103",
+      "region": "Central",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "RDC103_0_1",
+          "RDC103_0_2",
+          "RDC103_0_3",
+          "RDC103_0_4",
+          "RDC103_0_5",
+          "RDC103_0_6",
+          "RDC103_0_7",
+          "RDC103_0_8",
+          "RDC103_0_9",
+          "RDC103_0_10",
+          "RDC103_0_11",
+          "RDC103_0_12",
+          "RDC103_0_A-MMR",
+          "RDC103_0_B-MMR",
+          "RDC103_0_C-MMR",
+          "Loading Area"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "RDC104",
+      "region": "Central",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "RDC104_0_1",
+          "RDC104_0_2",
+          "RDC104_0_3",
+          "RDC104_0_4",
+          "RDC104_0_5",
+          "RDC104_0_6",
+          "RDC104_0_7",
+          "RDC104_0_8",
+          "RDC104_0_9",
+          "RDC104_0_10",
+          "RDC104_0_11",
+          "RDC104_0_12",
+          "RDC104_0_A-MMR",
+          "RDC104_0_B-MMR",
+          "RDC104_0_C-MMR",
+          "Loading Area"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "DDC21",
+      "region": "Eastern",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "Loading Area",
+          "DDC21_0_A-ER",
+          "DDC21_0_A-TR",
+          "DDC21_0_B-ER",
+          "DDC21_0_B-TR",
+          "DDC21_0_B"
+        ],
+        "1F": [
+          "DDC21_1_B",
+          "DDC21_1_B-TR",
+          "DDC21_1_A",
+          "DDC21_1_A-TR"
+        ],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "DDC352",
+      "region": "Eastern",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "Loading Area",
+          "DDC352_0_1",
+          "DDC352_0_2",
+          "DDC352_0_3",
+          "DDC352_0_4",
+          "DDC352_0_5",
+          "DDC352_0_6",
+          "DDC352_0_7",
+          "DDC352_0_8",
+          "DDC352_0_A-MMR",
+          "DDC352_0_B-MMR",
+          "DDC352_0_C-MMR"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "DDC371",
+      "region": "Eastern",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "Loading Area",
+          "DDC371_0_1",
+          "DDC371_0_2",
+          "DDC371_0_3",
+          "DDC371_0_4",
+          "DDC371_0_5",
+          "DDC371_0_6",
+          "DDC371_0_7",
+          "DDC371_0_8",
+          "DDC371_0_9",
+          "DDC371_0_10",
+          "DDC371_0_A-MMR",
+          "DDC371_0_B-MMR",
+          "DDC371_0_C-MMR"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "QDC26",
+      "region": "Eastern",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "QDC26_0_1",
+          "QDC26_0_2",
+          "QDC26_0_3",
+          "QDC26_0_4",
+          "QDC26_0_A-MMR",
+          "QDC26_0_B-MMR",
+          "QDC26_0_C-MMR",
+          "Loading Area"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "JDC04",
+      "region": "Western",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "Loading Area",
+          "Ground Floor - Network Room",
+          "Ground Floor - STC Computer Room"
+        ],
+        "1F": [
+          "First Floor - Computer Room",
+          "First Floor - Network Room"
+        ],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Utility Building",
+          "Transmission Room",
+          "MHS Services",
+          "KAUST Computer Room",
+          "Petrorabigh Computer Room",
+          "Operation Room",
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "JDC55",
+      "region": "Western",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "Loading Area",
+          "JDC55_0_1",
+          "JDC55_0_2",
+          "JDC55_0_3",
+          "JDC55_0_4",
+          "JDC55_0_A-MMR",
+          "JDC55_0_B-MMR",
+          "JDC55_0_C-MMR"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "JDC203",
+      "region": "Western",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "Loading Area",
+          "JDC203_0_1",
+          "JDC203_0_2",
+          "JDC203_0_3",
+          "JDC203_0_4",
+          "JDC203_0_5",
+          "JDC203_0_6",
+          "JDC203_0_7",
+          "JDC203_0_8",
+          "JDC203_0_9",
+          "JDC203_0_10",
+          "JDC203_0_A-MMR",
+          "JDC203_0_B-MMR",
+          "JDC203_0_C-MMR"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "MDC20",
+      "region": "Western",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "Loading Area",
+          "MDC20_0_1",
+          "MDC20_0_2",
+          "MDC20_0_3",
+          "MDC20_0_4",
+          "MDC20_0_A-MMR",
+          "MDC20_0_B-MMR",
+          "MDC20_0_C-MMR"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    },
+    {
+      "name": "MKDC34",
+      "region": "Western",
+      "zones": {
+        "GF": [
+          "Building Gate",
+          "Main Gate",
+          "Employee Office",
+          "Loading Area",
+          "MKDC34_0_1",
+          "MKDC34_0_2",
+          "MKDC34_0_3",
+          "MKDC34_0_4",
+          "MKDC34_0_A-MMR",
+          "MKDC34_0_B-MMR",
+          "MKDC34_0_C-MMR"
+        ],
+        "1F": [],
+        "2F": [],
+        "3F": [],
+        "Others": [
+          "Rooftop",
+          "Building Facilities"
+        ]
+      }
+    }
+  ],
+  "summary": [
+    {
+      "region": "Central",
+      "site": "RDC46",
+      "city": "Riyadh"
+    },
+    {
+      "region": "Central",
+      "site": "RDC05",
+      "city": ""
+    },
+    {
+      "region": "Central",
+      "site": "RDC301",
+      "city": ""
+    },
+    {
+      "region": "Central",
+      "site": "ITCC",
+      "city": ""
+    },
+    {
+      "region": "Central",
+      "site": "RDCKAFD",
+      "city": ""
+    },
+    {
+      "region": "Central",
+      "site": "RDC102",
+      "city": ""
+    },
+    {
+      "region": "Central",
+      "site": "RDC103",
+      "city": ""
+    },
+    {
+      "region": "Central",
+      "site": "RDC104",
+      "city": ""
+    },
+    {
+      "region": "Eastern",
+      "site": "QDC26",
+      "city": "Qassim"
+    },
+    {
+      "region": "Eastern",
+      "site": "DDC21",
+      "city": "Damam"
+    },
+    {
+      "region": "Eastern",
+      "site": "DDC352",
+      "city": ""
+    },
+    {
+      "region": "Eastern",
+      "site": "DDC371",
+      "city": ""
+    },
+    {
+      "region": "Western",
+      "site": "JDC04",
+      "city": "Jeddah"
+    },
+    {
+      "region": "Western",
+      "site": "JDC55",
+      "city": ""
+    },
+    {
+      "region": "Western",
+      "site": "JDC203",
+      "city": ""
+    },
+    {
+      "region": "Western",
+      "site": "MDC20",
+      "city": "Madinah"
+    },
+    {
+      "region": "Western",
+      "site": "MKDC34",
+      "city": "Makkah"
+    }
+  ]
+}

@@ -706,3 +706,16 @@ Time conditions:
 - [x] Add major cities for each country
 - [x] Preserve existing data (e.g., Riyadh if already exists)
 - [x] Remove duplicate cities (Riyadh, Manama, Tripoli)
+
+
+## Sites, Zones & Areas Setup (Jan 28, 2026)
+- [x] Read Excel file to extract 17 sites data
+- [x] Create all 17 sites with type = Data Centre
+- [x] Create zones for each site (GF, 1F, 2F, 3F, Others)
+- [x] Set zone properties: Access Policy = Open, Security = Medium, Security Controls = None, Infra Specs = None
+- [x] Create areas for each zone based on Excel data (Building Gate, Main Gate, Employee Office, Loading Area, Data Halls, MMRs, Rooftop, Building Facilities)
+
+**Summary:**
+- 17 Sites created (RDC46, RDC05, RDC301, ITCC, RDCKAFD, RDC102, RDC103, RDC104, DDC21, DDC352, DDC371, JDC04, JDC55, JDC203, MDC20, QDC26, MKDC34)
+- 85 Zones created (5 per site: GF, 1F, 2F, 3F, Others)
+- 300+ Areas created (Building Gate, Main Gate, Employee Office, Loading Area, Data Halls, MMRs, Rooftop, Building Facilities)

@@ -1,0 +1,78 @@
+{
+  "query": "SELECT id, code FROM sites ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code FROM sites ORDER BY id;",
+  "rows": [
+    {
+      "id": "2",
+      "code": "RDC46"
+    },
+    {
+      "id": "3",
+      "code": "RDC05"
+    },
+    {
+      "id": "4",
+      "code": "RDC301"
+    },
+    {
+      "id": "5",
+      "code": "ITCC"
+    },
+    {
+      "id": "6",
+      "code": "RDCKAFD"
+    },
+    {
+      "id": "7",
+      "code": "RDC102"
+    },
+    {
+      "id": "8",
+      "code": "RDC103"
+    },
+    {
+      "id": "9",
+      "code": "RDC104"
+    },
+    {
+      "id": "10",
+      "code": "DDC21"
+    },
+    {
+      "id": "11",
+      "code": "DDC352"
+    },
+    {
+      "id": "12",
+      "code": "DDC371"
+    },
+    {
+      "id": "13",
+      "code": "QDC26"
+    },
+    {
+      "id": "14",
+      "code": "JDC04"
+    },
+    {
+      "id": "15",
+      "code": "JDC55"
+    },
+    {
+      "id": "16",
+      "code": "JDC203"
+    },
+    {
+      "id": "17",
+      "code": "MDC20"
+    },
+    {
+      "id": "18",
+      "code": "MKDC34"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\n2\tRDC46\n3\tRDC05\n4\tRDC301\n5\tITCC\n6\tRDCKAFD\n7\tRDC102\n8\tRDC103\n9\tRDC104\n10\tDDC21\n11\tDDC352\n12\tDDC371\n13\tQDC26\n14\tJDC04\n15\tJDC55\n16\tJDC203\n17\tMDC20\n18\tMKDC34\n",
+  "stderr": "",
+  "execution_time_ms": 1541
+}
