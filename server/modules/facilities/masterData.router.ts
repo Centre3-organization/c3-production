@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, and, isNull, asc } from "drizzle-orm";
+import { eq, and, isNull, asc, desc } from "drizzle-orm";
 import { getDb } from "../../infra/db/connection";
 import { 
   countries, 
@@ -7,7 +7,13 @@ import {
   cities, 
   siteTypes, 
   zoneTypes, 
-  areaTypes 
+  areaTypes,
+  mainActivities,
+  subActivities,
+  roleTypes,
+  approvers,
+  users,
+  sites
 } from "../../../drizzle/schema";
 import { adminProcedure, publicProcedure, router } from "../../_core/trpc";
 
@@ -801,5 +807,424 @@ export const masterDataRouter = router({
       }
       
       return { success: true, message: "Sort order updated successfully" };
+    }),
+
+  // ============================================================================
+  // MAIN ACTIVITIES
+  // ============================================================================
+  
+  // Get active main activities for dropdowns
+  getMainActivities: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(mainActivities)
+      .where(eq(mainActivities.isActive, true))
+      .orderBy(asc(mainActivities.sortOrder), asc(mainActivities.name));
+    return result;
+  }),
+  
+  // Get all main activities for admin management (including inactive)
+  getAllMainActivities: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(mainActivities)
+      .orderBy(asc(mainActivities.sortOrder), asc(mainActivities.name));
+    return result;
+  }),
+  
+  createMainActivity: adminProcedure
+    .input(z.object({
+      name: z.string().min(1).max(255),
+      nameAr: z.string().max(255).optional(),
+      description: z.string().optional(),
+      icon: z.string().max(50).optional(),
+      color: z.string().max(20).optional(),
+      sortOrder: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.insert(mainActivities).values({
+        name: input.name,
+        nameAr: input.nameAr,
+        description: input.description,
+        icon: input.icon,
+        color: input.color,
+        sortOrder: input.sortOrder || 0,
+      });
+      
+      return { success: true, message: "Main activity created successfully" };
+    }),
+  
+  updateMainActivity: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      name: z.string().min(1).max(255).optional(),
+      nameAr: z.string().max(255).optional().nullable(),
+      description: z.string().optional().nullable(),
+      icon: z.string().max(50).optional().nullable(),
+      color: z.string().max(20).optional().nullable(),
+      sortOrder: z.number().optional(),
+      isActive: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const { id, ...data } = input;
+      await db.update(mainActivities).set(data).where(eq(mainActivities.id, id));
+      
+      return { success: true, message: "Main activity updated successfully" };
+    }),
+  
+  deleteMainActivity: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      // Soft delete by setting isActive to false
+      await db.update(mainActivities).set({ isActive: false }).where(eq(mainActivities.id, input.id));
+      
+      // Also deactivate all sub-activities under this main activity
+      await db.update(subActivities).set({ isActive: false }).where(eq(subActivities.mainActivityId, input.id));
+      
+      return { success: true, message: "Main activity deleted successfully" };
+    }),
+
+  // ============================================================================
+  // SUB-ACTIVITIES
+  // ============================================================================
+  
+  // Get active sub-activities for dropdowns
+  getSubActivities: publicProcedure
+    .input(z.object({
+      mainActivityId: z.number().optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      if (input?.mainActivityId) {
+        return await db.select().from(subActivities).where(
+          and(eq(subActivities.mainActivityId, input.mainActivityId), eq(subActivities.isActive, true))
+        ).orderBy(asc(subActivities.sortOrder), asc(subActivities.name));
+      }
+      
+      return await db.select().from(subActivities)
+        .where(eq(subActivities.isActive, true))
+        .orderBy(asc(subActivities.sortOrder), asc(subActivities.name));
+    }),
+  
+  // Get all sub-activities for admin management (including inactive)
+  getAllSubActivities: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db
+      .select({
+        id: subActivities.id,
+        mainActivityId: subActivities.mainActivityId,
+        name: subActivities.name,
+        nameAr: subActivities.nameAr,
+        description: subActivities.description,
+        requiresMOP: subActivities.requiresMOP,
+        requiresPermit: subActivities.requiresPermit,
+        riskLevel: subActivities.riskLevel,
+        sortOrder: subActivities.sortOrder,
+        isActive: subActivities.isActive,
+        createdAt: subActivities.createdAt,
+        mainActivityName: mainActivities.name,
+      })
+      .from(subActivities)
+      .leftJoin(mainActivities, eq(subActivities.mainActivityId, mainActivities.id))
+      .orderBy(asc(subActivities.sortOrder), asc(subActivities.name));
+    return result;
+  }),
+  
+  createSubActivity: adminProcedure
+    .input(z.object({
+      mainActivityId: z.number(),
+      name: z.string().min(1).max(255),
+      nameAr: z.string().max(255).optional(),
+      description: z.string().optional(),
+      requiresMOP: z.boolean().optional(),
+      requiresPermit: z.boolean().optional(),
+      riskLevel: z.enum(["low", "medium", "high", "critical"]).optional(),
+      sortOrder: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.insert(subActivities).values({
+        mainActivityId: input.mainActivityId,
+        name: input.name,
+        nameAr: input.nameAr,
+        description: input.description,
+        requiresMOP: input.requiresMOP || false,
+        requiresPermit: input.requiresPermit || false,
+        riskLevel: input.riskLevel || "low",
+        sortOrder: input.sortOrder || 0,
+      });
+      
+      return { success: true, message: "Sub-activity created successfully" };
+    }),
+  
+  updateSubActivity: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      mainActivityId: z.number().optional(),
+      name: z.string().min(1).max(255).optional(),
+      nameAr: z.string().max(255).optional().nullable(),
+      description: z.string().optional().nullable(),
+      requiresMOP: z.boolean().optional(),
+      requiresPermit: z.boolean().optional(),
+      riskLevel: z.enum(["low", "medium", "high", "critical"]).optional(),
+      sortOrder: z.number().optional(),
+      isActive: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const { id, ...data } = input;
+      await db.update(subActivities).set(data).where(eq(subActivities.id, id));
+      
+      return { success: true, message: "Sub-activity updated successfully" };
+    }),
+  
+  deleteSubActivity: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.update(subActivities).set({ isActive: false }).where(eq(subActivities.id, input.id));
+      
+      return { success: true, message: "Sub-activity deleted successfully" };
+    }),
+
+  // ============================================================================
+  // ROLE TYPES
+  // ============================================================================
+  
+  // Get active role types for dropdowns
+  getRoleTypes: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(roleTypes)
+      .where(eq(roleTypes.isActive, true))
+      .orderBy(asc(roleTypes.sortOrder), asc(roleTypes.name));
+    return result;
+  }),
+  
+  // Get all role types for admin management (including inactive)
+  getAllRoleTypes: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db.select().from(roleTypes)
+      .orderBy(asc(roleTypes.sortOrder), asc(roleTypes.name));
+    return result;
+  }),
+  
+  createRoleType: adminProcedure
+    .input(z.object({
+      name: z.string().min(1).max(100),
+      nameAr: z.string().max(100).optional(),
+      description: z.string().optional(),
+      category: z.enum(["internal", "external", "contractor", "visitor"]).optional(),
+      accessLevel: z.enum(["basic", "standard", "elevated", "full"]).optional(),
+      sortOrder: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.insert(roleTypes).values({
+        name: input.name,
+        nameAr: input.nameAr,
+        description: input.description,
+        category: input.category || "internal",
+        accessLevel: input.accessLevel || "standard",
+        sortOrder: input.sortOrder || 0,
+      });
+      
+      return { success: true, message: "Role type created successfully" };
+    }),
+  
+  updateRoleType: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      name: z.string().min(1).max(100).optional(),
+      nameAr: z.string().max(100).optional().nullable(),
+      description: z.string().optional().nullable(),
+      category: z.enum(["internal", "external", "contractor", "visitor"]).optional(),
+      accessLevel: z.enum(["basic", "standard", "elevated", "full"]).optional(),
+      sortOrder: z.number().optional(),
+      isActive: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const { id, ...data } = input;
+      await db.update(roleTypes).set(data).where(eq(roleTypes.id, id));
+      
+      return { success: true, message: "Role type updated successfully" };
+    }),
+  
+  deleteRoleType: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.update(roleTypes).set({ isActive: false }).where(eq(roleTypes.id, input.id));
+      
+      return { success: true, message: "Role type deleted successfully" };
+    }),
+
+  // ============================================================================
+  // APPROVERS
+  // ============================================================================
+  
+  // Get active approvers for dropdowns
+  getApprovers: publicProcedure
+    .input(z.object({
+      siteId: z.number().optional(),
+      regionId: z.number().optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      let conditions = [eq(approvers.isActive, true)];
+      if (input?.siteId) {
+        conditions.push(eq(approvers.siteId, input.siteId));
+      }
+      if (input?.regionId) {
+        conditions.push(eq(approvers.regionId, input.regionId));
+      }
+      
+      const result = await db
+        .select({
+          id: approvers.id,
+          userId: approvers.userId,
+          siteId: approvers.siteId,
+          regionId: approvers.regionId,
+          approvalLevel: approvers.approvalLevel,
+          maxApprovalAmount: approvers.maxApprovalAmount,
+          canApproveEmergency: approvers.canApproveEmergency,
+          canApproveVIP: approvers.canApproveVIP,
+          delegateUserId: approvers.delegateUserId,
+          isActive: approvers.isActive,
+          userName: users.name,
+          userEmail: users.email,
+          siteName: sites.name,
+        })
+        .from(approvers)
+        .leftJoin(users, eq(approvers.userId, users.id))
+        .leftJoin(sites, eq(approvers.siteId, sites.id))
+        .where(and(...conditions))
+        .orderBy(asc(approvers.approvalLevel));
+      return result;
+    }),
+  
+  // Get all approvers for admin management (including inactive)
+  getAllApprovers: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const result = await db
+      .select({
+        id: approvers.id,
+        userId: approvers.userId,
+        siteId: approvers.siteId,
+        regionId: approvers.regionId,
+        approvalLevel: approvers.approvalLevel,
+        maxApprovalAmount: approvers.maxApprovalAmount,
+        canApproveEmergency: approvers.canApproveEmergency,
+        canApproveVIP: approvers.canApproveVIP,
+        delegateUserId: approvers.delegateUserId,
+        isActive: approvers.isActive,
+        createdAt: approvers.createdAt,
+        userName: users.name,
+        userEmail: users.email,
+        siteName: sites.name,
+      })
+      .from(approvers)
+      .leftJoin(users, eq(approvers.userId, users.id))
+      .leftJoin(sites, eq(approvers.siteId, sites.id))
+      .orderBy(asc(approvers.approvalLevel));
+    return result;
+  }),
+  
+  createApprover: adminProcedure
+    .input(z.object({
+      userId: z.number(),
+      siteId: z.number().optional(),
+      regionId: z.number().optional(),
+      approvalLevel: z.number().min(1).max(10).optional(),
+      maxApprovalAmount: z.string().optional(),
+      canApproveEmergency: z.boolean().optional(),
+      canApproveVIP: z.boolean().optional(),
+      delegateUserId: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.insert(approvers).values({
+        userId: input.userId,
+        siteId: input.siteId || null,
+        regionId: input.regionId || null,
+        approvalLevel: input.approvalLevel || 1,
+        maxApprovalAmount: input.maxApprovalAmount,
+        canApproveEmergency: input.canApproveEmergency || false,
+        canApproveVIP: input.canApproveVIP || false,
+        delegateUserId: input.delegateUserId || null,
+      });
+      
+      return { success: true, message: "Approver created successfully" };
+    }),
+  
+  updateApprover: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      userId: z.number().optional(),
+      siteId: z.number().optional().nullable(),
+      regionId: z.number().optional().nullable(),
+      approvalLevel: z.number().min(1).max(10).optional(),
+      maxApprovalAmount: z.string().optional().nullable(),
+      canApproveEmergency: z.boolean().optional(),
+      canApproveVIP: z.boolean().optional(),
+      delegateUserId: z.number().optional().nullable(),
+      isActive: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const { id, ...data } = input;
+      await db.update(approvers).set(data).where(eq(approvers.id, id));
+      
+      return { success: true, message: "Approver updated successfully" };
+    }),
+  
+  deleteApprover: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.update(approvers).set({ isActive: false }).where(eq(approvers.id, input.id));
+      
+      return { success: true, message: "Approver deleted successfully" };
     }),
 });

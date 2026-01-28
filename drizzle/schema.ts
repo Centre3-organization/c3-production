@@ -99,6 +99,86 @@ export const roles = mysqlTable("roles", {
 export type Role = typeof roles.$inferSelect;
 export type InsertRole = typeof roles.$inferInsert;
 
+// ============================================================================
+// ACTIVITIES (Main Activities and Sub-Activities)
+// ============================================================================
+
+export const mainActivities = mysqlTable("mainActivities", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameAr: varchar("nameAr", { length: 255 }),
+  description: text("description"),
+  icon: varchar("icon", { length: 50 }),
+  color: varchar("color", { length: 20 }),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MainActivity = typeof mainActivities.$inferSelect;
+export type InsertMainActivity = typeof mainActivities.$inferInsert;
+
+export const subActivities = mysqlTable("subActivities", {
+  id: int("id").autoincrement().primaryKey(),
+  mainActivityId: int("mainActivityId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameAr: varchar("nameAr", { length: 255 }),
+  description: text("description"),
+  requiresMOP: boolean("requiresMOP").default(false).notNull(),
+  requiresPermit: boolean("requiresPermit").default(false).notNull(),
+  riskLevel: mysqlEnum("riskLevel", ["low", "medium", "high", "critical"]).default("low"),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SubActivity = typeof subActivities.$inferSelect;
+export type InsertSubActivity = typeof subActivities.$inferInsert;
+
+// ============================================================================
+// ROLE TYPES (for visitor/contractor categorization)
+// ============================================================================
+
+export const roleTypes = mysqlTable("roleTypes", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  nameAr: varchar("nameAr", { length: 100 }),
+  description: text("description"),
+  category: mysqlEnum("category", ["internal", "external", "contractor", "visitor"]).default("internal"),
+  accessLevel: mysqlEnum("accessLevel", ["basic", "standard", "elevated", "full"]).default("standard"),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RoleType = typeof roleTypes.$inferSelect;
+export type InsertRoleType = typeof roleTypes.$inferInsert;
+
+// ============================================================================
+// APPROVERS (site/region-specific approval authorities)
+// ============================================================================
+
+export const approvers = mysqlTable("approvers", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  siteId: int("siteId"),
+  regionId: int("regionId"),
+  approvalLevel: int("approvalLevel").default(1).notNull(),
+  maxApprovalAmount: varchar("maxApprovalAmount", { length: 20 }),
+  canApproveEmergency: boolean("canApproveEmergency").default(false).notNull(),
+  canApproveVIP: boolean("canApproveVIP").default(false).notNull(),
+  delegateUserId: int("delegateUserId"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Approver = typeof approvers.$inferSelect;
+export type InsertApprover = typeof approvers.$inferInsert;
+
 export const countries = mysqlTable("countries", {
   id: int("id").autoincrement().primaryKey(),
   code: varchar("code", { length: 3 }).notNull().unique(),

@@ -730,3 +730,16 @@ Time conditions:
 - [x] Update Western region sites (JDC04, JDC55, JDC203) with city = Jeddah
 - [x] Update Western region site (MDC20) with city = Madinah
 - [x] Update Western region site (MKDC34) with city = Makkah
+
+
+## Master Data UI - Missing Menu Items (Jan 28, 2026)
+- [x] Investigate current Master Data navigation structure
+- [x] Add Activities tab (with Main Activities and Sub-Activities sub-tabs)
+- [x] Add Role Types tab to Master Data
+- [x] Add Approvers tab to Master Data
+- [x] Create backend endpoints for Activities CRUD
+- [x] Create backend endpoints for Role Types CRUD
+- [x] Create backend endpoints for Approvers CRUD
+- [x] Reorder tabs: Activities, Role Types, Approvers, Countries, Regions, Cities, Site Types, Zone Types, Area Types
+- [x] Create database tables for mainActivities, subActivities, roleTypes, approvers
+- [x] Add unit tests for new Master Data endpoints

@@ -15,7 +15,14 @@ import {
   MapPin,
   Building,
   Layers,
-  Grid3X3
+  Grid3X3,
+  Activity,
+  UserCog,
+  Users2,
+  AlertTriangle,
+  CheckCircle2,
+  XCircle,
+  Circle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -189,7 +196,152 @@ export default function Settings() {
   // MASTER DATA STATE & QUERIES
   // ============================================================================
   
-  const [masterDataTab, setMasterDataTab] = useState("countries");
+  const [masterDataTab, setMasterDataTab] = useState("activities");
+  const [activitiesSubTab, setActivitiesSubTab] = useState("main");
+
+  // Main Activities
+  const { data: mainActivitiesData, isLoading: mainActivitiesLoading, refetch: refetchMainActivities } = trpc.masterData.getAllMainActivities.useQuery();
+  const [newMainActivityOpen, setNewMainActivityOpen] = useState(false);
+  const [editMainActivityOpen, setEditMainActivityOpen] = useState(false);
+  const [editingMainActivity, setEditingMainActivity] = useState<any>(null);
+  const [newMainActivity, setNewMainActivity] = useState({ name: "", nameAr: "", description: "", icon: "", color: "" });
+  
+  const createMainActivityMutation = trpc.masterData.createMainActivity.useMutation({
+    onSuccess: () => {
+      toast.success("Main Activity Created");
+      refetchMainActivities();
+      setNewMainActivityOpen(false);
+      setNewMainActivity({ name: "", nameAr: "", description: "", icon: "", color: "" });
+    },
+    onError: (error) => toast.error("Failed to create main activity", { description: error.message })
+  });
+  
+  const updateMainActivityMutation = trpc.masterData.updateMainActivity.useMutation({
+    onSuccess: () => {
+      toast.success("Main Activity Updated");
+      refetchMainActivities();
+      setEditMainActivityOpen(false);
+      setEditingMainActivity(null);
+    },
+    onError: (error) => toast.error("Failed to update main activity", { description: error.message })
+  });
+  
+  const deleteMainActivityMutation = trpc.masterData.deleteMainActivity.useMutation({
+    onSuccess: () => {
+      toast.success("Main Activity Deleted");
+      refetchMainActivities();
+    },
+    onError: (error) => toast.error("Failed to delete main activity", { description: error.message })
+  });
+
+  // Sub Activities
+  const { data: subActivitiesData, isLoading: subActivitiesLoading, refetch: refetchSubActivities } = trpc.masterData.getAllSubActivities.useQuery();
+  const [newSubActivityOpen, setNewSubActivityOpen] = useState(false);
+  const [editSubActivityOpen, setEditSubActivityOpen] = useState(false);
+  const [editingSubActivity, setEditingSubActivity] = useState<any>(null);
+  const [newSubActivity, setNewSubActivity] = useState({ mainActivityId: 0, name: "", nameAr: "", description: "", requiresMOP: false, requiresPermit: false, riskLevel: "low" as const });
+  
+  const createSubActivityMutation = trpc.masterData.createSubActivity.useMutation({
+    onSuccess: () => {
+      toast.success("Sub-Activity Created");
+      refetchSubActivities();
+      refetchMainActivities();
+      setNewSubActivityOpen(false);
+      setNewSubActivity({ mainActivityId: 0, name: "", nameAr: "", description: "", requiresMOP: false, requiresPermit: false, riskLevel: "low" });
+    },
+    onError: (error) => toast.error("Failed to create sub-activity", { description: error.message })
+  });
+  
+  const updateSubActivityMutation = trpc.masterData.updateSubActivity.useMutation({
+    onSuccess: () => {
+      toast.success("Sub-Activity Updated");
+      refetchSubActivities();
+      setEditSubActivityOpen(false);
+      setEditingSubActivity(null);
+    },
+    onError: (error) => toast.error("Failed to update sub-activity", { description: error.message })
+  });
+  
+  const deleteSubActivityMutation = trpc.masterData.deleteSubActivity.useMutation({
+    onSuccess: () => {
+      toast.success("Sub-Activity Deleted");
+      refetchSubActivities();
+      refetchMainActivities();
+    },
+    onError: (error) => toast.error("Failed to delete sub-activity", { description: error.message })
+  });
+
+  // Role Types
+  const { data: roleTypesData, isLoading: roleTypesLoading, refetch: refetchRoleTypes } = trpc.masterData.getAllRoleTypes.useQuery();
+  const [newRoleTypeOpen, setNewRoleTypeOpen] = useState(false);
+  const [editRoleTypeOpen, setEditRoleTypeOpen] = useState(false);
+  const [editingRoleType, setEditingRoleType] = useState<any>(null);
+  const [newRoleType, setNewRoleType] = useState({ name: "", nameAr: "", description: "", category: "internal" as const, accessLevel: "standard" as const });
+  
+  const createRoleTypeMutation = trpc.masterData.createRoleType.useMutation({
+    onSuccess: () => {
+      toast.success("Role Type Created");
+      refetchRoleTypes();
+      setNewRoleTypeOpen(false);
+      setNewRoleType({ name: "", nameAr: "", description: "", category: "internal", accessLevel: "standard" });
+    },
+    onError: (error) => toast.error("Failed to create role type", { description: error.message })
+  });
+  
+  const updateRoleTypeMutation = trpc.masterData.updateRoleType.useMutation({
+    onSuccess: () => {
+      toast.success("Role Type Updated");
+      refetchRoleTypes();
+      setEditRoleTypeOpen(false);
+      setEditingRoleType(null);
+    },
+    onError: (error) => toast.error("Failed to update role type", { description: error.message })
+  });
+  
+  const deleteRoleTypeMutation = trpc.masterData.deleteRoleType.useMutation({
+    onSuccess: () => {
+      toast.success("Role Type Deleted");
+      refetchRoleTypes();
+    },
+    onError: (error) => toast.error("Failed to delete role type", { description: error.message })
+  });
+
+  // Approvers
+  const { data: approversData, isLoading: approversLoading, refetch: refetchApprovers } = trpc.masterData.getAllApprovers.useQuery();
+  const { data: usersForApprovers } = trpc.users.list.useQuery({ limit: 1000 });
+  const { data: sitesForApprovers } = trpc.sites.getAll.useQuery();
+  const [newApproverOpen, setNewApproverOpen] = useState(false);
+  const [editApproverOpen, setEditApproverOpen] = useState(false);
+  const [editingApprover, setEditingApprover] = useState<any>(null);
+  const [newApprover, setNewApprover] = useState({ userId: 0, siteId: null as number | null, approvalLevel: 1, canApproveEmergency: false, canApproveVIP: false });
+  
+  const createApproverMutation = trpc.masterData.createApprover.useMutation({
+    onSuccess: () => {
+      toast.success("Approver Created");
+      refetchApprovers();
+      setNewApproverOpen(false);
+      setNewApprover({ userId: 0, siteId: null, approvalLevel: 1, canApproveEmergency: false, canApproveVIP: false });
+    },
+    onError: (error) => toast.error("Failed to create approver", { description: error.message })
+  });
+  
+  const updateApproverMutation = trpc.masterData.updateApprover.useMutation({
+    onSuccess: () => {
+      toast.success("Approver Updated");
+      refetchApprovers();
+      setEditApproverOpen(false);
+      setEditingApprover(null);
+    },
+    onError: (error) => toast.error("Failed to update approver", { description: error.message })
+  });
+  
+  const deleteApproverMutation = trpc.masterData.deleteApprover.useMutation({
+    onSuccess: () => {
+      toast.success("Approver Deleted");
+      refetchApprovers();
+    },
+    onError: (error) => toast.error("Failed to delete approver", { description: error.message })
+  });
   
   // Countries
   const { data: countriesData, isLoading: countriesLoading, refetch: refetchCountries } = trpc.masterData.getAllCountries.useQuery();
@@ -719,7 +871,16 @@ export default function Settings() {
             </CardHeader>
             <CardContent>
               <Tabs value={masterDataTab} onValueChange={setMasterDataTab}>
-                <TabsList className="grid w-full grid-cols-6 mb-6">
+                <TabsList className="flex flex-wrap gap-1 h-auto p-1 mb-6">
+                  <TabsTrigger value="activities" className="gap-1">
+                    <Activity className="h-4 w-4" /> Activities
+                  </TabsTrigger>
+                  <TabsTrigger value="roletypes" className="gap-1">
+                    <UserCog className="h-4 w-4" /> Role Types
+                  </TabsTrigger>
+                  <TabsTrigger value="approvers" className="gap-1">
+                    <Users2 className="h-4 w-4" /> Approvers
+                  </TabsTrigger>
                   <TabsTrigger value="countries" className="gap-1">
                     <Globe className="h-4 w-4" /> Countries
                   </TabsTrigger>
@@ -739,6 +900,553 @@ export default function Settings() {
                     <Grid3X3 className="h-4 w-4" /> Area Types
                   </TabsTrigger>
                 </TabsList>
+
+                {/* ============================================================================ */}
+                {/* ACTIVITIES TAB */}
+                {/* ============================================================================ */}
+                <TabsContent value="activities">
+                  <Tabs value={activitiesSubTab} onValueChange={setActivitiesSubTab} className="mb-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <TabsList>
+                        <TabsTrigger value="main">Main Activities</TabsTrigger>
+                        <TabsTrigger value="sub">Sub-Activities</TabsTrigger>
+                      </TabsList>
+                      {activitiesSubTab === "main" ? (
+                        <Dialog open={newMainActivityOpen} onOpenChange={setNewMainActivityOpen}>
+                          <DialogTrigger asChild>
+                            <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                              <Plus className="h-4 w-4" /> Add Main Activity
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <form onSubmit={(e) => { e.preventDefault(); createMainActivityMutation.mutate(newMainActivity); }}>
+                              <DialogHeader>
+                                <DialogTitle>Add New Main Activity</DialogTitle>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label>Activity Name (English)</Label>
+                                  <Input 
+                                    placeholder="e.g. Cabling Changes" 
+                                    value={newMainActivity.name}
+                                    onChange={e => setNewMainActivity({...newMainActivity, name: e.target.value})}
+                                    required 
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Activity Name (Arabic)</Label>
+                                  <Input 
+                                    placeholder="e.g. تغييرات الكابلات" 
+                                    value={newMainActivity.nameAr}
+                                    onChange={e => setNewMainActivity({...newMainActivity, nameAr: e.target.value})}
+                                    dir="rtl"
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Description</Label>
+                                  <Input 
+                                    placeholder="Brief description of the activity" 
+                                    value={newMainActivity.description}
+                                    onChange={e => setNewMainActivity({...newMainActivity, description: e.target.value})}
+                                  />
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button type="button" variant="outline" onClick={() => setNewMainActivityOpen(false)}>Cancel</Button>
+                                <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createMainActivityMutation.isPending}>
+                                  {createMainActivityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                                  Create
+                                </Button>
+                              </DialogFooter>
+                            </form>
+                          </DialogContent>
+                        </Dialog>
+                      ) : (
+                        <Dialog open={newSubActivityOpen} onOpenChange={setNewSubActivityOpen}>
+                          <DialogTrigger asChild>
+                            <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                              <Plus className="h-4 w-4" /> Add Sub-Activity
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <form onSubmit={(e) => { e.preventDefault(); createSubActivityMutation.mutate(newSubActivity); }}>
+                              <DialogHeader>
+                                <DialogTitle>Add New Sub-Activity</DialogTitle>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label>Main Activity</Label>
+                                  <Select value={newSubActivity.mainActivityId.toString()} onValueChange={v => setNewSubActivity({...newSubActivity, mainActivityId: parseInt(v)})}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select main activity" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {mainActivitiesData?.filter(a => a.isActive).map(a => (
+                                        <SelectItem key={a.id} value={a.id.toString()}>{a.name}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Sub-Activity Name (English)</Label>
+                                  <Input 
+                                    placeholder="e.g. Cable Installation" 
+                                    value={newSubActivity.name}
+                                    onChange={e => setNewSubActivity({...newSubActivity, name: e.target.value})}
+                                    required 
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Sub-Activity Name (Arabic)</Label>
+                                  <Input 
+                                    placeholder="e.g. تركيب الكابلات" 
+                                    value={newSubActivity.nameAr}
+                                    onChange={e => setNewSubActivity({...newSubActivity, nameAr: e.target.value})}
+                                    dir="rtl"
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Risk Level</Label>
+                                  <Select value={newSubActivity.riskLevel} onValueChange={v => setNewSubActivity({...newSubActivity, riskLevel: v as any})}>
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="low">Low</SelectItem>
+                                      <SelectItem value="medium">Medium</SelectItem>
+                                      <SelectItem value="high">High</SelectItem>
+                                      <SelectItem value="critical">Critical</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="flex gap-4">
+                                  <div className="flex items-center space-x-2">
+                                    <Switch checked={newSubActivity.requiresMOP} onCheckedChange={c => setNewSubActivity({...newSubActivity, requiresMOP: c})} />
+                                    <Label>Requires MOP</Label>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <Switch checked={newSubActivity.requiresPermit} onCheckedChange={c => setNewSubActivity({...newSubActivity, requiresPermit: c})} />
+                                    <Label>Requires Permit</Label>
+                                  </div>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button type="button" variant="outline" onClick={() => setNewSubActivityOpen(false)}>Cancel</Button>
+                                <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createSubActivityMutation.isPending}>
+                                  {createSubActivityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                                  Create
+                                </Button>
+                              </DialogFooter>
+                            </form>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                    </div>
+
+                    {/* Main Activities Sub-Tab */}
+                    <TabsContent value="main">
+                      {mainActivitiesLoading ? (
+                        <div className="flex items-center justify-center py-8">
+                          <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                        </div>
+                      ) : (
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Main Activity Name</TableHead>
+                              <TableHead>Description</TableHead>
+                              <TableHead>Sub-Activities</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {mainActivitiesData?.map(activity => {
+                              const subCount = subActivitiesData?.filter(s => s.mainActivityId === activity.id && s.isActive).length || 0;
+                              return (
+                                <TableRow key={activity.id}>
+                                  <TableCell className="font-medium">
+                                    <div className="flex items-center gap-2">
+                                      <Activity className="h-4 w-4 text-purple-600" />
+                                      {activity.name}
+                                    </div>
+                                  </TableCell>
+                                  <TableCell className="text-muted-foreground max-w-md truncate">{activity.description || "-"}</TableCell>
+                                  <TableCell>{subCount}</TableCell>
+                                  <TableCell>
+                                    <Badge variant={activity.isActive ? "default" : "secondary"} className={activity.isActive ? "bg-green-100 text-green-800" : ""}>
+                                      {activity.isActive ? "Active" : "Inactive"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-right">
+                                    <Button variant="ghost" size="icon" onClick={() => { setEditingMainActivity({...activity}); setEditMainActivityOpen(true); }}>
+                                      <Edit2 className="h-4 w-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this main activity?")) deleteMainActivityMutation.mutate({ id: activity.id }); }}>
+                                      <Trash2 className="h-4 w-4 text-red-500" />
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                            {(!mainActivitiesData || mainActivitiesData.length === 0) && (
+                              <TableRow>
+                                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">No main activities found. Add one to get started.</TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      )}
+                    </TabsContent>
+
+                    {/* Sub-Activities Sub-Tab */}
+                    <TabsContent value="sub">
+                      {subActivitiesLoading ? (
+                        <div className="flex items-center justify-center py-8">
+                          <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                        </div>
+                      ) : (
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Sub-Activity Name</TableHead>
+                              <TableHead>Main Activity</TableHead>
+                              <TableHead>Risk Level</TableHead>
+                              <TableHead>Requirements</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {subActivitiesData?.map(sub => (
+                              <TableRow key={sub.id}>
+                                <TableCell className="font-medium">{sub.name}</TableCell>
+                                <TableCell className="text-muted-foreground">{sub.mainActivityName || "-"}</TableCell>
+                                <TableCell>
+                                  <Badge variant="outline" className={
+                                    sub.riskLevel === "critical" ? "border-red-500 text-red-500" :
+                                    sub.riskLevel === "high" ? "border-orange-500 text-orange-500" :
+                                    sub.riskLevel === "medium" ? "border-yellow-500 text-yellow-600" :
+                                    "border-green-500 text-green-600"
+                                  }>
+                                    {(sub.riskLevel || 'low').charAt(0).toUpperCase() + (sub.riskLevel || 'low').slice(1)}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex gap-1">
+                                    {sub.requiresMOP && <Badge variant="secondary" className="text-xs">MOP</Badge>}
+                                    {sub.requiresPermit && <Badge variant="secondary" className="text-xs">Permit</Badge>}
+                                    {!sub.requiresMOP && !sub.requiresPermit && <span className="text-muted-foreground">-</span>}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant={sub.isActive ? "default" : "secondary"} className={sub.isActive ? "bg-green-100 text-green-800" : ""}>
+                                    {sub.isActive ? "Active" : "Inactive"}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  <Button variant="ghost" size="icon" onClick={() => { setEditingSubActivity({...sub}); setEditSubActivityOpen(true); }}>
+                                    <Edit2 className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this sub-activity?")) deleteSubActivityMutation.mutate({ id: sub.id }); }}>
+                                    <Trash2 className="h-4 w-4 text-red-500" />
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                            {(!subActivitiesData || subActivitiesData.length === 0) && (
+                              <TableRow>
+                                <TableCell colSpan={6} className="text-center text-muted-foreground py-8">No sub-activities found. Add one to get started.</TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      )}
+                    </TabsContent>
+                  </Tabs>
+                </TabsContent>
+
+                {/* ============================================================================ */}
+                {/* ROLE TYPES TAB */}
+                {/* ============================================================================ */}
+                <TabsContent value="roletypes">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Role Types</h3>
+                    <Dialog open={newRoleTypeOpen} onOpenChange={setNewRoleTypeOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                          <Plus className="h-4 w-4" /> Add Role Type
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <form onSubmit={(e) => { e.preventDefault(); createRoleTypeMutation.mutate(newRoleType); }}>
+                          <DialogHeader>
+                            <DialogTitle>Add New Role Type</DialogTitle>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div className="space-y-2">
+                              <Label>Role Type Name (English)</Label>
+                              <Input 
+                                placeholder="e.g. Contractor" 
+                                value={newRoleType.name}
+                                onChange={e => setNewRoleType({...newRoleType, name: e.target.value})}
+                                required 
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Role Type Name (Arabic)</Label>
+                              <Input 
+                                placeholder="e.g. مقاول" 
+                                value={newRoleType.nameAr}
+                                onChange={e => setNewRoleType({...newRoleType, nameAr: e.target.value})}
+                                dir="rtl"
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label>Category</Label>
+                                <Select value={newRoleType.category} onValueChange={v => setNewRoleType({...newRoleType, category: v as any})}>
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="internal">Internal</SelectItem>
+                                    <SelectItem value="external">External</SelectItem>
+                                    <SelectItem value="contractor">Contractor</SelectItem>
+                                    <SelectItem value="visitor">Visitor</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Access Level</Label>
+                                <Select value={newRoleType.accessLevel} onValueChange={v => setNewRoleType({...newRoleType, accessLevel: v as any})}>
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="basic">Basic</SelectItem>
+                                    <SelectItem value="standard">Standard</SelectItem>
+                                    <SelectItem value="elevated">Elevated</SelectItem>
+                                    <SelectItem value="full">Full</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Description</Label>
+                              <Input 
+                                placeholder="Brief description" 
+                                value={newRoleType.description}
+                                onChange={e => setNewRoleType({...newRoleType, description: e.target.value})}
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button type="button" variant="outline" onClick={() => setNewRoleTypeOpen(false)}>Cancel</Button>
+                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createRoleTypeMutation.isPending}>
+                              {createRoleTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                              Create
+                            </Button>
+                          </DialogFooter>
+                        </form>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  {roleTypesLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                    </div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Role Type Name</TableHead>
+                          <TableHead>Category</TableHead>
+                          <TableHead>Access Level</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {roleTypesData?.map(role => (
+                          <TableRow key={role.id}>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center gap-2">
+                                <UserCog className="h-4 w-4 text-purple-600" />
+                                {role.name}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="capitalize">{role.category}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="secondary" className="capitalize">{role.accessLevel}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={role.isActive ? "default" : "secondary"} className={role.isActive ? "bg-green-100 text-green-800" : ""}>
+                                {role.isActive ? "Active" : "Inactive"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="icon" onClick={() => { setEditingRoleType({...role}); setEditRoleTypeOpen(true); }}>
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this role type?")) deleteRoleTypeMutation.mutate({ id: role.id }); }}>
+                                <Trash2 className="h-4 w-4 text-red-500" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {(!roleTypesData || roleTypesData.length === 0) && (
+                          <TableRow>
+                            <TableCell colSpan={5} className="text-center text-muted-foreground py-8">No role types found. Add one to get started.</TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  )}
+                </TabsContent>
+
+                {/* ============================================================================ */}
+                {/* APPROVERS TAB */}
+                {/* ============================================================================ */}
+                <TabsContent value="approvers">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Approvers</h3>
+                    <Dialog open={newApproverOpen} onOpenChange={setNewApproverOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                          <Plus className="h-4 w-4" /> Add Approver
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <form onSubmit={(e) => { e.preventDefault(); createApproverMutation.mutate({...newApprover, siteId: newApprover.siteId || undefined}); }}>
+                          <DialogHeader>
+                            <DialogTitle>Add New Approver</DialogTitle>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div className="space-y-2">
+                              <Label>User</Label>
+                              <Select value={newApprover.userId.toString()} onValueChange={v => setNewApprover({...newApprover, userId: parseInt(v)})}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select user" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {usersForApprovers?.users?.map(u => (
+                                    <SelectItem key={u.id} value={u.id.toString()}>{u.name || u.email}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Site (Optional)</Label>
+                              <Select value={newApprover.siteId?.toString() || "all"} onValueChange={v => setNewApprover({...newApprover, siteId: v === "all" ? null : parseInt(v)})}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="All Sites" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="all">All Sites</SelectItem>
+                                  {sitesForApprovers?.map(s => (
+                                    <SelectItem key={s.id} value={s.id.toString()}>{s.name}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Approval Level (1-10)</Label>
+                              <Input 
+                                type="number"
+                                min={1}
+                                max={10}
+                                value={newApprover.approvalLevel}
+                                onChange={e => setNewApprover({...newApprover, approvalLevel: parseInt(e.target.value) || 1})}
+                              />
+                            </div>
+                            <div className="flex gap-4">
+                              <div className="flex items-center space-x-2">
+                                <Switch checked={newApprover.canApproveEmergency} onCheckedChange={c => setNewApprover({...newApprover, canApproveEmergency: c})} />
+                                <Label>Can Approve Emergency</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Switch checked={newApprover.canApproveVIP} onCheckedChange={c => setNewApprover({...newApprover, canApproveVIP: c})} />
+                                <Label>Can Approve VIP</Label>
+                              </div>
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button type="button" variant="outline" onClick={() => setNewApproverOpen(false)}>Cancel</Button>
+                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createApproverMutation.isPending}>
+                              {createApproverMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                              Create
+                            </Button>
+                          </DialogFooter>
+                        </form>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  {approversLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                    </div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Approver</TableHead>
+                          <TableHead>Site</TableHead>
+                          <TableHead>Level</TableHead>
+                          <TableHead>Permissions</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {approversData?.map(approver => (
+                          <TableRow key={approver.id}>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center gap-2">
+                                <Users2 className="h-4 w-4 text-purple-600" />
+                                <div>
+                                  <div>{approver.userName || "Unknown"}</div>
+                                  <div className="text-xs text-muted-foreground">{approver.userEmail}</div>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>{approver.siteName || "All Sites"}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">Level {approver.approvalLevel}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-1">
+                                {approver.canApproveEmergency && <Badge variant="destructive" className="text-xs">Emergency</Badge>}
+                                {approver.canApproveVIP && <Badge variant="secondary" className="text-xs">VIP</Badge>}
+                                {!approver.canApproveEmergency && !approver.canApproveVIP && <span className="text-muted-foreground">Standard</span>}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={approver.isActive ? "default" : "secondary"} className={approver.isActive ? "bg-green-100 text-green-800" : ""}>
+                                {approver.isActive ? "Active" : "Inactive"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="icon" onClick={() => { setEditingApprover({...approver}); setEditApproverOpen(true); }}>
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this approver?")) deleteApproverMutation.mutate({ id: approver.id }); }}>
+                                <Trash2 className="h-4 w-4 text-red-500" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {(!approversData || approversData.length === 0) && (
+                          <TableRow>
+                            <TableCell colSpan={6} className="text-center text-muted-foreground py-8">No approvers found. Add one to get started.</TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  )}
+                </TabsContent>
 
                 {/* Countries Tab */}
                 <TabsContent value="countries">
@@ -1049,6 +1757,257 @@ export default function Settings() {
           </Card>
 
           {/* Edit Dialogs for Master Data */}
+          
+          {/* Edit Main Activity Dialog */}
+          <Dialog open={editMainActivityOpen} onOpenChange={setEditMainActivityOpen}>
+            <DialogContent>
+              <form onSubmit={(e) => { e.preventDefault(); if(editingMainActivity) updateMainActivityMutation.mutate(editingMainActivity); }}>
+                <DialogHeader>
+                  <DialogTitle>Edit Main Activity</DialogTitle>
+                </DialogHeader>
+                {editingMainActivity && (
+                  <div className="grid gap-4 py-4">
+                    <div className="space-y-2">
+                      <Label>Activity Name (English)</Label>
+                      <Input value={editingMainActivity.name} onChange={e => setEditingMainActivity({...editingMainActivity, name: e.target.value})} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Activity Name (Arabic)</Label>
+                      <Input value={editingMainActivity.nameAr || ""} onChange={e => setEditingMainActivity({...editingMainActivity, nameAr: e.target.value})} dir="rtl" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Description</Label>
+                      <Input value={editingMainActivity.description || ""} onChange={e => setEditingMainActivity({...editingMainActivity, description: e.target.value})} />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch checked={editingMainActivity.isActive} onCheckedChange={c => setEditingMainActivity({...editingMainActivity, isActive: c})} />
+                      <Label>Active</Label>
+                    </div>
+                  </div>
+                )}
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setEditMainActivityOpen(false)}>Cancel</Button>
+                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateMainActivityMutation.isPending}>
+                    {updateMainActivityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Save
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+
+          {/* Edit Sub-Activity Dialog */}
+          <Dialog open={editSubActivityOpen} onOpenChange={setEditSubActivityOpen}>
+            <DialogContent>
+              <form onSubmit={(e) => { e.preventDefault(); if(editingSubActivity) updateSubActivityMutation.mutate(editingSubActivity); }}>
+                <DialogHeader>
+                  <DialogTitle>Edit Sub-Activity</DialogTitle>
+                </DialogHeader>
+                {editingSubActivity && (
+                  <div className="grid gap-4 py-4">
+                    <div className="space-y-2">
+                      <Label>Main Activity</Label>
+                      <Select value={editingSubActivity.mainActivityId?.toString()} onValueChange={v => setEditingSubActivity({...editingSubActivity, mainActivityId: parseInt(v)})}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mainActivitiesData?.filter(a => a.isActive).map(a => (
+                            <SelectItem key={a.id} value={a.id.toString()}>{a.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Sub-Activity Name (English)</Label>
+                      <Input value={editingSubActivity.name} onChange={e => setEditingSubActivity({...editingSubActivity, name: e.target.value})} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Sub-Activity Name (Arabic)</Label>
+                      <Input value={editingSubActivity.nameAr || ""} onChange={e => setEditingSubActivity({...editingSubActivity, nameAr: e.target.value})} dir="rtl" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Risk Level</Label>
+                      <Select value={editingSubActivity.riskLevel || "low"} onValueChange={v => setEditingSubActivity({...editingSubActivity, riskLevel: v as any})}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                          <SelectItem value="critical">Critical</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="flex items-center space-x-2">
+                        <Switch checked={editingSubActivity.requiresMOP} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, requiresMOP: c})} />
+                        <Label>Requires MOP</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Switch checked={editingSubActivity.requiresPermit} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, requiresPermit: c})} />
+                        <Label>Requires Permit</Label>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch checked={editingSubActivity.isActive} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, isActive: c})} />
+                      <Label>Active</Label>
+                    </div>
+                  </div>
+                )}
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setEditSubActivityOpen(false)}>Cancel</Button>
+                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateSubActivityMutation.isPending}>
+                    {updateSubActivityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Save
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+
+          {/* Edit Role Type Dialog */}
+          <Dialog open={editRoleTypeOpen} onOpenChange={setEditRoleTypeOpen}>
+            <DialogContent>
+              <form onSubmit={(e) => { e.preventDefault(); if(editingRoleType) updateRoleTypeMutation.mutate(editingRoleType); }}>
+                <DialogHeader>
+                  <DialogTitle>Edit Role Type</DialogTitle>
+                </DialogHeader>
+                {editingRoleType && (
+                  <div className="grid gap-4 py-4">
+                    <div className="space-y-2">
+                      <Label>Role Type Name (English)</Label>
+                      <Input value={editingRoleType.name} onChange={e => setEditingRoleType({...editingRoleType, name: e.target.value})} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Role Type Name (Arabic)</Label>
+                      <Input value={editingRoleType.nameAr || ""} onChange={e => setEditingRoleType({...editingRoleType, nameAr: e.target.value})} dir="rtl" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Category</Label>
+                        <Select value={editingRoleType.category || "internal"} onValueChange={v => setEditingRoleType({...editingRoleType, category: v as any})}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="internal">Internal</SelectItem>
+                            <SelectItem value="external">External</SelectItem>
+                            <SelectItem value="contractor">Contractor</SelectItem>
+                            <SelectItem value="visitor">Visitor</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Access Level</Label>
+                        <Select value={editingRoleType.accessLevel || "standard"} onValueChange={v => setEditingRoleType({...editingRoleType, accessLevel: v as any})}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="basic">Basic</SelectItem>
+                            <SelectItem value="standard">Standard</SelectItem>
+                            <SelectItem value="elevated">Elevated</SelectItem>
+                            <SelectItem value="full">Full</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Description</Label>
+                      <Input value={editingRoleType.description || ""} onChange={e => setEditingRoleType({...editingRoleType, description: e.target.value})} />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch checked={editingRoleType.isActive} onCheckedChange={c => setEditingRoleType({...editingRoleType, isActive: c})} />
+                      <Label>Active</Label>
+                    </div>
+                  </div>
+                )}
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setEditRoleTypeOpen(false)}>Cancel</Button>
+                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateRoleTypeMutation.isPending}>
+                    {updateRoleTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Save
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+
+          {/* Edit Approver Dialog */}
+          <Dialog open={editApproverOpen} onOpenChange={setEditApproverOpen}>
+            <DialogContent>
+              <form onSubmit={(e) => { e.preventDefault(); if(editingApprover) updateApproverMutation.mutate({...editingApprover, siteId: editingApprover.siteId || undefined}); }}>
+                <DialogHeader>
+                  <DialogTitle>Edit Approver</DialogTitle>
+                </DialogHeader>
+                {editingApprover && (
+                  <div className="grid gap-4 py-4">
+                    <div className="space-y-2">
+                      <Label>User</Label>
+                      <Select value={editingApprover.userId?.toString()} onValueChange={v => setEditingApprover({...editingApprover, userId: parseInt(v)})}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {usersForApprovers?.users?.map(u => (
+                            <SelectItem key={u.id} value={u.id.toString()}>{u.name || u.email}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Site (Optional)</Label>
+                      <Select value={editingApprover.siteId?.toString() || "all"} onValueChange={v => setEditingApprover({...editingApprover, siteId: v === "all" ? null : parseInt(v)})}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Sites</SelectItem>
+                          {sitesForApprovers?.map(s => (
+                            <SelectItem key={s.id} value={s.id.toString()}>{s.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Approval Level (1-10)</Label>
+                      <Input 
+                        type="number"
+                        min={1}
+                        max={10}
+                        value={editingApprover.approvalLevel}
+                        onChange={e => setEditingApprover({...editingApprover, approvalLevel: parseInt(e.target.value) || 1})}
+                      />
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="flex items-center space-x-2">
+                        <Switch checked={editingApprover.canApproveEmergency} onCheckedChange={c => setEditingApprover({...editingApprover, canApproveEmergency: c})} />
+                        <Label>Can Approve Emergency</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Switch checked={editingApprover.canApproveVIP} onCheckedChange={c => setEditingApprover({...editingApprover, canApproveVIP: c})} />
+                        <Label>Can Approve VIP</Label>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch checked={editingApprover.isActive} onCheckedChange={c => setEditingApprover({...editingApprover, isActive: c})} />
+                      <Label>Active</Label>
+                    </div>
+                  </div>
+                )}
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setEditApproverOpen(false)}>Cancel</Button>
+                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateApproverMutation.isPending}>
+                    {updateApproverMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Save
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+
           {/* Edit Country Dialog */}
           <Dialog open={editCountryOpen} onOpenChange={setEditCountryOpen}>
             <DialogContent>
