@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE mainActivities SET nameAr = 'تغييرات الكابلات' WHERE name = 'Cabling Changes';\nUPDATE mainActivities SET nameAr = 'الفحص والزيارة والتدقيق' WHERE name = 'Checks, Visit & Audit';\nUPDATE mainActivities SET nameAr = 'أعمال المرافق والبناء' WHERE name = 'Facilities & Civil Work';\nUPDATE mainActivities SET nameAr = 'تغييرات الأجهزة' WHERE name = 'HW Changes';\nUPDATE mainActivities SET nameAr = 'الإدخال / الإخراج' WHERE name = 'Input / Output';\nUPDATE mainActivities SET nameAr = 'تغييرات الأمن والسلامة' WHERE name = 'Security & Safety Changes';\nUPDATE mainActivities SET nameAr = 'أنظمة تكنولوجيا المعلومات والبرمجيات' WHERE name = 'IT System & Software';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute UPDATE mainActivities SET nameAr = 'تغييرات الكابلات' WHERE name = 'Cabling Changes';\nUPDATE mainActivities SET nameAr = 'الفحص والزيارة والتدقيق' WHERE name = 'Checks, Visit & Audit';\nUPDATE mainActivities SET nameAr = 'أعمال المرافق والبناء' WHERE name = 'Facilities & Civil Work';\nUPDATE mainActivities SET nameAr = 'تغييرات الأجهزة' WHERE name = 'HW Changes';\nUPDATE mainActivities SET nameAr = 'الإدخال / الإخراج' WHERE name = 'Input / Output';\nUPDATE mainActivities SET nameAr = 'تغييرات الأمن والسلامة' WHERE name = 'Security & Safety Changes';\nUPDATE mainActivities SET nameAr = 'أنظمة تكنولوجيا المعلومات والبرمجيات' WHERE name = 'IT System & Software';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2978
+}

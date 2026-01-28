@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE subActivities SET nameAr = 'لوحة إنذار الحريق' WHERE name = 'Fire Fighting Alarm Panel';\nUPDATE subActivities SET nameAr = 'اختبار التدريب' WHERE name = 'Drill Test';\nUPDATE subActivities SET nameAr = 'اللحام والقطع والحفر والطلاء' WHERE name = 'Welding, Cutting, Drilling, Painting';\nUPDATE subActivities SET nameAr = 'تركيب حامل الكابلات' WHERE name = 'Cable tray installation';\nUPDATE subActivities SET nameAr = 'تنسيق الحدائق' WHERE name = 'Landscapping';\nUPDATE subActivities SET nameAr = 'تركيب وإزالة PDU' WHERE name = 'PDU Installation and decommission';\nUPDATE subActivities SET nameAr = 'استبدال PDU' WHERE name = 'PDU Replacement';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute UPDATE subActivities SET nameAr = 'لوحة إنذار الحريق' WHERE name = 'Fire Fighting Alarm Panel';\nUPDATE subActivities SET nameAr = 'اختبار التدريب' WHERE name = 'Drill Test';\nUPDATE subActivities SET nameAr = 'اللحام والقطع والحفر والطلاء' WHERE name = 'Welding, Cutting, Drilling, Painting';\nUPDATE subActivities SET nameAr = 'تركيب حامل الكابلات' WHERE name = 'Cable tray installation';\nUPDATE subActivities SET nameAr = 'تنسيق الحدائق' WHERE name = 'Landscapping';\nUPDATE subActivities SET nameAr = 'تركيب وإزالة PDU' WHERE name = 'PDU Installation and decommission';\nUPDATE subActivities SET nameAr = 'استبدال PDU' WHERE name = 'PDU Replacement';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2855
+}

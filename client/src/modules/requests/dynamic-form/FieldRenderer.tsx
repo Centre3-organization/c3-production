@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Upload, X, FileText, User, Search, Loader2 } from "lucide-react";
+import { Upload, X, FileText, User, Search, Loader2, Activity, AlertTriangle, FileCheck, ClipboardList, MapPin as RoomIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -261,6 +261,219 @@ function AreaTypeField({
         required={field.isRequired}
         isRTL={isRTL}
       />
+      {getHelpText() && (
+        <p className="text-xs text-gray-500">{getHelpText()}</p>
+      )}
+      {error && <p className="text-xs text-red-600">{error}</p>}
+    </div>
+  );
+}
+
+// Activity Selector Field Component - shows main activity and sub-activity with requirements
+function ActivitySelectorField({
+  field,
+  value,
+  onChange,
+  onRequirementsChange,
+  disabled,
+  error,
+  isRTL,
+  getLabel,
+  getHelpText,
+}: {
+  field: FormField;
+  value: any;
+  onChange: (value: any) => void;
+  onRequirementsChange?: (requirements: { needsRFC: boolean; needsHRS: boolean; needsMOP: boolean; needsMHV: boolean; needsRoomSelection: boolean }) => void;
+  disabled: boolean;
+  error?: string;
+  isRTL: boolean;
+  getLabel: () => string;
+  getHelpText: () => string | undefined;
+}) {
+  const { t } = useTranslation();
+  const [selectedMainActivityId, setSelectedMainActivityId] = useState<number | null>(value?.mainActivityId || null);
+  const [selectedSubActivityId, setSelectedSubActivityId] = useState<number | null>(value?.subActivityId || null);
+
+  const { data: mainActivities, isLoading: loadingMain } = trpc.masterData.getAllMainActivities.useQuery();
+  const { data: subActivities, isLoading: loadingSub } = trpc.masterData.getAllSubActivities.useQuery();
+
+  // Filter sub-activities based on selected main activity
+  const filteredSubActivities = useMemo(() => {
+    if (!selectedMainActivityId || !subActivities) return [];
+    return subActivities.filter((s: any) => s.mainActivityId === selectedMainActivityId && s.isActive);
+  }, [selectedMainActivityId, subActivities]);
+
+  // Get selected sub-activity details for requirements
+  const selectedSubActivity = useMemo(() => {
+    if (!selectedSubActivityId || !subActivities) return null;
+    return subActivities.find((s: any) => s.id === selectedSubActivityId);
+  }, [selectedSubActivityId, subActivities]);
+
+  // Update parent when selection changes
+  useEffect(() => {
+    if (selectedMainActivityId && selectedSubActivityId) {
+      const mainActivity = mainActivities?.find((m: any) => m.id === selectedMainActivityId);
+      const subActivity = subActivities?.find((s: any) => s.id === selectedSubActivityId);
+      onChange({
+        mainActivityId: selectedMainActivityId,
+        mainActivityName: mainActivity?.name,
+        subActivityId: selectedSubActivityId,
+        subActivityName: subActivity?.name,
+        requirements: {
+          needsRFC: subActivity?.needsRFC || false,
+          needsHRS: subActivity?.needsHRS || false,
+          needsMOP: subActivity?.needsMOP || false,
+          needsMHV: subActivity?.needsMHV || false,
+          needsRoomSelection: subActivity?.needsRoomSelection || false,
+        }
+      });
+      // Notify parent about requirements
+      if (onRequirementsChange && subActivity) {
+        onRequirementsChange({
+          needsRFC: subActivity.needsRFC || false,
+          needsHRS: subActivity.needsHRS || false,
+          needsMOP: subActivity.needsMOP || false,
+          needsMHV: subActivity.needsMHV || false,
+          needsRoomSelection: subActivity.needsRoomSelection || false,
+        });
+      }
+    }
+  }, [selectedMainActivityId, selectedSubActivityId, mainActivities, subActivities]);
+
+  // Reset sub-activity when main activity changes
+  useEffect(() => {
+    if (selectedMainActivityId !== value?.mainActivityId) {
+      setSelectedSubActivityId(null);
+    }
+  }, [selectedMainActivityId]);
+
+  if (loadingMain) {
+    return (
+      <div className="space-y-1.5">
+        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          {getLabel()}
+          {field.isRequired && <span className="text-red-600">*</span>}
+        </Label>
+        <div className="flex items-center justify-center p-4 border rounded-md">
+          <Loader2 className="h-4 w-4 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Main Activity Selector */}
+      <div className="space-y-1.5">
+        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Activity className="h-3.5 w-3.5" />
+          {isRTL ? "النشاط الرئيسي" : "Main Activity"}
+          {field.isRequired && <span className="text-red-600">*</span>}
+        </Label>
+        <Select
+          value={selectedMainActivityId?.toString() || ""}
+          onValueChange={(v) => setSelectedMainActivityId(parseInt(v))}
+          disabled={disabled}
+        >
+          <SelectTrigger className={error ? "border-red-500" : ""}>
+            <SelectValue placeholder={isRTL ? "اختر النشاط الرئيسي" : "Select main activity"} />
+          </SelectTrigger>
+          <SelectContent>
+            {mainActivities?.filter((a: any) => a.isActive).map((activity: any) => (
+              <SelectItem key={activity.id} value={activity.id.toString()}>
+                {isRTL && activity.nameAr ? activity.nameAr : activity.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Sub-Activity Selector */}
+      {selectedMainActivityId && (
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+            <ClipboardList className="h-3.5 w-3.5" />
+            {isRTL ? "النشاط الفرعي" : "Sub-Activity"}
+            {field.isRequired && <span className="text-red-600">*</span>}
+          </Label>
+          {loadingSub ? (
+            <div className="flex items-center justify-center p-4 border rounded-md">
+              <Loader2 className="h-4 w-4 animate-spin" />
+            </div>
+          ) : (
+            <Select
+              value={selectedSubActivityId?.toString() || ""}
+              onValueChange={(v) => setSelectedSubActivityId(parseInt(v))}
+              disabled={disabled || filteredSubActivities.length === 0}
+            >
+              <SelectTrigger className={error ? "border-red-500" : ""}>
+                <SelectValue placeholder={isRTL ? "اختر النشاط الفرعي" : "Select sub-activity"} />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredSubActivities.map((sub: any) => (
+                  <SelectItem key={sub.id} value={sub.id.toString()}>
+                    {isRTL && sub.nameAr ? sub.nameAr : sub.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          {filteredSubActivities.length === 0 && !loadingSub && (
+            <p className="text-xs text-muted-foreground">
+              {isRTL ? "لا توجد أنشطة فرعية لهذا النشاط الرئيسي" : "No sub-activities available for this main activity"}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Requirements Display */}
+      {selectedSubActivity && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-md space-y-2">
+          <Label className="text-xs font-bold text-blue-800 uppercase flex items-center gap-1">
+            <FileCheck className="h-3.5 w-3.5" />
+            {isRTL ? "المتطلبات" : "Requirements"}
+          </Label>
+          <div className="flex flex-wrap gap-2">
+            {selectedSubActivity.needsRFC && (
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+                <AlertTriangle className="h-3 w-3 mr-1" />
+                RFC
+              </Badge>
+            )}
+            {selectedSubActivity.needsHRS && (
+              <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">
+                <FileCheck className="h-3 w-3 mr-1" />
+                HRS
+              </Badge>
+            )}
+            {selectedSubActivity.needsMOP && (
+              <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">
+                <ClipboardList className="h-3 w-3 mr-1" />
+                MOP
+              </Badge>
+            )}
+            {selectedSubActivity.needsMHV && (
+              <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                <FileCheck className="h-3 w-3 mr-1" />
+                MHV
+              </Badge>
+            )}
+            {selectedSubActivity.needsRoomSelection && (
+              <Badge className="bg-cyan-100 text-cyan-800 hover:bg-cyan-100">
+                <RoomIcon className="h-3 w-3 mr-1" />
+                {isRTL ? "اختيار الغرفة" : "Room Selection"}
+              </Badge>
+            )}
+            {!selectedSubActivity.needsRFC && !selectedSubActivity.needsHRS && !selectedSubActivity.needsMOP && !selectedSubActivity.needsMHV && !selectedSubActivity.needsRoomSelection && (
+              <span className="text-xs text-blue-600">
+                {isRTL ? "لا توجد متطلبات إضافية" : "No additional requirements"}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
       {getHelpText() && (
         <p className="text-xs text-gray-500">{getHelpText()}</p>
       )}
@@ -823,6 +1036,20 @@ export function FieldRenderer({
     case "area_type":
       return (
         <AreaTypeField
+          field={field}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          error={error}
+          isRTL={isRTL}
+          getLabel={getLabel}
+          getHelpText={getHelpText}
+        />
+      );
+
+    case "activity_selector":
+      return (
+        <ActivitySelectorField
           field={field}
           value={value}
           onChange={onChange}

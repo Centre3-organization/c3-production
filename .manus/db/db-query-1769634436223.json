@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE subActivities SET nameAr = 'إزالة الصناديق' WHERE name = 'Box Removal';\nUPDATE subActivities SET nameAr = 'تسليم / إزالة الأجهزة' WHERE name = 'HW Delivery / Removal';\nUPDATE subActivities SET nameAr = 'تركيب مكونات الأمن والسلامة' WHERE name = 'Security & Safety Components Installation';\nUPDATE subActivities SET nameAr = 'إيقاف مكونات الأمن والسلامة' WHERE name = 'Security & Safety Components Decommission';\nUPDATE subActivities SET nameAr = 'استبدال مكونات الأمن والسلامة' WHERE name = 'Security & Safety Components Replacement';\nUPDATE subActivities SET nameAr = 'ترقية مكونات الأمن والسلامة' WHERE name = 'Security & Safety Components Upgrade';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute UPDATE subActivities SET nameAr = 'إزالة الصناديق' WHERE name = 'Box Removal';\nUPDATE subActivities SET nameAr = 'تسليم / إزالة الأجهزة' WHERE name = 'HW Delivery / Removal';\nUPDATE subActivities SET nameAr = 'تركيب مكونات الأمن والسلامة' WHERE name = 'Security & Safety Components Installation';\nUPDATE subActivities SET nameAr = 'إيقاف مكونات الأمن والسلامة' WHERE name = 'Security & Safety Components Decommission';\nUPDATE subActivities SET nameAr = 'استبدال مكونات الأمن والسلامة' WHERE name = 'Security & Safety Components Replacement';\nUPDATE subActivities SET nameAr = 'ترقية مكونات الأمن والسلامة' WHERE name = 'Security & Safety Components Upgrade';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2652
+}

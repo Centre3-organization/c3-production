@@ -239,7 +239,7 @@ export default function Settings() {
   const [newSubActivityOpen, setNewSubActivityOpen] = useState(false);
   const [editSubActivityOpen, setEditSubActivityOpen] = useState(false);
   const [editingSubActivity, setEditingSubActivity] = useState<any>(null);
-  const [newSubActivity, setNewSubActivity] = useState({ mainActivityId: 0, name: "", nameAr: "", description: "", requiresMOP: false, requiresPermit: false, riskLevel: "low" as const });
+  const [newSubActivity, setNewSubActivity] = useState({ mainActivityId: 0, name: "", nameAr: "", description: "", needsRFC: false, needsHRS: false, needsMOP: false, needsMHV: false, needsRoomSelection: false, requiresMOP: false, requiresPermit: false, riskLevel: "low" as const });
   
   const createSubActivityMutation = trpc.masterData.createSubActivity.useMutation({
     onSuccess: () => {
@@ -247,7 +247,7 @@ export default function Settings() {
       refetchSubActivities();
       refetchMainActivities();
       setNewSubActivityOpen(false);
-      setNewSubActivity({ mainActivityId: 0, name: "", nameAr: "", description: "", requiresMOP: false, requiresPermit: false, riskLevel: "low" });
+      setNewSubActivity({ mainActivityId: 0, name: "", nameAr: "", description: "", needsRFC: false, needsHRS: false, needsMOP: false, needsMHV: false, needsRoomSelection: false, requiresMOP: false, requiresPermit: false, riskLevel: "low" });
     },
     onError: (error) => toast.error("Failed to create sub-activity", { description: error.message })
   });
@@ -1106,61 +1106,89 @@ export default function Settings() {
                           <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
                         </div>
                       ) : (
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Sub-Activity Name</TableHead>
-                              <TableHead>Main Activity</TableHead>
-                              <TableHead>Risk Level</TableHead>
-                              <TableHead>Requirements</TableHead>
-                              <TableHead>Status</TableHead>
-                              <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {subActivitiesData?.map(sub => (
-                              <TableRow key={sub.id}>
-                                <TableCell className="font-medium">{sub.name}</TableCell>
-                                <TableCell className="text-muted-foreground">{sub.mainActivityName || "-"}</TableCell>
-                                <TableCell>
-                                  <Badge variant="outline" className={
-                                    sub.riskLevel === "critical" ? "border-red-500 text-red-500" :
-                                    sub.riskLevel === "high" ? "border-orange-500 text-orange-500" :
-                                    sub.riskLevel === "medium" ? "border-yellow-500 text-yellow-600" :
-                                    "border-green-500 text-green-600"
-                                  }>
-                                    {(sub.riskLevel || 'low').charAt(0).toUpperCase() + (sub.riskLevel || 'low').slice(1)}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell>
-                                  <div className="flex gap-1">
-                                    {sub.requiresMOP && <Badge variant="secondary" className="text-xs">MOP</Badge>}
-                                    {sub.requiresPermit && <Badge variant="secondary" className="text-xs">Permit</Badge>}
-                                    {!sub.requiresMOP && !sub.requiresPermit && <span className="text-muted-foreground">-</span>}
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  <Badge variant={sub.isActive ? "default" : "secondary"} className={sub.isActive ? "bg-green-100 text-green-800" : ""}>
-                                    {sub.isActive ? "Active" : "Inactive"}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                  <Button variant="ghost" size="icon" onClick={() => { setEditingSubActivity({...sub}); setEditSubActivityOpen(true); }}>
-                                    <Edit2 className="h-4 w-4" />
-                                  </Button>
-                                  <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this sub-activity?")) deleteSubActivityMutation.mutate({ id: sub.id }); }}>
-                                    <Trash2 className="h-4 w-4 text-red-500" />
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                            {(!subActivitiesData || subActivitiesData.length === 0) && (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
                               <TableRow>
-                                <TableCell colSpan={6} className="text-center text-muted-foreground py-8">No sub-activities found. Add one to get started.</TableCell>
+                                <TableHead>Sub-Activity Name</TableHead>
+                                <TableHead>Main Activity</TableHead>
+                                <TableHead className="text-center">RFC</TableHead>
+                                <TableHead className="text-center">HRS</TableHead>
+                                <TableHead className="text-center">MOP</TableHead>
+                                <TableHead className="text-center">MHV</TableHead>
+                                <TableHead className="text-center">Room</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
                               </TableRow>
-                            )}
-                          </TableBody>
-                        </Table>
+                            </TableHeader>
+                            <TableBody>
+                              {subActivitiesData?.map(sub => (
+                                <TableRow key={sub.id}>
+                                  <TableCell className="font-medium">
+                                    <div>
+                                      <div>{sub.name}</div>
+                                      {sub.nameAr && <div className="text-xs text-muted-foreground" dir="rtl">{sub.nameAr}</div>}
+                                    </div>
+                                  </TableCell>
+                                  <TableCell className="text-muted-foreground">{sub.mainActivityName || "-"}</TableCell>
+                                  <TableCell className="text-center">
+                                    {sub.needsRFC ? (
+                                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">✓</Badge>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {sub.needsHRS ? (
+                                      <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">✓</Badge>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {sub.needsMOP ? (
+                                      <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">✓</Badge>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {sub.needsMHV ? (
+                                      <Badge className="bg-green-100 text-green-800 hover:bg-green-100">✓</Badge>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    {sub.needsRoomSelection ? (
+                                      <Badge className="bg-cyan-100 text-cyan-800 hover:bg-cyan-100">✓</Badge>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge variant={sub.isActive ? "default" : "secondary"} className={sub.isActive ? "bg-green-100 text-green-800" : ""}>
+                                      {sub.isActive ? "Active" : "Inactive"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-right">
+                                    <Button variant="ghost" size="icon" onClick={() => { setEditingSubActivity({...sub}); setEditSubActivityOpen(true); }}>
+                                      <Edit2 className="h-4 w-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this sub-activity?")) deleteSubActivityMutation.mutate({ id: sub.id }); }}>
+                                      <Trash2 className="h-4 w-4 text-red-500" />
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                              {(!subActivitiesData || subActivitiesData.length === 0) && (
+                                <TableRow>
+                                  <TableCell colSpan={9} className="text-center text-muted-foreground py-8">No sub-activities found. Add one to get started.</TableCell>
+                                </TableRow>
+                              )}
+                            </TableBody>
+                          </Table>
+                        </div>
                       )}
                     </TabsContent>
                   </Tabs>
@@ -1840,14 +1868,29 @@ export default function Settings() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="flex gap-4">
-                      <div className="flex items-center space-x-2">
-                        <Switch checked={editingSubActivity.requiresMOP} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, requiresMOP: c})} />
-                        <Label>Requires MOP</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Switch checked={editingSubActivity.requiresPermit} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, requiresPermit: c})} />
-                        <Label>Requires Permit</Label>
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">Requirements</Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="flex items-center space-x-2">
+                          <Switch checked={editingSubActivity.needsRFC} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, needsRFC: c})} />
+                          <Label className="text-sm">Needs RFC</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch checked={editingSubActivity.needsHRS} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, needsHRS: c})} />
+                          <Label className="text-sm">Needs HRS</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch checked={editingSubActivity.needsMOP} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, needsMOP: c})} />
+                          <Label className="text-sm">Needs MOP</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch checked={editingSubActivity.needsMHV} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, needsMHV: c})} />
+                          <Label className="text-sm">Needs MHV</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch checked={editingSubActivity.needsRoomSelection} onCheckedChange={c => setEditingSubActivity({...editingSubActivity, needsRoomSelection: c})} />
+                          <Label className="text-sm">Needs Room Selection</Label>
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">

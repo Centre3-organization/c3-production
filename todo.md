@@ -751,3 +751,11 @@ Time conditions:
 - [x] Add Sub-Activities with requirements (Needs RFC, HRS, MOP, MHV, Room Selection)
 - [x] Update subActivities schema to include requirement fields
 - [x] Verify all 67 sub-activities are properly linked to main activities
+
+
+## Sub-Activities UI and Access Request Integration (Jan 29, 2026)
+- [x] Update Sub-Activities UI table to display requirement columns (RFC, HRS, MOP, MHV, Room Selection) as badges
+- [x] Add Arabic translations for all main activity and sub-activity names
+- [x] Integrate requirements into Access Request form - show/hide RFC, HRS, MOP, MHV fields based on selected sub-activity
+- [x] Create ActivitySelectorField component with cascading main/sub-activity selection
+- [x] Display requirement badges when sub-activity is selected

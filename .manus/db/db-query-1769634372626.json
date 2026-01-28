@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE subActivities SET nameAr = 'إزالة الكابلات' WHERE name = 'Cable Removal';\nUPDATE subActivities SET nameAr = 'اختبار الكابلات' WHERE name = 'Cable Testing';\nUPDATE subActivities SET nameAr = 'تتبع الكابلات' WHERE name = 'Cable Tracing';\nUPDATE subActivities SET nameAr = 'لحام الألياف' WHERE name = 'Fiber Splicing';\nUPDATE subActivities SET nameAr = 'التكبيل' WHERE name = 'Cabling';\nUPDATE subActivities SET nameAr = 'وضع العلامات' WHERE name = 'Labeling';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute UPDATE subActivities SET nameAr = 'إزالة الكابلات' WHERE name = 'Cable Removal';\nUPDATE subActivities SET nameAr = 'اختبار الكابلات' WHERE name = 'Cable Testing';\nUPDATE subActivities SET nameAr = 'تتبع الكابلات' WHERE name = 'Cable Tracing';\nUPDATE subActivities SET nameAr = 'لحام الألياف' WHERE name = 'Fiber Splicing';\nUPDATE subActivities SET nameAr = 'التكبيل' WHERE name = 'Cabling';\nUPDATE subActivities SET nameAr = 'وضع العلامات' WHERE name = 'Labeling';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2655
+}
