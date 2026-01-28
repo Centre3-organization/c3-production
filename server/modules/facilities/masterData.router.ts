@@ -931,6 +931,13 @@ export const masterDataRouter = router({
         name: subActivities.name,
         nameAr: subActivities.nameAr,
         description: subActivities.description,
+        // New requirement fields
+        needsRFC: subActivities.needsRFC,
+        needsHRS: subActivities.needsHRS,
+        needsMOP: subActivities.needsMOP,
+        needsMHV: subActivities.needsMHV,
+        needsRoomSelection: subActivities.needsRoomSelection,
+        // Legacy fields
         requiresMOP: subActivities.requiresMOP,
         requiresPermit: subActivities.requiresPermit,
         riskLevel: subActivities.riskLevel,
@@ -951,6 +958,13 @@ export const masterDataRouter = router({
       name: z.string().min(1).max(255),
       nameAr: z.string().max(255).optional(),
       description: z.string().optional(),
+      // New requirement fields
+      needsRFC: z.boolean().optional(),
+      needsHRS: z.boolean().optional(),
+      needsMOP: z.boolean().optional(),
+      needsMHV: z.boolean().optional(),
+      needsRoomSelection: z.boolean().optional(),
+      // Legacy fields
       requiresMOP: z.boolean().optional(),
       requiresPermit: z.boolean().optional(),
       riskLevel: z.enum(["low", "medium", "high", "critical"]).optional(),
@@ -965,6 +979,11 @@ export const masterDataRouter = router({
         name: input.name,
         nameAr: input.nameAr,
         description: input.description,
+        needsRFC: input.needsRFC || false,
+        needsHRS: input.needsHRS || false,
+        needsMOP: input.needsMOP || false,
+        needsMHV: input.needsMHV || false,
+        needsRoomSelection: input.needsRoomSelection || false,
         requiresMOP: input.requiresMOP || false,
         requiresPermit: input.requiresPermit || false,
         riskLevel: input.riskLevel || "low",
@@ -981,6 +1000,13 @@ export const masterDataRouter = router({
       name: z.string().min(1).max(255).optional(),
       nameAr: z.string().max(255).optional().nullable(),
       description: z.string().optional().nullable(),
+      // New requirement fields
+      needsRFC: z.boolean().optional(),
+      needsHRS: z.boolean().optional(),
+      needsMOP: z.boolean().optional(),
+      needsMHV: z.boolean().optional(),
+      needsRoomSelection: z.boolean().optional(),
+      // Legacy fields
       requiresMOP: z.boolean().optional(),
       requiresPermit: z.boolean().optional(),
       riskLevel: z.enum(["low", "medium", "high", "critical"]).optional(),

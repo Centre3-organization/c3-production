@@ -743,3 +743,11 @@ Time conditions:
 - [x] Reorder tabs: Activities, Role Types, Approvers, Countries, Regions, Cities, Site Types, Zone Types, Area Types
 - [x] Create database tables for mainActivities, subActivities, roleTypes, approvers
 - [x] Add unit tests for new Master Data endpoints
+
+
+## Activities Data Migration from Excel (Jan 28, 2026)
+- [x] Clear existing main activities and sub-activities from database
+- [x] Add Main Activities: Cabling Changes, Checks/Visit/Audit, Facilities & Civil Work, HW Changes, Input/Output, Security & Safety Changes, IT System & Software
+- [x] Add Sub-Activities with requirements (Needs RFC, HRS, MOP, MHV, Room Selection)
+- [x] Update subActivities schema to include requirement fields
+- [x] Verify all 67 sub-activities are properly linked to main activities

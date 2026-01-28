@@ -125,6 +125,13 @@ export const subActivities = mysqlTable("subActivities", {
   name: varchar("name", { length: 255 }).notNull(),
   nameAr: varchar("nameAr", { length: 255 }),
   description: text("description"),
+  // Requirement flags from Excel
+  needsRFC: boolean("needsRFC").default(false).notNull(),
+  needsHRS: boolean("needsHRS").default(false).notNull(),
+  needsMOP: boolean("needsMOP").default(false).notNull(),
+  needsMHV: boolean("needsMHV").default(false).notNull(),
+  needsRoomSelection: boolean("needsRoomSelection").default(false).notNull(),
+  // Legacy fields (kept for compatibility)
   requiresMOP: boolean("requiresMOP").default(false).notNull(),
   requiresPermit: boolean("requiresPermit").default(false).notNull(),
   riskLevel: mysqlEnum("riskLevel", ["low", "medium", "high", "critical"]).default("low"),

@@ -1,0 +1,18 @@
+{
+  "query": "SELECT 'Main Activities' as type, COUNT(*) as count FROM mainActivities\nUNION ALL\nSELECT 'Sub Activities' as type, COUNT(*) as count FROM subActivities;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT 'Main Activities' as type, COUNT(*) as count FROM mainActivities\nUNION ALL\nSELECT 'Sub Activities' as type, COUNT(*) as count FROM subActivities;",
+  "rows": [
+    {
+      "type": "Sub Activities",
+      "count": "67"
+    },
+    {
+      "type": "Main Activities",
+      "count": "7"
+    }
+  ],
+  "messages": [],
+  "stdout": "type\tcount\nSub Activities\t67\nMain Activities\t7\n",
+  "stderr": "",
+  "execution_time_ms": 1512
+}

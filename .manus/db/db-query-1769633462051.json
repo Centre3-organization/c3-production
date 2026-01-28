@@ -1,0 +1,38 @@
+{
+  "query": "SELECT m.name as mainActivity, COUNT(s.id) as subActivityCount \nFROM mainActivities m \nLEFT JOIN subActivities s ON m.id = s.mainActivityId \nGROUP BY m.id, m.name \nORDER BY m.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT m.name as mainActivity, COUNT(s.id) as subActivityCount \nFROM mainActivities m \nLEFT JOIN subActivities s ON m.id = s.mainActivityId \nGROUP BY m.id, m.name \nORDER BY m.id;",
+  "rows": [
+    {
+      "mainActivity": "Cabling Changes",
+      "subActivityCount": "6"
+    },
+    {
+      "mainActivity": "Checks, Visit & Audit",
+      "subActivityCount": "6"
+    },
+    {
+      "mainActivity": "Facilities & Civil Work",
+      "subActivityCount": "27"
+    },
+    {
+      "mainActivity": "HW Changes",
+      "subActivityCount": "11"
+    },
+    {
+      "mainActivity": "Input / Output",
+      "subActivityCount": "2"
+    },
+    {
+      "mainActivity": "Security & Safety Changes",
+      "subActivityCount": "4"
+    },
+    {
+      "mainActivity": "IT System & Software",
+      "subActivityCount": "11"
+    }
+  ],
+  "messages": [],
+  "stdout": "mainActivity\tsubActivityCount\nCabling Changes\t6\nChecks, Visit & Audit\t6\nFacilities & Civil Work\t27\nHW Changes\t11\nInput / Output\t2\nSecurity & Safety Changes\t4\nIT System & Software\t11\n",
+  "stderr": "",
+  "execution_time_ms": 1509
+}
