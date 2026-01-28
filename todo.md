@@ -685,3 +685,16 @@ Time conditions:
 - [x] Display comments on request details tagged to the action
 - [x] Update Approvals page to use new dialog
 - [x] Update L1/L2 approval pages to use new dialog
+
+
+## Database Fresh Start Cleanup (Jan 28, 2026)
+- [x] Delete all requests and related data (visitors, materials, vehicles)
+- [x] Delete all approval instances, tasks, and history
+- [x] Delete all sites, zones, and areas
+- [x] Delete all workflows, conditions, stages, and approvers
+- [x] Delete all schedules, shifts, and delegations
+- [x] Delete all groups and group memberships
+- [x] Delete all master data (departments, roles, etc.)
+- [x] Keep translations intact
+- [x] Keep request type configurations intact
+- [x] Keep users intact

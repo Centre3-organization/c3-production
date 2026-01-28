@@ -1,0 +1,50 @@
+{
+  "query": "SELECT 'requests' as tbl, COUNT(*) as cnt FROM requests UNION ALL SELECT 'approvalInstances', COUNT(*) FROM approvalInstances UNION ALL SELECT 'approvalTasks', COUNT(*) FROM approvalTasks UNION ALL SELECT 'sites', COUNT(*) FROM sites UNION ALL SELECT 'zones', COUNT(*) FROM zones UNION ALL SELECT 'areas', COUNT(*) FROM areas UNION ALL SELECT 'departments', COUNT(*) FROM departments UNION ALL SELECT 'roles', COUNT(*) FROM roles UNION ALL SELECT 'approvalWorkflows', COUNT(*) FROM approvalWorkflows UNION ALL SELECT 'groups', COUNT(*) FROM `groups`;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT 'requests' as tbl, COUNT(*) as cnt FROM requests UNION ALL SELECT 'approvalInstances', COUNT(*) FROM approvalInstances UNION ALL SELECT 'approvalTasks', COUNT(*) FROM approvalTasks UNION ALL SELECT 'sites', COUNT(*) FROM sites UNION ALL SELECT 'zones', COUNT(*) FROM zones UNION ALL SELECT 'areas', COUNT(*) FROM areas UNION ALL SELECT 'departments', COUNT(*) FROM departments UNION ALL SELECT 'roles', COUNT(*) FROM roles UNION ALL SELECT 'approvalWorkflows', COUNT(*) FROM approvalWorkflows UNION ALL SELECT 'groups', COUNT(*) FROM `groups`;",
+  "rows": [
+    {
+      "tbl": "zones",
+      "cnt": "0"
+    },
+    {
+      "tbl": "requests",
+      "cnt": "0"
+    },
+    {
+      "tbl": "sites",
+      "cnt": "0"
+    },
+    {
+      "tbl": "approvalTasks",
+      "cnt": "0"
+    },
+    {
+      "tbl": "approvalInstances",
+      "cnt": "0"
+    },
+    {
+      "tbl": "areas",
+      "cnt": "0"
+    },
+    {
+      "tbl": "departments",
+      "cnt": "0"
+    },
+    {
+      "tbl": "approvalWorkflows",
+      "cnt": "0"
+    },
+    {
+      "tbl": "groups",
+      "cnt": "0"
+    },
+    {
+      "tbl": "roles",
+      "cnt": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "tbl\tcnt\nzones\t0\nrequests\t0\nsites\t0\napprovalTasks\t0\napprovalInstances\t0\nareas\t0\ndepartments\t0\napprovalWorkflows\t0\ngroups\t0\nroles\t0\n",
+  "stderr": "",
+  "execution_time_ms": 1509
+}

@@ -1,0 +1,26 @@
+{
+  "query": "SELECT 'requestCategories' as tbl, COUNT(*) as cnt FROM requestCategories UNION ALL SELECT 'requestTypes', COUNT(*) FROM requestTypes UNION ALL SELECT 'formSections', COUNT(*) FROM formSections UNION ALL SELECT 'formFields', COUNT(*) FROM formFields;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT 'requestCategories' as tbl, COUNT(*) as cnt FROM requestCategories UNION ALL SELECT 'requestTypes', COUNT(*) FROM requestTypes UNION ALL SELECT 'formSections', COUNT(*) FROM formSections UNION ALL SELECT 'formFields', COUNT(*) FROM formFields;",
+  "rows": [
+    {
+      "tbl": "requestCategories",
+      "cnt": "4"
+    },
+    {
+      "tbl": "requestTypes",
+      "cnt": "8"
+    },
+    {
+      "tbl": "formSections",
+      "cnt": "25"
+    },
+    {
+      "tbl": "formFields",
+      "cnt": "115"
+    }
+  ],
+  "messages": [],
+  "stdout": "tbl\tcnt\nrequestCategories\t4\nrequestTypes\t8\nformSections\t25\nformFields\t115\n",
+  "stderr": "",
+  "execution_time_ms": 1558
+}
