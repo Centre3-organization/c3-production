@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO cities (name, countryId, isActive) \nSELECT name, (SELECT id FROM countries WHERE code = 'AE'), 1 FROM (\n  SELECT 'Dubai' as name UNION ALL\n  SELECT 'Abu Dhabi' UNION ALL\n  SELECT 'Sharjah' UNION ALL\n  SELECT 'Ajman' UNION ALL\n  SELECT 'Ras Al Khaimah' UNION ALL\n  SELECT 'Fujairah' UNION ALL\n  SELECT 'Umm Al Quwain' UNION ALL\n  SELECT 'Al Ain'\n) AS cities_list\nON DUPLICATE KEY UPDATE name=VALUES(name);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute INSERT INTO cities (name, countryId, isActive) \nSELECT name, (SELECT id FROM countries WHERE code = 'AE'), 1 FROM (\n  SELECT 'Dubai' as name UNION ALL\n  SELECT 'Abu Dhabi' UNION ALL\n  SELECT 'Sharjah' UNION ALL\n  SELECT 'Ajman' UNION ALL\n  SELECT 'Ras Al Khaimah' UNION ALL\n  SELECT 'Fujairah' UNION ALL\n  SELECT 'Umm Al Quwain' UNION ALL\n  SELECT 'Al Ain'\n) AS cities_list\nON DUPLICATE KEY UPDATE name=VALUES(name);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1578
+}

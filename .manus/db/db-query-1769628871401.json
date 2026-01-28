@@ -1,0 +1,46 @@
+{
+  "query": "SELECT c.id, c.name, c.countryId, co.name as country FROM cities c JOIN countries co ON c.countryId = co.id WHERE c.name IN ('Riyadh', 'Manama', 'Tripoli') ORDER BY c.name, c.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT c.id, c.name, c.countryId, co.name as country FROM cities c JOIN countries co ON c.countryId = co.id WHERE c.name IN ('Riyadh', 'Manama', 'Tripoli') ORDER BY c.name, c.id;",
+  "rows": [
+    {
+      "id": "7",
+      "name": "Manama",
+      "countryId": "2",
+      "country": "Bahrain"
+    },
+    {
+      "id": "40",
+      "name": "Manama",
+      "countryId": "2",
+      "country": "Bahrain"
+    },
+    {
+      "id": "1",
+      "name": "Riyadh",
+      "countryId": "1",
+      "country": "Saudi Arabia"
+    },
+    {
+      "id": "8",
+      "name": "Riyadh",
+      "countryId": "1",
+      "country": "Saudi Arabia"
+    },
+    {
+      "id": "65",
+      "name": "Tripoli",
+      "countryId": "11",
+      "country": "Lebanon"
+    },
+    {
+      "id": "90",
+      "name": "Tripoli",
+      "countryId": "15",
+      "country": "Libya"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcountryId\tcountry\n7\tManama\t2\tBahrain\n40\tManama\t2\tBahrain\n1\tRiyadh\t1\tSaudi Arabia\n8\tRiyadh\t1\tSaudi Arabia\n65\tTripoli\t11\tLebanon\n90\tTripoli\t15\tLibya\n",
+  "stderr": "",
+  "execution_time_ms": 1495
+}

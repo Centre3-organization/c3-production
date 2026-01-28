@@ -1,0 +1,9 @@
+{
+  "query": "DELETE c1 FROM cities c1\nINNER JOIN cities c2 \nWHERE c1.name = c2.name \nAND c1.countryId = c2.countryId \nAND c1.id > c2.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute DELETE c1 FROM cities c1\nINNER JOIN cities c2 \nWHERE c1.name = c2.name \nAND c1.countryId = c2.countryId \nAND c1.id > c2.id;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1542
+}

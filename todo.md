@@ -698,3 +698,11 @@ Time conditions:
 - [x] Keep translations intact
 - [x] Keep request type configurations intact
 - [x] Keep users intact
+
+
+## Master Data - Countries & Cities (Jan 28, 2026)
+- [x] Add all MENA countries (Saudi Arabia, UAE, Qatar, Kuwait, Bahrain, Oman, Egypt, Jordan, Lebanon, Iraq, Syria, Yemen, Libya, Tunisia, Algeria, Morocco, Sudan, Palestine)
+- [x] Add Turkey and Pakistan
+- [x] Add major cities for each country
+- [x] Preserve existing data (e.g., Riyadh if already exists)
+- [x] Remove duplicate cities (Riyadh, Manama, Tripoli)

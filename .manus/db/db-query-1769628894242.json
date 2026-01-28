@@ -1,0 +1,18 @@
+{
+  "query": "SELECT 'Countries' as type, COUNT(*) as count FROM countries UNION ALL SELECT 'Cities', COUNT(*) FROM cities;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT 'Countries' as type, COUNT(*) as count FROM countries UNION ALL SELECT 'Cities', COUNT(*) FROM cities;",
+  "rows": [
+    {
+      "type": "Cities",
+      "count": "128"
+    },
+    {
+      "type": "Countries",
+      "count": "20"
+    }
+  ],
+  "messages": [],
+  "stdout": "type\tcount\nCities\t128\nCountries\t20\n",
+  "stderr": "",
+  "execution_time_ms": 1537
+}

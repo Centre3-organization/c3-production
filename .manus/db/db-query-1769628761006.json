@@ -1,0 +1,110 @@
+{
+  "query": "SELECT id, name, code FROM countries ORDER BY name;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, code FROM countries ORDER BY name;",
+  "rows": [
+    {
+      "id": "17",
+      "name": "Algeria",
+      "code": "DZ"
+    },
+    {
+      "id": "2",
+      "name": "Bahrain",
+      "code": "BH"
+    },
+    {
+      "id": "9",
+      "name": "Egypt",
+      "code": "EG"
+    },
+    {
+      "id": "12",
+      "name": "Iraq",
+      "code": "IQ"
+    },
+    {
+      "id": "10",
+      "name": "Jordan",
+      "code": "JO"
+    },
+    {
+      "id": "6",
+      "name": "Kuwait",
+      "code": "KW"
+    },
+    {
+      "id": "11",
+      "name": "Lebanon",
+      "code": "LB"
+    },
+    {
+      "id": "15",
+      "name": "Libya",
+      "code": "LY"
+    },
+    {
+      "id": "18",
+      "name": "Morocco",
+      "code": "MA"
+    },
+    {
+      "id": "8",
+      "name": "Oman",
+      "code": "OM"
+    },
+    {
+      "id": "22",
+      "name": "Pakistan",
+      "code": "PK"
+    },
+    {
+      "id": "20",
+      "name": "Palestine",
+      "code": "PS"
+    },
+    {
+      "id": "5",
+      "name": "Qatar",
+      "code": "QA"
+    },
+    {
+      "id": "1",
+      "name": "Saudi Arabia",
+      "code": "SA"
+    },
+    {
+      "id": "19",
+      "name": "Sudan",
+      "code": "SD"
+    },
+    {
+      "id": "13",
+      "name": "Syria",
+      "code": "SY"
+    },
+    {
+      "id": "16",
+      "name": "Tunisia",
+      "code": "TN"
+    },
+    {
+      "id": "21",
+      "name": "Turkey",
+      "code": "TR"
+    },
+    {
+      "id": "4",
+      "name": "United Arab Emirates",
+      "code": "AE"
+    },
+    {
+      "id": "14",
+      "name": "Yemen",
+      "code": "YE"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcode\n17\tAlgeria\tDZ\n2\tBahrain\tBH\n9\tEgypt\tEG\n12\tIraq\tIQ\n10\tJordan\tJO\n6\tKuwait\tKW\n11\tLebanon\tLB\n15\tLibya\tLY\n18\tMorocco\tMA\n8\tOman\tOM\n22\tPakistan\tPK\n20\tPalestine\tPS\n5\tQatar\tQA\n1\tSaudi Arabia\tSA\n19\tSudan\tSD\n13\tSyria\tSY\n16\tTunisia\tTN\n21\tTurkey\tTR\n4\tUnited Arab Emirates\tAE\n14\tYemen\tYE\n",
+  "stderr": "",
+  "execution_time_ms": 1520
+}
