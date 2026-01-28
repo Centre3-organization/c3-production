@@ -1,0 +1,46 @@
+{
+  "query": "SELECT c.id as country_id, c.name as country_name, ci.id as city_id, ci.name as city_name \nFROM countries c \nLEFT JOIN cities ci ON ci.countryId = c.id \nWHERE c.name = 'Saudi Arabia' \nAND ci.name IN ('Riyadh', 'Dammam', 'Jeddah', 'Madinah', 'Makkah', 'Qassim');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT c.id as country_id, c.name as country_name, ci.id as city_id, ci.name as city_name \nFROM countries c \nLEFT JOIN cities ci ON ci.countryId = c.id \nWHERE c.name = 'Saudi Arabia' \nAND ci.name IN ('Riyadh', 'Dammam', 'Jeddah', 'Madinah', 'Makkah', 'Qassim');",
+  "rows": [
+    {
+      "country_id": "1",
+      "country_name": "Saudi Arabia",
+      "city_id": "1",
+      "city_name": "Riyadh"
+    },
+    {
+      "country_id": "1",
+      "country_name": "Saudi Arabia",
+      "city_id": "2",
+      "city_name": "Jeddah"
+    },
+    {
+      "country_id": "1",
+      "country_name": "Saudi Arabia",
+      "city_id": "3",
+      "city_name": "Dammam"
+    },
+    {
+      "country_id": "1",
+      "country_name": "Saudi Arabia",
+      "city_id": "4",
+      "city_name": "Makkah"
+    },
+    {
+      "country_id": "1",
+      "country_name": "Saudi Arabia",
+      "city_id": "5",
+      "city_name": "Qassim"
+    },
+    {
+      "country_id": "1",
+      "country_name": "Saudi Arabia",
+      "city_id": "6",
+      "city_name": "Madinah"
+    }
+  ],
+  "messages": [],
+  "stdout": "country_id\tcountry_name\tcity_id\tcity_name\n1\tSaudi Arabia\t1\tRiyadh\n1\tSaudi Arabia\t2\tJeddah\n1\tSaudi Arabia\t3\tDammam\n1\tSaudi Arabia\t4\tMakkah\n1\tSaudi Arabia\t5\tQassim\n1\tSaudi Arabia\t6\tMadinah\n",
+  "stderr": "",
+  "execution_time_ms": 1479
+}

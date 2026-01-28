@@ -719,3 +719,14 @@ Time conditions:
 - 17 Sites created (RDC46, RDC05, RDC301, ITCC, RDCKAFD, RDC102, RDC103, RDC104, DDC21, DDC352, DDC371, JDC04, JDC55, JDC203, MDC20, QDC26, MKDC34)
 - 85 Zones created (5 per site: GF, 1F, 2F, 3F, Others)
 - 300+ Areas created (Building Gate, Main Gate, Employee Office, Loading Area, Data Halls, MMRs, Rooftop, Building Facilities)
+
+
+## Sites Region & City Update (Jan 28, 2026)
+- [x] Update all sites with country = Saudi Arabia
+- [x] Update all sites with type = Data Centre
+- [x] Update Central region sites (RDC46, RDC05, RDC301, ITCC, RDCKAFD, RDC102, RDC103, RDC104) with city = Riyadh
+- [x] Update Eastern region site (QDC26) with city = Qassim
+- [x] Update Eastern region sites (DDC21, DDC352, DDC371) with city = Dammam
+- [x] Update Western region sites (JDC04, JDC55, JDC203) with city = Jeddah
+- [x] Update Western region site (MDC20) with city = Madinah
+- [x] Update Western region site (MKDC34) with city = Makkah

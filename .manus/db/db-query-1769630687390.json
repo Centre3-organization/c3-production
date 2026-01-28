@@ -1,0 +1,14 @@
+{
+  "query": "SELECT id, name FROM siteTypes WHERE name LIKE '%Data%' OR name LIKE '%Centre%' OR name LIKE '%Center%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name FROM siteTypes WHERE name LIKE '%Data%' OR name LIKE '%Centre%' OR name LIKE '%Center%';",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Data Centre"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n1\tData Centre\n",
+  "stderr": "",
+  "execution_time_ms": 1511
+}

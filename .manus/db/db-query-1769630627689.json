@@ -1,0 +1,38 @@
+{
+  "query": "SELECT * FROM regions;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT * FROM regions;",
+  "rows": [
+    {
+      "id": "1",
+      "code": "ES",
+      "name": "Eastern Region",
+      "isActive": "1",
+      "createdAt": "2026-01-27 08:54:16"
+    },
+    {
+      "id": "2",
+      "code": "WS",
+      "name": "Western Region",
+      "isActive": "1",
+      "createdAt": "2026-01-27 08:54:26"
+    },
+    {
+      "id": "3",
+      "code": "CN",
+      "name": "Central Region",
+      "isActive": "1",
+      "createdAt": "2026-01-27 08:54:34"
+    },
+    {
+      "id": "4",
+      "code": "MN",
+      "name": "Manama",
+      "isActive": "1",
+      "createdAt": "2026-01-27 08:54:51"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tisActive\tcreatedAt\n1\tES\tEastern Region\t1\t2026-01-27 08:54:16\n2\tWS\tWestern Region\t1\t2026-01-27 08:54:26\n3\tCN\tCentral Region\t1\t2026-01-27 08:54:34\n4\tMN\tManama\t1\t2026-01-27 08:54:51\n",
+  "stderr": "",
+  "execution_time_ms": 1504
+}

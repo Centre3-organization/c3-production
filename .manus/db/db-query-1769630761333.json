@@ -1,0 +1,146 @@
+{
+  "query": "SELECT s.code, s.name, \n  c.name as country, \n  r.name as region, \n  ci.name as city, \n  st.name as site_type\nFROM sites s\nLEFT JOIN countries c ON s.countryId = c.id\nLEFT JOIN regions r ON s.regionId = r.id\nLEFT JOIN cities ci ON s.cityId = ci.id\nLEFT JOIN siteTypes st ON s.siteTypeId = st.id\nORDER BY r.name, ci.name, s.code;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT s.code, s.name, \n  c.name as country, \n  r.name as region, \n  ci.name as city, \n  st.name as site_type\nFROM sites s\nLEFT JOIN countries c ON s.countryId = c.id\nLEFT JOIN regions r ON s.regionId = r.id\nLEFT JOIN cities ci ON s.cityId = ci.id\nLEFT JOIN siteTypes st ON s.siteTypeId = st.id\nORDER BY r.name, ci.name, s.code;",
+  "rows": [
+    {
+      "code": "ITCC",
+      "name": "ITCC Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Central",
+      "city": "Riyadh",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "RDC05",
+      "name": "RDC05 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Central",
+      "city": "Riyadh",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "RDC102",
+      "name": "RDC102 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Central",
+      "city": "Riyadh",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "RDC103",
+      "name": "RDC103 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Central",
+      "city": "Riyadh",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "RDC104",
+      "name": "RDC104 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Central",
+      "city": "Riyadh",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "RDC301",
+      "name": "RDC301 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Central",
+      "city": "Riyadh",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "RDC46",
+      "name": "RDC46 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Central",
+      "city": "Riyadh",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "RDCKAFD",
+      "name": "RDCKAFD Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Central",
+      "city": "Riyadh",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "DDC21",
+      "name": "DDC21 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Eastern",
+      "city": "Dammam",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "DDC352",
+      "name": "DDC352 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Eastern",
+      "city": "Dammam",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "DDC371",
+      "name": "DDC371 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Eastern",
+      "city": "Dammam",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "QDC26",
+      "name": "QDC26 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Eastern",
+      "city": "Qassim",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "JDC04",
+      "name": "JDC04 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Western",
+      "city": "Jeddah",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "JDC203",
+      "name": "JDC203 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Western",
+      "city": "Jeddah",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "JDC55",
+      "name": "JDC55 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Western",
+      "city": "Jeddah",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "MDC20",
+      "name": "MDC20 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Western",
+      "city": "Madinah",
+      "site_type": "Data Centre"
+    },
+    {
+      "code": "MKDC34",
+      "name": "MKDC34 Data Centre",
+      "country": "Saudi Arabia",
+      "region": "Western",
+      "city": "Makkah",
+      "site_type": "Data Centre"
+    }
+  ],
+  "messages": [],
+  "stdout": "code\tname\tcountry\tregion\tcity\tsite_type\nITCC\tITCC Data Centre\tSaudi Arabia\tCentral\tRiyadh\tData Centre\nRDC05\tRDC05 Data Centre\tSaudi Arabia\tCentral\tRiyadh\tData Centre\nRDC102\tRDC102 Data Centre\tSaudi Arabia\tCentral\tRiyadh\tData Centre\nRDC103\tRDC103 Data Centre\tSaudi Arabia\tCentral\tRiyadh\tData Centre\nRDC104\tRDC104 Data Centre\tSaudi Arabia\tCentral\tRiyadh\tData Centre\nRDC301\tRDC301 Data Centre\tSaudi Arabia\tCentral\tRiyadh\tData Centre\nRDC46\tRDC46 Data Centre\tSaudi Arabia\tCentral\tRiyadh\tData Centre\nRDCKAFD\tRDCKAFD Data Centre\tSaudi Arabia\tCentral\tRiyadh\tData Centre\nDDC21\tDDC21 Data Centre\tSaudi Arabia\tEastern\tDammam\tData Centre\nDDC352\tDDC352 Data Centre\tSaudi Arabia\tEastern\tDammam\tData Centre\nDDC371\tDDC371 Data Centre\tSaudi Arabia\tEastern\tDammam\tData Centre\nQDC26\tQDC26 Data Centre\tSaudi Arabia\tEastern\tQassim\tData Centre\nJDC04\tJDC04 Data Centre\tSaudi Arabia\tWestern\tJeddah\tData Centre\nJDC203\tJDC203 Data Centre\tSaudi Arabia\tWestern\tJeddah\tData Centre\nJDC55\tJDC55 Data Centre\tSaudi Arabia\tWestern\tJeddah\tData Centre\nMDC20\tMDC20 Data Centre\tSaudi Arabia\tWestern\tMadinah\tData Centre\nMKDC34\tMKDC34 Data Centre\tSaudi Arabia\tWestern\tMakkah\tData Centre\n",
+  "stderr": "",
+  "execution_time_ms": 1516
+}

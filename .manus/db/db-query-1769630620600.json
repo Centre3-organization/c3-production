@@ -1,0 +1,95 @@
+{
+  "query": "SELECT id, code, name FROM sites ORDER BY code;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, name FROM sites ORDER BY code;",
+  "rows": [
+    {
+      "id": "10",
+      "code": "DDC21",
+      "name": "DDC21 Data Centre"
+    },
+    {
+      "id": "11",
+      "code": "DDC352",
+      "name": "DDC352 Data Centre"
+    },
+    {
+      "id": "12",
+      "code": "DDC371",
+      "name": "DDC371 Data Centre"
+    },
+    {
+      "id": "5",
+      "code": "ITCC",
+      "name": "ITCC Data Centre"
+    },
+    {
+      "id": "14",
+      "code": "JDC04",
+      "name": "JDC04 Data Centre"
+    },
+    {
+      "id": "16",
+      "code": "JDC203",
+      "name": "JDC203 Data Centre"
+    },
+    {
+      "id": "15",
+      "code": "JDC55",
+      "name": "JDC55 Data Centre"
+    },
+    {
+      "id": "17",
+      "code": "MDC20",
+      "name": "MDC20 Data Centre"
+    },
+    {
+      "id": "18",
+      "code": "MKDC34",
+      "name": "MKDC34 Data Centre"
+    },
+    {
+      "id": "13",
+      "code": "QDC26",
+      "name": "QDC26 Data Centre"
+    },
+    {
+      "id": "3",
+      "code": "RDC05",
+      "name": "RDC05 Data Centre"
+    },
+    {
+      "id": "7",
+      "code": "RDC102",
+      "name": "RDC102 Data Centre"
+    },
+    {
+      "id": "8",
+      "code": "RDC103",
+      "name": "RDC103 Data Centre"
+    },
+    {
+      "id": "9",
+      "code": "RDC104",
+      "name": "RDC104 Data Centre"
+    },
+    {
+      "id": "4",
+      "code": "RDC301",
+      "name": "RDC301 Data Centre"
+    },
+    {
+      "id": "2",
+      "code": "RDC46",
+      "name": "RDC46 Data Centre"
+    },
+    {
+      "id": "6",
+      "code": "RDCKAFD",
+      "name": "RDCKAFD Data Centre"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\n10\tDDC21\tDDC21 Data Centre\n11\tDDC352\tDDC352 Data Centre\n12\tDDC371\tDDC371 Data Centre\n5\tITCC\tITCC Data Centre\n14\tJDC04\tJDC04 Data Centre\n16\tJDC203\tJDC203 Data Centre\n15\tJDC55\tJDC55 Data Centre\n17\tMDC20\tMDC20 Data Centre\n18\tMKDC34\tMKDC34 Data Centre\n13\tQDC26\tQDC26 Data Centre\n3\tRDC05\tRDC05 Data Centre\n7\tRDC102\tRDC102 Data Centre\n8\tRDC103\tRDC103 Data Centre\n9\tRDC104\tRDC104 Data Centre\n4\tRDC301\tRDC301 Data Centre\n2\tRDC46\tRDC46 Data Centre\n6\tRDCKAFD\tRDCKAFD Data Centre\n",
+  "stderr": "",
+  "execution_time_ms": 1504
+}

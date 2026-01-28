@@ -1,0 +1,30 @@
+{
+  "query": "SELECT r.id as region_id, r.name as region_name FROM regions r;\nSELECT c.id as country_id, ci.id as city_id, ci.name as city_name \nFROM countries c \nJOIN cities ci ON ci.countryId = c.id \nWHERE c.name = 'Saudi Arabia' \nAND ci.name IN ('Riyadh', 'Dammam', 'Jeddah', 'Madinah', 'Makkah', 'Qassim');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT r.id as region_id, r.name as region_name FROM regions r;\nSELECT c.id as country_id, ci.id as city_id, ci.name as city_name \nFROM countries c \nJOIN cities ci ON ci.countryId = c.id \nWHERE c.name = 'Saudi Arabia' \nAND ci.name IN ('Riyadh', 'Dammam', 'Jeddah', 'Madinah', 'Makkah', 'Qassim');",
+  "rows": [
+    {
+      "region_id": "5",
+      "region_name": "Central"
+    },
+    {
+      "region_id": "6",
+      "region_name": "Eastern"
+    },
+    {
+      "region_id": "7",
+      "region_name": "Western"
+    }
+  ],
+  "messages": [
+    "country_id\tcity_id\tcity_name",
+    "1\t1\tRiyadh",
+    "1\t2\tJeddah",
+    "1\t3\tDammam",
+    "1\t4\tMakkah",
+    "1\t5\tQassim",
+    "1\t6\tMadinah"
+  ],
+  "stdout": "region_id\tregion_name\n5\tCentral\n6\tEastern\n7\tWestern\ncountry_id\tcity_id\tcity_name\n1\t1\tRiyadh\n1\t2\tJeddah\n1\t3\tDammam\n1\t4\tMakkah\n1\t5\tQassim\n1\t6\tMadinah\n",
+  "stderr": "",
+  "execution_time_ms": 1755
+}

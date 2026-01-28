@@ -1,0 +1,13 @@
+{
+  "query": "INSERT INTO siteTypes (code, name, description, level, sortOrder, isActive) \nSELECT 'DC', 'Data Centre', 'Data Centre facility', 0, 1, true\nWHERE NOT EXISTS (SELECT 1 FROM siteTypes WHERE name = 'Data Centre');\nSELECT id FROM siteTypes WHERE name = 'Data Centre';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute INSERT INTO siteTypes (code, name, description, level, sortOrder, isActive) \nSELECT 'DC', 'Data Centre', 'Data Centre facility', 0, 1, true\nWHERE NOT EXISTS (SELECT 1 FROM siteTypes WHERE name = 'Data Centre');\nSELECT id FROM siteTypes WHERE name = 'Data Centre';",
+  "rows": [
+    {
+      "id": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\n1\n",
+  "stderr": "",
+  "execution_time_ms": 1732
+}

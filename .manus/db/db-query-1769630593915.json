@@ -1,0 +1,28 @@
+{
+  "query": "SELECT * FROM sites LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT * FROM sites LIMIT 1;",
+  "rows": [
+    {
+      "id": "2",
+      "code": "RDC46",
+      "name": "RDC46 Data Centre",
+      "countryId": "NULL",
+      "regionId": "NULL",
+      "cityId": "NULL",
+      "address": "Riyadh, Central Region, Saudi Arabia",
+      "latitude": "NULL",
+      "longitude": "NULL",
+      "siteTypeId": "NULL",
+      "category": "primary",
+      "maxCapacity": "0",
+      "currentOccupancy": "0",
+      "status": "active",
+      "createdAt": "2026-01-28 19:50:19",
+      "updatedAt": "2026-01-28 19:50:19"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tcountryId\tregionId\tcityId\taddress\tlatitude\tlongitude\tsiteTypeId\tcategory\tmaxCapacity\tcurrentOccupancy\tstatus\tcreatedAt\tupdatedAt\n2\tRDC46\tRDC46 Data Centre\tNULL\tNULL\tNULL\tRiyadh, Central Region, Saudi Arabia\tNULL\tNULL\tNULL\tprimary\t0\t0\tactive\t2026-01-28 19:50:19\t2026-01-28 19:50:19\n",
+  "stderr": "",
+  "execution_time_ms": 1540
+}
