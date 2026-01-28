@@ -28,7 +28,11 @@ import {
   CreditCard,
   Radio,
   Download,
-  Copy
+  Copy,
+  HelpCircle,
+  MessageSquare,
+  ArrowLeft,
+  UserCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -97,17 +101,20 @@ export default function Approvals() {
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
-  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
-  const [rejectReason, setRejectReason] = useState("");
   const [processingId, setProcessingId] = useState<number | null>(null);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   
-  // Access grant dialog state
+  // Unified action dialog state
+  const [actionDialogOpen, setActionDialogOpen] = useState(false);
+  const [actionType, setActionType] = useState<"approve" | "reject" | "clarification" | null>(null);
+  const [actionComments, setActionComments] = useState("");
+  const [clarificationTarget, setClarificationTarget] = useState<"last_approver" | "requestor">("requestor");
+  
+  // Access grant dialog state (for final approval)
   const [accessGrantDialogOpen, setAccessGrantDialogOpen] = useState(false);
   const [entryMethod, setEntryMethod] = useState<"qr_code" | "rfid" | "card">("qr_code");
   const [rfidTag, setRfidTag] = useState("");
   const [cardNumber, setCardNumber] = useState("");
-  const [approvalComments, setApprovalComments] = useState("");
   
   // QR Code result state
   const [qrResultDialogOpen, setQrResultDialogOpen] = useState(false);
@@ -145,10 +152,7 @@ export default function Approvals() {
         });
       }
       refetch();
-      setSelectedRequest(null);
-      setProcessingId(null);
-      setAccessGrantDialogOpen(false);
-      resetAccessGrantForm();
+      resetAllDialogs();
     },
     onError: (error) => {
       toast.error("Failed to approve", { description: error.message });
@@ -161,10 +165,7 @@ export default function Approvals() {
     onSuccess: () => {
       toast.error("Request rejected");
       refetch();
-      setSelectedRequest(null);
-      setRejectDialogOpen(false);
-      setRejectReason("");
-      setProcessingId(null);
+      resetAllDialogs();
     },
     onError: (error) => {
       toast.error("Failed to reject", { description: error.message });
@@ -172,11 +173,33 @@ export default function Approvals() {
     }
   });
   
-  const resetAccessGrantForm = () => {
+  // Need clarification mutation
+  const needClarification = trpc.requests.needClarification.useMutation({
+    onSuccess: (result) => {
+      toast.info("Clarification requested", {
+        description: result.message
+      });
+      refetch();
+      resetAllDialogs();
+    },
+    onError: (error) => {
+      toast.error("Failed to request clarification", { description: error.message });
+      setProcessingId(null);
+    }
+  });
+  
+  const resetAllDialogs = () => {
+    setSelectedRequest(null);
+    setProcessingId(null);
+    setActionDialogOpen(false);
+    setActionType(null);
+    setActionComments("");
+    setClarificationTarget("requestor");
+    setAccessGrantDialogOpen(false);
     setEntryMethod("qr_code");
     setRfidTag("");
     setCardNumber("");
-    setApprovalComments("");
+    setDetailsDialogOpen(false);
   };
   
   // Group tasks by stage name for dynamic stats
@@ -219,17 +242,50 @@ export default function Approvals() {
     return task.stageOrder === task.totalStages;
   };
   
-  const handleApprove = (task: any) => {
-    // If this is the final stage, show access grant dialog
-    if (isFinalStage(task)) {
-      setSelectedRequest(task);
+  // Open action dialog
+  const openActionDialog = (task: any, type: "approve" | "reject" | "clarification") => {
+    setSelectedRequest(task);
+    setActionType(type);
+    setActionComments("");
+    setClarificationTarget("requestor");
+    
+    // For final stage approval, show access grant dialog instead
+    if (type === "approve" && isFinalStage(task)) {
       setAccessGrantDialogOpen(true);
     } else {
-      // Regular approval for non-final stages
-      setProcessingId(task.taskId);
+      setActionDialogOpen(true);
+    }
+  };
+  
+  const handleActionConfirm = () => {
+    if (!selectedRequest) return;
+    
+    if (actionType === "approve") {
+      setProcessingId(selectedRequest.taskId);
       approveTask.mutate({ 
-        taskId: task.taskId,
-        comments: `Approved at ${task.stageName || 'Stage ' + task.stageOrder} review`
+        taskId: selectedRequest.taskId,
+        comments: actionComments || undefined
+      });
+    } else if (actionType === "reject") {
+      if (!actionComments.trim()) {
+        toast.error("Rejection reason is required");
+        return;
+      }
+      setProcessingId(selectedRequest.taskId);
+      rejectTask.mutate({ 
+        taskId: selectedRequest.taskId, 
+        comments: actionComments 
+      });
+    } else if (actionType === "clarification") {
+      if (!actionComments.trim()) {
+        toast.error("Please specify what clarification is needed");
+        return;
+      }
+      setProcessingId(selectedRequest.taskId);
+      needClarification.mutate({
+        taskId: selectedRequest.taskId,
+        comments: actionComments,
+        target: clarificationTarget
       });
     }
   };
@@ -250,28 +306,11 @@ export default function Approvals() {
     setProcessingId(selectedRequest.taskId);
     approveTask.mutate({
       taskId: selectedRequest.taskId,
-      comments: approvalComments || `Final approval - Access granted via ${entryMethod.replace("_", " ")}`,
+      comments: actionComments || `Final approval - Access granted via ${entryMethod.replace("_", " ")}`,
       entryMethod: entryMethod,
       rfidTag: entryMethod === "rfid" ? rfidTag : undefined,
       cardNumber: entryMethod === "card" ? cardNumber : undefined,
       isFinalApproval: true,
-    });
-  };
-  
-  const handleRejectClick = (task: any) => {
-    setSelectedRequest(task);
-    setRejectDialogOpen(true);
-  };
-  
-  const handleRejectConfirm = () => {
-    if (!selectedRequest || !rejectReason.trim()) {
-      toast.error("Please provide a rejection reason");
-      return;
-    }
-    setProcessingId(selectedRequest.taskId);
-    rejectTask.mutate({ 
-      taskId: selectedRequest.taskId, 
-      comments: rejectReason 
     });
   };
   
@@ -361,12 +400,12 @@ export default function Approvals() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={t("approvals.searchPlaceholder", "Search by request number, visitor, or company...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className="pl-9"
           />
         </div>
         <Select value={stageFilter} onValueChange={setStageFilter}>
@@ -388,63 +427,60 @@ export default function Approvals() {
       {/* Task List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[#0f62fe]" />
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
       ) : filteredTasks.length === 0 ? (
-        <Card className="border-dashed">
+        <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <CheckCheck className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium">{t("approvals.noTasks", "No pending approvals")}</h3>
-            <p className="text-sm text-muted-foreground">{t("approvals.noTasksDescription", "You're all caught up! Check back later for new requests.")}</p>
+            <CheckCheck className="h-12 w-12 text-green-500 mb-4" />
+            <h3 className="text-lg font-medium">{t("approvals.noPending", "No Pending Approvals")}</h3>
+            <p className="text-sm text-muted-foreground">{t("approvals.noPendingDesc", "You're all caught up! Check back later for new requests.")}</p>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-3">
           {filteredTasks.map((task: any) => (
-            <Card 
-              key={task.taskId} 
-              className="hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => handleViewDetails(task)}
-            >
+            <Card key={task.taskId} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => handleViewDetails(task)}>
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="p-2 bg-gray-100 rounded-lg">
-                      <FileText className="h-5 w-5 text-gray-600" />
+                <div className="flex items-center justify-between gap-4">
+                  {/* Left side - Request info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-mono text-sm font-medium">{task.request?.requestNumber}</span>
+                      <Badge variant="outline" className={typeColors[task.request?.type] || "bg-gray-100"}>
+                        {typeLabels[task.request?.type] || task.request?.type}
+                      </Badge>
+                      <Badge variant="outline" className={getStageColor(task.stageOrder || 1)}>
+                        {task.stageName || `Stage ${task.stageOrder}`}
+                      </Badge>
+                      <StageProgress 
+                        currentStage={task.stageOrder || 1} 
+                        totalStages={task.totalStages || 1}
+                        stageName={task.stageName}
+                      />
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-mono text-sm font-medium">{task.request?.requestNumber}</span>
-                        <Badge variant="outline" className={typeColors[task.request?.type] || "bg-gray-100"}>
-                          {typeLabels[task.request?.type] || task.request?.type}
-                        </Badge>
-                        <Badge variant="outline" className={getStageColor(task.stageOrder || 1)}>
-                          {task.stageName || `Stage ${task.stageOrder}`}
-                          {isFinalStage(task) && " (Final)"}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        <span className="font-medium">{task.request?.visitorName}</span>
-                        {task.request?.visitorCompany && ` • ${task.request.visitorCompany}`}
-                      </p>
-                      <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Building2 className="h-3 w-3" />
-                          {task.request?.siteName || "N/A"}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {task.request?.startDate ? format(new Date(task.request.startDate), "MMM d") : "N/A"}
-                        </span>
-                        <StageProgress 
-                          currentStage={task.stageOrder || 1} 
-                          totalStages={task.totalStages || 1}
-                          stageName={task.stageName}
-                        />
-                      </div>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <User className="h-3.5 w-3.5" />
+                        {task.request?.visitorName || "N/A"}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Building2 className="h-3.5 w-3.5" />
+                        {task.request?.visitorCompany || "N/A"}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <MapPin className="h-3.5 w-3.5" />
+                        {task.request?.siteName || "N/A"}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3.5 w-3.5" />
+                        {task.request?.startDate ? format(new Date(task.request.startDate), "MMM d") : "N/A"}
+                      </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 ml-4">
+                  
+                  {/* Right side - Actions */}
+                  <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -458,10 +494,23 @@ export default function Approvals() {
                     <Button
                       variant="outline"
                       size="sm"
+                      className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openActionDialog(task, "clarification");
+                      }}
+                      disabled={processingId === task.taskId}
+                    >
+                      <HelpCircle className="h-4 w-4 mr-1" />
+                      {t("approvals.needClarification", "Clarify")}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleRejectClick(task);
+                        openActionDialog(task, "reject");
                       }}
                       disabled={processingId === task.taskId}
                     >
@@ -473,7 +522,7 @@ export default function Approvals() {
                       className="bg-green-600 hover:bg-green-700 text-white"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleApprove(task);
+                        openActionDialog(task, "approve");
                       }}
                       disabled={processingId === task.taskId}
                     >
@@ -492,21 +541,35 @@ export default function Approvals() {
         </div>
       )}
 
-      {/* Reject Dialog */}
-      <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
-        <DialogContent>
+      {/* Unified Action Dialog (Approve/Reject/Clarification) */}
+      <Dialog open={actionDialogOpen} onOpenChange={(open) => {
+        if (!open) resetAllDialogs();
+        else setActionDialogOpen(open);
+      }}>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600">
-              <XCircle className="h-5 w-5" />
-              {t("approvals.rejectRequest", "Reject Request")}
+            <DialogTitle className={`flex items-center gap-2 ${
+              actionType === "approve" ? "text-green-600" : 
+              actionType === "reject" ? "text-red-600" : 
+              "text-amber-600"
+            }`}>
+              {actionType === "approve" && <CheckCircle2 className="h-5 w-5" />}
+              {actionType === "reject" && <XCircle className="h-5 w-5" />}
+              {actionType === "clarification" && <HelpCircle className="h-5 w-5" />}
+              {actionType === "approve" && t("approvals.approveRequest", "Approve Request")}
+              {actionType === "reject" && t("approvals.rejectRequest", "Reject Request")}
+              {actionType === "clarification" && t("approvals.needClarificationTitle", "Request Clarification")}
             </DialogTitle>
             <DialogDescription>
-              {t("approvals.rejectDescription", "Please provide a reason for rejecting this request. This will be visible to the requestor.")}
+              {actionType === "approve" && t("approvals.approveDescription", "Add optional comments for this approval.")}
+              {actionType === "reject" && t("approvals.rejectDescription", "Please provide a reason for rejecting this request. This is mandatory and will be visible to the requestor.")}
+              {actionType === "clarification" && t("approvals.clarificationDescription", "Specify what information you need and who should provide it.")}
             </DialogDescription>
           </DialogHeader>
           
           {selectedRequest && (
             <div className="space-y-4">
+              {/* Request Summary */}
               <div className="p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="font-mono text-sm font-medium">{selectedRequest.request?.requestNumber}</span>
@@ -519,30 +582,90 @@ export default function Approvals() {
                 </p>
               </div>
               
-              <Textarea
-                placeholder={t("approvals.rejectReasonPlaceholder", "Enter rejection reason...")}
-                value={rejectReason}
-                onChange={(e) => setRejectReason(e.target.value)}
-                rows={4}
-              />
+              {/* Clarification Target Selection */}
+              {actionType === "clarification" && (
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">{t("approvals.sendClarificationTo", "Send clarification request to:")}</Label>
+                  <RadioGroup value={clarificationTarget} onValueChange={(v) => setClarificationTarget(v as any)} className="grid gap-3">
+                    <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${clarificationTarget === "requestor" ? "border-amber-500 bg-amber-50" : "hover:bg-gray-50"}`}>
+                      <RadioGroupItem value="requestor" id="requestor" />
+                      <Label htmlFor="requestor" className="flex items-center gap-3 cursor-pointer flex-1">
+                        <div className="p-2 bg-amber-100 rounded-lg">
+                          <User className="h-5 w-5 text-amber-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{t("approvals.requestor", "Requestor")}</p>
+                          <p className="text-xs text-muted-foreground">{t("approvals.requestorDesc", "Send back to the person who submitted this request")}</p>
+                        </div>
+                      </Label>
+                    </div>
+                    
+                    <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${clarificationTarget === "last_approver" ? "border-blue-500 bg-blue-50" : "hover:bg-gray-50"}`}>
+                      <RadioGroupItem value="last_approver" id="last_approver" />
+                      <Label htmlFor="last_approver" className="flex items-center gap-3 cursor-pointer flex-1">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <UserCheck className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{t("approvals.lastApprover", "Last Approver")}</p>
+                          <p className="text-xs text-muted-foreground">{t("approvals.lastApproverDesc", "Send back to the previous stage approver")}</p>
+                        </div>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              )}
+              
+              {/* Comments Field */}
+              <div className="space-y-2">
+                <Label>
+                  {actionType === "approve" && <>{t("approvals.comments", "Comments")} ({t("common.optional", "Optional")})</>}
+                  {actionType === "reject" && <>{t("approvals.rejectionReason", "Rejection Reason")} <span className="text-red-500">*</span></>}
+                  {actionType === "clarification" && <>{t("approvals.clarificationDetails", "What clarification do you need?")} <span className="text-red-500">*</span></>}
+                </Label>
+                <Textarea
+                  placeholder={
+                    actionType === "approve" ? t("approvals.approveCommentsPlaceholder", "Add any notes about this approval...") :
+                    actionType === "reject" ? t("approvals.rejectReasonPlaceholder", "Enter rejection reason...") :
+                    t("approvals.clarificationPlaceholder", "Describe what information or documents you need...")
+                  }
+                  value={actionComments}
+                  onChange={(e) => setActionComments(e.target.value)}
+                  rows={4}
+                  className={actionType !== "approve" && !actionComments.trim() ? "border-red-300" : ""}
+                />
+                {actionType !== "approve" && !actionComments.trim() && (
+                  <p className="text-xs text-red-500">{t("common.required", "This field is required")}</p>
+                )}
+              </div>
             </div>
           )}
           
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>
+            <Button variant="outline" onClick={() => resetAllDialogs()}>
               {t("common.cancel", "Cancel")}
             </Button>
             <Button 
-              variant="destructive" 
-              onClick={handleRejectConfirm}
-              disabled={!rejectReason.trim() || processingId !== null}
+              className={
+                actionType === "approve" ? "bg-green-600 hover:bg-green-700 text-white" :
+                actionType === "reject" ? "bg-red-600 hover:bg-red-700 text-white" :
+                "bg-amber-600 hover:bg-amber-700 text-white"
+              }
+              onClick={handleActionConfirm}
+              disabled={processingId !== null || (actionType !== "approve" && !actionComments.trim())}
             >
               {processingId !== null ? (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
               ) : (
-                <XCircle className="h-4 w-4 mr-2" />
+                <>
+                  {actionType === "approve" && <CheckCircle2 className="h-4 w-4 mr-2" />}
+                  {actionType === "reject" && <XCircle className="h-4 w-4 mr-2" />}
+                  {actionType === "clarification" && <Send className="h-4 w-4 mr-2" />}
+                </>
               )}
-              {t("approvals.confirmReject", "Confirm Rejection")}
+              {actionType === "approve" && t("approvals.confirmApprove", "Confirm Approval")}
+              {actionType === "reject" && t("approvals.confirmReject", "Confirm Rejection")}
+              {actionType === "clarification" && t("approvals.sendClarification", "Send Clarification Request")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -550,8 +673,8 @@ export default function Approvals() {
 
       {/* Access Grant Dialog - For Final Approval */}
       <Dialog open={accessGrantDialogOpen} onOpenChange={(open) => {
-        setAccessGrantDialogOpen(open);
-        if (!open) resetAccessGrantForm();
+        if (!open) resetAllDialogs();
+        else setAccessGrantDialogOpen(open);
       }}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
@@ -658,8 +781,8 @@ export default function Approvals() {
                 <Textarea
                   id="comments"
                   placeholder={t("approvals.commentsPlaceholder", "Add any notes about this approval...")}
-                  value={approvalComments}
-                  onChange={(e) => setApprovalComments(e.target.value)}
+                  value={actionComments}
+                  onChange={(e) => setActionComments(e.target.value)}
                   rows={2}
                 />
               </div>
@@ -667,10 +790,7 @@ export default function Approvals() {
           )}
           
           <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setAccessGrantDialogOpen(false);
-              resetAccessGrantForm();
-            }}>
+            <Button variant="outline" onClick={() => resetAllDialogs()}>
               {t("common.cancel", "Cancel")}
             </Button>
             <Button 
@@ -812,10 +932,21 @@ export default function Approvals() {
             </Button>
             <Button
               variant="outline"
+              className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+              onClick={() => {
+                setDetailsDialogOpen(false);
+                openActionDialog(selectedRequest, "clarification");
+              }}
+            >
+              <HelpCircle className="h-4 w-4 mr-2" />
+              {t("approvals.needClarification", "Clarify")}
+            </Button>
+            <Button
+              variant="outline"
               className="text-red-600 hover:text-red-700 hover:bg-red-50"
               onClick={() => {
                 setDetailsDialogOpen(false);
-                handleRejectClick(selectedRequest);
+                openActionDialog(selectedRequest, "reject");
               }}
             >
               <XCircle className="h-4 w-4 mr-2" />
@@ -825,7 +956,7 @@ export default function Approvals() {
               className="bg-green-600 hover:bg-green-700 text-white"
               onClick={() => {
                 setDetailsDialogOpen(false);
-                handleApprove(selectedRequest);
+                openActionDialog(selectedRequest, "approve");
               }}
             >
               <CheckCircle2 className="h-4 w-4 mr-2" />

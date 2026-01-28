@@ -1218,6 +1218,119 @@ export const requestsRouter = router({
       return { success: true, message: "Rejection recorded" };
     }),
   
+  // Request clarification on a task (new workflow system)
+  needClarification: protectedProcedure
+    .input(z.object({
+      taskId: z.number(),
+      comments: z.string().min(1, "Clarification reason is required"),
+      target: z.enum(["last_approver", "requestor"]),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      // Get the task
+      const taskData = await db
+        .select({
+          task: approvalTasks,
+          instance: approvalInstances,
+          stage: approvalStages,
+        })
+        .from(approvalTasks)
+        .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
+        .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
+        .where(eq(approvalTasks.id, input.taskId))
+        .limit(1);
+      
+      if (taskData.length === 0) throw new Error("Task not found");
+      
+      const { task, instance, stage } = taskData[0];
+      
+      if (task.assignedTo !== ctx.user.id) {
+        throw new Error("You are not authorized to request clarification on this task");
+      }
+      
+      if (task.status !== "pending") {
+        throw new Error("Task is not pending");
+      }
+      
+      // Update task status
+      await db.update(approvalTasks)
+        .set({
+          status: "need_clarification",
+          decision: "need_clarification",
+          comments: input.comments,
+          clarificationTarget: input.target,
+        })
+        .where(eq(approvalTasks.id, input.taskId));
+      
+      // Update instance status to indicate clarification needed
+      await db.update(approvalInstances)
+        .set({ 
+          status: "need_clarification"
+        })
+        .where(eq(approvalInstances.id, instance.id));
+      
+      // Update request status
+      await db.update(requests)
+        .set({ status: "need_clarification" as any })
+        .where(eq(requests.id, instance.requestId));
+      
+      // Get target info for history
+      let targetInfo = "";
+      if (input.target === "requestor") {
+        // Get requestor info
+        const requestData = await db
+          .select({ requestorId: requests.requestorId })
+          .from(requests)
+          .where(eq(requests.id, instance.requestId))
+          .limit(1);
+        if (requestData.length > 0) {
+          const requestor = await db
+            .select({ name: users.name, email: users.email })
+            .from(users)
+            .where(eq(users.id, requestData[0].requestorId))
+            .limit(1);
+          targetInfo = requestor.length > 0 ? (requestor[0].name || requestor[0].email || "Requestor") : "Requestor";
+        }
+      } else {
+        // Get last approver (previous stage approver)
+        const previousTasks = await db
+          .select({
+            task: approvalTasks,
+            user: users,
+          })
+          .from(approvalTasks)
+          .innerJoin(users, eq(approvalTasks.assignedTo, users.id))
+          .where(and(
+            eq(approvalTasks.instanceId, instance.id),
+            eq(approvalTasks.status, "approved")
+          ))
+          .orderBy(desc(approvalTasks.decidedAt))
+          .limit(1);
+        targetInfo = previousTasks.length > 0 ? (previousTasks[0].user.name || previousTasks[0].user.email || "Last Approver") : "Last Approver";
+      }
+      
+      // Record history
+      await db.insert(approvalHistory).values({
+        instanceId: instance.id,
+        taskId: task.id,
+        actionType: "info_requested",
+        actionBy: ctx.user.id,
+        details: {
+          stageName: stage.stageName,
+          comments: input.comments,
+          clarificationTarget: input.target,
+          targetInfo: targetInfo,
+        },
+      });
+      
+      return { 
+        success: true, 
+        message: `Clarification requested from ${input.target === "requestor" ? "requestor" : "last approver"}` 
+      };
+    }),
+  
   // Update access method for an approved request
   updateAccessMethod: protectedProcedure
     .input(z.object({

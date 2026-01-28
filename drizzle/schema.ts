@@ -885,7 +885,8 @@ export const approvalInstances = mysqlTable("approvalInstances", {
     "approved",
     "rejected",
     "cancelled",
-    "info_requested"
+    "info_requested",
+    "need_clarification"
   ]).default("pending").notNull(),
   // Access grant fields - set on final approval
   entryMethod: mysqlEnum("entryMethod", ["qr_code", "rfid", "card"]),
@@ -930,13 +931,15 @@ export const approvalTasks = mysqlTable("approvalTasks", {
     "pending",
     "approved",
     "rejected",
+    "need_clarification",
     "info_requested",
     "reassigned",
     "expired",
     "skipped"
   ]).default("pending").notNull(),
-  decision: mysqlEnum("decision", ["approved", "rejected", "info_requested"]),
+  decision: mysqlEnum("decision", ["approved", "rejected", "info_requested", "need_clarification"]),
   comments: text("comments"),
+  clarificationTarget: mysqlEnum("clarificationTarget", ["last_approver", "requestor"]),
   infoRequest: json("infoRequest").$type<{
     questions?: string[];
     requiredDocuments?: string[];
@@ -1001,6 +1004,8 @@ export const approvalHistory = mysqlTable("approvalHistory", {
     cardNumber?: string;
     qrCodeData?: string;
     rfidTag?: string;
+    clarificationTarget?: string;
+    targetInfo?: string;
   }>(),
   ipAddress: varchar("ipAddress", { length: 45 }),
   userAgent: text("userAgent"),

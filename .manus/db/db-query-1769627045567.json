@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE approvalTasks MODIFY COLUMN status ENUM('pending', 'approved', 'rejected', 'need_clarification', 'info_requested', 'reassigned', 'expired', 'skipped') NOT NULL DEFAULT 'pending';\nALTER TABLE approvalTasks MODIFY COLUMN decision ENUM('approved', 'rejected', 'info_requested', 'need_clarification');\nALTER TABLE approvalTasks ADD COLUMN clarificationTarget ENUM('last_approver', 'requestor') NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE approvalTasks MODIFY COLUMN status ENUM('pending', 'approved', 'rejected', 'need_clarification', 'info_requested', 'reassigned', 'expired', 'skipped') NOT NULL DEFAULT 'pending';\nALTER TABLE approvalTasks MODIFY COLUMN decision ENUM('approved', 'rejected', 'info_requested', 'need_clarification');\nALTER TABLE approvalTasks ADD COLUMN clarificationTarget ENUM('last_approver', 'requestor') NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 3892
+}

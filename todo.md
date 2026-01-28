@@ -653,3 +653,35 @@ Time conditions:
 - [x] Add QR code display to Decision Details dialog in Approval History
 - [x] Add resend credentials button (Email/SMS/WhatsApp) to Decision Details dialog
 - [x] Fetch access method data for approved requests in history view
+
+## Board-Level Presentation (Jan 27, 2026)
+- [ ] Gather brand guidelines (colors, fonts, logo)
+- [ ] Compile key features of Centre3 system
+- [ ] Create slide content outline
+- [ ] Generate professional presentation slides
+
+## Board-Level Presentation (Jan 27, 2026)
+- [x] Create Centre3 board presentation following brand guidelines
+- [x] Include all major modules and features (13 modules)
+- [x] Add business value metrics and ROI information
+- [x] Include implementation roadmap (4 phases)
+- [x] Design 15 professional slides with Swiss International Tech aesthetic
+
+## Enhanced Approval Dialog (Jan 28, 2026)
+
+### Backend Updates
+- [x] Add "need_clarification" status to approvalInstances
+- [x] Add clarificationTarget field (last_approver / requestor)
+- [x] Update approveTask endpoint to handle optional comments
+- [x] Update rejectTask endpoint to require mandatory comments
+- [x] Create needClarification endpoint with routing logic
+- [x] Store comments in approval history with proper tagging
+
+### Frontend Updates
+- [x] Create unified ApprovalDialog component with pop-up
+- [x] Approve action: pop-up with optional comments field
+- [x] Reject action: pop-up with mandatory comments field (validation)
+- [x] Need Clarification action: pop-up with sub-options (Last Approver / Requestor)
+- [x] Display comments on request details tagged to the action
+- [x] Update Approvals page to use new dialog
+- [x] Update L1/L2 approval pages to use new dialog

@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE approvalInstances MODIFY COLUMN status ENUM('pending', 'in_progress', 'approved', 'rejected', 'cancelled', 'info_requested', 'need_clarification') NOT NULL DEFAULT 'pending';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE approvalInstances MODIFY COLUMN status ENUM('pending', 'in_progress', 'approved', 'rejected', 'cancelled', 'info_requested', 'need_clarification') NOT NULL DEFAULT 'pending';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1678
+}

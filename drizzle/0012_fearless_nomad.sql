@@ -1,0 +1,3 @@
+ALTER TABLE `approvalTasks` MODIFY COLUMN `status` enum('pending','approved','rejected','need_clarification','info_requested','reassigned','expired','skipped') NOT NULL DEFAULT 'pending';--> statement-breakpoint
+ALTER TABLE `approvalTasks` MODIFY COLUMN `decision` enum('approved','rejected','info_requested','need_clarification');--> statement-breakpoint
+ALTER TABLE `approvalTasks` ADD `clarificationTarget` enum('last_approver','requestor');

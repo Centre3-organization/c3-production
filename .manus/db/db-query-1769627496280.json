@@ -1,0 +1,45 @@
+{
+  "query": "SELECT id, email, name, passwordHash, role FROM users LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, email, name, passwordHash, role FROM users LIMIT 10;",
+  "rows": [
+    {
+      "id": "3",
+      "email": "mohsiin@gmail.com",
+      "name": "Mohsiin",
+      "passwordHash": "$2b$10$/glvj80DWKz4iSxYErxIceg75UIZZQjANFxd7CoS9sj7lFAglSefG",
+      "role": "admin"
+    },
+    {
+      "id": "90182",
+      "email": "rizwan@techbanq.net",
+      "name": "Riz A",
+      "passwordHash": "$2b$10$fY8OWs2cnDSpS2TsUgcXyunpsvNDpDylI50dbvTvZDUIkTJiaES56",
+      "role": "user"
+    },
+    {
+      "id": "90183",
+      "email": "ali@techbanq.net",
+      "name": "Ali Aarish",
+      "passwordHash": "$2b$10$0MHQp1XkM8cqdMS6DnigHevvBKb5Tdt6lu8dZqIbOgehaq3D9s5DO",
+      "role": "admin"
+    },
+    {
+      "id": "90184",
+      "email": "ali-test-1769503146411@centre3.com",
+      "name": "Ali Test",
+      "passwordHash": "$2b$10$zcMzI8Sk3tHGM/o2jiBp5OEqmQfm4Lpf5ZhHt/XnDISjegehs4CEG",
+      "role": "user"
+    },
+    {
+      "id": "90185",
+      "email": "full-user-1769503146954@centre3.com",
+      "name": "Full User",
+      "passwordHash": "$2b$10$DVhkaNZwFdgfdXrKhoOYnu.eD4hMiqhTqbqipK/NbDWalvp9Sjimm",
+      "role": "user"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\tpasswordHash\trole\n3\tmohsiin@gmail.com\tMohsiin\t$2b$10$/glvj80DWKz4iSxYErxIceg75UIZZQjANFxd7CoS9sj7lFAglSefG\tadmin\n90182\trizwan@techbanq.net\tRiz A\t$2b$10$fY8OWs2cnDSpS2TsUgcXyunpsvNDpDylI50dbvTvZDUIkTJiaES56\tuser\n90183\tali@techbanq.net\tAli Aarish\t$2b$10$0MHQp1XkM8cqdMS6DnigHevvBKb5Tdt6lu8dZqIbOgehaq3D9s5DO\tadmin\n90184\tali-test-1769503146411@centre3.com\tAli Test\t$2b$10$zcMzI8Sk3tHGM/o2jiBp5OEqmQfm4Lpf5ZhHt/XnDISjegehs4CEG\tuser\n90185\tfull-user-1769503146954@centre3.com\tFull User\t$2b$10$DVhkaNZwFdgfdXrKhoOYnu.eD4hMiqhTqbqipK/NbDWalvp9Sjimm\tuser\n",
+  "stderr": "",
+  "execution_time_ms": 1521
+}
