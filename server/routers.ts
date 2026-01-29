@@ -37,6 +37,9 @@ import { workflowsRouter } from "./modules/workflows/workflows.router";
 // Request Config Module
 import { requestConfigRouter } from "./modules/request-config/requestConfig.router";
 
+// MCM Module (Magnetic Card Management)
+import { mcmRouter } from "./modules/mcm/mcm.router";
+
 import { seedDefaultRoles, seedDefaultDepartments } from "./infra/db/connection";
 
 // Initialize default data on server start
@@ -157,6 +160,9 @@ export const appRouter = router({
   
   // Request Config Module
   requestConfig: requestConfigRouter,
+  
+  // MCM Module (Magnetic Card Management)
+  mcm: mcmRouter,
 });
 
 export type AppRouter = typeof appRouter;

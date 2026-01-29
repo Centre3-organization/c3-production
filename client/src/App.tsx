@@ -54,6 +54,11 @@ import Settings from "./modules/settings/Settings";
 import TranslationManagement from "./modules/settings/TranslationManagement";
 import RequestTypeConfig from "./modules/settings/RequestTypeConfig";
 
+// MCM Module (Magnetic Card Management)
+import McmDashboard from "./modules/mcm/McmDashboard";
+import CardDirectory from "./modules/mcm/CardDirectory";
+import NewCardRequest from "./modules/mcm/NewCardRequest";
+
 function Router() {
   return (
     <Switch>
@@ -190,6 +195,24 @@ function Router() {
           <DelegationManagement />
         </Layout>
       </Route>
+      
+      {/* Protected Routes - MCM (Magnetic Card Management) */}
+      <Route path="/mcm">
+        <Layout>
+          <McmDashboard />
+        </Layout>
+      </Route>
+      <Route path="/mcm/cards">
+        <Layout>
+          <CardDirectory />
+        </Layout>
+      </Route>
+      <Route path="/mcm/request/new">
+        <Layout>
+          <NewCardRequest />
+        </Layout>
+      </Route>
+      
       <Route path="/profile">
         <Layout>
           <Profile />

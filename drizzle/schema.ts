@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean, decimal } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean, decimal, date } from "drizzle-orm/mysql-core";
 
 // ============================================================================
 // EXISTING TABLES (matching current database structure)
@@ -1377,3 +1377,275 @@ export const requestVehicles = mysqlTable("requestVehicles", {
 
 export type RequestVehicle = typeof requestVehicles.$inferSelect;
 export type InsertRequestVehicle = typeof requestVehicles.$inferInsert;
+
+
+// ============================================================================
+// MAGNETIC CARD MANAGEMENT (MCM) TABLES
+// ============================================================================
+
+/**
+ * Card Companies - Contractors, Sub-Contractors, Clients
+ */
+export const cardCompanies = mysqlTable("cardCompanies", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameAr: varchar("nameAr", { length: 255 }),
+  type: mysqlEnum("type", ["contractor", "subcontractor", "client"]).notNull(),
+  code: varchar("code", { length: 50 }),
+  contactPerson: varchar("contactPerson", { length: 255 }),
+  contactEmail: varchar("contactEmail", { length: 255 }),
+  contactPhone: varchar("contactPhone", { length: 50 }),
+  address: text("address"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CardCompany = typeof cardCompanies.$inferSelect;
+export type InsertCardCompany = typeof cardCompanies.$inferInsert;
+
+/**
+ * Magnetic Cards - Main card table
+ */
+export const magneticCards = mysqlTable("magneticCards", {
+  id: int("id").autoincrement().primaryKey(),
+  cardNumber: varchar("cardNumber", { length: 50 }).notNull().unique(),
+  
+  // Card Status
+  status: mysqlEnum("status", ["pending", "active", "inactive", "blocked", "expired"]).default("pending").notNull(),
+  blockReason: mysqlEnum("blockReason", ["security_incident", "policy_violation", "investigation", "emergency"]),
+  blockType: mysqlEnum("blockType", ["temporary", "permanent"]),
+  blockUntil: timestamp("blockUntil"),
+  blockedBy: int("blockedBy"),
+  blockedAt: timestamp("blockedAt"),
+  
+  // Company Type
+  companyType: mysqlEnum("companyType", ["centre3", "contractor", "subcontractor", "client"]).notNull(),
+  companyId: int("companyId"), // References cardCompanies for non-Centre3
+  
+  // Cardholder Information
+  idType: mysqlEnum("idType", ["saudi_id", "iqama"]).notNull(),
+  idNumber: varchar("idNumber", { length: 20 }).notNull(),
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  fullNameAr: varchar("fullNameAr", { length: 255 }),
+  birthDate: date("birthDate").notNull(),
+  nationality: varchar("nationality", { length: 100 }),
+  gender: mysqlEnum("gender", ["male", "female"]).notNull(),
+  bloodType: varchar("bloodType", { length: 10 }),
+  mobile: varchar("mobile", { length: 20 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  profession: varchar("profession", { length: 255 }),
+  
+  // ID Document Details
+  idIssueDate: date("idIssueDate"),
+  idIssuePlace: varchar("idIssuePlace", { length: 255 }),
+  idExpiryDate: date("idExpiryDate").notNull(),
+  
+  // Documents (S3 URLs)
+  photoUrl: varchar("photoUrl", { length: 500 }),
+  idDocumentUrl: varchar("idDocumentUrl", { length: 500 }),
+  contractUrl: varchar("contractUrl", { length: 500 }),
+  
+  // Yaqeen Verification
+  yaqeenVerified: boolean("yaqeenVerified").default(false),
+  yaqeenVerifiedAt: timestamp("yaqeenVerifiedAt"),
+  yaqeenOverrideBy: int("yaqeenOverrideBy"),
+  yaqeenOverrideReason: text("yaqeenOverrideReason"),
+  
+  // Dates
+  issueDate: timestamp("issueDate"),
+  expiryDate: timestamp("expiryDate"),
+  
+  // Request tracking
+  requestId: int("requestId"), // Links to workflow request
+  requestedBy: int("requestedBy").notNull(),
+  approvedBy: int("approvedBy"),
+  approvedAt: timestamp("approvedAt"),
+  
+  // Siport Integration
+  siportCardId: varchar("siportCardId", { length: 100 }),
+  siportSyncedAt: timestamp("siportSyncedAt"),
+  siportSyncStatus: mysqlEnum("siportSyncStatus", ["pending", "synced", "failed"]).default("pending"),
+  siportSyncError: text("siportSyncError"),
+  
+  // Deactivation
+  deactivatedBy: int("deactivatedBy"),
+  deactivatedAt: timestamp("deactivatedAt"),
+  deactivationReason: mysqlEnum("deactivationReason", ["resignation", "termination", "contract_ended", "security_concern", "lost", "stolen", "damaged", "expired", "other"]),
+  deactivationNotes: text("deactivationNotes"),
+  
+  // Replacement tracking
+  replacesCardId: int("replacesCardId"), // If this card replaces another
+  replacedByCardId: int("replacedByCardId"), // If this card was replaced
+  
+  // Lost card tracking
+  lostReportCount: int("lostReportCount").default(0),
+  lastLostReportAt: timestamp("lastLostReportAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MagneticCard = typeof magneticCards.$inferSelect;
+export type InsertMagneticCard = typeof magneticCards.$inferInsert;
+
+/**
+ * Card Access Levels - Access levels assigned to a card
+ */
+export const cardAccessLevels = mysqlTable("cardAccessLevels", {
+  id: int("id").autoincrement().primaryKey(),
+  cardId: int("cardId").notNull(),
+  
+  // Location
+  countryCode: varchar("countryCode", { length: 10 }).notNull(), // SA, BH
+  siteId: int("siteId").notNull(),
+  
+  // Access Level (from Centre3 system)
+  accessLevelId: int("accessLevelId").notNull(),
+  accessLevelName: varchar("accessLevelName", { length: 255 }),
+  
+  // Specific rooms (optional)
+  roomIds: json("roomIds").$type<number[]>(),
+  
+  // Validity
+  validFrom: timestamp("validFrom"),
+  validUntil: timestamp("validUntil"),
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  // Siport mapping
+  siportZoneIds: json("siportZoneIds").$type<string[]>(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CardAccessLevel = typeof cardAccessLevels.$inferSelect;
+export type InsertCardAccessLevel = typeof cardAccessLevels.$inferInsert;
+
+/**
+ * Card Audit Log - All card operations
+ */
+export const cardAuditLog = mysqlTable("cardAuditLog", {
+  id: int("id").autoincrement().primaryKey(),
+  cardId: int("cardId").notNull(),
+  
+  // Operation
+  operation: mysqlEnum("operation", [
+    "created", "modified", "activated", "deactivated", 
+    "blocked", "unblocked", "renewed", "replaced",
+    "access_added", "access_removed", "access_modified",
+    "yaqeen_verified", "yaqeen_override",
+    "siport_synced", "siport_failed"
+  ]).notNull(),
+  
+  // Details
+  performedBy: int("performedBy").notNull(),
+  performedAt: timestamp("performedAt").defaultNow().notNull(),
+  reason: text("reason"),
+  
+  // Change tracking
+  previousData: json("previousData").$type<Record<string, any>>(),
+  newData: json("newData").$type<Record<string, any>>(),
+  
+  // Request reference (if via workflow)
+  requestId: int("requestId"),
+  
+  // IP and session info
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+});
+
+export type CardAuditLog = typeof cardAuditLog.$inferSelect;
+export type InsertCardAuditLog = typeof cardAuditLog.$inferInsert;
+
+/**
+ * MCM Access Levels - Predefined access levels in Centre3 system
+ */
+export const mcmAccessLevels = mysqlTable("mcmAccessLevels", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameAr: varchar("nameAr", { length: 255 }),
+  description: text("description"),
+  
+  // Siport mapping
+  siportZoneMapping: json("siportZoneMapping").$type<Record<string, string[]>>(), // { siteCode: [zoneIds] }
+  
+  // Restrictions
+  requiresApproval: boolean("requiresApproval").default(true),
+  maxValidityDays: int("maxValidityDays").default(365),
+  allowedCompanyTypes: json("allowedCompanyTypes").$type<string[]>(), // ['centre3', 'contractor', etc.]
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  sortOrder: int("sortOrder").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type McmAccessLevel = typeof mcmAccessLevels.$inferSelect;
+export type InsertMcmAccessLevel = typeof mcmAccessLevels.$inferInsert;
+
+/**
+ * MCM Requests - Card operation requests (links to workflow)
+ */
+export const mcmRequests = mysqlTable("mcmRequests", {
+  id: int("id").autoincrement().primaryKey(),
+  requestNumber: varchar("requestNumber", { length: 50 }).notNull().unique(),
+  
+  // Operation type
+  operationType: mysqlEnum("operationType", [
+    "create", "modify", "deactivate", "renew", "replace_lost", "replace_damaged"
+  ]).notNull(),
+  
+  // Card reference (null for create)
+  cardId: int("cardId"),
+  
+  // Status
+  status: mysqlEnum("status", ["draft", "pending", "approved", "rejected", "cancelled"]).default("draft").notNull(),
+  
+  // Requestor
+  requestedBy: int("requestedBy").notNull(),
+  requestedFor: int("requestedFor"), // If requesting for someone else
+  requestedAt: timestamp("requestedAt").defaultNow().notNull(),
+  
+  // Form data (stored as JSON for flexibility)
+  formData: json("formData").$type<Record<string, any>>(),
+  
+  // Access levels requested
+  accessLevelsRequested: json("accessLevelsRequested").$type<{
+    countryCode: string;
+    siteId: number;
+    accessLevelId: number;
+    roomIds?: number[];
+  }[]>(),
+  
+  // For modifications - what changed
+  modificationType: mysqlEnum("modificationType", ["add_access", "remove_access", "change_access"]),
+  modificationReason: text("modificationReason"),
+  
+  // For deactivation
+  deactivationReason: mysqlEnum("deactivationReason", ["resignation", "termination", "contract_ended", "security_concern", "other"]),
+  effectiveDate: timestamp("effectiveDate"),
+  
+  // For lost/damaged
+  lostDamagedType: mysqlEnum("lostDamagedType", ["lost", "stolen", "damaged"]),
+  lostDamagedDetails: text("lostDamagedDetails"),
+  createReplacement: boolean("createReplacement").default(false),
+  
+  // Workflow integration
+  workflowInstanceId: int("workflowInstanceId"),
+  currentStageId: int("currentStageId"),
+  
+  // Completion
+  completedAt: timestamp("completedAt"),
+  completedBy: int("completedBy"),
+  
+  // Result
+  resultCardId: int("resultCardId"), // The card created/modified
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type McmRequest = typeof mcmRequests.$inferSelect;
+export type InsertMcmRequest = typeof mcmRequests.$inferInsert;

@@ -759,3 +759,46 @@ Time conditions:
 - [x] Integrate requirements into Access Request form - show/hide RFC, HRS, MOP, MHV fields based on selected sub-activity
 - [x] Create ActivitySelectorField component with cascading main/sub-activity selection
 - [x] Display requirement badges when sub-activity is selected
+
+
+## Magnetic Card Management (MCM) Module (Jan 29, 2026)
+
+### Phase 1: Database Schema
+- [x] Create magneticCards table (card info, status, dates)
+- [x] Create cardholders table (personal info, ID details) - merged into magneticCards
+- [x] Create cardAccessLevels table (card-to-access mapping)
+- [x] Create cardAuditLog table (all card operations)
+- [x] Create cardCompanies table (contractor/client companies)
+- [x] Create mcmAccessLevels table (predefined access levels)
+- [x] Create mcmRequests table (card operation requests)
+
+### Phase 2: Backend API
+- [x] Create MCM router with CRUD operations
+- [x] Implement card creation flow
+- [x] Implement card modification flow
+- [x] Implement card deactivation flow
+- [x] Implement lost/damaged card flow
+- [x] Implement block/unblock (admin only, no workflow)
+- [x] Implement card renewal flow
+- [ ] Implement bulk import/export
+- [x] Add card search and filtering
+
+### Phase 3: Workflow Integration
+- [ ] Add MCM operation types to workflow system
+- [ ] Configure workflow triggers for MCM operations
+- [ ] Handle immediate actions (block, lost card deactivation)
+- [ ] Implement approval callbacks for Siport sync
+
+### Phase 4: Frontend UI
+- [x] Create MCM Dashboard page
+- [x] Create Card Request Form (5-tab wizard)
+- [x] Create Card Directory page with filters
+- [ ] Create My Card page for employees
+- [x] Create Admin views (blocked cards, expiring cards)
+- [ ] Create Bulk Operations page
+
+### Phase 5: Navigation & Translations
+- [x] Add MCM to sidebar navigation
+- [x] Add English translations (basic)
+- [ ] Add Arabic translations
+- [ ] Add role-based menu visibility

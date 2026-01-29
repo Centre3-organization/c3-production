@@ -186,6 +186,14 @@ export default function Layout({ children }: LayoutProps) {
       ]
     },
     {
+      titleKey: "nav.mcm",
+      title: "Card Management",
+      items: [
+        { icon: CreditCard, labelKey: "nav.mcmDashboard", label: "MCM Dashboard", href: "/mcm" },
+        { icon: Users, labelKey: "nav.cardDirectory", label: "Card Directory", href: "/mcm/cards" },
+      ]
+    },
+    {
       titleKey: "nav.administration",
       title: "Administration",
       requiredPermission: "users.read",

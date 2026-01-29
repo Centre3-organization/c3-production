@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `cardAuditLog` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `cardId` int NOT NULL,\n  `operation` enum('created','modified','activated','deactivated','blocked','unblocked','renewed','replaced','access_added','access_removed','access_modified','yaqeen_verified','yaqeen_override','siport_synced','siport_failed') NOT NULL,\n  `performedBy` int NOT NULL,\n  `performedAt` timestamp NOT NULL DEFAULT (now()),\n  `reason` text,\n  `previousData` json,\n  `newData` json,\n  `requestId` int,\n  `ipAddress` varchar(45),\n  `userAgent` text,\n  CONSTRAINT `cardAuditLog_id` PRIMARY KEY(`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute CREATE TABLE IF NOT EXISTS `cardAuditLog` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `cardId` int NOT NULL,\n  `operation` enum('created','modified','activated','deactivated','blocked','unblocked','renewed','replaced','access_added','access_removed','access_modified','yaqeen_verified','yaqeen_override','siport_synced','siport_failed') NOT NULL,\n  `performedBy` int NOT NULL,\n  `performedAt` timestamp NOT NULL DEFAULT (now()),\n  `reason` text,\n  `previousData` json,\n  `newData` json,\n  `requestId` int,\n  `ipAddress` varchar(45),\n  `userAgent` text,\n  CONSTRAINT `cardAuditLog_id` PRIMARY KEY(`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1998
+}
