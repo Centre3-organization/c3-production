@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import {
   Loader2,
-  Search,
   CheckCircle,
   AlertCircle,
   UserPlus,
@@ -42,11 +41,11 @@ function FormField({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm text-muted-foreground font-normal">
+      <Label className="text-sm text-gray-700 font-normal">
         {label}{required && <span className="text-destructive ml-0.5">*</span>}:
       </Label>
       {children}
-      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {hint && <p className="text-xs text-gray-500">{hint}</p>}
     </div>
   );
 }
@@ -72,6 +71,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   // Yakeen verification state
   const [idType, setIdType] = useState<"national_id" | "iqama">("national_id");
   const [idNumber, setIdNumber] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [isVerified, setIsVerified] = useState(false);
   const [verificationError, setVerificationError] = useState("");
 
@@ -379,12 +379,12 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   disabled={isDisabled}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
                     isActive 
-                      ? "bg-gradient-to-r from-[#ff375e]/10 to-[#4f008c]/10 text-[#4f008c] border-l-4 border-[#4f008c]" 
+                      ? "bg-gradient-to-r from-[#ff375e]/15 to-[#4f008c]/15 text-gray-900 border-l-4 border-[#4f008c]" 
                       : isCompleted
-                        ? "text-foreground hover:bg-muted"
+                        ? "text-gray-900 hover:bg-gray-100"
                         : isDisabled
-                          ? "text-muted-foreground/50 cursor-not-allowed"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
@@ -440,7 +440,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                       {/* Identity Verification Section */}
                       <div className="bg-card rounded-lg border p-6">
                         <SectionHeader title="Identity Verification" />
-                        <div className="grid grid-cols-3 gap-6">
+                        <div className="grid grid-cols-2 gap-6 mb-4">
                           <FormField label="ID Type">
                             <Select value={idType} onValueChange={(value: "national_id" | "iqama") => setIdType(value)}>
                               <SelectTrigger className="bg-background">
@@ -454,34 +454,43 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           </FormField>
                           
                           <FormField label="ID Number" hint={`${idNumber.length}/10 digits`}>
-                            <div className="flex gap-2">
-                              <Input
-                                value={idNumber}
-                                onChange={(e) => handleIdNumberChange(e.target.value)}
-                                placeholder={idType === "national_id" ? "1XXXXXXXXX" : "2XXXXXXXXX"}
-                                maxLength={10}
-                                className="bg-background flex-1"
-                              />
-                              <Button 
-                                type="button"
-                                onClick={handleVerifyYakeen}
-                                disabled={verifyYakeenMutation.isPending || idNumber.length !== 10}
-                                variant="outline"
-                                className="shrink-0"
-                              >
-                                {verifyYakeenMutation.isPending ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <>
-                                    <Search className="h-4 w-4 mr-2" />
-                                    Verify with Yakeen
-                                  </>
-                                )}
-                              </Button>
-                            </div>
+                            <Input
+                              value={idNumber}
+                              onChange={(e) => handleIdNumberChange(e.target.value)}
+                              placeholder={idType === "national_id" ? "1XXXXXXXXX" : "2XXXXXXXXX"}
+                              maxLength={10}
+                              className="bg-background w-full text-lg tracking-wider font-mono"
+                            />
+                          </FormField>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-6 mb-4">
+                          <FormField label="Date of Birth" required>
+                            <Input
+                              type="date"
+                              value={dateOfBirth}
+                              onChange={(e) => setDateOfBirth(e.target.value)}
+                              className="bg-background"
+                            />
                           </FormField>
                           
-                          <div className="flex items-end pb-2">
+                          <div className="flex items-end">
+                            <Button 
+                              type="button"
+                              onClick={handleVerifyYakeen}
+                              disabled={verifyYakeenMutation.isPending || idNumber.length !== 10 || !dateOfBirth}
+                              className="bg-gradient-to-r from-[#ff375e] to-[#4f008c] hover:from-[#ff4a6e] hover:to-[#5f00a6] text-white h-10 px-6"
+                            >
+                              {verifyYakeenMutation.isPending ? (
+                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                              ) : null}
+                              Get Data with Yakeen
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        {(isVerified || verificationError) && (
+                          <div className="mt-4">
                             {isVerified && (
                               <Badge className="bg-green-500 h-9 px-4">
                                 <CheckCircle className="h-4 w-4 mr-2" /> Verified
@@ -490,11 +499,11 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                             {verificationError && (
                               <div className="flex items-center gap-2 text-amber-600 text-sm">
                                 <AlertCircle className="h-4 w-4 shrink-0" />
-                                <span className="truncate">{verificationError}</span>
+                                <span>{verificationError}</span>
                               </div>
                             )}
                           </div>
-                        </div>
+                        )}
                       </div>
 
                       {/* Personal Data Section */}

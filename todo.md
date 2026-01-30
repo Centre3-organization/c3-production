@@ -942,3 +942,11 @@ Time conditions:
 - [x] Create View User dialog with tabbed format showing all information
 - [x] Create Edit User popup with same form structure
 - [x] Test all form functionality
+
+## User Form Styling Fixes (Jan 31, 2026)
+- [x] Make font color black in form
+- [x] Update sidebar button colors to match brand
+- [x] Make ID Number input field bigger
+- [x] Change Yakeen button to proper button labeled "Get Data with Yakeen"
+- [x] Remove search icon from Yakeen button
+- [x] Add Date of Birth field for Yakeen verification
