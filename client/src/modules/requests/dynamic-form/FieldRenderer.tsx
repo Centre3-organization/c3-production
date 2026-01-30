@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/utils/useAuth";
 import { Upload, X, FileText, User, Search, Loader2, Activity, AlertTriangle, FileCheck, ClipboardList, MapPin as RoomIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -492,8 +493,20 @@ export function FieldRenderer({
 }: FieldRendererProps) {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
+  const { user } = useAuth();
   const [dynamicOptions, setDynamicOptions] = useState<FieldOption[]>([]);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
+  
+  // Auto-populate user_lookup fields with current user on mount
+  useEffect(() => {
+    if (field.fieldType === "user_lookup" && !value && user) {
+      onChange({
+        id: user.id,
+        name: user.name || user.email,
+        email: user.email
+      });
+    }
+  }, [field.fieldType, user]);
 
   // Get localized text
   const getLabel = () => (isRTL && field.nameAr ? field.nameAr : field.name);

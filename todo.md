@@ -812,3 +812,5 @@ Time conditions:
 - [x] Remove MCM Dashboard from sidebar and rename Card Directory to Card Control
 
 - [x] Add Integration Hub menu under Administration with Coming Soon page
+
+- [x] Make User Lookup field type default to logged-in user in request forms
