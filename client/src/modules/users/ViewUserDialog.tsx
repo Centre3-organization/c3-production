@@ -161,7 +161,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
                 </div>
               </div>
             </div>
-            <Button onClick={onEdit} className="gap-2 bg-gradient-to-r from-[#ff375e] to-[#4f008c] hover:from-[#ff4a6e] hover:to-[#5f00a6] text-white">
+            <Button onClick={onEdit} className="gap-2 bg-[#4f008c] hover:bg-[#3d006d] text-white">
               <Edit2 className="h-4 w-4" />
               Edit User
             </Button>

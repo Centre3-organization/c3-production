@@ -758,7 +758,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                   {!isLastTab ? (
                     <Button
                       onClick={goToNextTab}
-                      className="gap-2 bg-gradient-to-r from-[#ff375e] to-[#4f008c] hover:from-[#ff4a6e] hover:to-[#5f00a6] text-white"
+                      className="gap-2 bg-[#4f008c] hover:bg-[#3d006d] text-white"
                     >
                       Next
                       <ChevronRight className="h-4 w-4" />
@@ -767,7 +767,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                     <Button
                       onClick={handleSubmit}
                       disabled={updateUserMutation.isPending}
-                      className="gap-2 bg-gradient-to-r from-[#ff375e] to-[#4f008c] hover:from-[#ff4a6e] hover:to-[#5f00a6] text-white"
+                      className="gap-2 bg-[#4f008c] hover:bg-[#3d006d] text-white"
                     >
                       {updateUserMutation.isPending ? (
                         <>

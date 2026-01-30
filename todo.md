@@ -965,3 +965,8 @@ Time conditions:
 - [x] Integrate proper roles from Roles & Permissions system in NewUserForm
 - [x] Integrate proper roles from Roles & Permissions system in EditUserDialog
 - [x] Remove hardcoded user/admin role options
+
+## View/Edit Dialog Button Style Fix (Jan 31, 2026)
+- [x] Remove gradient from ViewUserDialog buttons, use solid purple (#4f008c)
+- [x] Remove gradient from EditUserDialog buttons, use solid purple (#4f008c)
+- [x] Populate Edit form with existing user data when opening (already implemented in useEffect)
