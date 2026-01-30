@@ -970,3 +970,11 @@ Time conditions:
 - [x] Remove gradient from ViewUserDialog buttons, use solid purple (#4f008c)
 - [x] Remove gradient from EditUserDialog buttons, use solid purple (#4f008c)
 - [x] Populate Edit form with existing user data when opening (already implemented in useEffect)
+
+## Groups-Companies Integration (Jan 31, 2026)
+- [x] Review current Groups and Companies schema structure
+- [x] Update Groups schema to link with Companies master data (companyId)
+- [x] Add group type field (internal/contractor/client) to Groups
+- [x] Update Groups UI to auto-populate from Companies for external groups
+- [x] Update User form to use integrated Groups with company data (already uses companies directly)
+- [x] Test the Groups-Companies integration

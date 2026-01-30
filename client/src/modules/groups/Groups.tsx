@@ -63,7 +63,8 @@ import {
 interface GroupWithChildren {
   id: number;
   name: string;
-  groupType: "internal" | "external";
+  groupType: "internal" | "contractor" | "client";
+  companyId: number | null;
   parentGroupId: number | null;
   description: string | null;
   status: "active" | "inactive";
@@ -75,7 +76,7 @@ interface GroupWithChildren {
 
 export default function Groups() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTab, setSelectedTab] = useState<"all" | "internal" | "external">("all");
+  const [selectedTab, setSelectedTab] = useState<"all" | "internal" | "contractor" | "client">("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isMembersDialogOpen, setIsMembersDialogOpen] = useState(false);
@@ -88,7 +89,8 @@ export default function Groups() {
   // Form state
   const [formData, setFormData] = useState({
     name: "",
-    groupType: "internal" as "internal" | "external",
+    groupType: "internal" as "internal" | "contractor" | "client",
+    companyId: null as number | null,
     parentGroupId: null as number | null,
     description: "",
     metadata: {
@@ -106,6 +108,14 @@ export default function Groups() {
   const { data: allGroups } = trpc.groups.list.useQuery({});
   const { data: stats } = trpc.groups.getStats.useQuery();
   const { data: allUsers } = trpc.users.list.useQuery({});
+  const { data: companiesData } = trpc.masterData.getAllCompanies.useQuery({ isActive: true });
+  
+  // Filter companies based on group type
+  const filteredCompanies = companiesData?.filter((c: { type: string }) => {
+    if (formData.groupType === "contractor") return c.type === "contractor" || c.type === "subcontractor";
+    if (formData.groupType === "client") return c.type === "client";
+    return false;
+  }) || [];
 
   // Mutations
   const createGroup = trpc.groups.create.useMutation({
@@ -142,6 +152,7 @@ export default function Groups() {
     setFormData({
       name: "",
       groupType: "internal",
+      companyId: null,
       parentGroupId: null,
       description: "",
       metadata: {
@@ -159,9 +170,10 @@ export default function Groups() {
     createGroup.mutate({
       name: formData.name,
       groupType: formData.groupType,
+      companyId: formData.companyId,
       parentGroupId: formData.parentGroupId,
       description: formData.description || undefined,
-      metadata: formData.groupType === "external" ? formData.metadata : undefined,
+      metadata: formData.groupType !== "internal" ? formData.metadata : undefined,
     });
   };
 
@@ -171,7 +183,7 @@ export default function Groups() {
       id: selectedGroup.id,
       name: formData.name,
       description: formData.description || undefined,
-      metadata: formData.groupType === "external" ? formData.metadata : undefined,
+      metadata: formData.groupType !== "internal" ? formData.metadata : undefined,
     });
   };
 
@@ -185,6 +197,7 @@ export default function Groups() {
     setFormData({
       name: group.name,
       groupType: group.groupType,
+      companyId: group.companyId,
       parentGroupId: group.parentGroupId,
       description: group.description || "",
       metadata: group.metadata || {
@@ -393,8 +406,8 @@ export default function Groups() {
                 <Globe className="h-6 w-6 text-orange-600" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">External Groups</p>
-                <p className="text-2xl font-bold">{stats?.externalGroups || 0}</p>
+                <p className="text-sm text-muted-foreground">Contractor Groups</p>
+                <p className="text-2xl font-bold">{stats?.contractorGroups || 0}</p>
               </div>
             </div>
           </CardContent>
@@ -442,7 +455,8 @@ export default function Groups() {
             <TabsList>
               <TabsTrigger value="all">All Groups</TabsTrigger>
               <TabsTrigger value="internal">Internal</TabsTrigger>
-              <TabsTrigger value="external">External</TabsTrigger>
+              <TabsTrigger value="contractor">Contractors</TabsTrigger>
+              <TabsTrigger value="client">Clients</TabsTrigger>
             </TabsList>
             <TabsContent value={selectedTab} className="mt-4">
               <div className="border rounded-lg">
@@ -489,8 +503,9 @@ export default function Groups() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="internal">Internal (Employee)</SelectItem>
-                    <SelectItem value="external">External (Vendor)</SelectItem>
+                    <SelectItem value="internal">Internal (Centre3 Employee)</SelectItem>
+                    <SelectItem value="contractor">Contractor</SelectItem>
+                    <SelectItem value="client">Client</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -527,48 +542,72 @@ export default function Groups() {
               />
             </div>
 
-            {/* External Group Metadata */}
-            {formData.groupType === "external" && (
+            {/* Contractor/Client Group - Company Selection */}
+            {formData.groupType !== "internal" && (
               <div className="space-y-4 border-t pt-4">
-                <h4 className="font-medium">Vendor Information</h4>
+                <h4 className="font-medium">Company Information</h4>
+                <div className="space-y-2">
+                  <Label>Select Company *</Label>
+                  <Select
+                    value={formData.companyId?.toString() || ""}
+                    onValueChange={(v) => {
+                      const companyId = parseInt(v);
+                      const company = companiesData?.find((c: any) => c.id === companyId);
+                      if (company) {
+                        setFormData({
+                          ...formData,
+                          companyId,
+                          name: company.name,
+                          metadata: {
+                            ...formData.metadata,
+                            contactEmail: company.contactPersonEmail || "",
+                            contactPhone: company.contactPersonPhone || "",
+                            contractNumber: company.contractReference || "",
+                            contractStartDate: company.contractStartDate ? new Date(company.contractStartDate).toISOString().split('T')[0] : "",
+                            contractEndDate: company.contractEndDate ? new Date(company.contractEndDate).toISOString().split('T')[0] : "",
+                          },
+                        });
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a company from Master Data" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filteredCompanies.map((c: any) => (
+                        <SelectItem key={c.id} value={c.id.toString()}>
+                          {c.code} - {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Company details will be auto-populated from Master Data
+                  </p>
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Contact Email</Label>
                     <Input
                       value={formData.metadata.contactEmail}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contactEmail: e.target.value },
-                        })
-                      }
-                      placeholder="vendor@example.com"
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>Contact Phone</Label>
                     <Input
                       value={formData.metadata.contactPhone}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contactPhone: e.target.value },
-                        })
-                      }
-                      placeholder="+1 234 567 8900"
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>Contract Number</Label>
                     <Input
                       value={formData.metadata.contractNumber}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contractNumber: e.target.value },
-                        })
-                      }
-                      placeholder="CONTRACT-2024-001"
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                   <div className="space-y-2">
@@ -576,12 +615,8 @@ export default function Groups() {
                     <Input
                       type="date"
                       value={formData.metadata.contractStartDate}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contractStartDate: e.target.value },
-                        })
-                      }
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                   <div className="space-y-2">
@@ -589,12 +624,8 @@ export default function Groups() {
                     <Input
                       type="date"
                       value={formData.metadata.contractEndDate}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contractEndDate: e.target.value },
-                        })
-                      }
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                 </div>
@@ -654,48 +685,72 @@ export default function Groups() {
               />
             </div>
 
-            {/* External Group Metadata */}
-            {formData.groupType === "external" && (
+            {/* Contractor/Client Group - Company Selection */}
+            {formData.groupType !== "internal" && (
               <div className="space-y-4 border-t pt-4">
-                <h4 className="font-medium">Vendor Information</h4>
+                <h4 className="font-medium">Company Information</h4>
+                <div className="space-y-2">
+                  <Label>Select Company *</Label>
+                  <Select
+                    value={formData.companyId?.toString() || ""}
+                    onValueChange={(v) => {
+                      const companyId = parseInt(v);
+                      const company = companiesData?.find((c: any) => c.id === companyId);
+                      if (company) {
+                        setFormData({
+                          ...formData,
+                          companyId,
+                          name: company.name,
+                          metadata: {
+                            ...formData.metadata,
+                            contactEmail: company.contactPersonEmail || "",
+                            contactPhone: company.contactPersonPhone || "",
+                            contractNumber: company.contractReference || "",
+                            contractStartDate: company.contractStartDate ? new Date(company.contractStartDate).toISOString().split('T')[0] : "",
+                            contractEndDate: company.contractEndDate ? new Date(company.contractEndDate).toISOString().split('T')[0] : "",
+                          },
+                        });
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a company from Master Data" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filteredCompanies.map((c: any) => (
+                        <SelectItem key={c.id} value={c.id.toString()}>
+                          {c.code} - {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Company details will be auto-populated from Master Data
+                  </p>
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Contact Email</Label>
                     <Input
                       value={formData.metadata.contactEmail}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contactEmail: e.target.value },
-                        })
-                      }
-                      placeholder="vendor@example.com"
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>Contact Phone</Label>
                     <Input
                       value={formData.metadata.contactPhone}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contactPhone: e.target.value },
-                        })
-                      }
-                      placeholder="+1 234 567 8900"
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>Contract Number</Label>
                     <Input
                       value={formData.metadata.contractNumber}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contractNumber: e.target.value },
-                        })
-                      }
-                      placeholder="CONTRACT-2024-001"
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                   <div className="space-y-2">
@@ -703,12 +758,8 @@ export default function Groups() {
                     <Input
                       type="date"
                       value={formData.metadata.contractStartDate}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contractStartDate: e.target.value },
-                        })
-                      }
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                   <div className="space-y-2">
@@ -716,12 +767,8 @@ export default function Groups() {
                     <Input
                       type="date"
                       value={formData.metadata.contractEndDate}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          metadata: { ...formData.metadata, contractEndDate: e.target.value },
-                        })
-                      }
+                      readOnly
+                      className="bg-muted"
                     />
                   </div>
                 </div>

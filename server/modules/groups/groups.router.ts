@@ -22,7 +22,7 @@ export const groupsRouter = router({
   list: publicProcedure
     .input(z.object({
       parentGroupId: z.number().nullable().optional(),
-      groupType: z.enum(["internal", "external"]).optional(),
+      groupType: z.enum(["internal", "contractor", "client"]).optional(),
       status: z.enum(["active", "inactive"]).optional(),
       includeChildren: z.boolean().optional().default(false),
       includeInactive: z.boolean().optional().default(false),
@@ -97,7 +97,8 @@ export const groupsRouter = router({
   create: protectedProcedure
     .input(z.object({
       name: z.string().min(1).max(100),
-      groupType: z.enum(["internal", "external"]),
+      groupType: z.enum(["internal", "contractor", "client"]),
+      companyId: z.number().nullable().optional(), // Links to cardCompanies for contractor/client groups
       parentGroupId: z.number().nullable().optional(),
       description: z.string().optional(),
       metadata: z.object({
@@ -116,6 +117,7 @@ export const groupsRouter = router({
       const result = await db.insert(groups).values({
         name: input.name,
         groupType: input.groupType,
+        companyId: input.companyId || null,
         parentGroupId: input.parentGroupId || null,
         description: input.description || null,
         metadata: input.metadata || null,
@@ -518,7 +520,8 @@ export const groupsRouter = router({
     return {
       totalGroups: allGroups.length,
       internalGroups: allGroups.filter(g => g.groupType === "internal").length,
-      externalGroups: allGroups.filter(g => g.groupType === "external").length,
+      contractorGroups: allGroups.filter(g => g.groupType === "contractor").length,
+      clientGroups: allGroups.filter(g => g.groupType === "client").length,
       totalMembers: allMemberships.length,
     };
   }),

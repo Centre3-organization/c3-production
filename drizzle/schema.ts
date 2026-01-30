@@ -477,7 +477,8 @@ export type InsertSystemSetting = typeof systemSettings.$inferInsert;
 export const groups = mysqlTable("groups", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
-  groupType: mysqlEnum("groupType", ["internal", "external"]).notNull(),
+  groupType: mysqlEnum("groupType", ["internal", "contractor", "client"]).notNull(),
+  companyId: int("companyId"), // Links to cardCompanies for contractor/client groups
   parentGroupId: int("parentGroupId"),
   description: text("description"),
   status: mysqlEnum("status", ["active", "inactive"]).default("active").notNull(),
