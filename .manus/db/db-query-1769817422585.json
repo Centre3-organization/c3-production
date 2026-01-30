@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE `groups` \n  MODIFY COLUMN `groupCategory` VARCHAR(50) DEFAULT NULL,\n  MODIFY COLUMN `requiresApprovalChain` TINYINT(1) DEFAULT 0,\n  MODIFY COLUMN `defaultWorkflowId` INT DEFAULT NULL,\n  MODIFY COLUMN `approvalConfig` JSON DEFAULT NULL,\n  MODIFY COLUMN `internalLiaisonUserId` INT DEFAULT NULL,\n  MODIFY COLUMN `internalLiaisonGroupId` INT DEFAULT NULL,\n  MODIFY COLUMN `slaOverrideHours` INT DEFAULT NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE `groups` \n  MODIFY COLUMN `groupCategory` VARCHAR(50) DEFAULT NULL,\n  MODIFY COLUMN `requiresApprovalChain` TINYINT(1) DEFAULT 0,\n  MODIFY COLUMN `defaultWorkflowId` INT DEFAULT NULL,\n  MODIFY COLUMN `approvalConfig` JSON DEFAULT NULL,\n  MODIFY COLUMN `internalLiaisonUserId` INT DEFAULT NULL,\n  MODIFY COLUMN `internalLiaisonGroupId` INT DEFAULT NULL,\n  MODIFY COLUMN `slaOverrideHours` INT DEFAULT NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1813
+}

@@ -985,3 +985,6 @@ Time conditions:
 
 ## Groups Creation Bug Fix 2 (Jan 31, 2026)
 - [x] Fix database column mismatch in groups table insert query (added default values for timezone, createdAt, updatedAt, workingHours)
+
+## Groups Creation Bug Fix 3 (Jan 31, 2026)
+- [x] Set default values for all remaining columns in groups table (groupCategory, requiresApprovalChain, defaultWorkflowId, approvalConfig, internalLiaisonUserId, internalLiaisonGroupId, slaOverrideHours)
