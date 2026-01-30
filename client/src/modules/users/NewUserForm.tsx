@@ -54,8 +54,8 @@ function FormField({
 // SAP Fiori-style Section Header
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="pb-2 mb-4 border-b">
-      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+    <div className="pb-2 mb-4 border-b border-[#4f008c]/20">
+      <h3 className="text-sm font-semibold text-[#4f008c]">{title}</h3>
     </div>
   );
 }
@@ -103,6 +103,9 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     
     // System Access
     roleId: null as number | null,
+    selectedSiteId: null as number | null,
+    selectedZoneId: null as number | null,
+    selectedAreaId: null as number | null,
     allSitesAccess: true,
     selectedSiteIds: [] as number[],
     
@@ -118,13 +121,17 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   const { data: usersData } = trpc.users.list.useQuery({});
   const { data: sitesData } = trpc.sites.getAll.useQuery();
   const { data: companiesData } = trpc.masterData.getAllCompanies.useQuery({});
-  const { data: rolesData } = trpc.roles.list.useQuery({ isActive: true });
+  const { data: rolesData } = trpc.roles.list.useQuery();
+  const { data: zonesData } = trpc.zones.getAll.useQuery({ siteId: formData.selectedSiteId || undefined });
+  const { data: areasData } = trpc.masterData.getAreaTypes.useQuery();
 
   const departments = departmentsData || [];
   const users = usersData?.users || [];
   const sites = sitesData || [];
   const companies = companiesData || [];
   const roles = rolesData || [];
+  const zones = zonesData || [];
+  const areas = areasData || [];
 
   // Filter companies by type
   const contractorCompanies = useMemo(() => 
@@ -163,6 +170,16 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
       }
     }
   }, [formData.clientCompanyId, formData.userType, companies]);
+
+  // Reset zone and area when site changes
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, selectedZoneId: null, selectedAreaId: null }));
+  }, [formData.selectedSiteId]);
+
+  // Reset area when zone changes
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, selectedAreaId: null }));
+  }, [formData.selectedZoneId]);
 
   // ID Number validation
   const handleIdNumberChange = (value: string) => {
@@ -294,15 +311,6 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     });
   };
 
-  const toggleSite = (siteId: number) => {
-    setFormData(prev => ({
-      ...prev,
-      selectedSiteIds: prev.selectedSiteIds.includes(siteId)
-        ? prev.selectedSiteIds.filter(id => id !== siteId)
-        : [...prev.selectedSiteIds, siteId],
-    }));
-  };
-
   // Navigation helpers
   const currentTabIndex = tabs.findIndex(t => t.id === activeTab);
   const isFirstTab = currentTabIndex === 0;
@@ -322,32 +330,33 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
 
   // Check if can proceed to next tab
   const canProceedFromGeneral = formData.userType && formData.firstName && formData.lastName && formData.email && formData.phone;
-  const canProceedFromOrganization = true; // Organization fields are optional
+
+  // Get user type display text
+  const getUserTypeDisplay = () => {
+    if (!formData.userType) return "Select user type to continue";
+    if (formData.userType === "centre3_employee") return "Centre3 Employee";
+    if (formData.userType === "contractor") {
+      return formData.isSubContractor ? "Sub-Contractor" : "Contractor";
+    }
+    return "Client";
+  };
 
   return (
     <div className="flex flex-col h-full bg-background">
-      {/* SAP Fiori-style Object Page Header */}
+      {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b bg-card">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B9D] to-[#C44569] flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#ff375e] to-[#4f008c] flex items-center justify-center">
             <UserPlus className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold">Create New User</h1>
-            <p className="text-sm text-muted-foreground">
-              {formData.userType ? 
-                formData.userType === "centre3_employee" ? "Centre3 Employee" :
-                formData.userType === "contractor" ? (formData.isSubContractor ? "Sub-Contractor" : "Contractor") :
-                "Client"
-              : "Select user type to continue"}
-            </p>
+            <h1 className="text-xl font-semibold text-[#4f008c]">Create New User</h1>
+            <p className="text-sm text-muted-foreground">{getUserTypeDisplay()}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={onCancel}>
-            Cancel
-          </Button>
-        </div>
+        <Button variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
       </div>
 
       {/* Main Content with Left Sidebar Tabs */}
@@ -359,7 +368,6 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
           </div>
           <nav className="flex-1 p-2">
             {tabs.map((tab, index) => {
-              const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               const isCompleted = index < currentTabIndex;
               const isDisabled = !formData.userType && index > 0;
@@ -371,7 +379,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   disabled={isDisabled}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
                     isActive 
-                      ? "bg-gradient-to-r from-[#FF6B9D]/10 to-[#C44569]/10 text-[#C44569] border-l-4 border-[#C44569]" 
+                      ? "bg-gradient-to-r from-[#ff375e]/10 to-[#4f008c]/10 text-[#4f008c] border-l-4 border-[#4f008c]" 
                       : isCompleted
                         ? "text-foreground hover:bg-muted"
                         : isDisabled
@@ -381,7 +389,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     isActive 
-                      ? "bg-gradient-to-br from-[#FF6B9D] to-[#C44569] text-white"
+                      ? "bg-gradient-to-br from-[#ff375e] to-[#4f008c] text-white"
                       : isCompleted
                         ? "bg-green-500 text-white"
                         : "bg-muted text-muted-foreground"
@@ -391,7 +399,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   <div className="flex-1">
                     <p className="text-sm font-medium">{tab.label}</p>
                   </div>
-                  {isActive && <ChevronRight className="h-4 w-4 text-[#C44569]" />}
+                  {isActive && <ChevronRight className="h-4 w-4 text-[#4f008c]" />}
                 </button>
               );
             })}
@@ -408,7 +416,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   {/* User Type Section */}
                   <div className="bg-card rounded-lg border p-6">
                     <SectionHeader title="User Classification" />
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid grid-cols-2 gap-6">
                       <FormField label="User Type" required>
                         <Select
                           value={formData.userType}
@@ -424,25 +432,6 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           </SelectContent>
                         </Select>
                       </FormField>
-
-                      {formData.userType === "contractor" && (
-                        <div className="flex items-end pb-2">
-                          <div className="flex items-center gap-2">
-                            <Checkbox
-                              id="isSubContractor"
-                              checked={formData.isSubContractor}
-                              onCheckedChange={(checked) => setFormData({ 
-                                ...formData, 
-                                isSubContractor: !!checked,
-                                subContractorCompanyId: null,
-                              })}
-                            />
-                            <Label htmlFor="isSubContractor" className="text-sm cursor-pointer">
-                              This is a Sub-Contractor
-                            </Label>
-                          </div>
-                        </div>
-                      )}
                     </div>
                   </div>
 
@@ -451,7 +440,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                       {/* Identity Verification Section */}
                       <div className="bg-card rounded-lg border p-6">
                         <SectionHeader title="Identity Verification" />
-                        <div className="grid grid-cols-4 gap-6">
+                        <div className="grid grid-cols-3 gap-6">
                           <FormField label="ID Type">
                             <Select value={idType} onValueChange={(value: "national_id" | "iqama") => setIdType(value)}>
                               <SelectTrigger className="bg-background">
@@ -465,35 +454,34 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           </FormField>
                           
                           <FormField label="ID Number" hint={`${idNumber.length}/10 digits`}>
-                            <Input
-                              value={idNumber}
-                              onChange={(e) => handleIdNumberChange(e.target.value)}
-                              placeholder={idType === "national_id" ? "1XXXXXXXXX" : "2XXXXXXXXX"}
-                              maxLength={10}
-                              className="bg-background"
-                            />
+                            <div className="flex gap-2">
+                              <Input
+                                value={idNumber}
+                                onChange={(e) => handleIdNumberChange(e.target.value)}
+                                placeholder={idType === "national_id" ? "1XXXXXXXXX" : "2XXXXXXXXX"}
+                                maxLength={10}
+                                className="bg-background flex-1"
+                              />
+                              <Button 
+                                type="button"
+                                onClick={handleVerifyYakeen}
+                                disabled={verifyYakeenMutation.isPending || idNumber.length !== 10}
+                                variant="outline"
+                                className="shrink-0"
+                              >
+                                {verifyYakeenMutation.isPending ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <>
+                                    <Search className="h-4 w-4 mr-2" />
+                                    Verify with Yakeen
+                                  </>
+                                )}
+                              </Button>
+                            </div>
                           </FormField>
                           
-                          <div className="flex items-end">
-                            <Button 
-                              type="button"
-                              onClick={handleVerifyYakeen}
-                              disabled={verifyYakeenMutation.isPending || idNumber.length !== 10}
-                              variant="outline"
-                              className="w-full"
-                            >
-                              {verifyYakeenMutation.isPending ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <>
-                                  <Search className="h-4 w-4 mr-2" />
-                                  Verify with Yakeen
-                                </>
-                              )}
-                            </Button>
-                          </div>
-                          
-                          <div className="flex items-end">
+                          <div className="flex items-end pb-2">
                             {isVerified && (
                               <Badge className="bg-green-500 h-9 px-4">
                                 <CheckCircle className="h-4 w-4 mr-2" /> Verified
@@ -501,7 +489,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                             )}
                             {verificationError && (
                               <div className="flex items-center gap-2 text-amber-600 text-sm">
-                                <AlertCircle className="h-4 w-4" />
+                                <AlertCircle className="h-4 w-4 shrink-0" />
                                 <span className="truncate">{verificationError}</span>
                               </div>
                             )}
@@ -589,6 +577,27 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
               {/* Organization Tab */}
               {activeTab === "organization" && (
                 <div className="space-y-6">
+                  {/* Sub-Contractor Toggle (for Contractor type) */}
+                  {formData.userType === "contractor" && (
+                    <div className="bg-card rounded-lg border p-6">
+                      <SectionHeader title="Contractor Type" />
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          id="isSubContractor"
+                          checked={formData.isSubContractor}
+                          onCheckedChange={(checked) => setFormData({ 
+                            ...formData, 
+                            isSubContractor: !!checked,
+                            subContractorCompanyId: null,
+                          })}
+                        />
+                        <Label htmlFor="isSubContractor" className="cursor-pointer">
+                          This user belongs to a Sub-Contractor company
+                        </Label>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Employment Data Section */}
                   <div className="bg-card rounded-lg border p-6">
                     <SectionHeader title="Employment Data" />
@@ -787,6 +796,30 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
               {/* Access & Security Tab */}
               {activeTab === "access" && (
                 <div className="space-y-6">
+                  {/* User Role Section */}
+                  <div className="bg-card rounded-lg border p-6">
+                    <SectionHeader title="User Role" />
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                      <FormField label="System Role" required>
+                        <Select
+                          value={formData.roleId?.toString() || ""}
+                          onValueChange={(value) => setFormData({ ...formData, roleId: value ? parseInt(value) : null })}
+                        >
+                          <SelectTrigger className="bg-background">
+                            <SelectValue placeholder="Select role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {roles.map((role: any) => (
+                              <SelectItem key={role.id} value={role.id.toString()}>
+                                {role.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+                    </div>
+                  </div>
+
                   {/* Site Access Section */}
                   <div className="bg-card rounded-lg border p-6">
                     <SectionHeader title="Site Access" />
@@ -798,7 +831,9 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           onCheckedChange={(checked) => setFormData({ 
                             ...formData, 
                             allSitesAccess: !!checked,
-                            selectedSiteIds: [],
+                            selectedSiteId: null,
+                            selectedZoneId: null,
+                            selectedAreaId: null,
                           })}
                         />
                         <Label htmlFor="allSites" className="cursor-pointer">
@@ -807,22 +842,62 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                       </div>
 
                       {!formData.allSitesAccess && (
-                        <div className="border rounded-lg p-4 bg-background">
-                          <p className="text-sm text-muted-foreground mb-3">Select specific sites:</p>
-                          <div className="grid grid-cols-3 gap-3">
-                            {sites.map((site: any) => (
-                              <div key={site.id} className="flex items-center gap-2">
-                                <Checkbox
-                                  id={`site-${site.id}`}
-                                  checked={formData.selectedSiteIds.includes(site.id)}
-                                  onCheckedChange={() => toggleSite(site.id)}
-                                />
-                                <Label htmlFor={`site-${site.id}`} className="text-sm cursor-pointer">
-                                  {site.name}
-                                </Label>
-                              </div>
-                            ))}
-                          </div>
+                        <div className="grid grid-cols-3 gap-6 pt-4">
+                          <FormField label="Site">
+                            <Select
+                              value={formData.selectedSiteId?.toString() || ""}
+                              onValueChange={(value) => setFormData({ ...formData, selectedSiteId: value ? parseInt(value) : null })}
+                            >
+                              <SelectTrigger className="bg-background">
+                                <SelectValue placeholder="Select site" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {sites.map((site: any) => (
+                                  <SelectItem key={site.id} value={site.id.toString()}>
+                                    {site.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormField>
+
+                          <FormField label="Zone">
+                            <Select
+                              value={formData.selectedZoneId?.toString() || ""}
+                              onValueChange={(value) => setFormData({ ...formData, selectedZoneId: value ? parseInt(value) : null })}
+                              disabled={!formData.selectedSiteId}
+                            >
+                              <SelectTrigger className="bg-background">
+                                <SelectValue placeholder={formData.selectedSiteId ? "Select zone" : "Select site first"} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {zones.map((zone: any) => (
+                                  <SelectItem key={zone.id} value={zone.id.toString()}>
+                                    {zone.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormField>
+
+                          <FormField label="Area">
+                            <Select
+                              value={formData.selectedAreaId?.toString() || ""}
+                              onValueChange={(value) => setFormData({ ...formData, selectedAreaId: value ? parseInt(value) : null })}
+                              disabled={!formData.selectedZoneId}
+                            >
+                              <SelectTrigger className="bg-background">
+                                <SelectValue placeholder={formData.selectedZoneId ? "Select area" : "Select zone first"} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {areas.map((area: any) => (
+                                  <SelectItem key={area.id} value={area.id.toString()}>
+                                    {area.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormField>
                         </div>
                       )}
                     </div>
@@ -905,7 +980,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                 <Button
                   onClick={goToNextTab}
                   disabled={activeTab === "general" && !canProceedFromGeneral}
-                  className="gap-2 bg-gradient-to-r from-[#FF6B9D] to-[#C44569] hover:from-[#FF5A8A] hover:to-[#B33D5C]"
+                  className="gap-2 bg-gradient-to-r from-[#ff375e] to-[#4f008c] hover:from-[#ff4a6e] hover:to-[#5f00a6] text-white"
                 >
                   Next
                   <ChevronRight className="h-4 w-4" />
@@ -914,7 +989,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                 <Button
                   onClick={handleSubmit}
                   disabled={createUserMutation.isPending}
-                  className="gap-2 bg-gradient-to-r from-[#FF6B9D] to-[#C44569] hover:from-[#FF5A8A] hover:to-[#B33D5C]"
+                  className="gap-2 bg-gradient-to-r from-[#ff375e] to-[#4f008c] hover:from-[#ff4a6e] hover:to-[#5f00a6] text-white"
                 >
                   {createUserMutation.isPending ? (
                     <>

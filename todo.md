@@ -931,3 +931,14 @@ Time conditions:
 - [x] Add Next/Previous buttons for section navigation
 - [x] Ensure buttons use Centre3 branding colors (pink gradient)
 - [x] Test form navigation flow
+
+## User Form Fixes (Jan 31, 2026)
+- [x] Fix Verify with Yakeen button position alignment
+- [x] Remove duplicate Cancel (X and Cancel button)
+- [x] Update colors to match Centre3 brand guidelines
+- [x] Move sub-contractor checkbox from General to Organization tab
+- [x] Add user role selection field
+- [x] Change site access to dropdown with cascading Zone/Area selection
+- [x] Create View User dialog with tabbed format showing all information
+- [x] Create Edit User popup with same form structure
+- [x] Test all form functionality

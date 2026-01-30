@@ -228,11 +228,22 @@ export const usersRouter = router({
         email: z.string().email().optional(),
         phone: z.string().optional(),
         role: z.enum(["user", "admin"]).optional(),
+        status: z.enum(["active", "inactive", "suspended"]).optional(),
         departmentId: z.number().nullable().optional(),
+        jobTitle: z.string().optional(),
+        employeeId: z.string().optional(),
+        managerId: z.number().nullable().optional(),
+        contractorCompanyId: z.number().nullable().optional(),
+        contractReference: z.string().optional(),
+        contractExpiry: z.string().optional(),
+        reportingToId: z.number().nullable().optional(),
+        clientCompanyId: z.number().nullable().optional(),
+        accountManagerId: z.number().nullable().optional(),
+        accountExpiresWithContract: z.boolean().optional(),
       })
     )
     .mutation(async ({ input }) => {
-      const { id, firstName, lastName, ...data } = input;
+      const { id, firstName, lastName, contractExpiry, ...data } = input;
       
       // Update full name if first or last name changed
       const updateData: any = { ...data };
@@ -245,6 +256,11 @@ export const usersRouter = router({
           updateData.lastName = newLastName;
           updateData.name = `${newFirstName} ${newLastName}`.trim();
         }
+      }
+      
+      // Convert contract expiry string to Date if provided
+      if (contractExpiry) {
+        updateData.contractExpiry = new Date(contractExpiry);
       }
       
       await updateUser(id, updateData);

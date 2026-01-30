@@ -65,6 +65,8 @@ import {
 } from "@/components/ui/popover";
 import { trpc } from "@/utils/trpc";
 import NewUserForm from "./NewUserForm";
+import ViewUserDialog from "./ViewUserDialog";
+import EditUserDialog from "./EditUserDialog";
 
 // Permission definitions for the UI
 const permissionModules = [
@@ -156,6 +158,7 @@ export default function Users() {
   const [newUserOpen, setNewUserOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [viewUserOpen, setViewUserOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<any>(null);
   const [editRoleOpen, setEditRoleOpen] = useState(false);
   const [editUserRoleOpen, setEditUserRoleOpen] = useState(false);
@@ -888,73 +891,25 @@ export default function Users() {
       </Tabs>
 
       {/* View User Dialog */}
-      <Dialog open={viewUserOpen} onOpenChange={setViewUserOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>User Details</DialogTitle>
-          </DialogHeader>
-          {selectedUser && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16">
-                  <AvatarFallback className="bg-purple-100 text-purple-700 text-xl">
-                    {getUserInitials(selectedUser)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="text-xl font-semibold">{getUserDisplayName(selectedUser)}</h3>
-                  <p className="text-muted-foreground">{selectedUser.email || "No email"}</p>
-                  {selectedUser.phone && (
-                    <p className="text-sm text-muted-foreground flex items-center gap-1">
-                      <Phone className="h-3 w-3" /> {selectedUser.phone}
-                    </p>
-                  )}
-                </div>
-              </div>
-              
-              <Separator />
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-muted-foreground">System Role</Label>
-                  <p className="font-medium">
-                    <Badge variant="outline" className={getRoleColor(selectedUser.role)}>
-                      {selectedUser.role}
-                    </Badge>
-                  </p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Status</Label>
-                  <p className="font-medium">
-                    <Badge variant="outline" className={getStatusColor((selectedUser as any).status || "active")}>
-                      {(selectedUser as any).status || "active"}
-                    </Badge>
-                  </p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Department</Label>
-                  <p className="font-medium">{getDepartmentName(selectedUser.departmentId)}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Last Active</Label>
-                  <p className="font-medium">{formatDate(selectedUser.lastSignedIn)}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Created</Label>
-                  <p className="font-medium">{formatDate(selectedUser.createdAt)}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Login Method</Label>
-                  <p className="font-medium">{selectedUser.loginMethod || "Password"}</p>
-                </div>
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setViewUserOpen(false)}>Close</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ViewUserDialog
+        user={selectedUser}
+        open={viewUserOpen}
+        onOpenChange={setViewUserOpen}
+        onEdit={() => {
+          setViewUserOpen(false);
+          setEditUserOpen(true);
+        }}
+      />
+
+      {/* Edit User Dialog */}
+      <EditUserDialog
+        user={selectedUser}
+        open={editUserOpen}
+        onOpenChange={setEditUserOpen}
+        onSuccess={() => {
+          refetchUsers();
+        }}
+      />
 
       {/* Edit User Role Dialog */}
       <Dialog open={editUserRoleOpen} onOpenChange={setEditUserRoleOpen}>
