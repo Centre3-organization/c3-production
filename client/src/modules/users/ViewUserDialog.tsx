@@ -136,7 +136,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden flex flex-col" showCloseButton={false}>
         {/* Header */}
         <DialogHeader className="pb-4">
           <div className="flex items-center justify-between">
@@ -171,7 +171,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
         <Separator />
 
         {/* Tabbed Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 overflow-hidden flex flex-col">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 min-h-0 flex flex-col">
           <TabsList className="grid grid-cols-3 w-full">
             <TabsTrigger value="general" className="gap-2">
               <User className="h-4 w-4" />
@@ -187,7 +187,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex-1 overflow-auto mt-4">
+          <div className="flex-1 min-h-0 overflow-auto mt-4">
             {/* General Tab */}
             <TabsContent value="general" className="m-0 space-y-6">
               {/* Personal Information */}

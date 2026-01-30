@@ -224,7 +224,7 @@ describe("users router", () => {
       if (users.users.length > 0) {
         const result = await caller.users.update({
           id: users.users[0].id,
-          role: "user",
+          roleId: 2, // Update to a different role ID
         });
         expect(result).toHaveProperty("success", true);
       }

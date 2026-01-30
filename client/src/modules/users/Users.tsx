@@ -927,8 +927,11 @@ export default function Users() {
                 <SelectValue placeholder="Select role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="user">User</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
+                {roles.map((role: any) => (
+                  <SelectItem key={role.id} value={role.id.toString()}>
+                    {role.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -941,7 +944,7 @@ export default function Users() {
                 if (editUserRoleUser) {
                   updateUserMutation.mutate({
                     id: editUserRoleUser.id,
-                    role: selectedRoleValue as "user" | "admin",
+                    roleId: selectedRoleValue ? parseInt(selectedRoleValue) : undefined,
                   });
                   setEditUserRoleOpen(false);
                 }

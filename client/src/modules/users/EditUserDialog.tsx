@@ -93,7 +93,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
     accountManagerId: null as number | null,
     
     // System Access
-    role: "user" as "user" | "admin",
+    roleId: null as number | null,
     status: "active" as "active" | "inactive" | "suspended",
     selectedSiteId: null as number | null,
     selectedZoneId: null as number | null,
@@ -126,7 +126,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
         reportingToId: user.reportingToId || null,
         clientCompanyId: user.clientCompanyId || null,
         accountManagerId: user.accountManagerId || null,
-        role: user.role || "user",
+        roleId: user.roleId || null,
         status: user.status || "active",
         selectedSiteId: null,
         selectedZoneId: null,
@@ -144,6 +144,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
   const { data: usersData } = trpc.users.list.useQuery({});
   const { data: sitesData } = trpc.sites.getAll.useQuery();
   const { data: companiesData } = trpc.masterData.getAllCompanies.useQuery({});
+  const { data: rolesData } = trpc.roles.list.useQuery();
   const { data: zonesData } = trpc.zones.getAll.useQuery({ siteId: formData.selectedSiteId || undefined });
   const { data: areasData } = trpc.masterData.getAreaTypes.useQuery();
 
@@ -151,6 +152,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
   const users = usersData?.users || [];
   const sites = sitesData || [];
   const companies = companiesData || [];
+  const roles = rolesData || [];
   const zones = zonesData || [];
   const areas = areasData || [];
 
@@ -205,7 +207,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
       email: formData.email,
       phone: formData.phone || undefined,
       jobTitle: formData.jobTitle || undefined,
-      role: formData.role,
+      roleId: formData.roleId || undefined,
       status: formData.status,
       employeeId: formData.employeeId || undefined,
       departmentId: formData.departmentId || undefined,
@@ -254,7 +256,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[900px] max-h-[90vh] p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-[900px] max-h-[90vh] p-0 overflow-hidden" showCloseButton={false}>
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b bg-card">
@@ -316,8 +318,8 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
             </div>
 
             {/* Right Content Area */}
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <ScrollArea className="flex-1">
+            <div className="flex-1 flex flex-col min-h-0">
+              <ScrollArea className="flex-1 min-h-0">
                 <div className="p-6">
                   {/* General Information Tab */}
                   {activeTab === "general" && (
@@ -599,15 +601,18 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                           <FormField label="System Role" required>
                             <Select
-                              value={formData.role}
-                              onValueChange={(value: "user" | "admin") => setFormData({ ...formData, role: value })}
+                              value={formData.roleId?.toString() || ""}
+                              onValueChange={(value) => setFormData({ ...formData, roleId: value ? parseInt(value) : null })}
                             >
                               <SelectTrigger className="bg-background">
                                 <SelectValue placeholder="Select role" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
+                                {roles.map((role: any) => (
+                                  <SelectItem key={role.id} value={role.id.toString()}>
+                                    {role.name}
+                                  </SelectItem>
+                                ))}
                               </SelectContent>
                             </Select>
                           </FormField>

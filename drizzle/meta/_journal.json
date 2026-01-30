@@ -148,6 +148,13 @@
       "when": 1769807737791,
       "tag": "0020_oval_freak",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1769814064419,
+      "tag": "0021_special_the_captain",
+      "breakpoints": true
     }
   ]
 }

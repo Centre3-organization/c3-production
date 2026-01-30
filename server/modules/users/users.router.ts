@@ -227,7 +227,7 @@ export const usersRouter = router({
         lastName: z.string().min(1).optional(),
         email: z.string().email().optional(),
         phone: z.string().optional(),
-        role: z.enum(["user", "admin"]).optional(),
+        roleId: z.number().nullable().optional(),
         status: z.enum(["active", "inactive", "suspended"]).optional(),
         departmentId: z.number().nullable().optional(),
         jobTitle: z.string().optional(),
@@ -263,7 +263,10 @@ export const usersRouter = router({
         updateData.contractExpiry = new Date(contractExpiry);
       }
       
-      await updateUser(id, updateData);
+      // Only update if there's data to update
+      if (Object.keys(updateData).length > 0) {
+        await updateUser(id, updateData);
+      }
       return { success: true };
     }),
 

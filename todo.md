@@ -958,3 +958,10 @@ Time conditions:
 
 ## Next Button Fix (Jan 31, 2026)
 - [x] Fix bottom navigation bar to stay fixed at bottom when form content overflows
+
+## View/Edit Dialog Fixes and Roles Integration (Jan 31, 2026)
+- [x] Apply layout fix (min-h-0) to ViewUserDialog
+- [x] Apply layout fix (min-h-0) to EditUserDialog
+- [x] Integrate proper roles from Roles & Permissions system in NewUserForm
+- [x] Integrate proper roles from Roles & Permissions system in EditUserDialog
+- [x] Remove hardcoded user/admin role options
