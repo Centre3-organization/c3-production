@@ -910,3 +910,10 @@ Time conditions:
 - [x] Create Edit Company dialog with same sections
 - [x] Support parent company selection for sub-contractors
 - [x] Add unit tests for companies CRUD operations
+
+## User Creation Form Improvements (Jan 30, 2026)
+- [x] Verify company integration with user creation form
+- [x] Auto-populate contract details when company is selected
+- [x] Redesign user creation form to be simpler and match previous form style
+- [x] Remove complex wizard steps, use single-page form layout
+- [x] Test form functionality
