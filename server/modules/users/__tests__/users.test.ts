@@ -137,9 +137,12 @@ describe("users router", () => {
       const caller = appRouter.createCaller(ctx);
 
       const result = await caller.users.create({
+        userType: "centre3_employee",
         firstName: "Ali",
         lastName: "Test",
         email: `ali-test-${Date.now()}@centre3.com`,
+        phone: "+966 50 123 4567",
+        jobTitle: "Staff",
         temporaryPassword: "TempPass123!",
         role: "user",
       });
@@ -153,11 +156,13 @@ describe("users router", () => {
       const caller = appRouter.createCaller(ctx);
 
       const result = await caller.users.create({
+        userType: "centre3_employee",
         firstName: "Full",
         lastName: "User",
         email: `full-user-${Date.now()}@centre3.com`,
-        temporaryPassword: "TempPass123!",
         phone: "+966 50 123 4567",
+        jobTitle: "Manager",
+        temporaryPassword: "TempPass123!",
         role: "user",
         departmentId: 1,
       });
