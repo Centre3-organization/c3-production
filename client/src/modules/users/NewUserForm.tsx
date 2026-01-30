@@ -5,8 +5,6 @@ import {
   Shield,
   Camera,
   Settings,
-  ChevronRight,
-  ChevronLeft,
   Check,
   Loader2,
   Upload,
@@ -17,6 +15,7 @@ import {
   Search,
   CheckCircle,
   AlertCircle,
+  IdCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/utils/trpc";
 import { toast } from "sonner";
 
-type UserType = "centre3_employee" | "contractor" | "sub_contractor" | "client";
+type UserType = "centre3_employee" | "contractor" | "client";
 
 interface NewUserFormProps {
   onSuccess: () => void;
@@ -38,11 +37,11 @@ interface NewUserFormProps {
 const userTypeLabels: Record<UserType, string> = {
   centre3_employee: "Centre3 Employee",
   contractor: "Contractor",
-  sub_contractor: "Sub-Contractor",
   client: "Client",
 };
 
-const steps = [
+// Left-side section navigation
+const sections = [
   { id: 1, title: "Personal Information", icon: User },
   { id: 2, title: "System Access", icon: Shield },
   { id: 3, title: "Photo", icon: Camera },
@@ -50,7 +49,7 @@ const steps = [
 ];
 
 export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentSection, setCurrentSection] = useState(1);
   
   // Yakeen verification state
   const [idType, setIdType] = useState<"national_id" | "iqama">("national_id");
@@ -59,38 +58,38 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   const [verificationError, setVerificationError] = useState("");
 
   const [formData, setFormData] = useState({
-    // Step 1: User Type + Personal Details (merged)
+    // Section 1: User Type + Personal Details
     userType: "" as UserType | "",
+    isSubContractor: false, // For contractors only
     firstName: "",
     lastName: "",
     firstNameAr: "",
     lastNameAr: "",
     email: "",
     phone: "",
-    jobTitle: "", // Now optional
+    jobTitle: "", // Optional
     employeeId: "",
     departmentId: null as number | null,
     managerId: null as number | null,
     contractorCompanyId: null as number | null,
+    subContractorCompanyId: null as number | null, // Sub-contractor dropdown
     contractReference: "",
     contractExpiry: "",
     reportingToId: null as number | null,
-    parentContractorId: null as number | null,
-    subContractorCompany: "",
     clientCompanyId: null as number | null,
     accountManagerId: null as number | null,
     
-    // Step 2: System Access - with multi-site selection
+    // Section 2: System Access
     roleId: null as number | null,
     allSitesAccess: false,
     selectedSiteIds: [] as number[],
     selectedZoneIds: [] as number[],
     selectedAreaIds: [] as number[],
     
-    // Step 3: Photo
+    // Section 3: Photo
     profilePhotoUrl: "",
     
-    // Step 4: Options
+    // Section 4: Options
     temporaryPassword: "",
     sendWelcomeEmail: true,
     mustChangePassword: true,
@@ -122,7 +121,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   const clientCompanies = useMemo(() => 
     companies.filter((c: any) => c.type === "client"), [companies]);
 
-  // Cascading: Filter zones by selected sites (multiple)
+  // Cascading: Filter zones by selected sites
   const filteredZones = useMemo(() => {
     if (formData.allSitesAccess) return zones;
     if (formData.selectedSiteIds.length === 0) return [];
@@ -137,30 +136,20 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
 
   // Auto-populate contract info when company is selected
   useEffect(() => {
-    if (formData.userType === "contractor" && formData.contractorCompanyId) {
-      const company = companies.find((c: any) => c.id === formData.contractorCompanyId);
-      if (company) {
-        setFormData(prev => ({
-          ...prev,
-          contractReference: company.contractReference || "",
-          contractExpiry: company.contractEndDate ? new Date(company.contractEndDate).toISOString().split('T')[0] : "",
-        }));
+    if (formData.userType === "contractor") {
+      const companyId = formData.isSubContractor ? formData.subContractorCompanyId : formData.contractorCompanyId;
+      if (companyId) {
+        const company = companies.find((c: any) => c.id === companyId);
+        if (company) {
+          setFormData(prev => ({
+            ...prev,
+            contractReference: company.contractReference || "",
+            contractExpiry: company.contractEndDate ? new Date(company.contractEndDate).toISOString().split('T')[0] : "",
+          }));
+        }
       }
     }
-  }, [formData.contractorCompanyId, formData.userType, companies]);
-
-  useEffect(() => {
-    if (formData.userType === "sub_contractor" && formData.parentContractorId) {
-      const company = companies.find((c: any) => c.id === formData.parentContractorId);
-      if (company) {
-        setFormData(prev => ({
-          ...prev,
-          contractReference: company.contractReference || "",
-          contractExpiry: company.contractEndDate ? new Date(company.contractEndDate).toISOString().split('T')[0] : "",
-        }));
-      }
-    }
-  }, [formData.parentContractorId, formData.userType, companies]);
+  }, [formData.contractorCompanyId, formData.subContractorCompanyId, formData.isSubContractor, formData.userType, companies]);
 
   useEffect(() => {
     if (formData.userType === "client" && formData.clientCompanyId) {
@@ -194,6 +183,50 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     }));
   }, [formData.selectedZoneIds]);
 
+  // ID Number validation
+  const validateIdNumber = (value: string): boolean => {
+    // Only allow digits
+    if (!/^\d*$/.test(value)) return false;
+    // Max 10 digits
+    if (value.length > 10) return false;
+    // ID must start with 1, Iqama must start with 2
+    if (value.length > 0) {
+      if (idType === "national_id" && value[0] !== "1") return false;
+      if (idType === "iqama" && value[0] !== "2") return false;
+    }
+    return true;
+  };
+
+  const handleIdNumberChange = (value: string) => {
+    // Only allow digits and validate
+    const digitsOnly = value.replace(/\D/g, "");
+    if (digitsOnly.length <= 10) {
+      // Auto-correct first digit based on ID type
+      if (digitsOnly.length > 0) {
+        if (idType === "national_id" && digitsOnly[0] !== "1") {
+          setIdNumber("1" + digitsOnly.slice(1));
+          return;
+        }
+        if (idType === "iqama" && digitsOnly[0] !== "2") {
+          setIdNumber("2" + digitsOnly.slice(1));
+          return;
+        }
+      }
+      setIdNumber(digitsOnly);
+    }
+  };
+
+  // When ID type changes, reset or adjust the ID number
+  useEffect(() => {
+    if (idNumber.length > 0) {
+      if (idType === "national_id" && idNumber[0] !== "1") {
+        setIdNumber("1" + idNumber.slice(1));
+      } else if (idType === "iqama" && idNumber[0] !== "2") {
+        setIdNumber("2" + idNumber.slice(1));
+      }
+    }
+  }, [idType]);
+
   // Yakeen verification mutation
   const verifyYakeenMutation = trpc.users.verifyByYakeen.useMutation({
     onSuccess: (result) => {
@@ -226,7 +259,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   });
 
   const handleVerifyYakeen = () => {
-    if (!idNumber || idNumber.length < 10) {
+    if (!idNumber || idNumber.length !== 10) {
       toast.error("Invalid ID", { description: "Please enter a valid 10-digit ID number." });
       return;
     }
@@ -248,18 +281,8 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     },
   });
 
-  const handleNext = () => {
-    if (validateCurrentStep()) {
-      setCurrentStep((prev) => Math.min(prev + 1, 4));
-    }
-  };
-
-  const handlePrev = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
-  };
-
-  const validateCurrentStep = () => {
-    switch (currentStep) {
+  const validateCurrentSection = () => {
+    switch (currentSection) {
       case 1:
         if (!formData.userType) {
           toast.error("Please select a user type");
@@ -277,10 +300,8 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
           toast.error("Please enter mobile number");
           return false;
         }
-        // Job Title is now optional - no validation
         return true;
       case 2:
-        // System access validation - at least one site or all sites
         if (!formData.allSitesAccess && formData.selectedSiteIds.length === 0) {
           toast.error("Please select at least one site or enable All Sites access");
           return false;
@@ -300,10 +321,14 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   };
 
   const handleSubmit = () => {
-    if (!validateCurrentStep()) return;
+    // Validate all sections
+    for (let i = 1; i <= 4; i++) {
+      setCurrentSection(i);
+      if (!validateCurrentSection()) return;
+    }
 
     createUserMutation.mutate({
-      userType: formData.userType as UserType,
+      userType: formData.isSubContractor ? "sub_contractor" : formData.userType as UserType,
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
@@ -321,8 +346,8 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
       contractReference: formData.contractReference || undefined,
       contractExpiry: formData.contractExpiry || undefined,
       reportingToId: formData.reportingToId || undefined,
-      parentContractorId: formData.parentContractorId || undefined,
-      subContractorCompany: formData.subContractorCompany || undefined,
+      parentContractorId: formData.isSubContractor ? formData.contractorCompanyId : undefined,
+      subContractorCompany: undefined,
       clientCompanyId: formData.clientCompanyId || undefined,
       accountManagerId: formData.accountManagerId || undefined,
       profilePhotoUrl: formData.profilePhotoUrl || undefined,
@@ -357,45 +382,57 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     }));
   };
 
-  const renderStepContent = () => {
-    switch (currentStep) {
+  const isSectionComplete = (sectionId: number): boolean => {
+    switch (sectionId) {
       case 1:
-        return renderPersonalInfoStep();
+        return !!(formData.userType && formData.firstName && formData.lastName && formData.email && formData.phone);
       case 2:
-        return renderSystemAccessStep();
+        return formData.allSitesAccess || formData.selectedSiteIds.length > 0;
       case 3:
-        return renderPhotoStep();
+        return true; // Photo is optional
       case 4:
-        return renderOptionsStep();
+        return formData.temporaryPassword.length >= 6;
+      default:
+        return false;
+    }
+  };
+
+  const renderSectionContent = () => {
+    switch (currentSection) {
+      case 1:
+        return renderPersonalInfoSection();
+      case 2:
+        return renderSystemAccessSection();
+      case 3:
+        return renderPhotoSection();
+      case 4:
+        return renderOptionsSection();
       default:
         return null;
     }
   };
 
-  // Step 1: Personal Information (merged with User Type)
-  const renderPersonalInfoStep = () => (
+  // Section 1: Personal Information
+  const renderPersonalInfoSection = () => (
     <div className="space-y-6">
-      {/* User Type Dropdown with Yakeen Verification */}
-      <div className="flex gap-4 items-end">
-        <div className="flex-1 space-y-2">
-          <Label className="text-sm font-medium">
-            User Type <span className="text-red-500">*</span>
-          </Label>
-          <Select
-            value={formData.userType}
-            onValueChange={(value) => setFormData({ ...formData, userType: value as UserType })}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select user type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="centre3_employee">Centre3 Employee</SelectItem>
-              <SelectItem value="contractor">Contractor</SelectItem>
-              <SelectItem value="sub_contractor">Sub-Contractor</SelectItem>
-              <SelectItem value="client">Client</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      {/* User Type Dropdown */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">
+          User Type <span className="text-red-500">*</span>
+        </Label>
+        <Select
+          value={formData.userType}
+          onValueChange={(value) => setFormData({ ...formData, userType: value as UserType, isSubContractor: false })}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select user type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="centre3_employee">Centre3 Employee</SelectItem>
+            <SelectItem value="contractor">Contractor</SelectItem>
+            <SelectItem value="client">Client</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {formData.userType && (
@@ -405,8 +442,8 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
           {/* Yakeen Verification Section */}
           <div className="bg-muted/50 rounded-lg p-4 space-y-4">
             <div className="flex items-center gap-2">
-              <Search className="h-5 w-5 text-primary" />
-              <h4 className="font-medium">Verify by Yakeen</h4>
+              <IdCard className="h-5 w-5 text-primary" />
+              <h4 className="font-medium">Identity Verification</h4>
               {isVerified && (
                 <Badge variant="default" className="bg-green-500">
                   <CheckCircle className="h-3 w-3 mr-1" /> Verified
@@ -425,25 +462,29 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="national_id">National ID</SelectItem>
-                    <SelectItem value="iqama">Iqama</SelectItem>
+                    <SelectItem value="national_id">National ID (starts with 1)</SelectItem>
+                    <SelectItem value="iqama">Iqama (starts with 2)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>ID Number</Label>
+                <Label>ID Number (10 digits)</Label>
                 <Input
                   value={idNumber}
-                  onChange={(e) => setIdNumber(e.target.value)}
-                  placeholder="Enter 10-digit ID"
+                  onChange={(e) => handleIdNumberChange(e.target.value)}
+                  placeholder={idType === "national_id" ? "1XXXXXXXXX" : "2XXXXXXXXX"}
                   maxLength={10}
                 />
+                <p className="text-xs text-muted-foreground">
+                  {idNumber.length}/10 digits
+                </p>
               </div>
               <div className="flex items-end">
                 <Button 
                   onClick={handleVerifyYakeen}
-                  disabled={verifyYakeenMutation.isPending || idNumber.length < 10}
+                  disabled={verifyYakeenMutation.isPending || idNumber.length !== 10}
                   className="w-full"
+                  variant="secondary"
                 >
                   {verifyYakeenMutation.isPending ? (
                     <>
@@ -453,7 +494,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   ) : (
                     <>
                       <Search className="h-4 w-4 mr-2" />
-                      Verify by Yakeen
+                      Verify with Yakeen
                     </>
                   )}
                 </Button>
@@ -609,9 +650,30 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
             <>
               <Separator />
               <h4 className="font-medium text-sm text-muted-foreground">Contractor Details</h4>
+              
+              {/* Sub-Contractor Toggle */}
+              <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+                <Checkbox
+                  id="isSubContractor"
+                  checked={formData.isSubContractor}
+                  onCheckedChange={(checked) => setFormData({ 
+                    ...formData, 
+                    isSubContractor: !!checked,
+                    subContractorCompanyId: null,
+                  })}
+                />
+                <div>
+                  <Label htmlFor="isSubContractor" className="cursor-pointer font-medium">This is a Sub-Contractor</Label>
+                  <p className="text-sm text-muted-foreground">Select if this user works for a sub-contractor company</p>
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Contractor Company <span className="text-red-500">*</span></Label>
+                  <Label>
+                    {formData.isSubContractor ? "Parent Contractor" : "Contractor Company"} 
+                    <span className="text-red-500">*</span>
+                  </Label>
                   <Select
                     value={formData.contractorCompanyId?.toString() || ""}
                     onValueChange={(value) => setFormData({ ...formData, contractorCompanyId: value ? parseInt(value) : null })}
@@ -628,90 +690,56 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label>Reports To (Centre3 Contact)</Label>
-                  <Select
-                    value={formData.reportingToId?.toString() || ""}
-                    onValueChange={(value) => setFormData({ ...formData, reportingToId: value ? parseInt(value) : null })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select contact" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {users.map((user: any) => (
-                        <SelectItem key={user.id} value={user.id.toString()}>
-                          {user.name || `${user.firstName} ${user.lastName}`}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                
+                {formData.isSubContractor ? (
+                  <div className="space-y-2">
+                    <Label>Sub-Contractor Company <span className="text-red-500">*</span></Label>
+                    <Select
+                      value={formData.subContractorCompanyId?.toString() || ""}
+                      onValueChange={(value) => setFormData({ ...formData, subContractorCompanyId: value ? parseInt(value) : null })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select sub-contractor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {subContractorCompanies.map((company: any) => (
+                          <SelectItem key={company.id} value={company.id.toString()}>
+                            {company.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <Label>Reports To (Centre3 Contact)</Label>
+                    <Select
+                      value={formData.reportingToId?.toString() || ""}
+                      onValueChange={(value) => setFormData({ ...formData, reportingToId: value ? parseInt(value) : null })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select contact" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {users.map((user: any) => (
+                          <SelectItem key={user.id} value={user.id.toString()}>
+                            {user.name || `${user.firstName} ${user.lastName}`}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
+              
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Contract Reference</Label>
                   <Input
                     value={formData.contractReference}
-                    onChange={(e) => setFormData({ ...formData, contractReference: e.target.value })}
+                    className="bg-muted"
+                    readOnly
                     placeholder="Auto-populated from company"
-                    className="bg-muted"
-                    readOnly
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Contract Expiry</Label>
-                  <Input
-                    type="date"
-                    value={formData.contractExpiry}
-                    onChange={(e) => setFormData({ ...formData, contractExpiry: e.target.value })}
-                    className="bg-muted"
-                    readOnly
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Sub-Contractor Specific Fields */}
-          {formData.userType === "sub_contractor" && (
-            <>
-              <Separator />
-              <h4 className="font-medium text-sm text-muted-foreground">Sub-Contractor Details</h4>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Parent Contractor <span className="text-red-500">*</span></Label>
-                  <Select
-                    value={formData.parentContractorId?.toString() || ""}
-                    onValueChange={(value) => setFormData({ ...formData, parentContractorId: value ? parseInt(value) : null })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select parent contractor" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {contractorCompanies.map((company: any) => (
-                        <SelectItem key={company.id} value={company.id.toString()}>
-                          {company.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Sub-Contractor Company Name <span className="text-red-500">*</span></Label>
-                  <Input
-                    value={formData.subContractorCompany}
-                    onChange={(e) => setFormData({ ...formData, subContractorCompany: e.target.value })}
-                    placeholder="Enter sub-contractor company"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Contract Reference</Label>
-                  <Input
-                    value={formData.contractReference}
-                    className="bg-muted"
-                    readOnly
                   />
                 </div>
                 <div className="space-y-2">
@@ -777,8 +805,8 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     </div>
   );
 
-  // Step 2: System Access with multi-site selection
-  const renderSystemAccessStep = () => (
+  // Section 2: System Access
+  const renderSystemAccessSection = () => (
     <div className="space-y-6">
       {/* Role Selection */}
       <div className="space-y-2">
@@ -852,7 +880,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
         )}
       </div>
 
-      {/* Zone Selection - only show if sites are selected */}
+      {/* Zone Selection */}
       {(formData.allSitesAccess || formData.selectedSiteIds.length > 0) && filteredZones.length > 0 && (
         <>
           <Separator />
@@ -884,7 +912,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
         </>
       )}
 
-      {/* Area Selection - only show if zones are selected */}
+      {/* Area Selection */}
       {formData.selectedZoneIds.length > 0 && filteredAreas.length > 0 && (
         <>
           <Separator />
@@ -918,8 +946,8 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     </div>
   );
 
-  // Step 3: Photo
-  const renderPhotoStep = () => (
+  // Section 3: Photo
+  const renderPhotoSection = () => (
     <div className="space-y-6">
       <div className="flex flex-col items-center justify-center py-8">
         <div className="w-32 h-32 rounded-full bg-muted flex items-center justify-center mb-4 overflow-hidden">
@@ -940,8 +968,8 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     </div>
   );
 
-  // Step 4: Options
-  const renderOptionsStep = () => (
+  // Section 4: Options
+  const renderOptionsSection = () => (
     <div className="space-y-6">
       <div className="space-y-2">
         <Label>Temporary Password <span className="text-red-500">*</span></Label>
@@ -980,7 +1008,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
           </div>
         </div>
 
-        {(formData.userType === "contractor" || formData.userType === "sub_contractor") && (
+        {formData.userType === "contractor" && (
           <div className="flex items-center gap-3">
             <Checkbox
               id="expiresWithContract"
@@ -1000,87 +1028,81 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <h2 className="text-xl font-semibold">Create New User</h2>
-        <Button variant="ghost" size="icon" onClick={onCancel}>
+      <div className="flex items-center justify-between p-4 border-b bg-[#1e1e2d]">
+        <h2 className="text-xl font-semibold text-white">Create New User</h2>
+        <Button variant="ghost" size="icon" onClick={onCancel} className="text-white hover:bg-white/10">
           <X className="h-5 w-5" />
         </Button>
       </div>
 
-      {/* Progress Steps */}
-      <div className="flex items-center justify-center gap-2 p-4 border-b bg-muted/30">
-        {steps.map((step, index) => {
-          const Icon = step.icon;
-          const isActive = currentStep === step.id;
-          const isCompleted = currentStep > step.id;
-          
-          return (
-            <div key={step.id} className="flex items-center">
-              <div
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : isCompleted
-                    ? "bg-green-100 text-green-700"
-                    : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {isCompleted ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <Icon className="h-4 w-4" />
-                )}
-                <span className="text-sm font-medium hidden sm:inline">{step.title}</span>
-              </div>
-              {index < steps.length - 1 && (
-                <ChevronRight className="h-4 w-4 mx-1 text-muted-foreground" />
-              )}
-            </div>
-          );
-        })}
-      </div>
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Sidebar - Section Navigation */}
+        <div className="w-64 border-r bg-muted/30 p-4">
+          <nav className="space-y-2">
+            {sections.map((section) => {
+              const Icon = section.icon;
+              const isActive = currentSection === section.id;
+              const isComplete = isSectionComplete(section.id);
+              
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => setCurrentSection(section.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted"
+                  }`}
+                >
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                    isComplete && !isActive
+                      ? "bg-green-100 text-green-600"
+                      : isActive
+                      ? "bg-primary-foreground/20"
+                      : "bg-muted"
+                  }`}>
+                    {isComplete && !isActive ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Icon className="h-4 w-4" />
+                    )}
+                  </div>
+                  <span className="font-medium text-sm">{section.title}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
 
-      {/* Form Content */}
-      <div className="flex-1 overflow-y-auto p-6">
-        {renderStepContent()}
+        {/* Main Content */}
+        <div className="flex-1 overflow-y-auto p-6">
+          {renderSectionContent()}
+        </div>
       </div>
 
       {/* Footer */}
       <div className="flex items-center justify-between p-4 border-t bg-muted/30">
-        <Button
-          variant="outline"
-          onClick={handlePrev}
-          disabled={currentStep === 1}
-          className="gap-2"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Previous
+        <Button variant="outline" onClick={onCancel}>
+          Cancel
         </Button>
 
-        {currentStep < 4 ? (
-          <Button onClick={handleNext} className="gap-2">
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        ) : (
-          <Button
-            onClick={handleSubmit}
-            disabled={createUserMutation.isPending}
-            className="gap-2"
-          >
-            {createUserMutation.isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Creating...
-              </>
-            ) : (
-              <>
-                <Check className="h-4 w-4" />
-                Create User
-              </>
-            )}
-          </Button>
-        )}
+        <Button
+          onClick={handleSubmit}
+          disabled={createUserMutation.isPending}
+          className="gap-2"
+        >
+          {createUserMutation.isPending ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Creating...
+            </>
+          ) : (
+            <>
+              <Check className="h-4 w-4" />
+              Create User
+            </>
+          )}
+        </Button>
       </div>
     </div>
   );

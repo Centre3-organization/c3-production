@@ -858,3 +858,11 @@ Time conditions:
 - [x] Make Job Title field optional (not mandatory)
 - [x] Add multi-site selection with "All Sites" option
 - [x] Update cascading to work with multiple sites
+
+
+## User Form UI Updates (Jan 30, 2026)
+- [x] Restore left-side section navigation (like previous version)
+- [x] Add ID/Iqama validation: ID starts with 1, Iqama starts with 2, max 10 digits
+- [x] Update verify button text to "Verify with Yakeen"
+- [x] Simplify User Type to 3 options: Centre3 Employee, Contractor, Client
+- [x] Add Sub-Contractor as checkbox/dropdown within Contractor section
