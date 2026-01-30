@@ -53,6 +53,7 @@ import { DelegationManagement } from "./modules/workflows/DelegationManagement";
 import Settings from "./modules/settings/Settings";
 import TranslationManagement from "./modules/settings/TranslationManagement";
 import RequestTypeConfig from "./modules/settings/RequestTypeConfig";
+import IntegrationHub from "./modules/settings/IntegrationHub";
 
 // MCM Module (Magnetic Card Management)
 // McmDashboard removed - stats moved to CardDirectory
@@ -176,6 +177,11 @@ function Router() {
       <Route path="/settings/request-types">
         <Layout>
           <RequestTypeConfig />
+        </Layout>
+      </Route>
+      <Route path="/integration-hub">
+        <Layout>
+          <IntegrationHub />
         </Layout>
       </Route>
       

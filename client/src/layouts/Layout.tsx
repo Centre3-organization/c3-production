@@ -200,6 +200,7 @@ export default function Layout({ children }: LayoutProps) {
         { icon: FolderTree, labelKey: "nav.groups", label: "Groups", href: "/groups", requiredPermission: "users.read" },
         { icon: Users, labelKey: "nav.users", label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
         { icon: Settings, labelKey: "nav.settings", label: "Settings", href: "/settings", requiredPermission: "users.read" },
+        { icon: Radio, labelKey: "nav.integrationHub", label: "Integration Hub", href: "/integration-hub", requiredPermission: "users.read" },
       ]
     }
   ];
