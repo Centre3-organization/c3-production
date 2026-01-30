@@ -955,3 +955,6 @@ Time conditions:
 - [x] Remove gradients from all buttons, use solid purple (#4f008c)
 - [x] Fix scroll issue so Next/Previous buttons are visible
 - [x] Remove X button from dialog header, keep only Cancel button
+
+## Next Button Fix (Jan 31, 2026)
+- [x] Fix bottom navigation bar to stay fixed at bottom when form content overflows

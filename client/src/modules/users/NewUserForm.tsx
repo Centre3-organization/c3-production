@@ -407,8 +407,8 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
         </div>
 
         {/* Right Content Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <ScrollArea className="flex-1">
+        <div className="flex-1 flex flex-col min-h-0">
+          <ScrollArea className="flex-1 min-h-0">
             <div className="p-6">
               {/* General Information Tab */}
               {activeTab === "general" && (
