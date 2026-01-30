@@ -1,0 +1,30 @@
+{
+  "query": "SELECT COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'groups' AND COLUMN_NAME IN ('timezone', 'workingHours', 'createdAt', 'updatedAt');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'groups' AND COLUMN_NAME IN ('timezone', 'workingHours', 'createdAt', 'updatedAt');",
+  "rows": [
+    {
+      "COLUMN_NAME": "createdAt",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "updatedAt",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "timezone",
+      "COLUMN_DEFAULT": "Asia/Riyadh",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "workingHours",
+      "COLUMN_DEFAULT": "NULL",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\tCOLUMN_DEFAULT\tIS_NULLABLE\ncreatedAt\tCURRENT_TIMESTAMP\tNO\nupdatedAt\tCURRENT_TIMESTAMP\tNO\ntimezone\tAsia/Riyadh\tYES\nworkingHours\tNULL\tYES\n",
+  "stderr": "",
+  "execution_time_ms": 1568
+}

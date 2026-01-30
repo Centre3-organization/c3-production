@@ -982,3 +982,6 @@ Time conditions:
 ## Groups Creation Bug Fix (Jan 31, 2026)
 - [x] Fix companyId column issue when creating groups
 - [x] Verify groups table has companyId column in database
+
+## Groups Creation Bug Fix 2 (Jan 31, 2026)
+- [x] Fix database column mismatch in groups table insert query (added default values for timezone, createdAt, updatedAt, workingHours)
