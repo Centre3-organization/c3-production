@@ -808,3 +808,5 @@ Time conditions:
 - [x] Update MCM New Card Request UI to match existing New Request form design
 
 - [x] Remove MCM Dashboard and move statistics to Card Directory page
+
+- [x] Remove MCM Dashboard from sidebar and rename Card Directory to Card Control
