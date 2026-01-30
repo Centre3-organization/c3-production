@@ -1407,13 +1407,26 @@ export const cardCompanies = mysqlTable("cardCompanies", {
   type: mysqlEnum("type", ["contractor", "subcontractor", "client"]).notNull(),
   code: varchar("code", { length: 50 }),
   parentCompanyId: int("parentCompanyId"),
+  // Contact person fields
   contactPerson: varchar("contactPerson", { length: 255 }),
   contactEmail: varchar("contactEmail", { length: 255 }),
   contactPhone: varchar("contactPhone", { length: 50 }),
+  contactPersonName: varchar("contactPersonName", { length: 255 }),
+  contactPersonEmail: varchar("contactPersonEmail", { length: 255 }),
+  contactPersonPhone: varchar("contactPersonPhone", { length: 50 }),
+  contactPersonPosition: varchar("contactPersonPosition", { length: 100 }),
+  // Address fields
   address: text("address"),
+  city: varchar("city", { length: 100 }),
+  country: varchar("country", { length: 100 }),
+  registrationNumber: varchar("registrationNumber", { length: 100 }),
+  // Contract fields
   contractReference: varchar("contractReference", { length: 100 }),
   contractStartDate: date("contractStartDate"),
   contractEndDate: date("contractEndDate"),
+  // Status fields
+  status: mysqlEnum("status", ["active", "inactive", "suspended"]).default("active").notNull(),
+  notes: text("notes"),
   isActive: boolean("isActive").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

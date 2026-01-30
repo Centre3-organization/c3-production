@@ -872,3 +872,41 @@ Time conditions:
 - [x] Make form wider for better readability (min-w-[900px] max-w-[1200px])
 - [x] Add Next/Previous navigation between sections (not just Create User)
 - [x] Enhance overall visual design and polish (gradient header, progress bar, section summary)
+
+
+## Companies Tab in Master Data (Jan 31, 2026)
+### Database Schema
+- [ ] Add company type field (contractor, sub_contractor, client)
+- [ ] Add contact person fields (name, email, phone, position)
+- [ ] Add contract fields (reference, start date, end date, value)
+- [ ] Add company details (address, city, country, registration number)
+- [ ] Add status field (active, inactive, suspended)
+
+### Backend Router
+- [ ] Update companies CRUD with new fields
+- [ ] Add company search and filtering
+
+### Frontend UI
+- [ ] Add Companies tab to Master Data settings
+- [ ] Create company list with filters
+- [ ] Create add/edit company dialog with all fields
+- [ ] Add contract status indicators (active, expiring soon, expired)
+
+### Integration
+- [ ] Update user form to fetch and display company details
+- [ ] Auto-populate contract info when company is selected
+
+## Companies Management in Master Data (Jan 30, 2026)
+- [x] Add Companies tab to Master Data settings
+- [x] Update cardCompanies schema with new fields (contactPersonName, contactPersonEmail, contactPersonPhone, contactPersonPosition, city, country, registrationNumber, status, notes)
+- [x] Create getAllCompanies API endpoint
+- [x] Create createCompany API endpoint with full company details
+- [x] Create updateCompany API endpoint
+- [x] Create getCompanyById API endpoint
+- [x] Create deleteCompany API endpoint (soft delete/deactivate)
+- [x] Create Companies UI with table view showing code, name, type, contract reference, contract period, contact person, status
+- [x] Add filter buttons for All/Contractors/Sub-Contractors/Clients
+- [x] Create Add Company dialog with sections: Basic Info, Contract Information, Contact Person, Additional Information
+- [x] Create Edit Company dialog with same sections
+- [x] Support parent company selection for sub-contractors
+- [x] Add unit tests for companies CRUD operations

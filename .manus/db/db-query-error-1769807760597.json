@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE `cardCompanies` ADD `contactPersonName` varchar(255);\nALTER TABLE `cardCompanies` ADD `contactPersonEmail` varchar(255);\nALTER TABLE `cardCompanies` ADD `contactPersonPhone` varchar(50);\nALTER TABLE `cardCompanies` ADD `contactPersonPosition` varchar(100);\nALTER TABLE `cardCompanies` ADD `city` varchar(100);\nALTER TABLE `cardCompanies` ADD `country` varchar(100);\nALTER TABLE `cardCompanies` ADD `registrationNumber` varchar(100);\nALTER TABLE `cardCompanies` ADD `status` enum('active','inactive','suspended') DEFAULT 'active' NOT NULL;\nALTER TABLE `cardCompanies` ADD `notes` text;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE `cardCompanies` ADD `contactPersonName` varchar(255);\nALTER TABLE `cardCompanies` ADD `contactPersonEmail` varchar(255);\nALTER TABLE `cardCompanies` ADD `contactPersonPhone` varchar(50);\nALTER TABLE `cardCompanies` ADD `contactPersonPosition` varchar(100);\nALTER TABLE `cardCompanies` ADD `city` varchar(100);\nALTER TABLE `cardCompanies` ADD `country` varchar(100);\nALTER TABLE `cardCompanies` ADD `registrationNumber` varchar(100);\nALTER TABLE `cardCompanies` ADD `status` enum('active','inactive','suspended') DEFAULT 'active' NOT NULL;\nALTER TABLE `cardCompanies` ADD `notes` text;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1060 (42S21) at line 1: Duplicate column name 'contactPersonName'"
+  ]
+}

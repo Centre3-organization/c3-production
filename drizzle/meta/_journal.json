@@ -141,6 +141,13 @@
       "when": 1769805287131,
       "tag": "0019_jazzy_imperial_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1769807737791,
+      "tag": "0020_oval_freak",
+      "breakpoints": true
     }
   ]
 }

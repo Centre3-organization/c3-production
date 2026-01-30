@@ -1306,12 +1306,27 @@ export const masterDataRouter = router({
       nameAr: z.string().optional(),
       type: z.enum(["contractor", "subcontractor", "client"]),
       parentCompanyId: z.number().optional(),
+      // Contact person fields
+      contactPersonName: z.string().optional(),
+      contactPersonEmail: z.string().email().optional(),
+      contactPersonPhone: z.string().optional(),
+      contactPersonPosition: z.string().optional(),
+      // Legacy fields (kept for compatibility)
       contactPerson: z.string().optional(),
       contactEmail: z.string().email().optional(),
       contactPhone: z.string().optional(),
+      // Contract fields
       contractReference: z.string().optional(),
       contractStartDate: z.string().optional(),
       contractEndDate: z.string().optional(),
+      // Company details
+      address: z.string().optional(),
+      city: z.string().optional(),
+      country: z.string().optional(),
+      registrationNumber: z.string().optional(),
+      // Status
+      status: z.enum(["active", "inactive", "suspended"]).default("active"),
+      notes: z.string().optional(),
       isActive: z.boolean().default(true),
     }))
     .mutation(async ({ input }) => {
@@ -1335,12 +1350,27 @@ export const masterDataRouter = router({
       nameAr: z.string().optional(),
       type: z.enum(["contractor", "subcontractor", "client"]).optional(),
       parentCompanyId: z.number().nullable().optional(),
+      // Contact person fields
+      contactPersonName: z.string().optional(),
+      contactPersonEmail: z.string().email().optional(),
+      contactPersonPhone: z.string().optional(),
+      contactPersonPosition: z.string().optional(),
+      // Legacy fields
       contactPerson: z.string().optional(),
       contactEmail: z.string().email().optional(),
       contactPhone: z.string().optional(),
+      // Contract fields
       contractReference: z.string().optional(),
       contractStartDate: z.string().optional(),
       contractEndDate: z.string().optional(),
+      // Company details
+      address: z.string().optional(),
+      city: z.string().optional(),
+      country: z.string().optional(),
+      registrationNumber: z.string().optional(),
+      // Status
+      status: z.enum(["active", "inactive", "suspended"]).optional(),
+      notes: z.string().optional(),
       isActive: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {
@@ -1355,6 +1385,7 @@ export const masterDataRouter = router({
       if (data.contractEndDate) {
         updateData.contractEndDate = new Date(data.contractEndDate);
       }
+
       
       await db.update(cardCompanies).set(updateData).where(eq(cardCompanies.id, id));
       

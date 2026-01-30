@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE cardCompanies \nADD COLUMN companyType VARCHAR(50) DEFAULT 'contractor',\nADD COLUMN contactPersonName VARCHAR(255),\nADD COLUMN contactPersonEmail VARCHAR(255),\nADD COLUMN contactPersonPhone VARCHAR(50),\nADD COLUMN contactPersonPosition VARCHAR(100),\nADD COLUMN address TEXT,\nADD COLUMN city VARCHAR(100),\nADD COLUMN country VARCHAR(100),\nADD COLUMN registrationNumber VARCHAR(100),\nADD COLUMN contractValue DECIMAL(15,2),\nADD COLUMN status VARCHAR(50) DEFAULT 'active',\nADD COLUMN notes TEXT;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE cardCompanies \nADD COLUMN companyType VARCHAR(50) DEFAULT 'contractor',\nADD COLUMN contactPersonName VARCHAR(255),\nADD COLUMN contactPersonEmail VARCHAR(255),\nADD COLUMN contactPersonPhone VARCHAR(50),\nADD COLUMN contactPersonPosition VARCHAR(100),\nADD COLUMN address TEXT,\nADD COLUMN city VARCHAR(100),\nADD COLUMN country VARCHAR(100),\nADD COLUMN registrationNumber VARCHAR(100),\nADD COLUMN contractValue DECIMAL(15,2),\nADD COLUMN status VARCHAR(50) DEFAULT 'active',\nADD COLUMN notes TEXT;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1060 (42S21) at line 1: Duplicate column name 'address'"
+  ]
+}

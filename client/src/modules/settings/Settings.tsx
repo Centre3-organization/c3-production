@@ -342,6 +342,58 @@ export default function Settings() {
     },
     onError: (error) => toast.error("Failed to delete approver", { description: error.message })
   });
+
+  // Companies
+  const { data: companiesData, isLoading: companiesLoading, refetch: refetchCompanies } = trpc.masterData.getAllCompanies.useQuery();
+  const [newCompanyOpen, setNewCompanyOpen] = useState(false);
+  const [editCompanyOpen, setEditCompanyOpen] = useState(false);
+  const [editingCompany, setEditingCompany] = useState<any>(null);
+  const [companiesFilter, setCompaniesFilter] = useState<"all" | "contractor" | "subcontractor" | "client">("all");
+  const [newCompany, setNewCompany] = useState<{
+    code: string; name: string; nameAr: string; type: "contractor" | "subcontractor" | "client";
+    parentCompanyId: number | undefined;
+    contactPersonName: string; contactPersonEmail: string; contactPersonPhone: string; contactPersonPosition: string;
+    contractReference: string; contractStartDate: string; contractEndDate: string;
+    address: string; city: string; country: string; registrationNumber: string;
+    status: "active" | "inactive" | "suspended"; notes: string;
+  }>({
+    code: "", name: "", nameAr: "", type: "contractor",
+    parentCompanyId: undefined,
+    contactPersonName: "", contactPersonEmail: "", contactPersonPhone: "", contactPersonPosition: "",
+    contractReference: "", contractStartDate: "", contractEndDate: "",
+    address: "", city: "", country: "", registrationNumber: "",
+    status: "active", notes: ""
+  });
+
+  const createCompanyMutation = trpc.masterData.createCompany.useMutation({
+    onSuccess: () => {
+      toast.success("Company Created");
+      refetchCompanies();
+      setNewCompanyOpen(false);
+      setNewCompany({ code: "", name: "", nameAr: "", type: "contractor", parentCompanyId: undefined, contactPersonName: "", contactPersonEmail: "", contactPersonPhone: "", contactPersonPosition: "", contractReference: "", contractStartDate: "", contractEndDate: "", address: "", city: "", country: "", registrationNumber: "", status: "active", notes: "" });
+    },
+    onError: (error) => toast.error("Failed to create company", { description: error.message })
+  });
+
+  const updateCompanyMutation = trpc.masterData.updateCompany.useMutation({
+    onSuccess: () => {
+      toast.success("Company Updated");
+      refetchCompanies();
+      setEditCompanyOpen(false);
+      setEditingCompany(null);
+    },
+    onError: (error) => toast.error("Failed to update company", { description: error.message })
+  });
+
+  const deleteCompanyMutation = trpc.masterData.deleteCompany.useMutation({
+    onSuccess: () => {
+      toast.success("Company Deactivated");
+      refetchCompanies();
+    },
+    onError: (error) => toast.error("Failed to deactivate company", { description: error.message })
+  });
+
+  const filteredCompanies = companiesData?.filter(c => companiesFilter === "all" || c.type === companiesFilter) || [];
   
   // Countries
   const { data: countriesData, isLoading: countriesLoading, refetch: refetchCountries } = trpc.masterData.getAllCountries.useQuery();
@@ -898,6 +950,9 @@ export default function Settings() {
                   </TabsTrigger>
                   <TabsTrigger value="areatypes" className="gap-1">
                     <Grid3X3 className="h-4 w-4" /> Area Types
+                  </TabsTrigger>
+                  <TabsTrigger value="companies" className="gap-1">
+                    <Building2 className="h-4 w-4" /> Companies
                   </TabsTrigger>
                 </TabsList>
 
@@ -1780,9 +1835,376 @@ export default function Settings() {
                     isDeleting={deleteAreaTypeMutation.isPending}
                   />
                 </TabsContent>
+
+                {/* Companies Tab */}
+                <TabsContent value="companies">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <h3 className="text-lg font-medium">Companies</h3>
+                        <div className="flex gap-1">
+                          <Button size="sm" variant={companiesFilter === "all" ? "default" : "outline"} onClick={() => setCompaniesFilter("all")}>All</Button>
+                          <Button size="sm" variant={companiesFilter === "contractor" ? "default" : "outline"} onClick={() => setCompaniesFilter("contractor")}>Contractors</Button>
+                          <Button size="sm" variant={companiesFilter === "subcontractor" ? "default" : "outline"} onClick={() => setCompaniesFilter("subcontractor")}>Sub-Contractors</Button>
+                          <Button size="sm" variant={companiesFilter === "client" ? "default" : "outline"} onClick={() => setCompaniesFilter("client")}>Clients</Button>
+                        </div>
+                      </div>
+                      <Button onClick={() => setNewCompanyOpen(true)}>
+                        <Plus className="h-4 w-4 mr-2" /> Add Company
+                      </Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Manage contractor, sub-contractor, and client companies with their contract details.</p>
+                    
+                    {companiesLoading ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                      </div>
+                    ) : (
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Code</TableHead>
+                            <TableHead>Company Name</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Contract Reference</TableHead>
+                            <TableHead>Contract Period</TableHead>
+                            <TableHead>Contact Person</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead className="w-[100px]">Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredCompanies.map((company) => (
+                            <TableRow key={company.id}>
+                              <TableCell className="font-mono text-sm">{company.code}</TableCell>
+                              <TableCell>
+                                <div>
+                                  <div className="font-medium">{company.name}</div>
+                                  {company.nameAr && <div className="text-sm text-muted-foreground" dir="rtl">{company.nameAr}</div>}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={company.type === "contractor" ? "default" : company.type === "subcontractor" ? "secondary" : "outline"}>
+                                  {company.type === "contractor" ? "Contractor" : company.type === "subcontractor" ? "Sub-Contractor" : "Client"}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>{company.contractReference || "-"}</TableCell>
+                              <TableCell>
+                                {company.contractStartDate && company.contractEndDate ? (
+                                  <span className="text-sm">
+                                    {new Date(company.contractStartDate).toLocaleDateString()} - {new Date(company.contractEndDate).toLocaleDateString()}
+                                  </span>
+                                ) : "-"}
+                              </TableCell>
+                              <TableCell>
+                                {company.contactPersonName ? (
+                                  <div className="text-sm">
+                                    <div>{company.contactPersonName}</div>
+                                    {company.contactPersonEmail && <div className="text-muted-foreground">{company.contactPersonEmail}</div>}
+                                  </div>
+                                ) : "-"}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={company.status === "active" ? "default" : "secondary"}>
+                                  {company.status === "active" ? "Active" : "Inactive"}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                <Button variant="ghost" size="icon" onClick={() => { setEditingCompany(company); setEditCompanyOpen(true); }}>
+                                  <Edit2 className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="icon" onClick={() => { if(confirm("Deactivate this company?")) deleteCompanyMutation.mutate({ id: company.id }); }}>
+                                  <Trash2 className="h-4 w-4 text-red-500" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                          {filteredCompanies.length === 0 && (
+                            <TableRow>
+                              <TableCell colSpan={8} className="text-center text-muted-foreground py-8">No companies found. Add one to get started.</TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    )}
+                  </div>
+                </TabsContent>
               </Tabs>
             </CardContent>
           </Card>
+
+          {/* Add Company Dialog */}
+          <Dialog open={newCompanyOpen} onOpenChange={setNewCompanyOpen}>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <form onSubmit={(e) => { e.preventDefault(); createCompanyMutation.mutate(newCompany); }}>
+                <DialogHeader>
+                  <DialogTitle>Add New Company</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Company Code *</Label>
+                      <Input value={newCompany.code} onChange={e => setNewCompany({...newCompany, code: e.target.value})} placeholder="e.g., CONT-001" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Company Type *</Label>
+                      <Select value={newCompany.type} onValueChange={(v: "contractor" | "subcontractor" | "client") => setNewCompany({...newCompany, type: v})}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="contractor">Contractor</SelectItem>
+                          <SelectItem value="subcontractor">Sub-Contractor</SelectItem>
+                          <SelectItem value="client">Client</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Company Name (English) *</Label>
+                      <Input value={newCompany.name} onChange={e => setNewCompany({...newCompany, name: e.target.value})} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Company Name (Arabic)</Label>
+                      <Input value={newCompany.nameAr} onChange={e => setNewCompany({...newCompany, nameAr: e.target.value})} dir="rtl" />
+                    </div>
+                  </div>
+                  {newCompany.type === "subcontractor" && (
+                    <div className="space-y-2">
+                      <Label>Parent Company (Main Contractor)</Label>
+                      <Select value={newCompany.parentCompanyId?.toString() || ""} onValueChange={(v) => setNewCompany({...newCompany, parentCompanyId: v ? parseInt(v) : undefined})}>
+                        <SelectTrigger><SelectValue placeholder="Select parent company" /></SelectTrigger>
+                        <SelectContent>
+                          {companiesData?.filter(c => c.type === "contractor").map(c => (
+                            <SelectItem key={c.id} value={c.id.toString()}>{c.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                  <div className="border-t pt-4">
+                    <h4 className="font-medium mb-3">Contract Information</h4>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label>Contract Reference</Label>
+                        <Input value={newCompany.contractReference} onChange={e => setNewCompany({...newCompany, contractReference: e.target.value})} placeholder="e.g., CNT-2024-001" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Start Date</Label>
+                        <Input type="date" value={newCompany.contractStartDate} onChange={e => setNewCompany({...newCompany, contractStartDate: e.target.value})} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>End Date</Label>
+                        <Input type="date" value={newCompany.contractEndDate} onChange={e => setNewCompany({...newCompany, contractEndDate: e.target.value})} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="border-t pt-4">
+                    <h4 className="font-medium mb-3">Contact Person</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Name</Label>
+                        <Input value={newCompany.contactPersonName} onChange={e => setNewCompany({...newCompany, contactPersonName: e.target.value})} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Position</Label>
+                        <Input value={newCompany.contactPersonPosition} onChange={e => setNewCompany({...newCompany, contactPersonPosition: e.target.value})} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Email</Label>
+                        <Input type="email" value={newCompany.contactPersonEmail} onChange={e => setNewCompany({...newCompany, contactPersonEmail: e.target.value})} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Phone</Label>
+                        <Input value={newCompany.contactPersonPhone} onChange={e => setNewCompany({...newCompany, contactPersonPhone: e.target.value})} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="border-t pt-4">
+                    <h4 className="font-medium mb-3">Additional Information</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Registration Number</Label>
+                        <Input value={newCompany.registrationNumber} onChange={e => setNewCompany({...newCompany, registrationNumber: e.target.value})} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Status</Label>
+                        <Select value={newCompany.status} onValueChange={(v: "active" | "inactive" | "suspended") => setNewCompany({...newCompany, status: v})}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">Active</SelectItem>
+                            <SelectItem value="inactive">Inactive</SelectItem>
+                            <SelectItem value="suspended">Suspended</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="space-y-2 mt-4">
+                      <Label>Address</Label>
+                      <Input value={newCompany.address} onChange={e => setNewCompany({...newCompany, address: e.target.value})} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+                      <div className="space-y-2">
+                        <Label>City</Label>
+                        <Input value={newCompany.city} onChange={e => setNewCompany({...newCompany, city: e.target.value})} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Country</Label>
+                        <Input value={newCompany.country} onChange={e => setNewCompany({...newCompany, country: e.target.value})} />
+                      </div>
+                    </div>
+                    <div className="space-y-2 mt-4">
+                      <Label>Notes</Label>
+                      <Input value={newCompany.notes} onChange={e => setNewCompany({...newCompany, notes: e.target.value})} />
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setNewCompanyOpen(false)}>Cancel</Button>
+                  <Button type="submit" disabled={createCompanyMutation.isPending}>
+                    {createCompanyMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Create Company
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+
+          {/* Edit Company Dialog */}
+          <Dialog open={editCompanyOpen} onOpenChange={setEditCompanyOpen}>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <form onSubmit={(e) => { e.preventDefault(); if(editingCompany) updateCompanyMutation.mutate(editingCompany); }}>
+                <DialogHeader>
+                  <DialogTitle>Edit Company</DialogTitle>
+                </DialogHeader>
+                {editingCompany && (
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Company Code *</Label>
+                        <Input value={editingCompany.code} onChange={e => setEditingCompany({...editingCompany, code: e.target.value})} required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Company Type *</Label>
+                        <Select value={editingCompany.type} onValueChange={(v) => setEditingCompany({...editingCompany, type: v})}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="contractor">Contractor</SelectItem>
+                            <SelectItem value="subcontractor">Sub-Contractor</SelectItem>
+                            <SelectItem value="client">Client</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Company Name (English) *</Label>
+                        <Input value={editingCompany.name} onChange={e => setEditingCompany({...editingCompany, name: e.target.value})} required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Company Name (Arabic)</Label>
+                        <Input value={editingCompany.nameAr || ""} onChange={e => setEditingCompany({...editingCompany, nameAr: e.target.value})} dir="rtl" />
+                      </div>
+                    </div>
+                    {editingCompany.type === "subcontractor" && (
+                      <div className="space-y-2">
+                        <Label>Parent Company (Main Contractor)</Label>
+                        <Select value={editingCompany.parentCompanyId?.toString() || ""} onValueChange={(v) => setEditingCompany({...editingCompany, parentCompanyId: v ? parseInt(v) : null})}>
+                          <SelectTrigger><SelectValue placeholder="Select parent company" /></SelectTrigger>
+                          <SelectContent>
+                            {companiesData?.filter(c => c.type === "contractor" && c.id !== editingCompany.id).map(c => (
+                              <SelectItem key={c.id} value={c.id.toString()}>{c.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+                    <div className="border-t pt-4">
+                      <h4 className="font-medium mb-3">Contract Information</h4>
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <Label>Contract Reference</Label>
+                          <Input value={editingCompany.contractReference || ""} onChange={e => setEditingCompany({...editingCompany, contractReference: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Start Date</Label>
+                          <Input type="date" value={editingCompany.contractStartDate ? new Date(editingCompany.contractStartDate).toISOString().split('T')[0] : ""} onChange={e => setEditingCompany({...editingCompany, contractStartDate: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>End Date</Label>
+                          <Input type="date" value={editingCompany.contractEndDate ? new Date(editingCompany.contractEndDate).toISOString().split('T')[0] : ""} onChange={e => setEditingCompany({...editingCompany, contractEndDate: e.target.value})} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="border-t pt-4">
+                      <h4 className="font-medium mb-3">Contact Person</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Name</Label>
+                          <Input value={editingCompany.contactPersonName || ""} onChange={e => setEditingCompany({...editingCompany, contactPersonName: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Position</Label>
+                          <Input value={editingCompany.contactPersonPosition || ""} onChange={e => setEditingCompany({...editingCompany, contactPersonPosition: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Email</Label>
+                          <Input type="email" value={editingCompany.contactPersonEmail || ""} onChange={e => setEditingCompany({...editingCompany, contactPersonEmail: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Phone</Label>
+                          <Input value={editingCompany.contactPersonPhone || ""} onChange={e => setEditingCompany({...editingCompany, contactPersonPhone: e.target.value})} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="border-t pt-4">
+                      <h4 className="font-medium mb-3">Additional Information</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Registration Number</Label>
+                          <Input value={editingCompany.registrationNumber || ""} onChange={e => setEditingCompany({...editingCompany, registrationNumber: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Status</Label>
+                          <Select value={editingCompany.status} onValueChange={(v) => setEditingCompany({...editingCompany, status: v})}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="active">Active</SelectItem>
+                              <SelectItem value="inactive">Inactive</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="space-y-2 mt-4">
+                        <Label>Address</Label>
+                        <Input value={editingCompany.address || ""} onChange={e => setEditingCompany({...editingCompany, address: e.target.value})} />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        <div className="space-y-2">
+                          <Label>City</Label>
+                          <Input value={editingCompany.city || ""} onChange={e => setEditingCompany({...editingCompany, city: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Country</Label>
+                          <Input value={editingCompany.country || ""} onChange={e => setEditingCompany({...editingCompany, country: e.target.value})} />
+                        </div>
+                      </div>
+                      <div className="space-y-2 mt-4">
+                        <Label>Notes</Label>
+                        <Input value={editingCompany.notes || ""} onChange={e => setEditingCompany({...editingCompany, notes: e.target.value})} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setEditCompanyOpen(false)}>Cancel</Button>
+                  <Button type="submit" disabled={updateCompanyMutation.isPending}>
+                    {updateCompanyMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Update Company
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
 
           {/* Edit Dialogs for Master Data */}
           

@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE cardCompanies \nADD COLUMN IF NOT EXISTS companyType VARCHAR(50) DEFAULT 'contractor',\nADD COLUMN IF NOT EXISTS contactPersonName VARCHAR(255),\nADD COLUMN IF NOT EXISTS contactPersonEmail VARCHAR(255),\nADD COLUMN IF NOT EXISTS contactPersonPhone VARCHAR(50),\nADD COLUMN IF NOT EXISTS contactPersonPosition VARCHAR(100),\nADD COLUMN IF NOT EXISTS city VARCHAR(100),\nADD COLUMN IF NOT EXISTS country VARCHAR(100),\nADD COLUMN IF NOT EXISTS registrationNumber VARCHAR(100),\nADD COLUMN IF NOT EXISTS contractValue DECIMAL(15,2),\nADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'active',\nADD COLUMN IF NOT EXISTS notes TEXT;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE cardCompanies \nADD COLUMN IF NOT EXISTS companyType VARCHAR(50) DEFAULT 'contractor',\nADD COLUMN IF NOT EXISTS contactPersonName VARCHAR(255),\nADD COLUMN IF NOT EXISTS contactPersonEmail VARCHAR(255),\nADD COLUMN IF NOT EXISTS contactPersonPhone VARCHAR(50),\nADD COLUMN IF NOT EXISTS contactPersonPosition VARCHAR(100),\nADD COLUMN IF NOT EXISTS city VARCHAR(100),\nADD COLUMN IF NOT EXISTS country VARCHAR(100),\nADD COLUMN IF NOT EXISTS registrationNumber VARCHAR(100),\nADD COLUMN IF NOT EXISTS contractValue DECIMAL(15,2),\nADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'active',\nADD COLUMN IF NOT EXISTS notes TEXT;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 5333
+}
