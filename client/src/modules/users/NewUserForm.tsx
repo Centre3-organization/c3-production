@@ -342,11 +342,11 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex flex-col h-[80vh] max-h-[800px] bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b bg-card">
+      <div className="flex items-center justify-between px-6 py-4 border-b bg-card shrink-0">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#ff375e] to-[#4f008c] flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-[#4f008c] flex items-center justify-center">
             <UserPlus className="h-6 w-6 text-white" />
           </div>
           <div>
@@ -389,7 +389,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     isActive 
-                      ? "bg-gradient-to-br from-[#ff375e] to-[#4f008c] text-white"
+                      ? "bg-[#4f008c] text-white"
                       : isCompleted
                         ? "bg-green-500 text-white"
                         : "bg-muted text-muted-foreground"
@@ -479,7 +479,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               type="button"
                               onClick={handleVerifyYakeen}
                               disabled={verifyYakeenMutation.isPending || idNumber.length !== 10 || !dateOfBirth}
-                              className="bg-gradient-to-r from-[#ff375e] to-[#4f008c] hover:from-[#ff4a6e] hover:to-[#5f00a6] text-white h-10 px-6"
+                              className="bg-[#4f008c] hover:bg-[#5f00a6] text-white h-10 px-6"
                             >
                               {verifyYakeenMutation.isPending ? (
                                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -970,7 +970,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
           </ScrollArea>
 
           {/* Bottom Navigation Bar */}
-          <div className="border-t bg-card px-6 py-4 flex items-center justify-between">
+          <div className="border-t bg-card px-6 py-4 flex items-center justify-between shrink-0">
             <div>
               {!isFirstTab && (
                 <Button
@@ -989,7 +989,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                 <Button
                   onClick={goToNextTab}
                   disabled={activeTab === "general" && !canProceedFromGeneral}
-                  className="gap-2 bg-gradient-to-r from-[#ff375e] to-[#4f008c] hover:from-[#ff4a6e] hover:to-[#5f00a6] text-white"
+                  className="gap-2 bg-[#4f008c] hover:bg-[#5f00a6] text-white"
                 >
                   Next
                   <ChevronRight className="h-4 w-4" />
@@ -998,7 +998,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                 <Button
                   onClick={handleSubmit}
                   disabled={createUserMutation.isPending}
-                  className="gap-2 bg-gradient-to-r from-[#ff375e] to-[#4f008c] hover:from-[#ff4a6e] hover:to-[#5f00a6] text-white"
+                  className="gap-2 bg-[#4f008c] hover:bg-[#5f00a6] text-white"
                 >
                   {createUserMutation.isPending ? (
                     <>

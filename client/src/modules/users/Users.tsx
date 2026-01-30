@@ -508,7 +508,7 @@ export default function Users() {
 
       {/* Add User Dialog - Multi-step wizard */}
       <Dialog open={newUserOpen} onOpenChange={setNewUserOpen}>
-        <DialogContent className="sm:max-w-[900px] h-[80vh] p-0 overflow-hidden">
+        <DialogContent className="sm:max-w-[900px] h-[80vh] p-0 overflow-hidden" showCloseButton={false}>
           <NewUserForm
             onSuccess={() => {
               setNewUserOpen(false);

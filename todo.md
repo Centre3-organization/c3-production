@@ -950,3 +950,8 @@ Time conditions:
 - [x] Change Yakeen button to proper button labeled "Get Data with Yakeen"
 - [x] Remove search icon from Yakeen button
 - [x] Add Date of Birth field for Yakeen verification
+
+## User Form Button and Layout Fixes (Jan 31, 2026)
+- [x] Remove gradients from all buttons, use solid purple (#4f008c)
+- [x] Fix scroll issue so Next/Previous buttons are visible
+- [x] Remove X button from dialog header, keep only Cancel button
