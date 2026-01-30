@@ -832,3 +832,17 @@ Time conditions:
 - [x] Update create user procedure with new fields and validation
 - [x] Create multi-step wizard form (5 steps: User Type, Personal Details, System Access, Photo, Options)
 - [x] Step 2 shows different fields based on user type selection
+
+
+## Documentation - How To Guide (Jan 30, 2026)
+- [x] Write How-To section for creating new request forms
+- [x] Write How-To section for configuring approval workflows based on site/area/zone
+- [x] Create 30 comprehensive test cases
+
+
+## User Creation Form Updates (Jan 30, 2026)
+- [x] Merge User Type & Personal Information into one step with dropdown
+- [x] System Access step to pull roles from Roles and Permissions
+- [x] Add cascading Site → Zone → Area dropdowns for site access
+- [x] Add Contractor/Client companies to Master Data settings
+- [x] Auto-populate contract reference/expiry from selected company

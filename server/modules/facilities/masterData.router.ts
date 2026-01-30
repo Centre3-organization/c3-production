@@ -13,7 +13,8 @@ import {
   roleTypes,
   approvers,
   users,
-  sites
+  sites,
+  cardCompanies
 } from "../../../drizzle/schema";
 import { adminProcedure, publicProcedure, router } from "../../_core/trpc";
 
@@ -1252,5 +1253,122 @@ export const masterDataRouter = router({
       await db.update(approvers).set({ isActive: false }).where(eq(approvers.id, input.id));
       
       return { success: true, message: "Approver deleted successfully" };
+    }),
+
+  // ============================================================================
+  // COMPANIES (Contractors & Clients)
+  // ============================================================================
+  
+  getAllCompanies: publicProcedure
+    .input(z.object({
+      type: z.enum(["contractor", "subcontractor", "client"]).optional(),
+      isActive: z.boolean().optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      const conditions: any[] = [];
+      if (input?.type) {
+        conditions.push(eq(cardCompanies.type, input.type));
+      }
+      if (input?.isActive !== undefined) {
+        conditions.push(eq(cardCompanies.isActive, input.isActive));
+      }
+      
+      const result = await db
+        .select()
+        .from(cardCompanies)
+        .where(conditions.length > 0 ? and(...conditions) : undefined)
+        .orderBy(asc(cardCompanies.name));
+      
+      return result;
+    }),
+  
+  getCompanyById: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+      
+      const [result] = await db
+        .select()
+        .from(cardCompanies)
+        .where(eq(cardCompanies.id, input.id));
+      
+      return result || null;
+    }),
+  
+  createCompany: adminProcedure
+    .input(z.object({
+      code: z.string().min(1),
+      name: z.string().min(1),
+      nameAr: z.string().optional(),
+      type: z.enum(["contractor", "subcontractor", "client"]),
+      parentCompanyId: z.number().optional(),
+      contactPerson: z.string().optional(),
+      contactEmail: z.string().email().optional(),
+      contactPhone: z.string().optional(),
+      contractReference: z.string().optional(),
+      contractStartDate: z.string().optional(),
+      contractEndDate: z.string().optional(),
+      isActive: z.boolean().default(true),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const [result] = await db.insert(cardCompanies).values({
+        ...input,
+        contractStartDate: input.contractStartDate ? new Date(input.contractStartDate) : null,
+        contractEndDate: input.contractEndDate ? new Date(input.contractEndDate) : null,
+      });
+      
+      return { id: result.insertId, ...input };
+    }),
+  
+  updateCompany: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      code: z.string().min(1).optional(),
+      name: z.string().min(1).optional(),
+      nameAr: z.string().optional(),
+      type: z.enum(["contractor", "subcontractor", "client"]).optional(),
+      parentCompanyId: z.number().nullable().optional(),
+      contactPerson: z.string().optional(),
+      contactEmail: z.string().email().optional(),
+      contactPhone: z.string().optional(),
+      contractReference: z.string().optional(),
+      contractStartDate: z.string().optional(),
+      contractEndDate: z.string().optional(),
+      isActive: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const { id, ...data } = input;
+      const updateData: any = { ...data };
+      if (data.contractStartDate) {
+        updateData.contractStartDate = new Date(data.contractStartDate);
+      }
+      if (data.contractEndDate) {
+        updateData.contractEndDate = new Date(data.contractEndDate);
+      }
+      
+      await db.update(cardCompanies).set(updateData).where(eq(cardCompanies.id, id));
+      
+      return { success: true };
+    }),
+  
+  deleteCompany: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.update(cardCompanies).set({ isActive: false }).where(eq(cardCompanies.id, input.id));
+      
+      return { success: true };
     }),
 });

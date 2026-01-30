@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE cardCompanies \nADD COLUMN parentCompanyId INT NULL,\nADD COLUMN contractReference VARCHAR(100) NULL,\nADD COLUMN contractStartDate DATE NULL,\nADD COLUMN contractEndDate DATE NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE cardCompanies \nADD COLUMN parentCompanyId INT NULL,\nADD COLUMN contractReference VARCHAR(100) NULL,\nADD COLUMN contractStartDate DATE NULL,\nADD COLUMN contractEndDate DATE NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 3367
+}
