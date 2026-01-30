@@ -866,3 +866,9 @@ Time conditions:
 - [x] Update verify button text to "Verify with Yakeen"
 - [x] Simplify User Type to 3 options: Centre3 Employee, Contractor, Client
 - [x] Add Sub-Contractor as checkbox/dropdown within Contractor section
+
+
+## User Form UI Enhancement (Jan 31, 2026)
+- [x] Make form wider for better readability (min-w-[900px] max-w-[1200px])
+- [x] Add Next/Previous navigation between sections (not just Create User)
+- [x] Enhance overall visual design and polish (gradient header, progress bar, section summary)

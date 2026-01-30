@@ -16,6 +16,9 @@ import {
   CheckCircle,
   AlertCircle,
   IdCard,
+  ChevronLeft,
+  ChevronRight,
+  UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1025,84 +1028,178 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     </div>
   );
 
+  const handleNext = () => {
+    if (validateCurrentSection()) {
+      if (currentSection < sections.length) {
+        setCurrentSection(currentSection + 1);
+      }
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentSection > 1) {
+      setCurrentSection(currentSection - 1);
+    }
+  };
+
   return (
-    <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-[#1e1e2d]">
-        <h2 className="text-xl font-semibold text-white">Create New User</h2>
+    <div className="flex flex-col h-full min-w-[900px] max-w-[1200px] mx-auto">
+      {/* Enhanced Header */}
+      <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-[#1e1e2d] to-[#2d2d44]">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+            <UserPlus className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-white">Create New User</h2>
+            <p className="text-sm text-white/60">Step {currentSection} of {sections.length}: {sections[currentSection - 1].title}</p>
+          </div>
+        </div>
         <Button variant="ghost" size="icon" onClick={onCancel} className="text-white hover:bg-white/10">
           <X className="h-5 w-5" />
         </Button>
       </div>
 
+      {/* Progress Bar */}
+      <div className="h-1 bg-muted">
+        <div 
+          className="h-full bg-primary transition-all duration-300"
+          style={{ width: `${(currentSection / sections.length) * 100}%` }}
+        />
+      </div>
+
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar - Section Navigation */}
-        <div className="w-64 border-r bg-muted/30 p-4">
-          <nav className="space-y-2">
-            {sections.map((section) => {
+        <div className="w-72 border-r bg-gradient-to-b from-muted/50 to-muted/20 p-5">
+          <div className="mb-4">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Form Sections</h3>
+          </div>
+          <nav className="space-y-1">
+            {sections.map((section, index) => {
               const Icon = section.icon;
               const isActive = currentSection === section.id;
               const isComplete = isSectionComplete(section.id);
+              const isPast = section.id < currentSection;
               
               return (
                 <button
                   key={section.id}
                   onClick={() => setCurrentSection(section.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-all duration-200 ${
                     isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted"
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25 scale-[1.02]"
+                      : isPast
+                      ? "bg-green-50 hover:bg-green-100 border border-green-200"
+                      : "hover:bg-muted border border-transparent"
                   }`}
                 >
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                    isComplete && !isActive
-                      ? "bg-green-100 text-green-600"
+                  <div className={`flex items-center justify-center w-9 h-9 rounded-full font-semibold text-sm ${
+                    isComplete
+                      ? "bg-green-500 text-white"
                       : isActive
-                      ? "bg-primary-foreground/20"
-                      : "bg-muted"
+                      ? "bg-primary-foreground/20 text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
                   }`}>
-                    {isComplete && !isActive ? (
+                    {isComplete ? (
                       <Check className="h-4 w-4" />
                     ) : (
-                      <Icon className="h-4 w-4" />
+                      <span>{section.id}</span>
                     )}
                   </div>
-                  <span className="font-medium text-sm">{section.title}</span>
+                  <div className="flex-1">
+                    <span className={`font-medium text-sm block ${
+                      isActive ? "text-primary-foreground" : isPast ? "text-green-700" : ""
+                    }`}>{section.title}</span>
+                    {isComplete && !isActive && (
+                      <span className="text-xs text-green-600">Completed</span>
+                    )}
+                  </div>
+                  {isActive && (
+                    <ChevronRight className="h-4 w-4 opacity-60" />
+                  )}
                 </button>
               );
             })}
           </nav>
+          
+          {/* Section Summary */}
+          <div className="mt-6 p-4 bg-muted/50 rounded-xl">
+            <div className="text-xs font-medium text-muted-foreground mb-2">Completion Status</div>
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-green-500 transition-all duration-300"
+                  style={{ width: `${(sections.filter((_, i) => isSectionComplete(i + 1)).length / sections.length) * 100}%` }}
+                />
+              </div>
+              <span className="text-xs font-semibold">
+                {sections.filter((_, i) => isSectionComplete(i + 1)).length}/{sections.length}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {renderSectionContent()}
+        <div className="flex-1 overflow-y-auto p-8 bg-background">
+          <div className="max-w-3xl">
+            {renderSectionContent()}
+          </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="flex items-center justify-between p-4 border-t bg-muted/30">
-        <Button variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-
-        <Button
-          onClick={handleSubmit}
-          disabled={createUserMutation.isPending}
-          className="gap-2"
-        >
-          {createUserMutation.isPending ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Creating...
-            </>
-          ) : (
-            <>
-              <Check className="h-4 w-4" />
-              Create User
-            </>
+      {/* Enhanced Footer */}
+      <div className="flex items-center justify-between px-6 py-4 border-t bg-muted/30">
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline" 
+            onClick={onCancel}
+            className="gap-2"
+          >
+            <X className="h-4 w-4" />
+            Cancel
+          </Button>
+          
+          {currentSection > 1 && (
+            <Button 
+              variant="outline" 
+              onClick={handlePrevious}
+              className="gap-2"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </Button>
           )}
-        </Button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {currentSection < sections.length ? (
+            <Button
+              onClick={handleNext}
+              className="gap-2 min-w-[120px]"
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              disabled={createUserMutation.isPending}
+              className="gap-2 min-w-[140px] bg-green-600 hover:bg-green-700"
+            >
+              {createUserMutation.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <UserPlus className="h-4 w-4" />
+                  Create User
+                </>
+              )}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
