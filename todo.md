@@ -925,3 +925,9 @@ Time conditions:
 - [x] Implement Form Groups with clear labels and mandatory indicators
 - [x] Apply SAP Fiori spacing and typography while keeping Centre3 branding
 - [x] Test the redesigned form
+
+## User Form Left-Side Tabs (Jan 31, 2026)
+- [x] Move tabs to left side as vertical navigation
+- [x] Add Next/Previous buttons for section navigation
+- [x] Ensure buttons use Centre3 branding colors (pink gradient)
+- [x] Test form navigation flow

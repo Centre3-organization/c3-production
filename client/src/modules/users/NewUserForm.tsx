@@ -1,11 +1,15 @@
 import { useState, useMemo, useEffect } from "react";
 import {
   Loader2,
-  X,
   Search,
   CheckCircle,
   AlertCircle,
   UserPlus,
+  ChevronRight,
+  ChevronLeft,
+  Building2,
+  Shield,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +17,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { trpc } from "@/utils/trpc";
 import { toast } from "sonner";
@@ -31,13 +34,11 @@ function FormField({
   required, 
   children,
   hint,
-  readOnly,
 }: { 
   label: string; 
   required?: boolean; 
   children: React.ReactNode;
   hint?: string;
-  readOnly?: boolean;
 }) {
   return (
     <div className="space-y-1.5">
@@ -58,6 +59,12 @@ function SectionHeader({ title }: { title: string }) {
     </div>
   );
 }
+
+const tabs = [
+  { id: "general", label: "General Information", icon: User },
+  { id: "organization", label: "Organization", icon: Building2 },
+  { id: "access", label: "Access & Security", icon: Shield },
+];
 
 export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   const [activeTab, setActiveTab] = useState("general");
@@ -237,22 +244,27 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     // Validation
     if (!formData.userType) {
       toast.error("Please select a user type");
+      setActiveTab("general");
       return;
     }
     if (!formData.firstName || !formData.lastName) {
       toast.error("Please enter first and last name");
+      setActiveTab("general");
       return;
     }
     if (!formData.email) {
       toast.error("Please enter email address");
+      setActiveTab("general");
       return;
     }
     if (!formData.phone) {
       toast.error("Please enter mobile number");
+      setActiveTab("general");
       return;
     }
     if (!formData.temporaryPassword || formData.temporaryPassword.length < 6) {
       toast.error("Please enter a temporary password (min 6 characters)");
+      setActiveTab("access");
       return;
     }
 
@@ -291,6 +303,27 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
     }));
   };
 
+  // Navigation helpers
+  const currentTabIndex = tabs.findIndex(t => t.id === activeTab);
+  const isFirstTab = currentTabIndex === 0;
+  const isLastTab = currentTabIndex === tabs.length - 1;
+
+  const goToNextTab = () => {
+    if (!isLastTab) {
+      setActiveTab(tabs[currentTabIndex + 1].id);
+    }
+  };
+
+  const goToPrevTab = () => {
+    if (!isFirstTab) {
+      setActiveTab(tabs[currentTabIndex - 1].id);
+    }
+  };
+
+  // Check if can proceed to next tab
+  const canProceedFromGeneral = formData.userType && formData.firstName && formData.lastName && formData.email && formData.phone;
+  const canProceedFromOrganization = true; // Organization fields are optional
+
   return (
     <div className="flex flex-col h-full bg-background">
       {/* SAP Fiori-style Object Page Header */}
@@ -314,529 +347,589 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={createUserMutation.isPending || !formData.userType}
-            className="bg-gradient-to-r from-[#FF6B9D] to-[#C44569] hover:from-[#FF5A8A] hover:to-[#B33D5C]"
-          >
-            {createUserMutation.isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Creating...
-              </>
-            ) : (
-              "Create User"
-            )}
-          </Button>
         </div>
       </div>
 
-      {/* SAP Fiori-style Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-        <div className="border-b bg-card px-6">
-          <TabsList className="h-12 bg-transparent p-0 gap-0">
-            <TabsTrigger 
-              value="general" 
-              className="h-12 px-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-            >
-              General Information
-            </TabsTrigger>
-            <TabsTrigger 
-              value="organization" 
-              className="h-12 px-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-              disabled={!formData.userType}
-            >
-              Organization
-            </TabsTrigger>
-            <TabsTrigger 
-              value="access" 
-              className="h-12 px-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-              disabled={!formData.userType}
-            >
-              Access & Security
-            </TabsTrigger>
-          </TabsList>
+      {/* Main Content with Left Sidebar Tabs */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Sidebar - Vertical Tabs */}
+        <div className="w-64 border-r bg-card flex flex-col">
+          <div className="p-4 border-b">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Steps</p>
+          </div>
+          <nav className="flex-1 p-2">
+            {tabs.map((tab, index) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              const isCompleted = index < currentTabIndex;
+              const isDisabled = !formData.userType && index > 0;
+              
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => !isDisabled && setActiveTab(tab.id)}
+                  disabled={isDisabled}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
+                    isActive 
+                      ? "bg-gradient-to-r from-[#FF6B9D]/10 to-[#C44569]/10 text-[#C44569] border-l-4 border-[#C44569]" 
+                      : isCompleted
+                        ? "text-foreground hover:bg-muted"
+                        : isDisabled
+                          ? "text-muted-foreground/50 cursor-not-allowed"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    isActive 
+                      ? "bg-gradient-to-br from-[#FF6B9D] to-[#C44569] text-white"
+                      : isCompleted
+                        ? "bg-green-500 text-white"
+                        : "bg-muted text-muted-foreground"
+                  }`}>
+                    {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{tab.label}</p>
+                  </div>
+                  {isActive && <ChevronRight className="h-4 w-4 text-[#C44569]" />}
+                </button>
+              );
+            })}
+          </nav>
         </div>
 
-        <ScrollArea className="flex-1">
-          <div className="p-6">
-            {/* General Information Tab */}
-            <TabsContent value="general" className="mt-0 space-y-6">
-              {/* User Type Section */}
-              <div className="bg-card rounded-lg border p-6">
-                <SectionHeader title="User Classification" />
-                <div className="grid grid-cols-3 gap-6">
-                  <FormField label="User Type" required>
-                    <Select
-                      value={formData.userType}
-                      onValueChange={(value) => setFormData({ ...formData, userType: value as UserType, isSubContractor: false })}
-                    >
-                      <SelectTrigger className="bg-background">
-                        <SelectValue placeholder="Select user type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="centre3_employee">Centre3 Employee</SelectItem>
-                        <SelectItem value="contractor">Contractor</SelectItem>
-                        <SelectItem value="client">Client</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormField>
-
-                  {formData.userType === "contractor" && (
-                    <div className="flex items-end pb-2">
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="isSubContractor"
-                          checked={formData.isSubContractor}
-                          onCheckedChange={(checked) => setFormData({ 
-                            ...formData, 
-                            isSubContractor: !!checked,
-                            subContractorCompanyId: null,
-                          })}
-                        />
-                        <Label htmlFor="isSubContractor" className="text-sm cursor-pointer">
-                          This is a Sub-Contractor
-                        </Label>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {formData.userType && (
-                <>
-                  {/* Identity Verification Section */}
+        {/* Right Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <ScrollArea className="flex-1">
+            <div className="p-6">
+              {/* General Information Tab */}
+              {activeTab === "general" && (
+                <div className="space-y-6">
+                  {/* User Type Section */}
                   <div className="bg-card rounded-lg border p-6">
-                    <SectionHeader title="Identity Verification" />
-                    <div className="grid grid-cols-4 gap-6">
-                      <FormField label="ID Type">
-                        <Select value={idType} onValueChange={(value: "national_id" | "iqama") => setIdType(value)}>
-                          <SelectTrigger className="bg-background">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="national_id">National ID</SelectItem>
-                            <SelectItem value="iqama">Iqama</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormField>
-                      
-                      <FormField label="ID Number" hint={`${idNumber.length}/10 digits`}>
-                        <Input
-                          value={idNumber}
-                          onChange={(e) => handleIdNumberChange(e.target.value)}
-                          placeholder={idType === "national_id" ? "1XXXXXXXXX" : "2XXXXXXXXX"}
-                          maxLength={10}
-                          className="bg-background"
-                        />
-                      </FormField>
-                      
-                      <div className="flex items-end">
-                        <Button 
-                          type="button"
-                          onClick={handleVerifyYakeen}
-                          disabled={verifyYakeenMutation.isPending || idNumber.length !== 10}
-                          variant="outline"
-                          className="w-full"
-                        >
-                          {verifyYakeenMutation.isPending ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <>
-                              <Search className="h-4 w-4 mr-2" />
-                              Verify with Yakeen
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                      
-                      <div className="flex items-end">
-                        {isVerified && (
-                          <Badge className="bg-green-500 h-9 px-4">
-                            <CheckCircle className="h-4 w-4 mr-2" /> Verified
-                          </Badge>
-                        )}
-                        {verificationError && (
-                          <div className="flex items-center gap-2 text-amber-600 text-sm">
-                            <AlertCircle className="h-4 w-4" />
-                            <span className="truncate">{verificationError}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Personal Data Section */}
-                  <div className="bg-card rounded-lg border p-6">
-                    <SectionHeader title="Personal Data" />
-                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                      <FormField label="First Name (English)" required>
-                        <Input
-                          value={formData.firstName}
-                          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                          placeholder="Enter first name"
-                          disabled={isVerified}
-                          className={`bg-background ${isVerified ? "bg-muted" : ""}`}
-                        />
-                      </FormField>
-                      
-                      <FormField label="Last Name (English)" required>
-                        <Input
-                          value={formData.lastName}
-                          onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                          placeholder="Enter last name"
-                          disabled={isVerified}
-                          className={`bg-background ${isVerified ? "bg-muted" : ""}`}
-                        />
-                      </FormField>
-                      
-                      <FormField label="First Name (Arabic) / الاسم الأول">
-                        <Input
-                          value={formData.firstNameAr}
-                          onChange={(e) => setFormData({ ...formData, firstNameAr: e.target.value })}
-                          placeholder="أدخل الاسم الأول"
-                          dir="rtl"
-                          disabled={isVerified}
-                          className={`bg-background ${isVerified ? "bg-muted" : ""}`}
-                        />
-                      </FormField>
-                      
-                      <FormField label="Last Name (Arabic) / اسم العائلة">
-                        <Input
-                          value={formData.lastNameAr}
-                          onChange={(e) => setFormData({ ...formData, lastNameAr: e.target.value })}
-                          placeholder="أدخل اسم العائلة"
-                          dir="rtl"
-                          disabled={isVerified}
-                          className={`bg-background ${isVerified ? "bg-muted" : ""}`}
-                        />
-                      </FormField>
-                    </div>
-                  </div>
-
-                  {/* Communication Data Section */}
-                  <div className="bg-card rounded-lg border p-6">
-                    <SectionHeader title="Communication Data" />
-                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                      <FormField label="Email Address" required>
-                        <Input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="user@example.com"
-                          className="bg-background"
-                        />
-                      </FormField>
-                      
-                      <FormField label="Mobile Number" required>
-                        <Input
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+966 5XX XXX XXXX"
-                          className="bg-background"
-                        />
-                      </FormField>
-                    </div>
-                  </div>
-                </>
-              )}
-            </TabsContent>
-
-            {/* Organization Tab */}
-            <TabsContent value="organization" className="mt-0 space-y-6">
-              {/* Employment Data Section */}
-              <div className="bg-card rounded-lg border p-6">
-                <SectionHeader title="Employment Data" />
-                <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                  <FormField label="Job Title">
-                    <Input
-                      value={formData.jobTitle}
-                      onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
-                      placeholder="Enter job title"
-                      className="bg-background"
-                    />
-                  </FormField>
-                  
-                  <FormField label="Department">
-                    <Select
-                      value={formData.departmentId?.toString() || ""}
-                      onValueChange={(value) => setFormData({ ...formData, departmentId: value ? parseInt(value) : null })}
-                    >
-                      <SelectTrigger className="bg-background">
-                        <SelectValue placeholder="Select department" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {departments.map((dept: any) => (
-                          <SelectItem key={dept.id} value={dept.id.toString()}>
-                            {dept.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormField>
-
-                  {formData.userType === "centre3_employee" && (
-                    <>
-                      <FormField label="Employee ID">
-                        <Input
-                          value={formData.employeeId}
-                          onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
-                          placeholder="Enter employee ID"
-                          className="bg-background"
-                        />
-                      </FormField>
-                      
-                      <FormField label="Reports To">
+                    <SectionHeader title="User Classification" />
+                    <div className="grid grid-cols-3 gap-6">
+                      <FormField label="User Type" required>
                         <Select
-                          value={formData.managerId?.toString() || ""}
-                          onValueChange={(value) => setFormData({ ...formData, managerId: value ? parseInt(value) : null })}
+                          value={formData.userType}
+                          onValueChange={(value) => setFormData({ ...formData, userType: value as UserType, isSubContractor: false })}
                         >
                           <SelectTrigger className="bg-background">
-                            <SelectValue placeholder="Select manager" />
+                            <SelectValue placeholder="Select user type" />
                           </SelectTrigger>
                           <SelectContent>
-                            {users.map((user: any) => (
-                              <SelectItem key={user.id} value={user.id.toString()}>
-                                {user.name || `${user.firstName} ${user.lastName}`}
-                              </SelectItem>
-                            ))}
+                            <SelectItem value="centre3_employee">Centre3 Employee</SelectItem>
+                            <SelectItem value="contractor">Contractor</SelectItem>
+                            <SelectItem value="client">Client</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormField>
+
+                      {formData.userType === "contractor" && (
+                        <div className="flex items-end pb-2">
+                          <div className="flex items-center gap-2">
+                            <Checkbox
+                              id="isSubContractor"
+                              checked={formData.isSubContractor}
+                              onCheckedChange={(checked) => setFormData({ 
+                                ...formData, 
+                                isSubContractor: !!checked,
+                                subContractorCompanyId: null,
+                              })}
+                            />
+                            <Label htmlFor="isSubContractor" className="text-sm cursor-pointer">
+                              This is a Sub-Contractor
+                            </Label>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {formData.userType && (
+                    <>
+                      {/* Identity Verification Section */}
+                      <div className="bg-card rounded-lg border p-6">
+                        <SectionHeader title="Identity Verification" />
+                        <div className="grid grid-cols-4 gap-6">
+                          <FormField label="ID Type">
+                            <Select value={idType} onValueChange={(value: "national_id" | "iqama") => setIdType(value)}>
+                              <SelectTrigger className="bg-background">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="national_id">National ID</SelectItem>
+                                <SelectItem value="iqama">Iqama</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormField>
+                          
+                          <FormField label="ID Number" hint={`${idNumber.length}/10 digits`}>
+                            <Input
+                              value={idNumber}
+                              onChange={(e) => handleIdNumberChange(e.target.value)}
+                              placeholder={idType === "national_id" ? "1XXXXXXXXX" : "2XXXXXXXXX"}
+                              maxLength={10}
+                              className="bg-background"
+                            />
+                          </FormField>
+                          
+                          <div className="flex items-end">
+                            <Button 
+                              type="button"
+                              onClick={handleVerifyYakeen}
+                              disabled={verifyYakeenMutation.isPending || idNumber.length !== 10}
+                              variant="outline"
+                              className="w-full"
+                            >
+                              {verifyYakeenMutation.isPending ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <>
+                                  <Search className="h-4 w-4 mr-2" />
+                                  Verify with Yakeen
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                          
+                          <div className="flex items-end">
+                            {isVerified && (
+                              <Badge className="bg-green-500 h-9 px-4">
+                                <CheckCircle className="h-4 w-4 mr-2" /> Verified
+                              </Badge>
+                            )}
+                            {verificationError && (
+                              <div className="flex items-center gap-2 text-amber-600 text-sm">
+                                <AlertCircle className="h-4 w-4" />
+                                <span className="truncate">{verificationError}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Personal Data Section */}
+                      <div className="bg-card rounded-lg border p-6">
+                        <SectionHeader title="Personal Data" />
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                          <FormField label="First Name (English)" required>
+                            <Input
+                              value={formData.firstName}
+                              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                              placeholder="Enter first name"
+                              disabled={isVerified}
+                              className={`bg-background ${isVerified ? "bg-muted" : ""}`}
+                            />
+                          </FormField>
+                          
+                          <FormField label="Last Name (English)" required>
+                            <Input
+                              value={formData.lastName}
+                              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                              placeholder="Enter last name"
+                              disabled={isVerified}
+                              className={`bg-background ${isVerified ? "bg-muted" : ""}`}
+                            />
+                          </FormField>
+                          
+                          <FormField label="First Name (Arabic) / الاسم الأول">
+                            <Input
+                              value={formData.firstNameAr}
+                              onChange={(e) => setFormData({ ...formData, firstNameAr: e.target.value })}
+                              placeholder="أدخل الاسم الأول"
+                              dir="rtl"
+                              disabled={isVerified}
+                              className={`bg-background ${isVerified ? "bg-muted" : ""}`}
+                            />
+                          </FormField>
+                          
+                          <FormField label="Last Name (Arabic) / اسم العائلة">
+                            <Input
+                              value={formData.lastNameAr}
+                              onChange={(e) => setFormData({ ...formData, lastNameAr: e.target.value })}
+                              placeholder="أدخل اسم العائلة"
+                              dir="rtl"
+                              disabled={isVerified}
+                              className={`bg-background ${isVerified ? "bg-muted" : ""}`}
+                            />
+                          </FormField>
+                        </div>
+                      </div>
+
+                      {/* Communication Data Section */}
+                      <div className="bg-card rounded-lg border p-6">
+                        <SectionHeader title="Communication Data" />
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                          <FormField label="Email Address" required>
+                            <Input
+                              type="email"
+                              value={formData.email}
+                              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                              placeholder="user@example.com"
+                              className="bg-background"
+                            />
+                          </FormField>
+                          
+                          <FormField label="Mobile Number" required>
+                            <Input
+                              value={formData.phone}
+                              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                              placeholder="+966 5XX XXX XXXX"
+                              className="bg-background"
+                            />
+                          </FormField>
+                        </div>
+                      </div>
                     </>
                   )}
                 </div>
-              </div>
+              )}
 
-              {/* Contractor Company Section */}
-              {formData.userType === "contractor" && (
-                <div className="bg-card rounded-lg border p-6">
-                  <SectionHeader title="Contractor Assignment" />
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                    <FormField 
-                      label={formData.isSubContractor ? "Parent Contractor Company" : "Contractor Company"} 
-                      required
-                    >
-                      <Select
-                        value={formData.contractorCompanyId?.toString() || ""}
-                        onValueChange={(value) => setFormData({ ...formData, contractorCompanyId: value ? parseInt(value) : null })}
-                      >
-                        <SelectTrigger className="bg-background">
-                          <SelectValue placeholder="Select company" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {contractorCompanies.map((company: any) => (
-                            <SelectItem key={company.id} value={company.id.toString()}>
-                              {company.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormField>
-                    
-                    {formData.isSubContractor ? (
-                      <FormField label="Sub-Contractor Company" required>
+              {/* Organization Tab */}
+              {activeTab === "organization" && (
+                <div className="space-y-6">
+                  {/* Employment Data Section */}
+                  <div className="bg-card rounded-lg border p-6">
+                    <SectionHeader title="Employment Data" />
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                      <FormField label="Job Title">
+                        <Input
+                          value={formData.jobTitle}
+                          onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
+                          placeholder="Enter job title"
+                          className="bg-background"
+                        />
+                      </FormField>
+                      
+                      <FormField label="Department">
                         <Select
-                          value={formData.subContractorCompanyId?.toString() || ""}
-                          onValueChange={(value) => setFormData({ ...formData, subContractorCompanyId: value ? parseInt(value) : null })}
+                          value={formData.departmentId?.toString() || ""}
+                          onValueChange={(value) => setFormData({ ...formData, departmentId: value ? parseInt(value) : null })}
                         >
                           <SelectTrigger className="bg-background">
-                            <SelectValue placeholder="Select sub-contractor" />
+                            <SelectValue placeholder="Select department" />
                           </SelectTrigger>
                           <SelectContent>
-                            {subContractorCompanies.map((company: any) => (
-                              <SelectItem key={company.id} value={company.id.toString()}>
-                                {company.name}
+                            {departments.map((dept: any) => (
+                              <SelectItem key={dept.id} value={dept.id.toString()}>
+                                {dept.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </FormField>
-                    ) : (
-                      <FormField label="Centre3 Contact Person">
-                        <Select
-                          value={formData.reportingToId?.toString() || ""}
-                          onValueChange={(value) => setFormData({ ...formData, reportingToId: value ? parseInt(value) : null })}
-                        >
-                          <SelectTrigger className="bg-background">
-                            <SelectValue placeholder="Select contact" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {users.map((user: any) => (
-                              <SelectItem key={user.id} value={user.id.toString()}>
-                                {user.name || `${user.firstName} ${user.lastName}`}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormField>
-                    )}
-                    
-                    <FormField label="Contract Reference" hint="Auto-populated from company">
-                      <Input
-                        value={formData.contractReference}
-                        className="bg-muted"
-                        readOnly
-                        placeholder="—"
-                      />
-                    </FormField>
-                    
-                    <FormField label="Contract Expiry Date" hint="Auto-populated from company">
-                      <Input
-                        type="date"
-                        value={formData.contractExpiry}
-                        className="bg-muted"
-                        readOnly
-                      />
-                    </FormField>
-                  </div>
-                </div>
-              )}
 
-              {/* Client Company Section */}
-              {formData.userType === "client" && (
-                <div className="bg-card rounded-lg border p-6">
-                  <SectionHeader title="Client Assignment" />
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                    <FormField label="Client Company" required>
-                      <Select
-                        value={formData.clientCompanyId?.toString() || ""}
-                        onValueChange={(value) => setFormData({ ...formData, clientCompanyId: value ? parseInt(value) : null })}
-                      >
-                        <SelectTrigger className="bg-background">
-                          <SelectValue placeholder="Select client company" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {clientCompanies.map((company: any) => (
-                            <SelectItem key={company.id} value={company.id.toString()}>
-                              {company.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormField>
-                    
-                    <FormField label="Account Manager (Centre3)">
-                      <Select
-                        value={formData.accountManagerId?.toString() || ""}
-                        onValueChange={(value) => setFormData({ ...formData, accountManagerId: value ? parseInt(value) : null })}
-                      >
-                        <SelectTrigger className="bg-background">
-                          <SelectValue placeholder="Select account manager" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {users.map((user: any) => (
-                            <SelectItem key={user.id} value={user.id.toString()}>
-                              {user.name || `${user.firstName} ${user.lastName}`}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormField>
-                  </div>
-                </div>
-              )}
-            </TabsContent>
-
-            {/* Access & Security Tab */}
-            <TabsContent value="access" className="mt-0 space-y-6">
-              {/* Site Access Section */}
-              <div className="bg-card rounded-lg border p-6">
-                <SectionHeader title="Site Access" />
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <Checkbox
-                      id="allSites"
-                      checked={formData.allSitesAccess}
-                      onCheckedChange={(checked) => setFormData({ 
-                        ...formData, 
-                        allSitesAccess: !!checked,
-                        selectedSiteIds: [],
-                      })}
-                    />
-                    <Label htmlFor="allSites" className="cursor-pointer">
-                      Grant access to all sites
-                    </Label>
-                  </div>
-
-                  {!formData.allSitesAccess && (
-                    <div className="border rounded-lg p-4 bg-background">
-                      <p className="text-sm text-muted-foreground mb-3">Select specific sites:</p>
-                      <div className="grid grid-cols-3 gap-3">
-                        {sites.map((site: any) => (
-                          <div key={site.id} className="flex items-center gap-2">
-                            <Checkbox
-                              id={`site-${site.id}`}
-                              checked={formData.selectedSiteIds.includes(site.id)}
-                              onCheckedChange={() => toggleSite(site.id)}
+                      {formData.userType === "centre3_employee" && (
+                        <>
+                          <FormField label="Employee ID">
+                            <Input
+                              value={formData.employeeId}
+                              onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
+                              placeholder="Enter employee ID"
+                              className="bg-background"
                             />
-                            <Label htmlFor={`site-${site.id}`} className="text-sm cursor-pointer">
-                              {site.name}
-                            </Label>
-                          </div>
-                        ))}
+                          </FormField>
+                          
+                          <FormField label="Reports To">
+                            <Select
+                              value={formData.managerId?.toString() || ""}
+                              onValueChange={(value) => setFormData({ ...formData, managerId: value ? parseInt(value) : null })}
+                            >
+                              <SelectTrigger className="bg-background">
+                                <SelectValue placeholder="Select manager" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {users.map((user: any) => (
+                                  <SelectItem key={user.id} value={user.id.toString()}>
+                                    {user.name || `${user.firstName} ${user.lastName}`}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormField>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Contractor Company Section */}
+                  {formData.userType === "contractor" && (
+                    <div className="bg-card rounded-lg border p-6">
+                      <SectionHeader title="Contractor Assignment" />
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                        <FormField 
+                          label={formData.isSubContractor ? "Parent Contractor Company" : "Contractor Company"} 
+                          required
+                        >
+                          <Select
+                            value={formData.contractorCompanyId?.toString() || ""}
+                            onValueChange={(value) => setFormData({ ...formData, contractorCompanyId: value ? parseInt(value) : null })}
+                          >
+                            <SelectTrigger className="bg-background">
+                              <SelectValue placeholder="Select company" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {contractorCompanies.map((company: any) => (
+                                <SelectItem key={company.id} value={company.id.toString()}>
+                                  {company.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormField>
+                        
+                        {formData.isSubContractor ? (
+                          <FormField label="Sub-Contractor Company" required>
+                            <Select
+                              value={formData.subContractorCompanyId?.toString() || ""}
+                              onValueChange={(value) => setFormData({ ...formData, subContractorCompanyId: value ? parseInt(value) : null })}
+                            >
+                              <SelectTrigger className="bg-background">
+                                <SelectValue placeholder="Select sub-contractor" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {subContractorCompanies.map((company: any) => (
+                                  <SelectItem key={company.id} value={company.id.toString()}>
+                                    {company.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormField>
+                        ) : (
+                          <FormField label="Centre3 Contact Person">
+                            <Select
+                              value={formData.reportingToId?.toString() || ""}
+                              onValueChange={(value) => setFormData({ ...formData, reportingToId: value ? parseInt(value) : null })}
+                            >
+                              <SelectTrigger className="bg-background">
+                                <SelectValue placeholder="Select contact" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {users.map((user: any) => (
+                                  <SelectItem key={user.id} value={user.id.toString()}>
+                                    {user.name || `${user.firstName} ${user.lastName}`}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormField>
+                        )}
+                        
+                        <FormField label="Contract Reference" hint="Auto-populated from company">
+                          <Input
+                            value={formData.contractReference}
+                            className="bg-muted"
+                            readOnly
+                            placeholder="—"
+                          />
+                        </FormField>
+                        
+                        <FormField label="Contract Expiry Date" hint="Auto-populated from company">
+                          <Input
+                            type="date"
+                            value={formData.contractExpiry}
+                            className="bg-muted"
+                            readOnly
+                          />
+                        </FormField>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Client Company Section */}
+                  {formData.userType === "client" && (
+                    <div className="bg-card rounded-lg border p-6">
+                      <SectionHeader title="Client Assignment" />
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                        <FormField label="Client Company" required>
+                          <Select
+                            value={formData.clientCompanyId?.toString() || ""}
+                            onValueChange={(value) => setFormData({ ...formData, clientCompanyId: value ? parseInt(value) : null })}
+                          >
+                            <SelectTrigger className="bg-background">
+                              <SelectValue placeholder="Select client company" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {clientCompanies.map((company: any) => (
+                                <SelectItem key={company.id} value={company.id.toString()}>
+                                  {company.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormField>
+                        
+                        <FormField label="Account Manager (Centre3)">
+                          <Select
+                            value={formData.accountManagerId?.toString() || ""}
+                            onValueChange={(value) => setFormData({ ...formData, accountManagerId: value ? parseInt(value) : null })}
+                          >
+                            <SelectTrigger className="bg-background">
+                              <SelectValue placeholder="Select account manager" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {users.map((user: any) => (
+                                <SelectItem key={user.id} value={user.id.toString()}>
+                                  {user.name || `${user.firstName} ${user.lastName}`}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormField>
                       </div>
                     </div>
                   )}
                 </div>
-              </div>
+              )}
 
-              {/* Account Settings Section */}
-              <div className="bg-card rounded-lg border p-6">
-                <SectionHeader title="Account Settings" />
-                <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                  <FormField label="Temporary Password" required hint="Minimum 6 characters">
-                    <Input
-                      type="password"
-                      value={formData.temporaryPassword}
-                      onChange={(e) => setFormData({ ...formData, temporaryPassword: e.target.value })}
-                      placeholder="Enter temporary password"
-                      className="bg-background"
-                    />
-                  </FormField>
-                  
-                  <div className="space-y-4 pt-6">
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        id="sendWelcome"
-                        checked={formData.sendWelcomeEmail}
-                        onCheckedChange={(checked) => setFormData({ ...formData, sendWelcomeEmail: !!checked })}
-                      />
-                      <Label htmlFor="sendWelcome" className="cursor-pointer">
-                        Send welcome email with login instructions
-                      </Label>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        id="mustChange"
-                        checked={formData.mustChangePassword}
-                        onCheckedChange={(checked) => setFormData({ ...formData, mustChangePassword: !!checked })}
-                      />
-                      <Label htmlFor="mustChange" className="cursor-pointer">
-                        Require password change on first login
-                      </Label>
-                    </div>
-
-                    {formData.userType === "contractor" && (
+              {/* Access & Security Tab */}
+              {activeTab === "access" && (
+                <div className="space-y-6">
+                  {/* Site Access Section */}
+                  <div className="bg-card rounded-lg border p-6">
+                    <SectionHeader title="Site Access" />
+                    <div className="space-y-4">
                       <div className="flex items-center gap-3">
                         <Checkbox
-                          id="expiresWithContract"
-                          checked={formData.accountExpiresWithContract}
-                          onCheckedChange={(checked) => setFormData({ ...formData, accountExpiresWithContract: !!checked })}
+                          id="allSites"
+                          checked={formData.allSitesAccess}
+                          onCheckedChange={(checked) => setFormData({ 
+                            ...formData, 
+                            allSitesAccess: !!checked,
+                            selectedSiteIds: [],
+                          })}
                         />
-                        <Label htmlFor="expiresWithContract" className="cursor-pointer">
-                          Account expires with contract
+                        <Label htmlFor="allSites" className="cursor-pointer">
+                          Grant access to all sites
                         </Label>
                       </div>
-                    )}
+
+                      {!formData.allSitesAccess && (
+                        <div className="border rounded-lg p-4 bg-background">
+                          <p className="text-sm text-muted-foreground mb-3">Select specific sites:</p>
+                          <div className="grid grid-cols-3 gap-3">
+                            {sites.map((site: any) => (
+                              <div key={site.id} className="flex items-center gap-2">
+                                <Checkbox
+                                  id={`site-${site.id}`}
+                                  checked={formData.selectedSiteIds.includes(site.id)}
+                                  onCheckedChange={() => toggleSite(site.id)}
+                                />
+                                <Label htmlFor={`site-${site.id}`} className="text-sm cursor-pointer">
+                                  {site.name}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Account Settings Section */}
+                  <div className="bg-card rounded-lg border p-6">
+                    <SectionHeader title="Account Settings" />
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                      <FormField label="Temporary Password" required hint="Minimum 6 characters">
+                        <Input
+                          type="password"
+                          value={formData.temporaryPassword}
+                          onChange={(e) => setFormData({ ...formData, temporaryPassword: e.target.value })}
+                          placeholder="Enter temporary password"
+                          className="bg-background"
+                        />
+                      </FormField>
+                      
+                      <div className="space-y-4 pt-6">
+                        <div className="flex items-center gap-3">
+                          <Checkbox
+                            id="sendWelcome"
+                            checked={formData.sendWelcomeEmail}
+                            onCheckedChange={(checked) => setFormData({ ...formData, sendWelcomeEmail: !!checked })}
+                          />
+                          <Label htmlFor="sendWelcome" className="cursor-pointer">
+                            Send welcome email with login instructions
+                          </Label>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <Checkbox
+                            id="mustChange"
+                            checked={formData.mustChangePassword}
+                            onCheckedChange={(checked) => setFormData({ ...formData, mustChangePassword: !!checked })}
+                          />
+                          <Label htmlFor="mustChange" className="cursor-pointer">
+                            Require password change on first login
+                          </Label>
+                        </div>
+
+                        {formData.userType === "contractor" && (
+                          <div className="flex items-center gap-3">
+                            <Checkbox
+                              id="expiresWithContract"
+                              checked={formData.accountExpiresWithContract}
+                              onCheckedChange={(checked) => setFormData({ ...formData, accountExpiresWithContract: !!checked })}
+                            />
+                            <Label htmlFor="expiresWithContract" className="cursor-pointer">
+                              Account expires with contract
+                            </Label>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </TabsContent>
+              )}
+            </div>
+          </ScrollArea>
+
+          {/* Bottom Navigation Bar */}
+          <div className="border-t bg-card px-6 py-4 flex items-center justify-between">
+            <div>
+              {!isFirstTab && (
+                <Button
+                  variant="outline"
+                  onClick={goToPrevTab}
+                  className="gap-2"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-3">
+              {!isLastTab ? (
+                <Button
+                  onClick={goToNextTab}
+                  disabled={activeTab === "general" && !canProceedFromGeneral}
+                  className="gap-2 bg-gradient-to-r from-[#FF6B9D] to-[#C44569] hover:from-[#FF5A8A] hover:to-[#B33D5C]"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleSubmit}
+                  disabled={createUserMutation.isPending}
+                  className="gap-2 bg-gradient-to-r from-[#FF6B9D] to-[#C44569] hover:from-[#FF5A8A] hover:to-[#B33D5C]"
+                >
+                  {createUserMutation.isPending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    "Create User"
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
-        </ScrollArea>
-      </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
