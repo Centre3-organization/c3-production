@@ -802,3 +802,7 @@ Time conditions:
 - [x] Add English translations (basic)
 - [ ] Add Arabic translations
 - [ ] Add role-based menu visibility
+
+
+## MCM UI Updates (Jan 30, 2026)
+- [x] Update MCM New Card Request UI to match existing New Request form design
