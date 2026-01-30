@@ -978,3 +978,7 @@ Time conditions:
 - [x] Update Groups UI to auto-populate from Companies for external groups
 - [x] Update User form to use integrated Groups with company data (already uses companies directly)
 - [x] Test the Groups-Companies integration
+
+## Groups Creation Bug Fix (Jan 31, 2026)
+- [x] Fix companyId column issue when creating groups
+- [x] Verify groups table has companyId column in database
