@@ -36,7 +36,11 @@ import {
   RefreshCw,
   AlertTriangle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  CreditCard,
+  FileText,
+  Clock,
+  Plus
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -50,6 +54,9 @@ export default function CardDirectory() {
   const [showBlockDialog, setShowBlockDialog] = useState(false);
   const [blockReason, setBlockReason] = useState<string>("");
   const [blockType, setBlockType] = useState<string>("temporary");
+
+  // Fetch stats
+  const { data: stats, isLoading: statsLoading } = trpc.mcm.getStats.useQuery();
 
   // Fetch cards
   const { data: cardsData, isLoading, refetch } = trpc.mcm.cards.list.useQuery({
@@ -75,6 +82,37 @@ export default function CardDirectory() {
       refetch();
     },
   });
+
+  const statCards = [
+    {
+      title: t("mcm.stats.activeCards", "Active Cards"),
+      value: stats?.activeCards || 0,
+      icon: CreditCard,
+      color: "text-green-500",
+      bgColor: "bg-green-500/10",
+    },
+    {
+      title: t("mcm.stats.pendingRequests", "Pending Requests"),
+      value: stats?.pendingRequests || 0,
+      icon: FileText,
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+    },
+    {
+      title: t("mcm.stats.expiringSoon", "Expiring Soon"),
+      value: stats?.expiringSoon || 0,
+      icon: Clock,
+      color: "text-yellow-500",
+      bgColor: "bg-yellow-500/10",
+    },
+    {
+      title: t("mcm.stats.blockedCards", "Blocked Cards"),
+      value: stats?.blockedCards || 0,
+      icon: AlertTriangle,
+      color: "text-red-500",
+      bgColor: "bg-red-500/10",
+    },
+  ];
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
@@ -122,14 +160,38 @@ export default function CardDirectory() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{t("mcm.cardDirectory", "Card Directory")}</h1>
+          <h1 className="text-2xl font-bold">{t("mcm.title", "Magnetic Card Management")}</h1>
           <p className="text-muted-foreground">
-            {t("mcm.cardDirectoryDesc", "View and manage all magnetic cards")}
+            {t("mcm.subtitle", "Manage access cards for employees and contractors")}
           </p>
         </div>
         <Link href="/mcm/request/new">
-          <Button>{t("mcm.newRequest", "New Card Request")}</Button>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            {t("mcm.newRequest", "New Card Request")}
+          </Button>
         </Link>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {statCards.map((stat) => (
+          <Card key={stat.title}>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">{stat.title}</p>
+                  <p className="text-3xl font-bold mt-1">
+                    {statsLoading ? "..." : stat.value}
+                  </p>
+                </div>
+                <div className={`p-3 rounded-full ${stat.bgColor}`}>
+                  <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Filters */}
@@ -307,10 +369,11 @@ export default function CardDirectory() {
                   <SelectValue placeholder={t("mcm.selectReason", "Select reason")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="security_incident">{t("mcm.securityIncident", "Security Incident")}</SelectItem>
-                  <SelectItem value="policy_violation">{t("mcm.policyViolation", "Policy Violation")}</SelectItem>
-                  <SelectItem value="investigation">{t("mcm.investigation", "Under Investigation")}</SelectItem>
-                  <SelectItem value="emergency">{t("mcm.emergency", "Emergency")}</SelectItem>
+                  <SelectItem value="security_violation">{t("mcm.securityViolation", "Security Violation")}</SelectItem>
+                  <SelectItem value="contract_ended">{t("mcm.contractEnded", "Contract Ended")}</SelectItem>
+                  <SelectItem value="lost_card">{t("mcm.lostCard", "Lost Card")}</SelectItem>
+                  <SelectItem value="damaged_card">{t("mcm.damagedCard", "Damaged Card")}</SelectItem>
+                  <SelectItem value="other">{t("mcm.other", "Other")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -331,12 +394,12 @@ export default function CardDirectory() {
             <Button variant="outline" onClick={() => setShowBlockDialog(false)}>
               {t("common.cancel", "Cancel")}
             </Button>
-            <Button
-              variant="destructive"
+            <Button 
+              variant="destructive" 
               onClick={handleBlock}
               disabled={!blockReason || blockMutation.isPending}
             >
-              {blockMutation.isPending ? t("common.blocking", "Blocking...") : t("mcm.blockCard", "Block Card")}
+              {t("mcm.blockCard", "Block Card")}
             </Button>
           </DialogFooter>
         </DialogContent>

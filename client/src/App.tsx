@@ -55,7 +55,7 @@ import TranslationManagement from "./modules/settings/TranslationManagement";
 import RequestTypeConfig from "./modules/settings/RequestTypeConfig";
 
 // MCM Module (Magnetic Card Management)
-import McmDashboard from "./modules/mcm/McmDashboard";
+// McmDashboard removed - stats moved to CardDirectory
 import CardDirectory from "./modules/mcm/CardDirectory";
 import NewCardRequest from "./modules/mcm/NewCardRequest";
 
@@ -199,7 +199,7 @@ function Router() {
       {/* Protected Routes - MCM (Magnetic Card Management) */}
       <Route path="/mcm">
         <Layout>
-          <McmDashboard />
+          <CardDirectory />
         </Layout>
       </Route>
       <Route path="/mcm/cards">

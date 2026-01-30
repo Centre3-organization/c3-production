@@ -806,3 +806,5 @@ Time conditions:
 
 ## MCM UI Updates (Jan 30, 2026)
 - [x] Update MCM New Card Request UI to match existing New Request form design
+
+- [x] Remove MCM Dashboard and move statistics to Card Directory page
