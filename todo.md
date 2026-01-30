@@ -846,3 +846,15 @@ Time conditions:
 - [x] Add cascading Site → Zone → Area dropdowns for site access
 - [x] Add Contractor/Client companies to Master Data settings
 - [x] Auto-populate contract reference/expiry from selected company
+
+
+## Yakeen Verification Integration (Jan 30, 2026)
+- [x] Create Yakeen verification backend endpoint (mock for now)
+- [x] Add ID Type selection (National ID / Iqama) to user form
+- [x] Add "Verify by Yakeen" button next to User Type dropdown
+- [x] Auto-populate user data on successful verification
+- [x] Show manual entry fields if verification fails
+- [x] Add Arabic name fields (firstNameAr, lastNameAr)
+- [x] Make Job Title field optional (not mandatory)
+- [x] Add multi-site selection with "All Sites" option
+- [x] Update cascading to work with multiple sites

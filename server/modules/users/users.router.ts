@@ -12,6 +12,83 @@ import {
 import bcrypt from "bcryptjs";
 
 export const usersRouter = router({
+  // Yakeen verification endpoint (mock implementation)
+  verifyByYakeen: protectedProcedure
+    .input(
+      z.object({
+        idType: z.enum(["national_id", "iqama"]),
+        idNumber: z.string().min(10, "ID number must be at least 10 digits"),
+        dateOfBirth: z.string().optional(), // Format: YYYY-MM-DD
+      })
+    )
+    .mutation(async ({ input }) => {
+      // Mock Yakeen verification - in production, this would call the actual Yakeen API
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Mock successful verification for demo purposes
+      // In production, this would validate against Yakeen's SOAP/REST API
+      const mockData: Record<string, {
+        firstName: string;
+        lastName: string;
+        firstNameAr: string;
+        lastNameAr: string;
+        dateOfBirth: string;
+        nationality: string;
+        gender: string;
+      }> = {
+        // Sample mock data for testing
+        "1234567890": {
+          firstName: "Mohammed",
+          lastName: "Al-Rashid",
+          firstNameAr: "محمد",
+          lastNameAr: "الراشد",
+          dateOfBirth: "1985-03-15",
+          nationality: "Saudi",
+          gender: "Male",
+        },
+        "2345678901": {
+          firstName: "Ahmed",
+          lastName: "Al-Fahad",
+          firstNameAr: "أحمد",
+          lastNameAr: "الفهد",
+          dateOfBirth: "1990-07-22",
+          nationality: "Saudi",
+          gender: "Male",
+        },
+        "3456789012": {
+          firstName: "Fatima",
+          lastName: "Al-Salem",
+          firstNameAr: "فاطمة",
+          lastNameAr: "السالم",
+          dateOfBirth: "1988-11-08",
+          nationality: "Saudi",
+          gender: "Female",
+        },
+      };
+      
+      const userData = mockData[input.idNumber];
+      
+      if (userData) {
+        return {
+          success: true,
+          verified: true,
+          data: {
+            ...userData,
+            idType: input.idType,
+            idNumber: input.idNumber,
+          },
+        };
+      }
+      
+      // For any other ID, return not found (user can enter manually)
+      return {
+        success: true,
+        verified: false,
+        message: "ID not found in Yakeen database. Please enter information manually.",
+      };
+    }),
+
   // Get current authenticated user
   me: protectedProcedure.query(async ({ ctx }) => {
     if (!ctx.user) {
