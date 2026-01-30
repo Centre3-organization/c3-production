@@ -64,6 +64,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { trpc } from "@/utils/trpc";
+import NewUserForm from "./NewUserForm";
 
 // Permission definitions for the UI
 const permissionModules = [
@@ -323,10 +324,12 @@ export default function Users() {
     }
     
     createUserMutation.mutate({
+      userType: "centre3_employee",
       firstName: newUserForm.firstName,
       lastName: newUserForm.lastName,
       email: newUserForm.email,
-      phone: newUserForm.phone || undefined,
+      phone: newUserForm.phone || "+966",
+      jobTitle: "Staff",
       temporaryPassword: newUserForm.temporaryPassword,
       role: newUserForm.role,
       departmentId: newUserForm.departmentId,
@@ -500,135 +503,16 @@ export default function Users() {
         </Button>
       </div>
 
-      {/* Add User Dialog - Updated to match the design */}
+      {/* Add User Dialog - Multi-step wizard */}
       <Dialog open={newUserOpen} onOpenChange={setNewUserOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Add New User</DialogTitle>
-            <DialogDescription>
-              Create a new user account. They will receive an email to set their password.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleAddUser}>
-            <div className="grid gap-4 py-4">
-              {/* First Name & Last Name Row */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First name</Label>
-                  <Input 
-                    id="firstName" 
-                    placeholder="Ahmed" 
-                    value={newUserForm.firstName}
-                    onChange={(e) => setNewUserForm({...newUserForm, firstName: e.target.value})}
-                    className="bg-purple-50/50 border-purple-200 focus:border-purple-400"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last name</Label>
-                  <Input 
-                    id="lastName" 
-                    placeholder="Al-Sayed" 
-                    value={newUserForm.lastName}
-                    onChange={(e) => setNewUserForm({...newUserForm, lastName: e.target.value})}
-                    className="bg-slate-50 border-slate-200"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Email & Phone Row */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="mohsiin@gmail.com" 
-                    value={newUserForm.email}
-                    onChange={(e) => setNewUserForm({...newUserForm, email: e.target.value})}
-                    className="bg-purple-50/50 border-purple-200 focus:border-purple-400"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input 
-                    id="phone" 
-                    type="tel" 
-                    placeholder="+966 5..." 
-                    value={newUserForm.phone}
-                    onChange={(e) => setNewUserForm({...newUserForm, phone: e.target.value})}
-                    className="bg-slate-50 border-slate-200"
-                  />
-                </div>
-              </div>
-
-              {/* Temporary Password */}
-              <div className="space-y-2">
-                <Label htmlFor="temporaryPassword">Temporary Password</Label>
-                <Input 
-                  id="temporaryPassword" 
-                  type="password" 
-                  placeholder="••••••" 
-                  value={newUserForm.temporaryPassword}
-                  onChange={(e) => setNewUserForm({...newUserForm, temporaryPassword: e.target.value})}
-                  className="bg-purple-50/50 border-purple-200 focus:border-purple-400"
-                  required
-                  minLength={6}
-                />
-                <p className="text-xs text-muted-foreground">User can change this after first login</p>
-              </div>
-
-              {/* Role & Department Row */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="role">Role</Label>
-                  <Select 
-                    value={newUserForm.role} 
-                    onValueChange={(value: "user" | "admin") => setNewUserForm({...newUserForm, role: value})}
-                  >
-                    <SelectTrigger className="bg-slate-50 border-slate-200">
-                      <SelectValue placeholder="Select role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="user">User</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="department">Department</Label>
-                  <Select 
-                    value={newUserForm.departmentId?.toString() || ""} 
-                    onValueChange={(value) => setNewUserForm({...newUserForm, departmentId: value ? parseInt(value) : null})}
-                  >
-                    <SelectTrigger className="bg-slate-50 border-slate-200">
-                      <SelectValue placeholder="Select department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {departments.map((dept: any) => (
-                        <SelectItem key={dept.id} value={dept.id.toString()}>
-                          {dept.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setNewUserOpen(false)}>Cancel</Button>
-              <Button 
-                type="submit" 
-                className="bg-purple-600 hover:bg-purple-700"
-                disabled={createUserMutation.isPending}
-              >
-                {createUserMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Create Account
-              </Button>
-            </DialogFooter>
-          </form>
+        <DialogContent className="sm:max-w-[900px] h-[80vh] p-0 overflow-hidden">
+          <NewUserForm
+            onSuccess={() => {
+              setNewUserOpen(false);
+              refetchUsers();
+            }}
+            onCancel={() => setNewUserOpen(false)}
+          />
         </DialogContent>
       </Dialog>
 

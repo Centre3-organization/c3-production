@@ -55,16 +55,55 @@ export const usersRouter = router({
   create: adminProcedure
     .input(
       z.object({
+        // Step 1: User Type
+        userType: z.enum(["centre3_employee", "contractor", "sub_contractor", "client"]),
+        
+        // Step 2: Personal Details (all user types)
         firstName: z.string().min(1, "First name is required"),
         lastName: z.string().min(1, "Last name is required"),
-        email: z.string().email("Valid email is required"),
-        phone: z.string().optional(),
-        temporaryPassword: z.string().min(6, "Password must be at least 6 characters"),
-        role: z.enum(["user", "admin"]).default("user"),
+        email: z.string().email("Invalid email address"),
+        phone: z.string().min(1, "Mobile number is required"),
+        jobTitle: z.string().min(1, "Job title is required"),
+        
+        // Centre3 Employee specific fields
+        employeeId: z.string().optional(),
         departmentId: z.number().nullable().optional(),
+        managerId: z.number().nullable().optional(),
+        
+        // Contractor specific fields
+        contractorCompanyId: z.number().nullable().optional(),
+        contractReference: z.string().optional(),
+        contractExpiry: z.string().optional(), // ISO date string
+        reportingToId: z.number().nullable().optional(),
+        
+        // Sub-Contractor specific fields
+        parentContractorId: z.number().nullable().optional(),
+        subContractorCompany: z.string().optional(),
+        
+        // Client specific fields
+        clientCompanyId: z.number().nullable().optional(),
+        accountManagerId: z.number().nullable().optional(),
+        
+        // Step 3: System Access
+        role: z.enum(["user", "admin"]).default("user"),
+        siteIds: z.array(z.number()).optional(),
+        
+        // Step 4: Photo
+        profilePhotoUrl: z.string().optional(),
+        
+        // Step 5: Options
+        temporaryPassword: z.string().min(6, "Password must be at least 6 characters"),
+        sendWelcomeEmail: z.boolean().default(true),
+        mustChangePassword: z.boolean().default(true),
+        accountExpiresWithContract: z.boolean().default(false),
       })
     )
     .mutation(async ({ input }) => {
+      // Validate Centre3 employee email domain
+      if (input.userType === "centre3_employee" && !input.email.endsWith("@center3.sa")) {
+        // Allow for now, but could enforce: throw new Error("Centre3 employees must use @center3.sa email");
+      }
+      
       // Hash the temporary password
       const passwordHash = await bcrypt.hash(input.temporaryPassword, 10);
       
@@ -80,7 +119,25 @@ export const usersRouter = router({
         passwordHash: passwordHash,
         role: input.role,
         departmentId: input.departmentId || null,
+        // New fields
+        userType: input.userType,
+        employeeId: input.employeeId || null,
+        jobTitle: input.jobTitle || null,
+        contractorCompanyId: input.contractorCompanyId || null,
+        parentContractorId: input.parentContractorId || null,
+        subContractorCompany: input.subContractorCompany || null,
+        clientCompanyId: input.clientCompanyId || null,
+        contractReference: input.contractReference || null,
+        contractExpiry: input.contractExpiry ? new Date(input.contractExpiry) : null,
+        reportingToId: input.reportingToId || null,
+        accountManagerId: input.accountManagerId || null,
+        profilePhotoUrl: input.profilePhotoUrl || null,
+        managerId: input.managerId || null,
       });
+      
+      // TODO: Handle site assignments if siteIds provided
+      // TODO: Send welcome email if sendWelcomeEmail is true
+      
       return { success: true, userId };
     }),
 

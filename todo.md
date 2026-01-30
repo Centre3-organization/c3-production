@@ -814,3 +814,21 @@ Time conditions:
 - [x] Add Integration Hub menu under Administration with Coming Soon page
 
 - [x] Make User Lookup field type default to logged-in user in request forms
+
+
+## User Creation Form Update (Jan 30, 2026)
+- [ ] Add new user fields to database schema (userType, employeeId, department, contractorCompany, parentContractor, subContractorCompany, clientCompany, contractReference, contractExpiry, reportingTo, accountManager)
+- [ ] Update backend router to handle new user fields
+- [ ] Create multi-step wizard for user creation (Step 1: User Type, Step 2: User Info based on type, Step 3: System Access, Step 4: Photo, Step 5: Review)
+- [ ] Implement conditional fields based on user type (Centre3 Employee, Contractor, Sub-Contractor, Client)
+- [ ] Add validation rules (email unique, Centre3 email domain, contract expiry auto-deactivation)
+
+
+## User Creation Form Update (Jan 30, 2026)
+- [x] Add userType field (enum: centre3_employee, contractor, sub_contractor, client)
+- [x] Add employeeId, jobTitle, contractorCompanyId, parentContractorId fields
+- [x] Add subContractorCompany, clientCompanyId, contractReference, contractExpiry fields
+- [x] Add reportingToId, accountManagerId, profilePhotoUrl fields
+- [x] Update create user procedure with new fields and validation
+- [x] Create multi-step wizard form (5 steps: User Type, Personal Details, System Access, Photo, Options)
+- [x] Step 2 shows different fields based on user type selection

@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE users \nADD COLUMN userType ENUM('centre3_employee', 'contractor', 'sub_contractor', 'client') DEFAULT 'centre3_employee',\nADD COLUMN employeeId VARCHAR(50),\nADD COLUMN jobTitle VARCHAR(100),\nADD COLUMN contractorCompanyId INT,\nADD COLUMN parentContractorId INT,\nADD COLUMN subContractorCompany VARCHAR(255),\nADD COLUMN clientCompanyId INT,\nADD COLUMN contractReference VARCHAR(100),\nADD COLUMN contractExpiry TIMESTAMP NULL,\nADD COLUMN reportingToId INT,\nADD COLUMN accountManagerId INT,\nADD COLUMN profilePhotoUrl VARCHAR(500);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE users \nADD COLUMN userType ENUM('centre3_employee', 'contractor', 'sub_contractor', 'client') DEFAULT 'centre3_employee',\nADD COLUMN employeeId VARCHAR(50),\nADD COLUMN jobTitle VARCHAR(100),\nADD COLUMN contractorCompanyId INT,\nADD COLUMN parentContractorId INT,\nADD COLUMN subContractorCompany VARCHAR(255),\nADD COLUMN clientCompanyId INT,\nADD COLUMN contractReference VARCHAR(100),\nADD COLUMN contractExpiry TIMESTAMP NULL,\nADD COLUMN reportingToId INT,\nADD COLUMN accountManagerId INT,\nADD COLUMN profilePhotoUrl VARCHAR(500);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 5569
+}
