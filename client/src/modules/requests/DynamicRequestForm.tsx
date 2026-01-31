@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useParams } from "wouter";
 import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
@@ -29,20 +29,31 @@ import { cn } from "@/lib/utils";
 
 export default function DynamicRequestForm() {
   const [, navigate] = useLocation();
+  const params = useParams<{ id?: string }>();
+  const editId = params.id ? parseInt(params.id) : null;
+  const isEditMode = !!editId;
+  
   const { user } = useAuth();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
   // State
-  const [showCategoryDialog, setShowCategoryDialog] = useState(true);
+  const [showCategoryDialog, setShowCategoryDialog] = useState(!isEditMode);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [selectedTypeIds, setSelectedTypeIds] = useState<number[]>([]);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [activeSection, setActiveSection] = useState<string>("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   // Error dialog
   const { showError, ErrorDialogComponent } = useErrorDialog();
+
+  // Fetch existing request for edit mode
+  const { data: existingRequest, isLoading: loadingExisting } = trpc.requests.getById.useQuery(
+    { id: editId! },
+    { enabled: isEditMode }
+  );
 
   // Fetch categories with types
   const { data: categories, isLoading: loadingCategories } =
@@ -89,9 +100,59 @@ export default function DynamicRequestForm() {
     },
   });
 
-  // Initialize form data with defaults when form definition loads
+  // Update request mutation
+  const updateRequest = trpc.requests.update.useMutation({
+    onSuccess: (data: any) => {
+      toast.success(
+        t("requests.updated", "Request {{number}} updated successfully!", {
+          number: data.requestNumber,
+        })
+      );
+      navigate("/requests");
+    },
+    onError: (error: any) => {
+      showError(
+        t(
+          "requests.updateError",
+          "There was an error updating your request. Please try again or contact support if the problem persists."
+        ),
+        t("requests.updateFailed", "Request Update Failed")
+      );
+      console.error("Request update error:", error);
+    },
+  });
+
+  // Load existing request data in edit mode
   useEffect(() => {
-    if (formDefinition?.sections) {
+    if (isEditMode && existingRequest && !isDataLoaded) {
+      // Check if request is editable (draft status only)
+      if (existingRequest.status !== "draft") {
+        toast.error(t("requests.notEditable", "Only draft requests can be edited"));
+        navigate("/requests");
+        return;
+      }
+
+      // Set category and types from existing request
+      if (existingRequest.categoryId) {
+        setSelectedCategoryId(existingRequest.categoryId);
+      }
+      if (existingRequest.selectedTypeIds && Array.isArray(existingRequest.selectedTypeIds)) {
+        setSelectedTypeIds(existingRequest.selectedTypeIds);
+      }
+      
+      // Set form data from existing request
+      if (existingRequest.formData && typeof existingRequest.formData === 'object') {
+        setFormData(existingRequest.formData as Record<string, any>);
+      }
+      
+      setShowCategoryDialog(false);
+      setIsDataLoaded(true);
+    }
+  }, [isEditMode, existingRequest, isDataLoaded, navigate, t]);
+
+  // Initialize form data with defaults when form definition loads (only for new requests)
+  useEffect(() => {
+    if (formDefinition?.sections && !isEditMode) {
       const defaults: Record<string, any> = {};
       formDefinition.sections.forEach((section: any) => {
         if (section.isRepeatable) {
@@ -110,11 +171,18 @@ export default function DynamicRequestForm() {
         setActiveSection(formDefinition.sections[0].code);
       }
     }
-  }, [formDefinition]);
+  }, [formDefinition, isEditMode]);
 
-  // Prefill user info
+  // Set active section when form definition loads in edit mode
   useEffect(() => {
-    if (user) {
+    if (formDefinition?.sections && isEditMode && formDefinition.sections.length > 0 && !activeSection) {
+      setActiveSection(formDefinition.sections[0].code);
+    }
+  }, [formDefinition, isEditMode, activeSection]);
+
+  // Prefill user info (only for new requests)
+  useEffect(() => {
+    if (user && !isEditMode) {
       setFormData((prev) => ({
         ...prev,
         requestor_name: user.name || "",
@@ -122,13 +190,15 @@ export default function DynamicRequestForm() {
         requestor_company: "Centre3",
       }));
     }
-  }, [user]);
+  }, [user, isEditMode]);
 
   // Handle category/type selection from dialog
   const handleCategoryTypeConfirm = (categoryId: number, typeIds: number[]) => {
     setSelectedCategoryId(categoryId);
     setSelectedTypeIds(typeIds);
-    setFormData({});
+    if (!isEditMode) {
+      setFormData({});
+    }
     setActiveSection("");
     setShowCategoryDialog(false);
   };
@@ -234,11 +304,25 @@ export default function DynamicRequestForm() {
       submitImmediately: !asDraft,
     };
 
-    createRequest.mutate(requestData as any);
+    if (isEditMode) {
+      updateRequest.mutate({ id: editId!, ...requestData } as any);
+    } else {
+      createRequest.mutate(requestData as any);
+    }
   };
 
   // Check if form is ready (category and types selected)
   const isFormReady = selectedCategoryId && selectedTypeIds.length > 0;
+  const isPending = createRequest.isPending || updateRequest.isPending;
+
+  // Show loading state for edit mode
+  if (isEditMode && loadingExisting) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#0f62fe]" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -251,6 +335,8 @@ export default function DynamicRequestForm() {
         categories={(categories as any[]) || []}
         loadingCategories={loadingCategories}
         onConfirm={handleCategoryTypeConfirm}
+        initialCategoryId={selectedCategoryId}
+        initialTypeIds={selectedTypeIds}
       />
 
       <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#f4f4f4] font-poppins">
@@ -258,8 +344,15 @@ export default function DynamicRequestForm() {
         <div className="bg-[#161616] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
           <div className="flex items-center gap-6">
             <span className="font-bold tracking-wide text-white uppercase">
-              {t("requests.createNew", "CREATE NEW REQUEST")}
+              {isEditMode 
+                ? t("requests.editRequest", "EDIT REQUEST") 
+                : t("requests.createNew", "CREATE NEW REQUEST")}
             </span>
+            {isEditMode && existingRequest && (
+              <Badge variant="outline" className="bg-amber-500/20 text-amber-300 border-amber-500/50">
+                {existingRequest.requestNumber}
+              </Badge>
+            )}
             <div className="h-5 w-px bg-gray-600" />
             <div className="flex items-center gap-2">
               <Button
@@ -281,7 +374,7 @@ export default function DynamicRequestForm() {
                 size="icon"
                 className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
                 onClick={() => handleSubmit(true)}
-                disabled={createRequest.isPending || !isFormReady}
+                disabled={isPending || !isFormReady}
               >
                 <Save className="h-4 w-4" />
               </Button>
@@ -358,7 +451,7 @@ export default function DynamicRequestForm() {
                 </div>
               </div>
             )}
-            {isFormReady && (
+            {isFormReady && !isEditMode && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -375,9 +468,14 @@ export default function DynamicRequestForm() {
               </span>
               <Badge
                 variant="outline"
-                className="bg-blue-50 text-blue-700 border-blue-200 rounded-sm px-2 py-0.5"
+                className={cn(
+                  "rounded-sm px-2 py-0.5",
+                  isEditMode 
+                    ? "bg-amber-50 text-amber-700 border-amber-200" 
+                    : "bg-blue-50 text-blue-700 border-blue-200"
+                )}
               >
-                {t("common.new", "NEW")}
+                {isEditMode ? t("common.draft", "DRAFT") : t("common.new", "NEW")}
               </Badge>
             </div>
           </div>
@@ -421,27 +519,29 @@ export default function DynamicRequestForm() {
               <div className="bg-white border-t px-6 py-4 flex items-center justify-between">
                 <Button
                   variant="ghost"
-                  onClick={handleChangeSelection}
+                  onClick={() => navigate("/requests")}
                   className="text-gray-600"
                 >
                   <ArrowLeft className="h-4 w-4 mr-1" />
-                  {t("common.back", "Back")}
+                  {t("common.cancel", "Cancel")}
                 </Button>
                 <div className="flex gap-3">
                   <Button
                     variant="outline"
                     onClick={() => handleSubmit(true)}
-                    disabled={createRequest.isPending}
+                    disabled={isPending}
                   >
                     <Save className="h-4 w-4 mr-2" />
-                    {t("common.saveAsDraft", "Save as Draft")}
+                    {isEditMode 
+                      ? t("common.saveDraft", "Save Draft") 
+                      : t("common.saveAsDraft", "Save as Draft")}
                   </Button>
                   <Button
                     onClick={() => handleSubmit(false)}
-                    disabled={createRequest.isPending}
+                    disabled={isPending}
                     className="bg-[#0f62fe] hover:bg-[#0043ce] gap-2"
                   >
-                    {createRequest.isPending ? (
+                    {isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
                       <Send className="h-4 w-4" />
@@ -455,7 +555,12 @@ export default function DynamicRequestForm() {
             <div className="h-full flex items-center justify-center text-gray-500">
               <div className="text-center">
                 <AlertCircle className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                <p>{t("requests.noFormDefinition", "No form definition available")}</p>
+                <p className="text-lg font-medium mb-2">
+                  {t("requests.noFormDefinition", "No form definition found for this request type")}
+                </p>
+                <p className="text-sm text-gray-400 mb-4">
+                  {t("requests.contactAdmin", "Please contact an administrator to configure the form")}
+                </p>
               </div>
             </div>
           )}

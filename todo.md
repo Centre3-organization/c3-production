@@ -1269,3 +1269,16 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add Iqama Expiry Date field from Yakeen response
 - [x] Save visitor data changes (company, etc.) after Yakeen verification
 - [x] Nationality auto-populated from Yakeen
+
+
+## Draft Editing Fix (Jan 31, 2026)
+
+### Bug: Drafts are not editable
+- [x] Investigate current draft handling in requests module
+- [x] Add edit button/action for draft requests
+- [x] Load draft data into request form for editing
+- [x] Allow updating draft or submitting as new request
+- [x] Add route for /requests/:id/edit
+- [x] Add update mutation in requests router
+- [x] Update getById to return formData, categoryId, selectedTypeIds
+- [ ] Test draft editing workflow (manual testing required)

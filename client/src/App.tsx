@@ -91,6 +91,11 @@ function Router() {
           <DynamicRequestForm />
         </Layout>
       </Route>
+      <Route path="/requests/:id/edit">
+        <Layout>
+          <DynamicRequestForm />
+        </Layout>
+      </Route>
       <Route path="/requests/new-legacy">
         <Layout>
           <RequestForm />

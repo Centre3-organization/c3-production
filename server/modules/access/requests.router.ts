@@ -599,6 +599,10 @@ export const requestsRouter = router({
           endDate: requests.endDate,
           startTime: requests.startTime,
           endTime: requests.endTime,
+          // Dynamic form fields for editing
+          categoryId: requests.categoryId,
+          selectedTypeIds: requests.selectedTypeIds,
+          formData: requests.formData,
           createdAt: requests.createdAt,
           updatedAt: requests.updatedAt,
         })
@@ -946,6 +950,205 @@ export const requestsRouter = router({
       return created[0];
     }),
   
+  // Update existing draft request
+  update: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      // Legacy fields (for backward compatibility)
+      type: z.enum(["admin_visit", "work_permit", "material_entry", "tep", "mop", "escort"]).optional(),
+      visitorName: z.string().min(1).max(100).optional(),
+      visitorIdType: z.enum(["national_id", "iqama", "passport"]).optional(),
+      visitorIdNumber: z.string().min(1).max(50).optional(),
+      visitorCompany: z.string().max(100).optional(),
+      visitorPhone: z.string().max(20).optional(),
+      visitorEmail: z.string().email().optional().nullable(),
+      hostId: z.number().optional(),
+      siteId: z.number().optional(),
+      purpose: z.string().min(1).max(500).optional(),
+      startDate: z.string().optional(),
+      endDate: z.string().optional(),
+      startTime: z.string().optional(),
+      endTime: z.string().optional(),
+      zoneIds: z.array(z.number()).optional(),
+      
+      // Dynamic Request Type System fields
+      categoryId: z.number().optional(),
+      selectedTypeIds: z.array(z.number()).optional(),
+      formData: z.record(z.string(), z.any()).optional(),
+      
+      // Visitors array
+      visitors: z.array(z.object({
+        fullName: z.string().min(1).max(255),
+        idType: z.enum(["national_id", "iqama", "passport"]).optional(),
+        idNumber: z.string().min(1).max(50),
+        nationality: z.string().max(100).optional(),
+        company: z.string().max(255).optional(),
+        jobTitle: z.string().max(255).optional(),
+        phone: z.string().max(20).optional(),
+        email: z.string().email().optional().nullable(),
+        isVerified: z.boolean().optional(),
+      })).optional(),
+      
+      // Materials array (for MHV)
+      materials: z.array(z.object({
+        materialType: z.string().min(1).max(100),
+        description: z.string().max(500).optional(),
+        quantity: z.number().default(1),
+        serialNumber: z.string().max(255).optional(),
+        unit: z.string().max(50).optional(),
+        direction: z.enum(["entry", "exit"]).optional(),
+      })).optional(),
+      
+      // Vehicles array (for VIP/MHV)
+      vehicles: z.array(z.object({
+        vehicleType: z.string().max(100).optional(),
+        plateNumber: z.string().max(50).optional(),
+        driverName: z.string().max(255).optional(),
+        driverIdNumber: z.string().max(50).optional(),
+        driverNationality: z.string().max(100).optional(),
+        driverCompany: z.string().max(255).optional(),
+        driverPhone: z.string().max(20).optional(),
+        purpose: z.string().max(500).optional(),
+      })).optional(),
+      
+      submitImmediately: z.boolean().default(false),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      // Check request exists and is draft
+      const existing = await db.select().from(requests).where(eq(requests.id, input.id)).limit(1);
+      if (existing.length === 0) throw new Error("Request not found");
+      if (existing[0].status !== "draft") throw new Error("Only draft requests can be edited");
+      if (existing[0].requestorId !== ctx.user.id) throw new Error("You can only edit your own requests");
+      
+      const existingRequest = existing[0];
+      
+      // Build update object with only provided fields
+      const updateData: any = {};
+      if (input.visitorName !== undefined) updateData.visitorName = input.visitorName;
+      if (input.visitorIdType !== undefined) updateData.visitorIdType = input.visitorIdType;
+      if (input.visitorIdNumber !== undefined) updateData.visitorIdNumber = input.visitorIdNumber;
+      if (input.visitorCompany !== undefined) updateData.visitorCompany = input.visitorCompany;
+      if (input.visitorPhone !== undefined) updateData.visitorPhone = input.visitorPhone;
+      if (input.visitorEmail !== undefined) updateData.visitorEmail = input.visitorEmail || undefined;
+      if (input.hostId !== undefined) updateData.hostId = input.hostId;
+      if (input.siteId !== undefined) updateData.siteId = input.siteId;
+      if (input.purpose !== undefined) updateData.purpose = input.purpose;
+      if (input.startDate !== undefined) updateData.startDate = new Date(input.startDate).toISOString().split('T')[0];
+      if (input.endDate !== undefined) updateData.endDate = new Date(input.endDate).toISOString().split('T')[0];
+      if (input.startTime !== undefined) updateData.startTime = input.startTime;
+      if (input.endTime !== undefined) updateData.endTime = input.endTime;
+      if (input.categoryId !== undefined) updateData.categoryId = input.categoryId;
+      if (input.selectedTypeIds !== undefined) updateData.selectedTypeIds = input.selectedTypeIds;
+      if (input.formData !== undefined) updateData.formData = input.formData;
+      
+      // Update request type if selectedTypeIds changed
+      if (input.selectedTypeIds && input.selectedTypeIds.length > 0) {
+        const typeMapping: Record<number, string> = {
+          1: "admin_visit",
+          2: "tep",
+          3: "work_permit",
+          4: "mop",
+          5: "material_entry",
+        };
+        updateData.type = typeMapping[input.selectedTypeIds[0]] || "admin_visit";
+      } else if (input.type) {
+        updateData.type = input.type;
+      }
+      
+      // Update the request
+      if (Object.keys(updateData).length > 0) {
+        await db.update(requests).set(updateData).where(eq(requests.id, input.id));
+      }
+      
+      // Update zones if provided
+      if (input.zoneIds !== undefined) {
+        await db.delete(requestZones).where(eq(requestZones.requestId, input.id));
+        if (input.zoneIds.length > 0) {
+          await db.insert(requestZones).values(
+            input.zoneIds.map(zoneId => ({
+              requestId: input.id,
+              zoneId,
+            }))
+          );
+        }
+      }
+      
+      // Update visitors if provided
+      if (input.visitors !== undefined) {
+        await db.delete(requestVisitors).where(eq(requestVisitors.requestId, input.id));
+        if (input.visitors.length > 0) {
+          await db.insert(requestVisitors).values(
+            input.visitors.map((visitor, index) => ({
+              requestId: input.id,
+              visitorIndex: index + 1,
+              fullName: visitor.fullName,
+              idType: visitor.idType || "national_id",
+              idNumber: visitor.idNumber,
+              nationality: visitor.nationality,
+              company: visitor.company,
+              jobTitle: visitor.jobTitle,
+              mobile: visitor.phone,
+              email: visitor.email || undefined,
+              isVerified: visitor.isVerified || false,
+            }))
+          );
+        }
+      }
+      
+      // Update materials if provided
+      if (input.materials !== undefined) {
+        await db.delete(requestMaterials).where(eq(requestMaterials.requestId, input.id));
+        if (input.materials.length > 0) {
+          await db.insert(requestMaterials).values(
+            input.materials.map((material, index) => ({
+              requestId: input.id,
+              materialIndex: index + 1,
+              direction: material.direction || "entry",
+              materialType: material.materialType,
+              model: material.description,
+              serialNumber: material.serialNumber,
+              quantity: material.quantity || 1,
+            }))
+          );
+        }
+      }
+      
+      // Update vehicles if provided
+      if (input.vehicles !== undefined) {
+        await db.delete(requestVehicles).where(eq(requestVehicles.requestId, input.id));
+        if (input.vehicles.length > 0) {
+          await db.insert(requestVehicles).values(
+            input.vehicles.map(vehicle => ({
+              requestId: input.id,
+              driverName: vehicle.driverName,
+              driverNationality: vehicle.driverNationality,
+              driverId: vehicle.driverIdNumber,
+              driverCompany: vehicle.driverCompany,
+              driverPhone: vehicle.driverPhone,
+              vehiclePlate: vehicle.plateNumber,
+              vehicleType: vehicle.vehicleType,
+            }))
+          );
+        }
+      }
+      
+      // If submitting immediately, start the workflow
+      if (input.submitImmediately) {
+        await db.update(requests).set({ status: "pending_approval" }).where(eq(requests.id, input.id));
+        const updatedRequest = await db.select().from(requests).where(eq(requests.id, input.id)).limit(1);
+        if (updatedRequest.length > 0) {
+          await startWorkflowForRequest(db, input.id, updatedRequest[0].type, updatedRequest[0].siteId, ctx.user.id);
+        }
+      }
+      
+      // Fetch and return the updated request
+      const updated = await db.select().from(requests).where(eq(requests.id, input.id)).limit(1);
+      return updated[0];
+    }),
+
   // Submit draft request for approval
   submit: protectedProcedure
     .input(z.object({ id: z.number() }))

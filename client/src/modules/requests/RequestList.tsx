@@ -29,7 +29,8 @@ import {
   Send,
   Mail,
   MessageSquare,
-  Phone as PhoneIcon
+  Phone as PhoneIcon,
+  Edit2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -452,14 +453,25 @@ export default function Requests() {
           ) : requestDetail ? (
             <div className="space-y-6">
               {/* Status & Type */}
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary" className={`${statusConfig[requestDetail.status]?.color} gap-1 text-sm px-3 py-1`}>
-                  {statusConfig[requestDetail.status]?.icon}
-                  {statusConfig[requestDetail.status]?.label}
-                </Badge>
-                <Badge variant="outline" className="text-sm px-3 py-1">
-                  {typeLabels[requestDetail.type] || requestDetail.type}
-                </Badge>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Badge variant="secondary" className={`${statusConfig[requestDetail.status]?.color} gap-1 text-sm px-3 py-1`}>
+                    {statusConfig[requestDetail.status]?.icon}
+                    {statusConfig[requestDetail.status]?.label}
+                  </Badge>
+                  <Badge variant="outline" className="text-sm px-3 py-1">
+                    {typeLabels[requestDetail.type] || requestDetail.type}
+                  </Badge>
+                </div>
+                {/* Edit button for draft requests */}
+                {requestDetail.status === "draft" && (
+                  <Link href={`/requests/${requestDetail.id}/edit`}>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Edit2 className="h-4 w-4" />
+                      Edit Draft
+                    </Button>
+                  </Link>
+                )}
               </div>
               
               {/* Access Method Section - Only for approved requests */}

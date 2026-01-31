@@ -57,6 +57,8 @@ interface CategoryTypeDialogProps {
   categories: RequestCategory[];
   loadingCategories?: boolean;
   onConfirm: (categoryId: number, typeIds: number[]) => void;
+  initialCategoryId?: number | null;
+  initialTypeIds?: number[];
 }
 
 // Icon mapping
@@ -71,14 +73,22 @@ export function CategoryTypeDialog({
   categories,
   loadingCategories = false,
   onConfirm,
+  initialCategoryId,
+  initialTypeIds,
 }: CategoryTypeDialogProps) {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
   // Dialog state
-  const [step, setStep] = useState<"category" | "type">("category");
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
-  const [selectedTypeIds, setSelectedTypeIds] = useState<number[]>([]);
+  const [step, setStep] = useState<"category" | "type">(
+    initialCategoryId ? "type" : "category"
+  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    initialCategoryId ?? null
+  );
+  const [selectedTypeIds, setSelectedTypeIds] = useState<number[]>(
+    initialTypeIds ?? []
+  );
 
   // Get selected category
   const selectedCategory = useMemo(() => {
