@@ -349,14 +349,58 @@ export default function Users() {
   // Update role mutation
   const updateRoleMutation = trpc.roles.update.useMutation({
     onSuccess: () => {
-      toast.success("Role updated successfully");
-      refetchRoles();
-      setEditRoleOpen(false);
+      // After updating role name/description, also update permissions
+      if (selectedRole && selectedRole.id) {
+        const permissionCodes = convertPermissionsToArray(selectedRole.permissions);
+        updatePermissionsMutation.mutate({
+          roleId: selectedRole.id,
+          permissions: permissionCodes,
+        });
+      } else {
+        toast.success("Role updated successfully");
+        refetchRoles();
+        setEditRoleOpen(false);
+      }
     },
     onError: (error: any) => {
       toast.error("Failed to update role", { description: error.message });
     },
   });
+
+  // Update permissions mutation
+  const updatePermissionsMutation = trpc.roles.updatePermissions.useMutation({
+    onSuccess: () => {
+      toast.success("Role and permissions updated successfully");
+      refetchRoles();
+      setEditRoleOpen(false);
+    },
+    onError: (error: any) => {
+      // Show clear error message - permissions update failed
+      toast.error("Failed to update permissions", { 
+        description: error.message.includes("permission") 
+          ? "You need Admin or Super Admin access to modify role permissions." 
+          : error.message,
+        duration: 5000
+      });
+      // Still close dialog and refetch to show current state
+      refetchRoles();
+      setEditRoleOpen(false);
+    },
+  });
+
+  // Helper function to convert permissions object to array of permission codes
+  const convertPermissionsToArray = (permissions: Record<string, Record<string, boolean>> | undefined): string[] => {
+    if (!permissions) return [];
+    const codes: string[] = [];
+    for (const [module, actions] of Object.entries(permissions)) {
+      for (const [action, enabled] of Object.entries(actions || {})) {
+        if (enabled) {
+          codes.push(`${module}:${action}`);
+        }
+      }
+    }
+    return codes;
+  };
 
   // Create user mutation
   const createUserMutation = trpc.users.create.useMutation({

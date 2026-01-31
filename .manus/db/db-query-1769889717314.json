@@ -1,0 +1,34 @@
+{
+  "query": "SELECT * FROM systemRoles WHERE name LIKE '%Admin%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT * FROM systemRoles WHERE name LIKE '%Admin%';",
+  "rows": [
+    {
+      "id": "1",
+      "code": "super_admin",
+      "name": "Super Admin",
+      "nameAr": "مدير النظام الأعلى",
+      "description": "Full system access - Technical team only",
+      "level": "0",
+      "isSystem": "1",
+      "isActive": "1",
+      "createdAt": "2026-01-31 13:29:25",
+      "updatedAt": "2026-01-31 13:29:25"
+    },
+    {
+      "id": "2",
+      "code": "admin",
+      "name": "Administrator",
+      "nameAr": "مدير",
+      "description": "System administration - Technology in-charge",
+      "level": "1",
+      "isSystem": "1",
+      "isActive": "1",
+      "createdAt": "2026-01-31 13:29:25",
+      "updatedAt": "2026-01-31 13:29:25"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tnameAr\tdescription\tlevel\tisSystem\tisActive\tcreatedAt\tupdatedAt\n1\tsuper_admin\tSuper Admin\tمدير النظام الأعلى\tFull system access - Technical team only\t0\t1\t1\t2026-01-31 13:29:25\t2026-01-31 13:29:25\n2\tadmin\tAdministrator\tمدير\tSystem administration - Technology in-charge\t1\t1\t1\t2026-01-31 13:29:25\t2026-01-31 13:29:25\n",
+  "stderr": "",
+  "execution_time_ms": 1599
+}

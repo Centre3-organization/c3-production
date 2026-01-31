@@ -1,0 +1,75 @@
+{
+  "query": "SELECT id, code, name FROM systemRoles WHERE isActive = 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, name FROM systemRoles WHERE isActive = 1;",
+  "rows": [
+    {
+      "id": "1",
+      "code": "super_admin",
+      "name": "Super Admin"
+    },
+    {
+      "id": "2",
+      "code": "admin",
+      "name": "Administrator"
+    },
+    {
+      "id": "3",
+      "code": "security_manager",
+      "name": "Security Manager"
+    },
+    {
+      "id": "4",
+      "code": "site_manager",
+      "name": "Site Manager"
+    },
+    {
+      "id": "5",
+      "code": "security_officer",
+      "name": "Security Officer"
+    },
+    {
+      "id": "6",
+      "code": "account_manager",
+      "name": "Account Manager"
+    },
+    {
+      "id": "7",
+      "code": "approver",
+      "name": "Approver"
+    },
+    {
+      "id": "8",
+      "code": "requestor",
+      "name": "Requestor"
+    },
+    {
+      "id": "9",
+      "code": "viewer",
+      "name": "Viewer"
+    },
+    {
+      "id": "10",
+      "code": "zone_manager",
+      "name": "Zone Manager"
+    },
+    {
+      "id": "11",
+      "code": "guest",
+      "name": "Guest"
+    },
+    {
+      "id": "12",
+      "code": "test_role_1769870580197",
+      "name": "Test Role"
+    },
+    {
+      "id": "13",
+      "code": "update_test_1769870581155",
+      "name": "Update Test Role"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\n1\tsuper_admin\tSuper Admin\n2\tadmin\tAdministrator\n3\tsecurity_manager\tSecurity Manager\n4\tsite_manager\tSite Manager\n5\tsecurity_officer\tSecurity Officer\n6\taccount_manager\tAccount Manager\n7\tapprover\tApprover\n8\trequestor\tRequestor\n9\tviewer\tViewer\n10\tzone_manager\tZone Manager\n11\tguest\tGuest\n12\ttest_role_1769870580197\tTest Role\n13\tupdate_test_1769870581155\tUpdate Test Role\n",
+  "stderr": "",
+  "execution_time_ms": 1564
+}

@@ -1,0 +1,8 @@
+{
+  "query": "SELECT r.name as role_name, p.code as permission_code, p.module, p.action \nFROM role_permissions rp \nJOIN system_roles r ON rp.role_id = r.id \nJOIN permissions p ON rp.permission_id = p.id \nWHERE r.code = 'admin' AND p.module = 'sites'\nORDER BY p.code;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT r.name as role_name, p.code as permission_code, p.module, p.action \nFROM role_permissions rp \nJOIN system_roles r ON rp.role_id = r.id \nJOIN permissions p ON rp.permission_id = p.id \nWHERE r.code = 'admin' AND p.module = 'sites'\nORDER BY p.code;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'wqxabcmrq5aefj4qyeefun.role_permissions' doesn't exist"
+  ]
+}

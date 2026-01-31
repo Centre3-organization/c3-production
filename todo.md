@@ -1442,3 +1442,23 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Create sub-items for Reports section (Access Reports, Security Reports, Audit Logs, Activity History)
 - [x] Create Reports pages (AccessReports.tsx, SecurityReports.tsx, AuditLogs.tsx, ActivityHistory.tsx)
 - [x] Add routes for all Reports pages in App.tsx
+
+## CRITICAL BUG: Role Permission Not Saving (Jan 31, 2026)
+- [x] FIX: Role permission changes not persisting to database after save
+  - ROOT CAUSE: Permission codes used dots (.) in UI but colons (:) in database
+  - FIX: Changed convertPermissionsToArray function to use colons instead of dots
+  - File: client/src/modules/users/Users.tsx line 398
+- [x] FIX: Users not reflecting updated role permissions after role edit
+  - Added cache invalidation in roles.router.ts updatePermissions endpoint
+  - Added clearRolePermissionCache function call after permission update
+- [x] Investigate role save mutation in Users.tsx
+- [x] Investigate updateRole endpoint in users.router.ts
+- [x] Check if permissions are being saved to database correctly
+  - VERIFIED: Database now correctly stores zones:create, zones:read, zones:update, zones:lock for Administrator role
+- [x] Check if user permission cache is being invalidated after role update
+- [x] Test with all users and roles after fix
+  - Tested as Super Admin (Mohsin Qureshi)
+  - Added Zone Management permissions to Administrator role
+  - Verified permissions persist after reopening Edit Role dialog
+  - Verified database contains correct permission records
+- [x] Document test results - see test-results-permission-fix.md

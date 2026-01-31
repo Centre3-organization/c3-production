@@ -523,6 +523,26 @@ export function clearPermissionCache(userId?: number): void {
 }
 
 /**
+ * Clear permission cache for all users with a specific role
+ * Called when role permissions are updated
+ */
+export async function clearRolePermissionCache(roleId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+
+  // Get all users with this role
+  const usersWithRole = await db
+    .select({ userId: userSystemRoles.userId })
+    .from(userSystemRoles)
+    .where(and(eq(userSystemRoles.roleId, roleId), eq(userSystemRoles.isActive, true)));
+
+  // Clear cache for each user
+  for (const user of usersWithRole) {
+    permissionCache.delete(user.userId);
+  }
+}
+
+/**
  * Get all system roles
  */
 export async function getAllSystemRoles() {

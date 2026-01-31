@@ -1,0 +1,250 @@
+{
+  "query": "SELECT r.name as role_name, p.code as permission_code, p.module, p.action \nFROM rolePermissions rp \nJOIN systemRoles r ON rp.roleId = r.id \nJOIN permissions p ON rp.permissionId = p.id \nWHERE r.code = 'admin'\nORDER BY p.module, p.action;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT r.name as role_name, p.code as permission_code, p.module, p.action \nFROM rolePermissions rp \nJOIN systemRoles r ON rp.roleId = r.id \nJOIN permissions p ON rp.permissionId = p.id \nWHERE r.code = 'admin'\nORDER BY p.module, p.action;",
+  "rows": [
+    {
+      "role_name": "Administrator",
+      "permission_code": "admin:access",
+      "module": "admin",
+      "action": "access"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "admin:audit",
+      "module": "admin",
+      "action": "audit"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "admin:roles",
+      "module": "admin",
+      "action": "roles"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "dashboard:analytics",
+      "module": "dashboard",
+      "action": "analytics"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "dashboard:export",
+      "module": "dashboard",
+      "action": "export"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "dashboard:view",
+      "module": "dashboard",
+      "action": "view"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "facilities:create",
+      "module": "facilities",
+      "action": "create"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "facilities:delete",
+      "module": "facilities",
+      "action": "delete"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "facilities:update",
+      "module": "facilities",
+      "action": "update"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "facilities:view",
+      "module": "facilities",
+      "action": "view"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "groups:create",
+      "module": "groups",
+      "action": "create"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "groups:delete",
+      "module": "groups",
+      "action": "delete"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "groups:manage_members",
+      "module": "groups",
+      "action": "manage_members"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "groups:update",
+      "module": "groups",
+      "action": "update"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "groups:view",
+      "module": "groups",
+      "action": "view"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "masterdata:create",
+      "module": "masterdata",
+      "action": "create"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "masterdata:delete",
+      "module": "masterdata",
+      "action": "delete"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "masterdata:update",
+      "module": "masterdata",
+      "action": "update"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "masterdata:view",
+      "module": "masterdata",
+      "action": "view"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "reports:create",
+      "module": "reports",
+      "action": "create"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "reports:export",
+      "module": "reports",
+      "action": "export"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "reports:view",
+      "module": "reports",
+      "action": "view"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "requests:approve",
+      "module": "requests",
+      "action": "approve"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "requests:create",
+      "module": "requests",
+      "action": "create"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "requests:delete",
+      "module": "requests",
+      "action": "delete"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "requests:reject",
+      "module": "requests",
+      "action": "reject"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "requests:send_back",
+      "module": "requests",
+      "action": "send_back"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "requests:update",
+      "module": "requests",
+      "action": "update"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "requests:view",
+      "module": "requests",
+      "action": "view"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "settings:update",
+      "module": "settings",
+      "action": "update"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "settings:view",
+      "module": "settings",
+      "action": "view"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "users:create",
+      "module": "users",
+      "action": "create"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "users:delete",
+      "module": "users",
+      "action": "delete"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "users:manage_roles",
+      "module": "users",
+      "action": "manage_roles"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "users:update",
+      "module": "users",
+      "action": "update"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "users:view",
+      "module": "users",
+      "action": "view"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "workflows:create",
+      "module": "workflows",
+      "action": "create"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "workflows:delete",
+      "module": "workflows",
+      "action": "delete"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "workflows:update",
+      "module": "workflows",
+      "action": "update"
+    },
+    {
+      "role_name": "Administrator",
+      "permission_code": "workflows:view",
+      "module": "workflows",
+      "action": "view"
+    }
+  ],
+  "messages": [],
+  "stdout": "role_name\tpermission_code\tmodule\taction\nAdministrator\tadmin:access\tadmin\taccess\nAdministrator\tadmin:audit\tadmin\taudit\nAdministrator\tadmin:roles\tadmin\troles\nAdministrator\tdashboard:analytics\tdashboard\tanalytics\nAdministrator\tdashboard:export\tdashboard\texport\nAdministrator\tdashboard:view\tdashboard\tview\nAdministrator\tfacilities:create\tfacilities\tcreate\nAdministrator\tfacilities:delete\tfacilities\tdelete\nAdministrator\tfacilities:update\tfacilities\tupdate\nAdministrator\tfacilities:view\tfacilities\tview\nAdministrator\tgroups:create\tgroups\tcreate\nAdministrator\tgroups:delete\tgroups\tdelete\nAdministrator\tgroups:manage_members\tgroups\tmanage_members\nAdministrator\tgroups:update\tgroups\tupdate\nAdministrator\tgroups:view\tgroups\tview\nAdministrator\tmasterdata:create\tmasterdata\tcreate\nAdministrator\tmasterdata:delete\tmasterdata\tdelete\nAdministrator\tmasterdata:update\tmasterdata\tupdate\nAdministrator\tmasterdata:view\tmasterdata\tview\nAdministrator\treports:create\treports\tcreate\nAdministrator\treports:export\treports\texport\nAdministrator\treports:view\treports\tview\nAdministrator\trequests:approve\trequests\tapprove\nAdministrator\trequests:create\trequests\tcreate\nAdministrator\trequests:delete\trequests\tdelete\nAdministrator\trequests:reject\trequests\treject\nAdministrator\trequests:send_back\trequests\tsend_back\nAdministrator\trequests:update\trequests\tupdate\nAdministrator\trequests:view\trequests\tview\nAdministrator\tsettings:update\tsettings\tupdate\nAdministrator\tsettings:view\tsettings\tview\nAdministrator\tusers:create\tusers\tcreate\nAdministrator\tusers:delete\tusers\tdelete\nAdministrator\tusers:manage_roles\tusers\tmanage_roles\nAdministrator\tusers:update\tusers\tupdate\nAdministrator\tusers:view\tusers\tview\nAdministrator\tworkflows:create\tworkflows\tcreate\nAdministrator\tworkflows:delete\tworkflows\tdelete\nAdministrator\tworkflows:update\tworkflows\tupdate\nAdministrator\tworkflows:view\tworkflows\tview\n",
+  "stderr": "",
+  "execution_time_ms": 1538
+}

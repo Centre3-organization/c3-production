@@ -1,0 +1,46 @@
+{
+  "query": "SELECT id, code, module, action FROM permissions WHERE module = 'zones' OR code LIKE 'zones%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, module, action FROM permissions WHERE module = 'zones' OR code LIKE 'zones%';",
+  "rows": [
+    {
+      "id": "31",
+      "code": "zones:view",
+      "module": "zones",
+      "action": "view"
+    },
+    {
+      "id": "32",
+      "code": "zones:manage",
+      "module": "zones",
+      "action": "manage"
+    },
+    {
+      "id": "71",
+      "code": "zones:create",
+      "module": "zones",
+      "action": "create"
+    },
+    {
+      "id": "72",
+      "code": "zones:read",
+      "module": "zones",
+      "action": "read"
+    },
+    {
+      "id": "73",
+      "code": "zones:update",
+      "module": "zones",
+      "action": "update"
+    },
+    {
+      "id": "74",
+      "code": "zones:lock",
+      "module": "zones",
+      "action": "lock"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tmodule\taction\n31\tzones:view\tzones\tview\n32\tzones:manage\tzones\tmanage\n71\tzones:create\tzones\tcreate\n72\tzones:read\tzones\tread\n73\tzones:update\tzones\tupdate\n74\tzones:lock\tzones\tlock\n",
+  "stderr": "",
+  "execution_time_ms": 1511
+}

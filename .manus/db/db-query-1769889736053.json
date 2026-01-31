@@ -1,0 +1,130 @@
+{
+  "query": "SELECT id, code, module, action FROM permissions WHERE isActive = 1 LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, module, action FROM permissions WHERE isActive = 1 LIMIT 20;",
+  "rows": [
+    {
+      "id": "1",
+      "code": "dashboard:view",
+      "module": "dashboard",
+      "action": "view"
+    },
+    {
+      "id": "2",
+      "code": "dashboard:analytics",
+      "module": "dashboard",
+      "action": "analytics"
+    },
+    {
+      "id": "3",
+      "code": "users:view",
+      "module": "users",
+      "action": "view"
+    },
+    {
+      "id": "4",
+      "code": "users:create",
+      "module": "users",
+      "action": "create"
+    },
+    {
+      "id": "5",
+      "code": "users:edit",
+      "module": "users",
+      "action": "edit"
+    },
+    {
+      "id": "6",
+      "code": "users:delete",
+      "module": "users",
+      "action": "delete"
+    },
+    {
+      "id": "7",
+      "code": "users:assign_role",
+      "module": "users",
+      "action": "assign_role"
+    },
+    {
+      "id": "8",
+      "code": "groups:view",
+      "module": "groups",
+      "action": "view"
+    },
+    {
+      "id": "9",
+      "code": "groups:create",
+      "module": "groups",
+      "action": "create"
+    },
+    {
+      "id": "10",
+      "code": "groups:edit",
+      "module": "groups",
+      "action": "edit"
+    },
+    {
+      "id": "11",
+      "code": "groups:delete",
+      "module": "groups",
+      "action": "delete"
+    },
+    {
+      "id": "12",
+      "code": "groups:manage_members",
+      "module": "groups",
+      "action": "manage_members"
+    },
+    {
+      "id": "13",
+      "code": "requests:view_own",
+      "module": "requests",
+      "action": "view_own"
+    },
+    {
+      "id": "14",
+      "code": "requests:view_group",
+      "module": "requests",
+      "action": "view_group"
+    },
+    {
+      "id": "15",
+      "code": "requests:view_site",
+      "module": "requests",
+      "action": "view_site"
+    },
+    {
+      "id": "16",
+      "code": "requests:view_all",
+      "module": "requests",
+      "action": "view_all"
+    },
+    {
+      "id": "17",
+      "code": "requests:create",
+      "module": "requests",
+      "action": "create"
+    },
+    {
+      "id": "18",
+      "code": "requests:edit",
+      "module": "requests",
+      "action": "edit"
+    },
+    {
+      "id": "19",
+      "code": "requests:cancel",
+      "module": "requests",
+      "action": "cancel"
+    },
+    {
+      "id": "20",
+      "code": "approvals:view",
+      "module": "approvals",
+      "action": "view"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tmodule\taction\n1\tdashboard:view\tdashboard\tview\n2\tdashboard:analytics\tdashboard\tanalytics\n3\tusers:view\tusers\tview\n4\tusers:create\tusers\tcreate\n5\tusers:edit\tusers\tedit\n6\tusers:delete\tusers\tdelete\n7\tusers:assign_role\tusers\tassign_role\n8\tgroups:view\tgroups\tview\n9\tgroups:create\tgroups\tcreate\n10\tgroups:edit\tgroups\tedit\n11\tgroups:delete\tgroups\tdelete\n12\tgroups:manage_members\tgroups\tmanage_members\n13\trequests:view_own\trequests\tview_own\n14\trequests:view_group\trequests\tview_group\n15\trequests:view_site\trequests\tview_site\n16\trequests:view_all\trequests\tview_all\n17\trequests:create\trequests\tcreate\n18\trequests:edit\trequests\tedit\n19\trequests:cancel\trequests\tcancel\n20\tapprovals:view\tapprovals\tview\n",
+  "stderr": "",
+  "execution_time_ms": 1544
+}

@@ -1,0 +1,9 @@
+{
+  "query": "SELECT p.code, p.module, p.action \nFROM rolePermissions rp \nJOIN permissions p ON rp.permissionId = p.id \nJOIN systemRoles sr ON rp.roleId = sr.id \nWHERE sr.code = 'admin' \nORDER BY p.module, p.action;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT p.code, p.module, p.action \nFROM rolePermissions rp \nJOIN permissions p ON rp.permissionId = p.id \nJOIN systemRoles sr ON rp.roleId = sr.id \nWHERE sr.code = 'admin' \nORDER BY p.module, p.action;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1528
+}

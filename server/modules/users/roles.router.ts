@@ -12,6 +12,7 @@ import {
   getAllSystemRoles,
   getAllPermissions,
   getRolePermissions,
+  clearRolePermissionCache,
 } from "../../services/enterprise-rbac.service";
 
 export const rolesRouter = router({
@@ -206,6 +207,9 @@ export const rolesRouter = router({
       if (newPermissions.length > 0) {
         await db.insert(rolePermissions).values(newPermissions);
       }
+
+      // Clear permission cache for all users with this role
+      await clearRolePermissionCache(input.roleId);
 
       return { success: true };
     }),

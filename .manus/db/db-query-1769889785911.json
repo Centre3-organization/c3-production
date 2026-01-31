@@ -1,0 +1,40 @@
+{
+  "query": "SELECT code, module, action FROM permissions WHERE module = 'zones' ORDER BY code;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT code, module, action FROM permissions WHERE module = 'zones' ORDER BY code;",
+  "rows": [
+    {
+      "code": "zones:create",
+      "module": "zones",
+      "action": "create"
+    },
+    {
+      "code": "zones:lock",
+      "module": "zones",
+      "action": "lock"
+    },
+    {
+      "code": "zones:manage",
+      "module": "zones",
+      "action": "manage"
+    },
+    {
+      "code": "zones:read",
+      "module": "zones",
+      "action": "read"
+    },
+    {
+      "code": "zones:update",
+      "module": "zones",
+      "action": "update"
+    },
+    {
+      "code": "zones:view",
+      "module": "zones",
+      "action": "view"
+    }
+  ],
+  "messages": [],
+  "stdout": "code\tmodule\taction\nzones:create\tzones\tcreate\nzones:lock\tzones\tlock\nzones:manage\tzones\tmanage\nzones:read\tzones\tread\nzones:update\tzones\tupdate\nzones:view\tzones\tview\n",
+  "stderr": "",
+  "execution_time_ms": 1525
+}

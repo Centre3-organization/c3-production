@@ -1,0 +1,160 @@
+{
+  "query": "SELECT code FROM permissions WHERE isActive = 1 ORDER BY module, action LIMIT 50;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT code FROM permissions WHERE isActive = 1 ORDER BY module, action LIMIT 50;",
+  "rows": [
+    {
+      "code": "admin:access"
+    },
+    {
+      "code": "admin:audit"
+    },
+    {
+      "code": "admin:roles"
+    },
+    {
+      "code": "admin:security"
+    },
+    {
+      "code": "alerts:resolve"
+    },
+    {
+      "code": "alerts:view"
+    },
+    {
+      "code": "approvals:approve"
+    },
+    {
+      "code": "approvals:delegate"
+    },
+    {
+      "code": "approvals:l1"
+    },
+    {
+      "code": "approvals:manual"
+    },
+    {
+      "code": "approvals:reject"
+    },
+    {
+      "code": "approvals:send_back"
+    },
+    {
+      "code": "approvals:view"
+    },
+    {
+      "code": "audit:export"
+    },
+    {
+      "code": "audit:view"
+    },
+    {
+      "code": "cards:control"
+    },
+    {
+      "code": "cards:issue"
+    },
+    {
+      "code": "cards:revoke"
+    },
+    {
+      "code": "cards:view"
+    },
+    {
+      "code": "dashboard:analytics"
+    },
+    {
+      "code": "dashboard:export"
+    },
+    {
+      "code": "dashboard:view"
+    },
+    {
+      "code": "delegations:create"
+    },
+    {
+      "code": "delegations:delete"
+    },
+    {
+      "code": "delegations:update"
+    },
+    {
+      "code": "delegations:view"
+    },
+    {
+      "code": "facilities:create"
+    },
+    {
+      "code": "facilities:delete"
+    },
+    {
+      "code": "facilities:update"
+    },
+    {
+      "code": "facilities:view"
+    },
+    {
+      "code": "groups:create"
+    },
+    {
+      "code": "groups:delete"
+    },
+    {
+      "code": "groups:edit"
+    },
+    {
+      "code": "groups:manage_members"
+    },
+    {
+      "code": "groups:update"
+    },
+    {
+      "code": "groups:view"
+    },
+    {
+      "code": "hardware:control"
+    },
+    {
+      "code": "hardware:view"
+    },
+    {
+      "code": "integrations:configure"
+    },
+    {
+      "code": "integrations:view"
+    },
+    {
+      "code": "masterdata:create"
+    },
+    {
+      "code": "masterdata:delete"
+    },
+    {
+      "code": "masterdata:update"
+    },
+    {
+      "code": "masterdata:view"
+    },
+    {
+      "code": "reports:create"
+    },
+    {
+      "code": "reports:export"
+    },
+    {
+      "code": "reports:view"
+    },
+    {
+      "code": "requests:approve"
+    },
+    {
+      "code": "requests:cancel"
+    },
+    {
+      "code": "requests:create"
+    }
+  ],
+  "messages": [],
+  "stdout": "code\nadmin:access\nadmin:audit\nadmin:roles\nadmin:security\nalerts:resolve\nalerts:view\napprovals:approve\napprovals:delegate\napprovals:l1\napprovals:manual\napprovals:reject\napprovals:send_back\napprovals:view\naudit:export\naudit:view\ncards:control\ncards:issue\ncards:revoke\ncards:view\ndashboard:analytics\ndashboard:export\ndashboard:view\ndelegations:create\ndelegations:delete\ndelegations:update\ndelegations:view\nfacilities:create\nfacilities:delete\nfacilities:update\nfacilities:view\ngroups:create\ngroups:delete\ngroups:edit\ngroups:manage_members\ngroups:update\ngroups:view\nhardware:control\nhardware:view\nintegrations:configure\nintegrations:view\nmasterdata:create\nmasterdata:delete\nmasterdata:update\nmasterdata:view\nreports:create\nreports:export\nreports:view\nrequests:approve\nrequests:cancel\nrequests:create\n",
+  "stderr": "",
+  "execution_time_ms": 1518
+}

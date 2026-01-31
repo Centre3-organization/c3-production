@@ -1,0 +1,40 @@
+{
+  "query": "SELECT * FROM rolePermissions LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT * FROM rolePermissions LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "roleId": "1",
+      "permissionId": "21",
+      "createdAt": "2026-01-31 13:29:54"
+    },
+    {
+      "id": "2",
+      "roleId": "1",
+      "permissionId": "24",
+      "createdAt": "2026-01-31 13:29:54"
+    },
+    {
+      "id": "3",
+      "roleId": "1",
+      "permissionId": "22",
+      "createdAt": "2026-01-31 13:29:54"
+    },
+    {
+      "id": "4",
+      "roleId": "1",
+      "permissionId": "23",
+      "createdAt": "2026-01-31 13:29:54"
+    },
+    {
+      "id": "5",
+      "roleId": "1",
+      "permissionId": "20",
+      "createdAt": "2026-01-31 13:29:54"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\troleId\tpermissionId\tcreatedAt\n1\t1\t21\t2026-01-31 13:29:54\n2\t1\t24\t2026-01-31 13:29:54\n3\t1\t22\t2026-01-31 13:29:54\n4\t1\t23\t2026-01-31 13:29:54\n5\t1\t20\t2026-01-31 13:29:54\n",
+  "stderr": "",
+  "execution_time_ms": 1512
+}

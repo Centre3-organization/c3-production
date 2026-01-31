@@ -1,0 +1,31 @@
+{
+  "query": "SELECT u.id, u.email, u.name, r.name as role_name, r.code as role_code\nFROM users u\nJOIN userSystemRoles usr ON u.id = usr.userId\nJOIN systemRoles r ON usr.roleId = r.id\nWHERE r.code = 'super_admin' AND usr.isActive = 1\nLIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT u.id, u.email, u.name, r.name as role_name, r.code as role_code\nFROM users u\nJOIN userSystemRoles usr ON u.id = usr.userId\nJOIN systemRoles r ON usr.roleId = r.id\nWHERE r.code = 'super_admin' AND usr.isActive = 1\nLIMIT 5;",
+  "rows": [
+    {
+      "id": "3",
+      "email": "mohsiin@gmail.com",
+      "name": "Mohsin Qureshi",
+      "role_name": "Super Admin",
+      "role_code": "super_admin"
+    },
+    {
+      "id": "150005",
+      "email": "dev@techbanq.org",
+      "name": "Dev Dev",
+      "role_name": "Super Admin",
+      "role_code": "super_admin"
+    },
+    {
+      "id": "150011",
+      "email": "newuser@abc.com",
+      "name": "New user",
+      "role_name": "Super Admin",
+      "role_code": "super_admin"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\trole_name\trole_code\n3\tmohsiin@gmail.com\tMohsin Qureshi\tSuper Admin\tsuper_admin\n150005\tdev@techbanq.org\tDev Dev\tSuper Admin\tsuper_admin\n150011\tnewuser@abc.com\tNew user\tSuper Admin\tsuper_admin\n",
+  "stderr": "",
+  "execution_time_ms": 1539
+}
