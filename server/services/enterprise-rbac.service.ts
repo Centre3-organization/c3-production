@@ -308,7 +308,67 @@ export async function hasHigherPrivilege(userId: number, targetUserId: number): 
 }
 
 /**
- * Assign a system role to a user
+ * Assign a system role to a user by role ID
+ */
+export async function assignRoleById(
+  userId: number,
+  roleId: number,
+  assignedBy: number
+): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  const role = await db
+    .select()
+    .from(systemRoles)
+    .where(eq(systemRoles.id, roleId))
+    .limit(1);
+
+  if (role.length === 0) return false;
+
+  // Deactivate ALL existing role assignments for this user
+  await db
+    .update(userSystemRoles)
+    .set({ isActive: false })
+    .where(eq(userSystemRoles.userId, userId));
+
+  // Check if this user-role combination already exists (even if inactive)
+  const existingAssignment = await db
+    .select()
+    .from(userSystemRoles)
+    .where(and(
+      eq(userSystemRoles.userId, userId),
+      eq(userSystemRoles.roleId, roleId)
+    ))
+    .limit(1);
+
+  if (existingAssignment.length > 0) {
+    // Reactivate the existing assignment
+    await db
+      .update(userSystemRoles)
+      .set({ 
+        isActive: true, 
+        assignedBy,
+        assignedAt: new Date()
+      })
+      .where(eq(userSystemRoles.id, existingAssignment[0].id));
+  } else {
+    // Create new assignment
+    await db.insert(userSystemRoles).values({
+      userId,
+      roleId,
+      assignedBy,
+    });
+  }
+
+  // Clear cache
+  permissionCache.delete(userId);
+
+  return true;
+}
+
+/**
+ * Assign a system role to a user by role code
  */
 export async function assignRole(
   userId: number,
@@ -326,18 +386,40 @@ export async function assignRole(
 
   if (role.length === 0) return false;
 
-  // Deactivate existing role assignments
+  // Deactivate ALL existing role assignments for this user
   await db
     .update(userSystemRoles)
     .set({ isActive: false })
     .where(eq(userSystemRoles.userId, userId));
 
-  // Assign new role
-  await db.insert(userSystemRoles).values({
-    userId,
-    roleId: role[0].id,
-    assignedBy,
-  });
+  // Check if this user-role combination already exists (even if inactive)
+  const existingAssignment = await db
+    .select()
+    .from(userSystemRoles)
+    .where(and(
+      eq(userSystemRoles.userId, userId),
+      eq(userSystemRoles.roleId, role[0].id)
+    ))
+    .limit(1);
+
+  if (existingAssignment.length > 0) {
+    // Reactivate the existing assignment
+    await db
+      .update(userSystemRoles)
+      .set({ 
+        isActive: true, 
+        assignedBy,
+        assignedAt: new Date()
+      })
+      .where(eq(userSystemRoles.id, existingAssignment[0].id));
+  } else {
+    // Create new assignment
+    await db.insert(userSystemRoles).values({
+      userId,
+      roleId: role[0].id,
+      assignedBy,
+    });
+  }
 
   // Clear cache
   permissionCache.delete(userId);

@@ -1374,3 +1374,18 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Update all users with dummy phone numbers where missing (+966 5XXXXXXXX format)
 - [x] Update all users with department assignments (Administration as default)
 - [x] Update all users with job titles ('Staff' as default)
+
+
+## User Role Assignment Bugs (Jan 31, 2026) - FIXED
+
+### Bug 1: Role assignment failing with database error - FIXED
+- [x] Investigate userSystemRoles table structure
+- [x] Check the insert query parameters (150006, 2, 3) - found unique constraint issue
+- [x] Fix the role assignment mutation - deactivate all existing roles first, then upsert
+
+### Bug 2: New users defaulting to Requestor instead of selected role - FIXED
+- [x] Check user creation flow and role assignment - form was not sending roleId
+- [x] Add systemRoleId parameter to user creation backend
+- [x] Add assignRoleById function for role assignment by ID
+- [x] Update NewUserForm to send formData.roleId as systemRoleId
+- [x] Default to 'requestor' role (id: 8) if no role specified

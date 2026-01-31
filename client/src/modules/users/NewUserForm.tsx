@@ -293,6 +293,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
       phone: formData.phone,
       jobTitle: formData.jobTitle || "",
       role: "user",
+      systemRoleId: formData.roleId || undefined, // Pass the selected system role
       temporaryPassword: formData.temporaryPassword,
       sendWelcomeEmail: formData.sendWelcomeEmail,
       mustChangePassword: formData.mustChangePassword,

@@ -10,7 +10,7 @@ import {
   getDepartmentById,
 } from "../../infra/db/connection";
 import bcrypt from "bcryptjs";
-import { getUserSystemRole, assignRole, getAllSystemRoles, getUserPermissions } from "../../services/enterprise-rbac.service";
+import { getUserSystemRole, assignRole, assignRoleById, getAllSystemRoles, getUserPermissions } from "../../services/enterprise-rbac.service";
 
 export const usersRouter = router({
   // Yakeen verification endpoint (mock implementation)
@@ -185,6 +185,7 @@ export const usersRouter = router({
         
         // Step 3: System Access
         role: z.enum(["user", "admin"]).default("user"),
+        systemRoleId: z.number().optional(), // New enterprise RBAC role
         siteIds: z.array(z.number()).optional(),
         
         // Step 4: Photo
@@ -233,6 +234,23 @@ export const usersRouter = router({
         profilePhotoUrl: input.profilePhotoUrl || null,
         managerId: input.managerId || null,
       });
+      
+      // Assign system role if provided
+      if (input.systemRoleId) {
+        try {
+          await assignRoleById(userId, input.systemRoleId, userId); // Self-assigned during creation
+        } catch (err) {
+          console.error('Failed to assign system role:', err);
+          // Don't fail user creation if role assignment fails
+        }
+      } else {
+        // Default to 'requestor' role (id: 8) if no role specified
+        try {
+          await assignRoleById(userId, 8, userId);
+        } catch (err) {
+          console.error('Failed to assign default role:', err);
+        }
+      }
       
       // TODO: Handle site assignments if siteIds provided
       // TODO: Send welcome email if sendWelcomeEmail is true
