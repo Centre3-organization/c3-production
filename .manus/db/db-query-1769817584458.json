@@ -1,0 +1,100 @@
+{
+  "query": "SELECT id, name, groupType, status FROM `groups` ORDER BY id DESC LIMIT 15;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, groupType, status FROM `groups` ORDER BY id DESC LIMIT 15;",
+  "rows": [
+    {
+      "id": "30018",
+      "name": "Test Internal Group 4",
+      "groupType": "internal",
+      "status": "active"
+    },
+    {
+      "id": "30017",
+      "name": "Test Client Group 3",
+      "groupType": "client",
+      "status": "active"
+    },
+    {
+      "id": "30016",
+      "name": "Test Client Group 2",
+      "groupType": "client",
+      "status": "active"
+    },
+    {
+      "id": "30015",
+      "name": "Test Client Group 1",
+      "groupType": "client",
+      "status": "active"
+    },
+    {
+      "id": "30014",
+      "name": "Test Contractor Group 3",
+      "groupType": "contractor",
+      "status": "active"
+    },
+    {
+      "id": "30013",
+      "name": "Test Contractor Group 2",
+      "groupType": "contractor",
+      "status": "active"
+    },
+    {
+      "id": "30012",
+      "name": "Test Contractor Group 1",
+      "groupType": "contractor",
+      "status": "active"
+    },
+    {
+      "id": "30011",
+      "name": "Test Internal Group 3",
+      "groupType": "internal",
+      "status": "active"
+    },
+    {
+      "id": "30010",
+      "name": "Test Internal Group 2",
+      "groupType": "internal",
+      "status": "active"
+    },
+    {
+      "id": "30009",
+      "name": "Test Internal Group 1",
+      "groupType": "internal",
+      "status": "active"
+    },
+    {
+      "id": "30008",
+      "name": "34t3q5gy4y54",
+      "groupType": "internal",
+      "status": "inactive"
+    },
+    {
+      "id": "30007",
+      "name": "Parent Contractor 1769807937052",
+      "groupType": "internal",
+      "status": "inactive"
+    },
+    {
+      "id": "30006",
+      "name": "Updated Test Group",
+      "groupType": "internal",
+      "status": "inactive"
+    },
+    {
+      "id": "30005",
+      "name": "ddd",
+      "groupType": "external",
+      "status": "inactive"
+    },
+    {
+      "id": "30004",
+      "name": "Updated Test Group",
+      "groupType": "internal",
+      "status": "inactive"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tgroupType\tstatus\n30018\tTest Internal Group 4\tinternal\tactive\n30017\tTest Client Group 3\tclient\tactive\n30016\tTest Client Group 2\tclient\tactive\n30015\tTest Client Group 1\tclient\tactive\n30014\tTest Contractor Group 3\tcontractor\tactive\n30013\tTest Contractor Group 2\tcontractor\tactive\n30012\tTest Contractor Group 1\tcontractor\tactive\n30011\tTest Internal Group 3\tinternal\tactive\n30010\tTest Internal Group 2\tinternal\tactive\n30009\tTest Internal Group 1\tinternal\tactive\n30008\t34t3q5gy4y54\tinternal\tinactive\n30007\tParent Contractor 1769807937052\tinternal\tinactive\n30006\tUpdated Test Group\tinternal\tinactive\n30005\tddd\texternal\tinactive\n30004\tUpdated Test Group\tinternal\tinactive\n",
+  "stderr": "",
+  "execution_time_ms": 1530
+}
