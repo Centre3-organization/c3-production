@@ -1,0 +1,94 @@
+{
+  "query": "SELECT id, code, name, level FROM systemRoles ORDER BY level;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, name, level FROM systemRoles ORDER BY level;",
+  "rows": [
+    {
+      "id": "1",
+      "code": "super_admin",
+      "name": "Super Admin",
+      "level": "0"
+    },
+    {
+      "id": "2",
+      "code": "admin",
+      "name": "Administrator",
+      "level": "1"
+    },
+    {
+      "id": "3",
+      "code": "security_manager",
+      "name": "Security Manager",
+      "level": "2"
+    },
+    {
+      "id": "4",
+      "code": "site_manager",
+      "name": "Site Manager",
+      "level": "2"
+    },
+    {
+      "id": "5",
+      "code": "security_officer",
+      "name": "Security Officer",
+      "level": "3"
+    },
+    {
+      "id": "6",
+      "code": "account_manager",
+      "name": "Account Manager",
+      "level": "3"
+    },
+    {
+      "id": "7",
+      "code": "approver",
+      "name": "Approver",
+      "level": "4"
+    },
+    {
+      "id": "10",
+      "code": "zone_manager",
+      "name": "Zone Manager",
+      "level": "4"
+    },
+    {
+      "id": "8",
+      "code": "requestor",
+      "name": "Requestor",
+      "level": "5"
+    },
+    {
+      "id": "9",
+      "code": "viewer",
+      "name": "Viewer",
+      "level": "6"
+    },
+    {
+      "id": "11",
+      "code": "guest",
+      "name": "Guest",
+      "level": "8"
+    },
+    {
+      "id": "12",
+      "code": "test_role_1769870580197",
+      "name": "Test Role",
+      "level": "50"
+    },
+    {
+      "id": "13",
+      "code": "update_test_1769870581155",
+      "name": "Update Test Role",
+      "level": "50"
+    },
+    {
+      "id": "14",
+      "code": "delete_test_1769870584102",
+      "name": "Delete Test Role",
+      "level": "50"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tlevel\n1\tsuper_admin\tSuper Admin\t0\n2\tadmin\tAdministrator\t1\n3\tsecurity_manager\tSecurity Manager\t2\n4\tsite_manager\tSite Manager\t2\n5\tsecurity_officer\tSecurity Officer\t3\n6\taccount_manager\tAccount Manager\t3\n7\tapprover\tApprover\t4\n10\tzone_manager\tZone Manager\t4\n8\trequestor\tRequestor\t5\n9\tviewer\tViewer\t6\n11\tguest\tGuest\t8\n12\ttest_role_1769870580197\tTest Role\t50\n13\tupdate_test_1769870581155\tUpdate Test Role\t50\n14\tdelete_test_1769870584102\tDelete Test Role\t50\n",
+  "stderr": "",
+  "execution_time_ms": 1600
+}

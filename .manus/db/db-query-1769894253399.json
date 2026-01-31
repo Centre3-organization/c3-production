@@ -1,0 +1,94 @@
+{
+  "query": "SELECT id, name, email, userType, role FROM users ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, email, userType, role FROM users ORDER BY id;",
+  "rows": [
+    {
+      "id": "3",
+      "name": "Mohsin Qureshi",
+      "email": "mohsiin@gmail.com",
+      "userType": "centre3_employee",
+      "role": "admin"
+    },
+    {
+      "id": "90182",
+      "name": "Riz A",
+      "email": "rizwan@techbanq.net",
+      "userType": "centre3_employee",
+      "role": "user"
+    },
+    {
+      "id": "90183",
+      "name": "Ali Aarish",
+      "email": "ali@techbanq.net",
+      "userType": "centre3_employee",
+      "role": "admin"
+    },
+    {
+      "id": "150003",
+      "name": "Ali Test",
+      "email": "ali-test-1769869315536@centre3.com",
+      "userType": "centre3_employee",
+      "role": "user"
+    },
+    {
+      "id": "150004",
+      "name": "Full User",
+      "email": "full-user-1769869316102@centre3.com",
+      "userType": "centre3_employee",
+      "role": "user"
+    },
+    {
+      "id": "150005",
+      "name": "Dev Dev",
+      "email": "dev@techbanq.org",
+      "userType": "centre3_employee",
+      "role": "user"
+    },
+    {
+      "id": "150006",
+      "name": "Abdullah Alzakari",
+      "email": "Aalzakari@center3.com",
+      "userType": "centre3_employee",
+      "role": "user"
+    },
+    {
+      "id": "150007",
+      "name": "Rand A.  Almaymuni",
+      "email": "Salshamrani@center3.com",
+      "userType": "centre3_employee",
+      "role": "user"
+    },
+    {
+      "id": "150008",
+      "name": "Diwan Mohideen",
+      "email": "dmohideen@center3.com",
+      "userType": "centre3_employee",
+      "role": "user"
+    },
+    {
+      "id": "150009",
+      "name": "Talha Burney",
+      "email": "talhaburney@gmail.com",
+      "userType": "centre3_employee",
+      "role": "user"
+    },
+    {
+      "id": "150010",
+      "name": "Muhammad Shaykhu",
+      "email": "mshaykhu.c@center3.com",
+      "userType": "centre3_employee",
+      "role": "user"
+    },
+    {
+      "id": "150011",
+      "name": "New user",
+      "email": "newuser@abc.com",
+      "userType": "centre3_employee",
+      "role": "user"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\tuserType\trole\n3\tMohsin Qureshi\tmohsiin@gmail.com\tcentre3_employee\tadmin\n90182\tRiz A\trizwan@techbanq.net\tcentre3_employee\tuser\n90183\tAli Aarish\tali@techbanq.net\tcentre3_employee\tadmin\n150003\tAli Test\tali-test-1769869315536@centre3.com\tcentre3_employee\tuser\n150004\tFull User\tfull-user-1769869316102@centre3.com\tcentre3_employee\tuser\n150005\tDev Dev\tdev@techbanq.org\tcentre3_employee\tuser\n150006\tAbdullah Alzakari\tAalzakari@center3.com\tcentre3_employee\tuser\n150007\tRand A.  Almaymuni\tSalshamrani@center3.com\tcentre3_employee\tuser\n150008\tDiwan Mohideen\tdmohideen@center3.com\tcentre3_employee\tuser\n150009\tTalha Burney\ttalhaburney@gmail.com\tcentre3_employee\tuser\n150010\tMuhammad Shaykhu\tmshaykhu.c@center3.com\tcentre3_employee\tuser\n150011\tNew user\tnewuser@abc.com\tcentre3_employee\tuser\n",
+  "stderr": "",
+  "execution_time_ms": 1567
+}

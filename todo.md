@@ -1511,3 +1511,39 @@ Create a unified data source system that can pull options from anywhere in the p
 
 ## Logo Update (Jan 31, 2026)
 - [x] Upload new center3 logo to sidebar (center3-logo-white.png)
+
+## Approval Workflow System Implementation (Feb 1, 2026)
+
+### User Creation
+- [x] Create 10 Centre3 internal users with different roles
+  - securityofficer@centre3.com
+  - sitemanager@centre3.com
+  - securitymanager@centre3.com
+  - riyadhsecurityofficer@centre3.com
+  - jaborofficer@centre3.com
+  - facilitymanager@centre3.com
+  - accesscontroller@centre3.com
+  - shiftlead@centre3.com
+  - dutymanager@centre3.com
+  - operationsmanager@centre3.com
+- [x] Create 5 Amazon users (user1@aws.com, user2@aws.com, manager@aws.com, etc.)
+- [x] Create 5 Google Cloud users (user1@google.com, user2@google.com, manager@google.com, etc.)
+
+### Workflow Configuration
+- [x] Configure Admin Visit approval workflows in Workflow Builder
+- [x] Configure Visitor request approval workflows
+- [x] Set up site-specific workflows (Riyadh, Jabor, etc.)
+- [x] Configure external company workflows (Amazon, Google)
+- [x] Ensure administrators and super-admin can intervene at any step
+
+### Test Cases Documentation
+- [x] Document 20 approval workflow test cases
+- [ ] Test Case 1: Basic Admin Visit (User A → Security Officer → Site Manager → Security Manager)
+- [ ] Test Case 2: Riyadh Site Admin Visit (→ Riyadh Security Officer → Security Manager)
+- [ ] Test Case 3: External company request (Amazon/Google → Company Manager → Site Manager → Security Manager)
+- [ ] Additional 17 test cases for various scenarios
+
+### Testing
+- [ ] Test all 20 workflow scenarios
+- [ ] Verify administrator intervention capability
+- [ ] Verify super-admin intervention capability
