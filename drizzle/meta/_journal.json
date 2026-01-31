@@ -197,6 +197,13 @@
       "when": 1769872986446,
       "tag": "0027_regular_next_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "5",
+      "when": 1769875950252,
+      "tag": "0028_deep_naoko",
+      "breakpoints": true
     }
   ]
 }

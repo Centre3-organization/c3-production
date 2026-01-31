@@ -59,9 +59,15 @@ interface FormField {
   helpTextAr?: string;
   defaultValue?: string;
   options?: FieldOption[];
-  optionsSource?: "static" | "api" | "dependent";
+  optionsSource?: "static" | "api" | "dependent" | 
+    "countries" | "regions" | "cities" | 
+    "sites" | "zones" | "areas" | 
+    "departments" | "groups" | "users" | "contractors" | 
+    "request_types" | "approval_roles" | 
+    "user_sites" | "user_groups" | "user_departments";
   optionsApi?: string;
   dependsOnField?: string;
+  filterByField?: string;
   validation?: FieldValidation;
   showCondition?: ShowCondition;
 }
@@ -540,25 +546,62 @@ export function FieldRenderer({
     }
   };
 
-  // Load dependent options when parent value changes
+  // Data source types that need API fetching
+  const dynamicDataSources = [
+    "countries", "regions", "cities", "sites", "zones", "areas",
+    "departments", "groups", "users", "contractors",
+    "request_types", "approval_roles",
+    "user_sites", "user_groups", "user_departments"
+  ];
+
+  // Load options from data source when field mounts or filter changes
   useEffect(() => {
-    if (field.optionsSource === "dependent" && field.dependsOnField) {
+    const source = field.optionsSource;
+    if (!source || source === "static") return;
+
+    // Handle dependent options (legacy)
+    if (source === "dependent" && field.dependsOnField) {
       const parentValue = formValues[field.dependsOnField];
       if (parentValue) {
         loadDependentOptions(parentValue);
       } else {
         setDynamicOptions([]);
       }
+      return;
     }
-  }, [field.dependsOnField, formValues]);
+
+    // Handle dynamic data sources
+    if (dynamicDataSources.includes(source)) {
+      const filterValue = field.filterByField ? formValues[field.filterByField] : undefined;
+      loadDataSourceOptions(source, filterValue);
+    }
+  }, [field.optionsSource, field.dependsOnField, field.filterByField, formValues]);
+
+  const loadDataSourceOptions = async (source: string, filterValue?: any) => {
+    setIsLoadingOptions(true);
+    try {
+      const response = await fetch(`/api/trpc/requestConfig.fields.getDataSourceOptions?input=${encodeURIComponent(JSON.stringify({ source, filterValue }))}`);
+      const result = await response.json();
+      if (result.result?.data) {
+        setDynamicOptions(result.result.data.map((item: any) => ({
+          value: String(item.value),
+          label: item.label,
+          labelAr: item.labelAr,
+        })));
+      }
+    } catch (error) {
+      console.error("Failed to load data source options:", error);
+      setDynamicOptions([]);
+    } finally {
+      setIsLoadingOptions(false);
+    }
+  };
 
   const loadDependentOptions = async (parentValue: string) => {
     setIsLoadingOptions(true);
     try {
       // In a real implementation, this would call the API
-      // For now, we'll simulate with a delay
       await new Promise((resolve) => setTimeout(resolve, 500));
-      // Options would come from API
       setDynamicOptions([]);
     } catch (error) {
       console.error("Failed to load options:", error);
@@ -569,7 +612,9 @@ export function FieldRenderer({
 
   // Get options to display
   const getOptions = (): FieldOption[] => {
-    if (field.optionsSource === "dependent") {
+    const source = field.optionsSource;
+    // Use dynamic options for non-static sources
+    if (source && source !== "static") {
       return dynamicOptions;
     }
     return field.options || [];

@@ -743,7 +743,15 @@ export const formFieldsRouter = router({
           label: z.string(),
           labelAr: z.string().optional(),
         })).optional(),
-        optionsSource: z.enum(["static", "api", "dependent"]).optional(),
+        optionsSource: z.enum([
+          "static", "api", "dependent",
+          "countries", "regions", "cities",
+          "sites", "zones", "areas",
+          "departments", "groups", "users", "contractors",
+          "request_types", "approval_roles",
+          "user_sites", "user_groups", "user_departments"
+        ]).optional(),
+        filterByField: z.string().max(100).optional(),
         optionsApi: z.string().max(500).optional(),
         dependsOnField: z.string().max(100).optional(),
         validation: z.object({
@@ -825,7 +833,15 @@ export const formFieldsRouter = router({
           label: z.string(),
           labelAr: z.string().optional(),
         })).nullable().optional(),
-        optionsSource: z.enum(["static", "api", "dependent"]).optional(),
+        optionsSource: z.enum([
+          "static", "api", "dependent",
+          "countries", "regions", "cities",
+          "sites", "zones", "areas",
+          "departments", "groups", "users", "contractors",
+          "request_types", "approval_roles",
+          "user_sites", "user_groups", "user_departments"
+        ]).optional(),
+        filterByField: z.string().max(100).optional(),
         optionsApi: z.string().max(500).nullable().optional(),
         dependsOnField: z.string().max(100).nullable().optional(),
         validation: z.object({
@@ -969,6 +985,293 @@ export const formFieldsRouter = router({
         
         const [options] = await connection.execute(query, params);
         return options;
+      } finally {
+        await connection.end();
+      }
+    }),
+
+  // Get options from data source (comprehensive portal-wide data sources)
+  getDataSourceOptions: protectedProcedure
+    .input(
+      z.object({
+        source: z.enum([
+          "static", "api", "dependent",
+          "countries", "regions", "cities",
+          "sites", "zones", "areas",
+          "departments", "groups", "users", "contractors",
+          "request_types", "approval_roles",
+          "user_sites", "user_groups", "user_departments"
+        ]),
+        filterValue: z.string().optional(), // For cascading (e.g., countryId for regions)
+        search: z.string().optional(), // For search/autocomplete
+        limit: z.number().max(500).optional(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const connection = await getConnection();
+      try {
+        const limit = input.limit || 100;
+        let options: Array<{ value: string; label: string; labelAr?: string }> = [];
+        
+        switch (input.source) {
+          // ============ MASTER DATA SOURCES ============
+          case "countries": {
+            const [rows] = await connection.execute(`
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM countries 
+              WHERE isActive = true
+              ORDER BY name ASC
+              LIMIT ?
+            `, [limit]);
+            options = rows as any;
+            break;
+          }
+          
+          case "regions": {
+            let query = `
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM regions 
+              WHERE isActive = true
+            `;
+            const params: any[] = [];
+            if (input.filterValue) {
+              query += ` AND countryId = ?`;
+              params.push(input.filterValue);
+            }
+            query += ` ORDER BY name ASC LIMIT ?`;
+            params.push(limit);
+            const [rows] = await connection.execute(query, params);
+            options = rows as any;
+            break;
+          }
+          
+          case "cities": {
+            let query = `
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM cities 
+              WHERE isActive = true
+            `;
+            const params: any[] = [];
+            if (input.filterValue) {
+              query += ` AND regionId = ?`;
+              params.push(input.filterValue);
+            }
+            query += ` ORDER BY name ASC LIMIT ?`;
+            params.push(limit);
+            const [rows] = await connection.execute(query, params);
+            options = rows as any;
+            break;
+          }
+          
+          // ============ FACILITY SOURCES ============
+          case "sites": {
+            let query = `
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM sites 
+              WHERE isActive = true
+            `;
+            const params: any[] = [];
+            if (input.filterValue) {
+              query += ` AND cityId = ?`;
+              params.push(input.filterValue);
+            }
+            if (input.search) {
+              query += ` AND (name LIKE ? OR code LIKE ?)`;
+              params.push(`%${input.search}%`, `%${input.search}%`);
+            }
+            query += ` ORDER BY name ASC LIMIT ?`;
+            params.push(limit);
+            const [rows] = await connection.execute(query, params);
+            options = rows as any;
+            break;
+          }
+          
+          case "zones": {
+            let query = `
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM zones 
+              WHERE isActive = true
+            `;
+            const params: any[] = [];
+            if (input.filterValue) {
+              query += ` AND siteId = ?`;
+              params.push(input.filterValue);
+            }
+            query += ` ORDER BY name ASC LIMIT ?`;
+            params.push(limit);
+            const [rows] = await connection.execute(query, params);
+            options = rows as any;
+            break;
+          }
+          
+          case "areas": {
+            let query = `
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM areas 
+              WHERE isActive = true
+            `;
+            const params: any[] = [];
+            if (input.filterValue) {
+              query += ` AND zoneId = ?`;
+              params.push(input.filterValue);
+            }
+            query += ` ORDER BY name ASC LIMIT ?`;
+            params.push(limit);
+            const [rows] = await connection.execute(query, params);
+            options = rows as any;
+            break;
+          }
+          
+          // ============ ORGANIZATION SOURCES ============
+          case "departments": {
+            const [rows] = await connection.execute(`
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM departments 
+              WHERE isActive = true
+              ORDER BY name ASC
+              LIMIT ?
+            `, [limit]);
+            options = rows as any;
+            break;
+          }
+          
+          case "groups": {
+            let query = `
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM \`groups\` 
+              WHERE isActive = true
+            `;
+            const params: any[] = [];
+            if (input.search) {
+              query += ` AND name LIKE ?`;
+              params.push(`%${input.search}%`);
+            }
+            query += ` ORDER BY name ASC LIMIT ?`;
+            params.push(limit);
+            const [rows] = await connection.execute(query, params);
+            options = rows as any;
+            break;
+          }
+          
+          case "users": {
+            let query = `
+              SELECT id as value, CONCAT(COALESCE(firstName, ''), ' ', COALESCE(lastName, '')) as label 
+              FROM users 
+              WHERE status = 'active'
+            `;
+            const params: any[] = [];
+            if (input.filterValue) {
+              // Filter by department
+              query += ` AND departmentId = ?`;
+              params.push(input.filterValue);
+            }
+            if (input.search) {
+              query += ` AND (firstName LIKE ? OR lastName LIKE ? OR email LIKE ?)`;
+              params.push(`%${input.search}%`, `%${input.search}%`, `%${input.search}%`);
+            }
+            query += ` ORDER BY firstName ASC LIMIT ?`;
+            params.push(limit);
+            const [rows] = await connection.execute(query, params);
+            options = rows as any;
+            break;
+          }
+          
+          case "contractors": {
+            const [rows] = await connection.execute(`
+              SELECT id as value, companyName as label, companyNameAr as labelAr 
+              FROM cardCompanies 
+              WHERE isActive = true AND companyType IN ('contractor', 'sub_contractor')
+              ORDER BY companyName ASC
+              LIMIT ?
+            `, [limit]);
+            options = rows as any;
+            break;
+          }
+          
+          // ============ CONFIGURATION SOURCES ============
+          case "request_types": {
+            let query = `
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM requestTypes 
+              WHERE isActive = true
+            `;
+            const params: any[] = [];
+            if (input.filterValue) {
+              // Filter by category
+              query += ` AND categoryId = ?`;
+              params.push(input.filterValue);
+            }
+            query += ` ORDER BY displayOrder ASC LIMIT ?`;
+            params.push(limit);
+            const [rows] = await connection.execute(query, params);
+            options = rows as any;
+            break;
+          }
+          
+          case "approval_roles": {
+            const [rows] = await connection.execute(`
+              SELECT id as value, name as label, description as labelAr 
+              FROM approvalRoles 
+              WHERE isActive = true
+              ORDER BY name ASC
+              LIMIT ?
+            `, [limit]);
+            options = rows as any;
+            break;
+          }
+          
+          // ============ USER PROFILE SOURCES ============
+          case "user_sites": {
+            // Get sites assigned to current user (through groups or direct assignment)
+            const [rows] = await connection.execute(`
+              SELECT DISTINCT s.id as value, s.name as label, s.nameAr as labelAr
+              FROM sites s
+              LEFT JOIN groupAccessPolicies gap ON gap.siteId = s.id
+              LEFT JOIN userGroupMembership ugm ON ugm.groupId = gap.groupId AND ugm.userId = ?
+              WHERE s.isActive = true AND (ugm.userId IS NOT NULL OR s.id = (SELECT defaultSiteId FROM users WHERE id = ?))
+              ORDER BY s.name ASC
+              LIMIT ?
+            `, [ctx.user.id, ctx.user.id, limit]);
+            options = rows as any;
+            break;
+          }
+          
+          case "user_groups": {
+            // Get groups current user belongs to
+            const [rows] = await connection.execute(`
+              SELECT g.id as value, g.name as label, g.nameAr as labelAr
+              FROM \`groups\` g
+              INNER JOIN userGroupMembership ugm ON ugm.groupId = g.id
+              WHERE ugm.userId = ? AND g.isActive = true
+              ORDER BY g.name ASC
+              LIMIT ?
+            `, [ctx.user.id, limit]);
+            options = rows as any;
+            break;
+          }
+          
+          case "user_departments": {
+            // Get current user's department
+            const [rows] = await connection.execute(`
+              SELECT d.id as value, d.name as label, d.nameAr as labelAr
+              FROM departments d
+              INNER JOIN users u ON u.departmentId = d.id
+              WHERE u.id = ? AND d.isActive = true
+            `, [ctx.user.id]);
+            options = rows as any;
+            break;
+          }
+          
+          default:
+            options = [];
+        }
+        
+        // Convert numeric IDs to strings for consistency
+        return options.map(opt => ({
+          value: String(opt.value),
+          label: opt.label || '',
+          labelAr: opt.labelAr || undefined
+        }));
       } finally {
         await connection.end();
       }

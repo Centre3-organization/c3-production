@@ -1,0 +1,2 @@
+ALTER TABLE `formFields` MODIFY COLUMN `optionsSource` enum('static','api','dependent','countries','regions','cities','sites','zones','areas','departments','groups','users','contractors','request_types','approval_roles','user_sites','user_groups','user_departments') DEFAULT 'static';--> statement-breakpoint
+ALTER TABLE `formFields` ADD `filterByField` varchar(100);

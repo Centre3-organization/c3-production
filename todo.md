@@ -1171,3 +1171,34 @@ Time conditions:
 - [x] Update Requestor role to have "View All Requests" permission (scoped to own data)
 - [x] Implement data scoping so Requestors only see their own requests (via getDataScopeFilter)
 - [x] Ensure "All Requests" menu item is visible for Requestors
+
+
+## Comprehensive Data Source System (Jan 31, 2026)
+
+### Feature: Portal-wide Dynamic Data Source for Dropdown Fields
+Create a unified data source system that can pull options from anywhere in the portal.
+
+**Available Data Sources:**
+- static: Manual options defined in field configuration
+- countries: Master data countries table
+- regions: Master data regions (filtered by country)
+- cities: Master data cities (filtered by region)
+- sites: Sites table (all or user's assigned sites)
+- zones: Zones table (filtered by site)
+- areas: Areas table (filtered by zone)
+- departments: Departments table
+- groups: Groups table (all or user's groups)
+- users: Users table (for user lookup)
+- contractors: Contractor companies
+- request_types: Request types for category
+- approval_roles: Approval roles
+- user_profile: Current user's profile data
+
+**Implementation Tasks:**
+- [x] Update optionsSource enum in schema to include all data sources
+- [x] Create unified /api/data-source endpoint with type and filter params (getDataSourceOptions)
+- [x] Update Edit Field dialog with Data Source dropdown selector
+- [x] Add "Depends On Field" selector for cascading dropdowns (filterByField)
+- [x] Update DynamicForm FieldRenderer to fetch from data source API
+- [x] Implement cascading logic (parent field change triggers child refresh)
+- [ ] Test Country → Region → City → Site → Zone → Area cascade (manual testing required)

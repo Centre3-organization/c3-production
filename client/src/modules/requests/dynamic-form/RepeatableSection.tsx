@@ -27,9 +27,15 @@ interface FormField {
   helpTextAr?: string;
   defaultValue?: string;
   options?: any[];
-  optionsSource?: "static" | "api" | "dependent";
+  optionsSource?: "static" | "api" | "dependent" | 
+    "countries" | "regions" | "cities" | 
+    "sites" | "zones" | "areas" | 
+    "departments" | "groups" | "users" | "contractors" | 
+    "request_types" | "approval_roles" | 
+    "user_sites" | "user_groups" | "user_departments";
   optionsApi?: string;
   dependsOnField?: string;
+  filterByField?: string;
   validation?: any;
   showCondition?: any;
 }

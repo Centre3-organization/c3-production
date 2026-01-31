@@ -1303,9 +1303,35 @@ export const formFields = mysqlTable("formFields", {
     label: string;
     labelAr?: string;
   }>>(),
-  optionsSource: mysqlEnum("optionsSource", ["static", "api", "dependent"]).default("static"),
+  optionsSource: mysqlEnum("optionsSource", [
+    "static",           // Manual options defined in field config
+    "api",              // Custom API endpoint
+    "dependent",        // Depends on another field
+    // Master Data Sources
+    "countries",        // Countries from master data
+    "regions",          // Regions (can filter by country)
+    "cities",           // Cities (can filter by region)
+    // Facility Sources
+    "sites",            // Sites table
+    "zones",            // Zones (can filter by site)
+    "areas",            // Areas (can filter by zone)
+    // Organization Sources
+    "departments",      // Departments table
+    "groups",           // Groups table
+    "users",            // Users for lookup
+    "contractors",      // Contractor companies
+    // Configuration Sources
+    "request_types",    // Request types
+    "approval_roles",   // Approval roles
+    // Profile Sources
+    "user_sites",       // Current user's assigned sites
+    "user_groups",      // Current user's groups
+    "user_departments"  // Current user's department
+  ]).default("static"),
   optionsApi: varchar("optionsApi", { length: 500 }),
   dependsOnField: varchar("dependsOnField", { length: 100 }),
+  // Filter configuration for cascading dropdowns
+  filterByField: varchar("filterByField", { length: 100 }), // Field code to filter by (e.g., "country" for regions)
   
   // Validation
   validation: json("validation").$type<{
