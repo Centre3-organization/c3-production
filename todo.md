@@ -1502,3 +1502,12 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Create single Reports page with Salesforce-style list layout
 - [x] Show "Coming Soon" message when clicking on reports
 - [x] Update login page to match new design (centered logo, purple gradient, cleaner form)
+
+## Reports Page Cleanup (Jan 31, 2026)
+- [x] Remove search bar from Reports page
+- [x] Remove New Report and New Folder buttons from Reports page
+- [x] Remove left sidebar categories from Reports page
+- [x] Keep simple table layout with Coming Soon dialog
+
+## Logo Update (Jan 31, 2026)
+- [x] Upload new center3 logo to sidebar (center3-logo-white.png)
