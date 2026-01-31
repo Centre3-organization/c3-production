@@ -1553,3 +1553,15 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Create 20 test requests for all workflow test cases
 - [x] Set all requests to "Pending First Approval" status
 - [x] Verify requests appear in the system with correct workflow assignment
+
+## Super Admin/Admin Approvals Visibility Fix (Feb 1, 2026)
+- [ ] Update approvals query to show all pending requests for Super Admin and Admin
+- [ ] Ensure Super Admin and Admin can intervene and approve any request
+- [ ] Test visibility in My Approvals page
+
+
+## Super Admin/Admin Approval Visibility Fix (Feb 1, 2026)
+- [x] Update getMyPendingApprovals to show all pending approvals for Super Admin/Admin
+- [x] Initialize workflow instances for existing pending requests
+- [x] Create approvalTasks for all pending requests
+- [x] Verify 39 pending approvals now visible in My Approvals page

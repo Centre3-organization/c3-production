@@ -21,7 +21,7 @@ import {
   requestVehicles
 } from "../../../drizzle/schema";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "../../_core/trpc";
-import { getDataScopeFilter, hasPermission } from "../../services/enterprise-rbac.service";
+import { getDataScopeFilter, hasPermission, getUserPermissions } from "../../services/enterprise-rbac.service";
 // Workflow engine functions are defined locally
 
 // Generate request number: REQ-YYYYMMDD-XXXXXX (max 20 chars to fit column)
@@ -157,28 +157,58 @@ export const requestsRouter = router({
     const db = await getDb();
     if (!db) return [];
     
-    // Get tasks assigned to current user that are pending
-    const tasks = await db
-      .select({
-        taskId: approvalTasks.id,
-        instanceId: approvalTasks.instanceId,
-        stageId: approvalTasks.stageId,
-        stageName: approvalStages.stageName,
-        stageOrder: approvalStages.stageOrder,
-        requestId: approvalInstances.requestId,
-        workflowId: approvalInstances.workflowId,
-        workflowName: approvalWorkflows.name,
-        taskCreatedAt: approvalTasks.createdAt,
-      })
-      .from(approvalTasks)
-      .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
-      .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
-      .innerJoin(approvalWorkflows, eq(approvalInstances.workflowId, approvalWorkflows.id))
-      .where(and(
-        eq(approvalTasks.assignedTo, ctx.user.id),
-        eq(approvalTasks.status, "pending")
-      ))
-      .orderBy(desc(approvalTasks.createdAt));
+    // Check if user is Super Admin or Admin - they can see ALL pending approvals
+    const userPerms = await getUserPermissions(ctx.user.id);
+    const isAdminOrSuperAdmin = userPerms?.roleCode === "super_admin" || userPerms?.roleCode === "admin";
+    
+    let tasks;
+    
+    if (isAdminOrSuperAdmin) {
+      // Super Admin and Admin can see ALL pending tasks across all workflows
+      tasks = await db
+        .select({
+          taskId: approvalTasks.id,
+          instanceId: approvalTasks.instanceId,
+          stageId: approvalTasks.stageId,
+          stageName: approvalStages.stageName,
+          stageOrder: approvalStages.stageOrder,
+          requestId: approvalInstances.requestId,
+          workflowId: approvalInstances.workflowId,
+          workflowName: approvalWorkflows.name,
+          taskCreatedAt: approvalTasks.createdAt,
+          assignedToId: approvalTasks.assignedTo,
+        })
+        .from(approvalTasks)
+        .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
+        .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
+        .innerJoin(approvalWorkflows, eq(approvalInstances.workflowId, approvalWorkflows.id))
+        .where(eq(approvalTasks.status, "pending"))
+        .orderBy(desc(approvalTasks.createdAt));
+    } else {
+      // Regular users only see tasks assigned to them
+      tasks = await db
+        .select({
+          taskId: approvalTasks.id,
+          instanceId: approvalTasks.instanceId,
+          stageId: approvalTasks.stageId,
+          stageName: approvalStages.stageName,
+          stageOrder: approvalStages.stageOrder,
+          requestId: approvalInstances.requestId,
+          workflowId: approvalInstances.workflowId,
+          workflowName: approvalWorkflows.name,
+          taskCreatedAt: approvalTasks.createdAt,
+          assignedToId: approvalTasks.assignedTo,
+        })
+        .from(approvalTasks)
+        .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
+        .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
+        .innerJoin(approvalWorkflows, eq(approvalInstances.workflowId, approvalWorkflows.id))
+        .where(and(
+          eq(approvalTasks.assignedTo, ctx.user.id),
+          eq(approvalTasks.status, "pending")
+        ))
+        .orderBy(desc(approvalTasks.createdAt));
+    }
     
     if (tasks.length === 0) return [];
     
