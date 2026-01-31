@@ -1202,3 +1202,18 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Update DynamicForm FieldRenderer to fetch from data source API
 - [x] Implement cascading logic (parent field change triggers child refresh)
 - [ ] Test Country → Region → City → Site → Zone → Area cascade (manual testing required)
+
+
+## Visitors Form Improvements (Jan 31, 2026)
+
+### Feature: Improve Visitors Form UI
+- [x] Improve form layout with better spacing and grouping
+- [x] Add visual separation between visitor entries (collapsible cards with badges)
+- [x] Improve field labels and styling (uppercase labels, proper spacing)
+- [x] Add better validation feedback (error badges, toast messages)
+
+### Feature: Yakeen Verification for Visitors
+- [x] Add "Verify from Yakeen" button to visitor section
+- [x] Integrate with Yakeen API for ID verification (simulated)
+- [x] Auto-populate visitor details from Yakeen response
+- [x] Show verification status indicator (Verified/Manual badges)

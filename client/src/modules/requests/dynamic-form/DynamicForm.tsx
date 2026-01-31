@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { FieldRenderer } from "./FieldRenderer";
 import { RepeatableSection } from "./RepeatableSection";
+import { RepeatableSectionWithYakeen } from "./RepeatableSectionWithYakeen";
 
 // Icon mapping for sections
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -311,32 +312,49 @@ export function DynamicForm({
               {/* Section Content */}
               <div className="p-8">
                 {currentSectionData.isRepeatable ? (
-                  <RepeatableSection
-                    sectionCode={currentSectionData.code}
-                    sectionName={currentSectionData.name}
-                    sectionNameAr={currentSectionData.nameAr}
-                    fields={getSortedFields(currentSectionData.fields)}
-                    items={formData[currentSectionData.code] || []}
-                    onChange={(items) =>
-                      handleRepeatableChange(currentSectionData.code, items)
-                    }
-                    minItems={currentSectionData.minItems}
-                    maxItems={currentSectionData.maxItems}
-                    disabled={disabled}
-                    itemLabel={
-                      currentSectionData.code === "visitors"
-                        ? t("requests.visitor", "Visitor")
-                        : currentSectionData.code === "materials"
-                        ? t("requests.material", "Material")
-                        : currentSectionData.code === "method_statement"
-                        ? t("requests.step", "Step")
-                        : currentSectionData.code === "risk_assessment"
-                        ? t("requests.risk", "Risk")
-                        : currentSectionData.code === "affected_systems"
-                        ? t("requests.system", "System")
-                        : t("common.item", "Item")
-                    }
-                  />
+                  // Use Yakeen-enabled component for visitor sections
+                  currentSectionData.code === "visitors" ? (
+                    <RepeatableSectionWithYakeen
+                      sectionCode={currentSectionData.code}
+                      sectionName={currentSectionData.name}
+                      sectionNameAr={currentSectionData.nameAr}
+                      fields={getSortedFields(currentSectionData.fields)}
+                      items={formData[currentSectionData.code] || []}
+                      onChange={(items) =>
+                        handleRepeatableChange(currentSectionData.code, items)
+                      }
+                      minItems={currentSectionData.minItems}
+                      maxItems={currentSectionData.maxItems}
+                      disabled={disabled}
+                      itemLabel={t("requests.visitor", "Visitor")}
+                      enableYakeenVerification={true}
+                    />
+                  ) : (
+                    <RepeatableSection
+                      sectionCode={currentSectionData.code}
+                      sectionName={currentSectionData.name}
+                      sectionNameAr={currentSectionData.nameAr}
+                      fields={getSortedFields(currentSectionData.fields)}
+                      items={formData[currentSectionData.code] || []}
+                      onChange={(items) =>
+                        handleRepeatableChange(currentSectionData.code, items)
+                      }
+                      minItems={currentSectionData.minItems}
+                      maxItems={currentSectionData.maxItems}
+                      disabled={disabled}
+                      itemLabel={
+                        currentSectionData.code === "materials"
+                          ? t("requests.material", "Material")
+                          : currentSectionData.code === "method_statement"
+                          ? t("requests.step", "Step")
+                          : currentSectionData.code === "risk_assessment"
+                          ? t("requests.risk", "Risk")
+                          : currentSectionData.code === "affected_systems"
+                          ? t("requests.system", "System")
+                          : t("common.item", "Item")
+                      }
+                    />
+                  )
                 ) : (
                   <div className="grid grid-cols-12 gap-x-6 gap-y-6">
                     {getSortedFields(currentSectionData.fields).map((field) => (
