@@ -1601,3 +1601,10 @@ Create a unified data source system that can pull options from anywhere in the p
 - [ ] Fix "Task is not pending" error when requesting clarification
 - [ ] Add approval history with comments to request details dialog
 - [ ] Show comments from each completed stage in the approval timeline
+
+
+## Login Issue Fix (Feb 1, 2026)
+- [x] Fix login returning to same page with correct credentials (security middleware blocking)
+- [x] Implemented localStorage token fallback for cookie issues
+- [x] Added Authorization header support in SDK authentication
+- [ ] Test login works from Pakistan region

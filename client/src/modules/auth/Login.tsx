@@ -20,7 +20,11 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
 
   const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Store session token in localStorage as fallback for cookie issues
+      if (data.sessionToken) {
+        localStorage.setItem('app_session_token', data.sessionToken);
+      }
       window.location.href = "/";
     },
     onError: (err: any) => {

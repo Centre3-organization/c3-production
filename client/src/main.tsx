@@ -48,6 +48,16 @@ const trpcClient = trpc.createClient({
     httpBatchLink({
       url: "/api/trpc",
       transformer: superjson,
+      headers() {
+        // Include session token from localStorage as fallback for cookie issues
+        const sessionToken = localStorage.getItem('app_session_token');
+        if (sessionToken) {
+          return {
+            Authorization: `Bearer ${sessionToken}`,
+          };
+        }
+        return {};
+      },
       fetch(input, init) {
         return globalThis.fetch(input, {
           ...(init ?? {}),
