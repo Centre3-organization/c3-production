@@ -1576,3 +1576,22 @@ Create a unified data source system that can pull options from anywhere in the p
 - [ ] Create 20 TEP/MOP test requests with workflow instances
 
 - [ ] Fix Super Admin/Admin authorization to approve any request
+
+
+## Approval Flow Fixes (Feb 2026)
+- [ ] Change Approve button to move request to next stage (not direct grant)
+- [ ] Show Grant Access option only at final approval stage
+- [ ] Add proper filters to Approvals page (by stage, request type, site)
+- [ ] Ensure multi-stage workflow progression works correctly
+
+
+## Approval Flow UI Fixes (Feb 1, 2026)
+- [x] Fix Approve button to move to next stage instead of direct grant
+- [x] Show "Grant Access" only at final stage (opens entry method dialog)
+- [x] Show "Approve" for intermediate stages (opens simple approval dialog)
+- [x] Add Stage filter dropdown with counts (L1, Security Officer Review, Site Manager Approval)
+- [x] Add Type filter dropdown (Admin Visit, MOP, TEP, Visitor)
+- [x] Add Site filter dropdown
+- [x] Fix Super Admin/Admin authorization to approve/reject/clarify any request
+- [x] Verify multi-stage approval flow works correctly (1/3 → 2/3 → 3/3)
+- [x] Test approval creates new tasks for next stage approvers

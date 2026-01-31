@@ -100,6 +100,8 @@ export default function Approvals() {
   const isRTL = i18n.language === 'ar';
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [siteFilter, setSiteFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
   const [processingId, setProcessingId] = useState<number | null>(null);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
@@ -217,13 +219,23 @@ export default function Approvals() {
     .sort(([, a], [, b]) => a.order - b.order)
     .map(([name, data]) => ({ name, ...data }));
   
-  // Filter by search and stage
+  // Get unique types and sites for filters
+  const uniqueTypes = Array.from(new Set((pendingTasks || []).map((t: any) => t.request?.type).filter(Boolean))) as string[];
+  const uniqueSites = Array.from(new Set((pendingTasks || []).map((t: any) => t.request?.siteName).filter(Boolean))) as string[];
+  
+  // Filter by search, stage, type, and site
   const filteredTasks = (pendingTasks || []).filter((task: any) => {
     // Stage filter
     if (stageFilter !== "all") {
       const taskStageName = task.stageName || `Stage ${task.stageOrder}`;
       if (taskStageName !== stageFilter) return false;
     }
+    
+    // Type filter
+    if (typeFilter !== "all" && task.request?.type !== typeFilter) return false;
+    
+    // Site filter
+    if (siteFilter !== "all" && task.request?.siteName !== siteFilter) return false;
     
     // Search filter
     if (!searchQuery) return true;
@@ -398,8 +410,8 @@ export default function Approvals() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
+      <div className="flex flex-col sm:flex-row gap-4 flex-wrap">
+        <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={t("approvals.searchPlaceholder", "Search by request number, visitor, or company...")}
@@ -409,15 +421,43 @@ export default function Approvals() {
           />
         </div>
         <Select value={stageFilter} onValueChange={setStageFilter}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-[160px]">
             <Filter className="h-4 w-4 mr-2" />
-            <SelectValue placeholder={t("approvals.filterByStage", "Filter by stage")} />
+            <SelectValue placeholder={t("approvals.filterByStage", "All Stages")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("approvals.allStages", "All Stages")}</SelectItem>
             {uniqueStages.map((stage) => (
               <SelectItem key={stage.name} value={stage.name}>
                 {stage.name} ({stage.count})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger className="w-[160px]">
+            <FileText className="h-4 w-4 mr-2" />
+            <SelectValue placeholder={t("approvals.filterByType", "All Types")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("approvals.allTypes", "All Types")}</SelectItem>
+            {uniqueTypes.map((type) => (
+              <SelectItem key={type} value={type}>
+                {typeLabels[type] || type}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={siteFilter} onValueChange={setSiteFilter}>
+          <SelectTrigger className="w-[180px]">
+            <MapPin className="h-4 w-4 mr-2" />
+            <SelectValue placeholder={t("approvals.filterBySite", "All Sites")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("approvals.allSites", "All Sites")}</SelectItem>
+            {uniqueSites.map((site) => (
+              <SelectItem key={site} value={site}>
+                {site}
               </SelectItem>
             ))}
           </SelectContent>
