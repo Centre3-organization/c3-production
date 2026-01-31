@@ -1296,3 +1296,13 @@ Create a unified data source system that can pull options from anywhere in the p
 
 ### Bug: Iqama Expiry Date in Attachments section
 - [x] Remove Iqama Expiry Date field from Attachments section in database
+
+
+## Login Bug from Different Location (Jan 31, 2026)
+
+### Bug: Correct credentials don't redirect after login from different location
+- [x] Investigate authentication flow and cookie settings
+- [x] Check SameSite cookie attribute for cross-origin access
+- [x] Check Secure cookie flag for HTTPS
+- [x] Verify JWT token is being set correctly
+- [x] Fix cross-origin cookie issue (SameSite=none requires Secure=true)

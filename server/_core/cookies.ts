@@ -39,10 +39,16 @@ export function getSessionCookieOptions(
   //       ? hostname
   //       : undefined;
 
+  // For SameSite=none, Secure MUST be true (required by browsers)
+  // This ensures cookies work across different origins/locations
+  const isSecure = isSecureRequest(req);
+  
   return {
     httpOnly: true,
     path: "/",
-    sameSite: "none",
-    secure: isSecureRequest(req),
+    // Use SameSite=none with Secure=true for cross-origin compatibility
+    // If not secure (local dev), use SameSite=lax instead
+    sameSite: isSecure ? "none" : "lax",
+    secure: isSecure,
   };
 }
