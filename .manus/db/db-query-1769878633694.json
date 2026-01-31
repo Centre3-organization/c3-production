@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE formFields SET optionsSource = 'countries', filterByField = NULL WHERE sectionId = 2 AND code = 'country';\nUPDATE formFields SET optionsSource = 'regions', filterByField = 'country' WHERE sectionId = 2 AND code = 'region';\nUPDATE formFields SET optionsSource = 'cities', filterByField = 'region' WHERE sectionId = 2 AND code = 'city';\nUPDATE formFields SET optionsSource = 'sites', filterByField = 'city' WHERE sectionId = 2 AND code = 'site';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute UPDATE formFields SET optionsSource = 'countries', filterByField = NULL WHERE sectionId = 2 AND code = 'country';\nUPDATE formFields SET optionsSource = 'regions', filterByField = 'country' WHERE sectionId = 2 AND code = 'region';\nUPDATE formFields SET optionsSource = 'cities', filterByField = 'region' WHERE sectionId = 2 AND code = 'city';\nUPDATE formFields SET optionsSource = 'sites', filterByField = 'city' WHERE sectionId = 2 AND code = 'site';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2232
+}

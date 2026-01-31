@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, code, name, fieldType, displayOrder FROM formFields WHERE sectionId = 6 ORDER BY displayOrder;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, name, fieldType, displayOrder FROM formFields WHERE sectionId = 6 ORDER BY displayOrder;",
+  "rows": [
+    {
+      "id": "30",
+      "code": "supporting_documents",
+      "name": "Supporting Documents",
+      "fieldType": "file_multi",
+      "displayOrder": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tfieldType\tdisplayOrder\n30\tsupporting_documents\tSupporting Documents\tfile_multi\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1543
+}

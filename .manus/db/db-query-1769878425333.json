@@ -1,0 +1,16 @@
+{
+  "query": "SELECT rt.id, rt.code, rt.name, rc.name as category\nFROM requestTypes rt\nJOIN requestCategories rc ON rt.categoryId = rc.id\nWHERE rt.code = 'ADMIN_VISIT' OR rt.name LIKE '%Admin%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT rt.id, rt.code, rt.name, rc.name as category\nFROM requestTypes rt\nJOIN requestCategories rc ON rt.categoryId = rc.id\nWHERE rt.code = 'ADMIN_VISIT' OR rt.name LIKE '%Admin%';",
+  "rows": [
+    {
+      "id": "1",
+      "code": "admin_visit",
+      "name": "Admin Visit",
+      "category": "Admin Visit"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tcategory\n1\tadmin_visit\tAdmin Visit\tAdmin Visit\n",
+  "stderr": "",
+  "execution_time_ms": 1590
+}

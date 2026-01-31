@@ -1,0 +1,310 @@
+{
+  "query": "SELECT ff.id, ff.code, ff.name, ff.fieldType, ff.optionsSource, ff.isRequired, ff.displayOrder, fs.name as sectionName\nFROM formFields ff\nJOIN formSections fs ON ff.sectionId = fs.id\nJOIN requestTypes rt ON fs.requestTypeId = rt.id\nWHERE rt.code = 'ADMIN_VISIT'\nORDER BY fs.displayOrder, ff.displayOrder;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT ff.id, ff.code, ff.name, ff.fieldType, ff.optionsSource, ff.isRequired, ff.displayOrder, fs.name as sectionName\nFROM formFields ff\nJOIN formSections fs ON ff.sectionId = fs.id\nJOIN requestTypes rt ON fs.requestTypeId = rt.id\nWHERE rt.code = 'ADMIN_VISIT'\nORDER BY fs.displayOrder, ff.displayOrder;",
+  "rows": [
+    {
+      "id": "1",
+      "code": "requestor_name",
+      "name": "Requestor Name",
+      "fieldType": "readonly",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "1",
+      "sectionName": "Basic Information"
+    },
+    {
+      "id": "2",
+      "code": "company",
+      "name": "Company",
+      "fieldType": "readonly",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "2",
+      "sectionName": "Basic Information"
+    },
+    {
+      "id": "3",
+      "code": "email",
+      "name": "Email",
+      "fieldType": "readonly",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "3",
+      "sectionName": "Basic Information"
+    },
+    {
+      "id": "4",
+      "code": "mobile",
+      "name": "Mobile",
+      "fieldType": "readonly",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "4",
+      "sectionName": "Basic Information"
+    },
+    {
+      "id": "5",
+      "code": "department",
+      "name": "Department",
+      "fieldType": "readonly",
+      "optionsSource": "api",
+      "isRequired": "1",
+      "displayOrder": "5",
+      "sectionName": "Basic Information"
+    },
+    {
+      "id": "6",
+      "code": "sub_type",
+      "name": "Purpose of Entry",
+      "fieldType": "dropdown",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "6",
+      "sectionName": "Basic Information"
+    },
+    {
+      "id": "7",
+      "code": "purpose",
+      "name": "Visit description",
+      "fieldType": "textarea",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "7",
+      "sectionName": "Basic Information"
+    },
+    {
+      "id": "8",
+      "code": "notes",
+      "name": "Additional Notes",
+      "fieldType": "textarea",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "8",
+      "sectionName": "Basic Information"
+    },
+    {
+      "id": "9",
+      "code": "country",
+      "name": "Country",
+      "fieldType": "dropdown",
+      "optionsSource": "api",
+      "isRequired": "1",
+      "displayOrder": "1",
+      "sectionName": "Location"
+    },
+    {
+      "id": "10",
+      "code": "region",
+      "name": "Region",
+      "fieldType": "dropdown",
+      "optionsSource": "dependent",
+      "isRequired": "1",
+      "displayOrder": "2",
+      "sectionName": "Location"
+    },
+    {
+      "id": "11",
+      "code": "city",
+      "name": "City",
+      "fieldType": "dropdown",
+      "optionsSource": "dependent",
+      "isRequired": "1",
+      "displayOrder": "3",
+      "sectionName": "Location"
+    },
+    {
+      "id": "12",
+      "code": "site",
+      "name": "Site",
+      "fieldType": "dropdown",
+      "optionsSource": "dependent",
+      "isRequired": "1",
+      "displayOrder": "4",
+      "sectionName": "Location"
+    },
+    {
+      "id": "13",
+      "code": "start_date",
+      "name": "Start Date",
+      "fieldType": "date",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "1",
+      "sectionName": "Schedule"
+    },
+    {
+      "id": "14",
+      "code": "end_date",
+      "name": "End Date",
+      "fieldType": "date",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "2",
+      "sectionName": "Schedule"
+    },
+    {
+      "id": "15",
+      "code": "start_time",
+      "name": "Start Time",
+      "fieldType": "text",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "3",
+      "sectionName": "Schedule"
+    },
+    {
+      "id": "16",
+      "code": "end_time",
+      "name": "End Time",
+      "fieldType": "text",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "4",
+      "sectionName": "Schedule"
+    },
+    {
+      "id": "17",
+      "code": "full_name",
+      "name": "Full Name",
+      "fieldType": "text",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "1",
+      "sectionName": "Visitors"
+    },
+    {
+      "id": "18",
+      "code": "nationality",
+      "name": "Nationality",
+      "fieldType": "dropdown",
+      "optionsSource": "api",
+      "isRequired": "0",
+      "displayOrder": "2",
+      "sectionName": "Visitors"
+    },
+    {
+      "id": "19",
+      "code": "id_type",
+      "name": "ID Type",
+      "fieldType": "dropdown",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "3",
+      "sectionName": "Visitors"
+    },
+    {
+      "id": "20",
+      "code": "id_number",
+      "name": "ID Number",
+      "fieldType": "text",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "4",
+      "sectionName": "Visitors"
+    },
+    {
+      "id": "21",
+      "code": "company",
+      "name": "Company",
+      "fieldType": "text",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "5",
+      "sectionName": "Visitors"
+    },
+    {
+      "id": "22",
+      "code": "job_title",
+      "name": "Job Title",
+      "fieldType": "text",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "6",
+      "sectionName": "Visitors"
+    },
+    {
+      "id": "23",
+      "code": "mobile",
+      "name": "Mobile",
+      "fieldType": "phone",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "7",
+      "sectionName": "Visitors"
+    },
+    {
+      "id": "24",
+      "code": "email",
+      "name": "Email",
+      "fieldType": "email",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "8",
+      "sectionName": "Visitors"
+    },
+    {
+      "id": "25",
+      "code": "id_attachment",
+      "name": "ID Attachment",
+      "fieldType": "file",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "9",
+      "sectionName": "Visitors"
+    },
+    {
+      "id": "26",
+      "code": "vip_visit",
+      "name": "VIP Visit",
+      "fieldType": "radio",
+      "optionsSource": "static",
+      "isRequired": "1",
+      "displayOrder": "1",
+      "sectionName": "VIP Details"
+    },
+    {
+      "id": "27",
+      "code": "driver_name",
+      "name": "Driver Name",
+      "fieldType": "text",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "2",
+      "sectionName": "VIP Details"
+    },
+    {
+      "id": "28",
+      "code": "driver_id",
+      "name": "Driver ID",
+      "fieldType": "text",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "3",
+      "sectionName": "VIP Details"
+    },
+    {
+      "id": "29",
+      "code": "vehicle_plate",
+      "name": "Vehicle Plate",
+      "fieldType": "text",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "4",
+      "sectionName": "VIP Details"
+    },
+    {
+      "id": "30",
+      "code": "supporting_documents",
+      "name": "Supporting Documents",
+      "fieldType": "file_multi",
+      "optionsSource": "static",
+      "isRequired": "0",
+      "displayOrder": "1",
+      "sectionName": "Attachments"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tfieldType\toptionsSource\tisRequired\tdisplayOrder\tsectionName\n1\trequestor_name\tRequestor Name\treadonly\tstatic\t1\t1\tBasic Information\n2\tcompany\tCompany\treadonly\tstatic\t1\t2\tBasic Information\n3\temail\tEmail\treadonly\tstatic\t1\t3\tBasic Information\n4\tmobile\tMobile\treadonly\tstatic\t1\t4\tBasic Information\n5\tdepartment\tDepartment\treadonly\tapi\t1\t5\tBasic Information\n6\tsub_type\tPurpose of Entry\tdropdown\tstatic\t1\t6\tBasic Information\n7\tpurpose\tVisit description\ttextarea\tstatic\t0\t7\tBasic Information\n8\tnotes\tAdditional Notes\ttextarea\tstatic\t0\t8\tBasic Information\n9\tcountry\tCountry\tdropdown\tapi\t1\t1\tLocation\n10\tregion\tRegion\tdropdown\tdependent\t1\t2\tLocation\n11\tcity\tCity\tdropdown\tdependent\t1\t3\tLocation\n12\tsite\tSite\tdropdown\tdependent\t1\t4\tLocation\n13\tstart_date\tStart Date\tdate\tstatic\t1\t1\tSchedule\n14\tend_date\tEnd Date\tdate\tstatic\t1\t2\tSchedule\n15\tstart_time\tStart Time\ttext\tstatic\t0\t3\tSchedule\n16\tend_time\tEnd Time\ttext\tstatic\t0\t4\tSchedule\n17\tfull_name\tFull Name\ttext\tstatic\t1\t1\tVisitors\n18\tnationality\tNationality\tdropdown\tapi\t0\t2\tVisitors\n19\tid_type\tID Type\tdropdown\tstatic\t1\t3\tVisitors\n20\tid_number\tID Number\ttext\tstatic\t1\t4\tVisitors\n21\tcompany\tCompany\ttext\tstatic\t0\t5\tVisitors\n22\tjob_title\tJob Title\ttext\tstatic\t0\t6\tVisitors\n23\tmobile\tMobile\tphone\tstatic\t0\t7\tVisitors\n24\temail\tEmail\temail\tstatic\t0\t8\tVisitors\n25\tid_attachment\tID Attachment\tfile\tstatic\t0\t9\tVisitors\n26\tvip_visit\tVIP Visit\tradio\tstatic\t1\t1\tVIP Details\n27\tdriver_name\tDriver Name\ttext\tstatic\t0\t2\tVIP Details\n28\tdriver_id\tDriver ID\ttext\tstatic\t0\t3\tVIP Details\n29\tvehicle_plate\tVehicle Plate\ttext\tstatic\t0\t4\tVIP Details\n30\tsupporting_documents\tSupporting Documents\tfile_multi\tstatic\t0\t1\tAttachments\n",
+  "stderr": "",
+  "execution_time_ms": 1540
+}

@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO formFields (sectionId, code, name, nameAr, fieldType, isRequired, displayOrder, columnSpan, optionsSource, helpText, isActive)\nVALUES \n(30001, 'host_user', 'Host', 'المضيف', 'user_lookup', 1, 1, 12, 'users', 'Search and select the host who will receive the visitor', 1);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute INSERT INTO formFields (sectionId, code, name, nameAr, fieldType, isRequired, displayOrder, columnSpan, optionsSource, helpText, isActive)\nVALUES \n(30001, 'host_user', 'Host', 'المضيف', 'user_lookup', 1, 1, 12, 'users', 'Search and select the host who will receive the visitor', 1);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1542
+}

@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO formFields (sectionId, code, name, nameAr, fieldType, isRequired, displayOrder, columnSpan, helpText, isActive)\nVALUES \n(6, 'iqama_expiry_date', 'Iqama Expiry Date', 'تاريخ انتهاء الإقامة', 'date', 0, 10, 6, 'Auto-populated from Yakeen verification', 1);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute INSERT INTO formFields (sectionId, code, name, nameAr, fieldType, isRequired, displayOrder, columnSpan, helpText, isActive)\nVALUES \n(6, 'iqama_expiry_date', 'Iqama Expiry Date', 'تاريخ انتهاء الإقامة', 'date', 0, 10, 6, 'Auto-populated from Yakeen verification', 1);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1537
+}

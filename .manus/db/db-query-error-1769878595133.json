@@ -1,0 +1,8 @@
+{
+  "query": "UPDATE formFields SET optionsSource = 'user_profile' WHERE sectionId = 1 AND code IN ('requestor_name', 'company', 'email', 'mobile', 'department');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute UPDATE formFields SET optionsSource = 'user_profile' WHERE sectionId = 1 AND code IN ('requestor_name', 'company', 'email', 'mobile', 'department');",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1265 (01000) at line 1: Data truncated for column '%s' at row %d"
+  ]
+}

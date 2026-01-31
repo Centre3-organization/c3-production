@@ -1230,3 +1230,42 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add clearer labels and descriptions for data source options (icons, categories)
 - [x] Add cascading filter UI with blue highlight and link icon
 - [x] Show selected data source info with confirmation message
+
+
+## Admin Visit Form Fix (Jan 31, 2026)
+
+### Basic Info Section
+- [x] Auto-populate Requestor Name from user profile
+- [x] Auto-populate Company from user profile
+- [x] Auto-populate Email from user profile
+- [x] Auto-populate Mobile from user profile
+- [x] Auto-populate Department from user profile
+- [x] Keep Purpose of entry, Visit description, additional notes as-is
+
+### Location Section
+- [x] Update Country field to dropdown with data source = countries
+- [x] Update Region field to dropdown filtered by selected country
+- [x] Update City field to dropdown filtered by selected region
+- [x] Update Site field to dropdown filtered by selected city
+- [x] Make Area field optional dropdown filtered by site
+- [x] Make Zone field optional dropdown filtered by area
+
+### Host Section
+- [x] Add user search/select field for Host (mandatory)
+- [x] Show host user details after selection
+- [x] Implement user search with autocomplete functionality
+
+### VIP Visit Section (NEW)
+- [x] Add VIP Visit Yes/No toggle field
+- [x] Add conditional visibility for VIP form when Yes is selected
+- [x] Add Driver Name field (VARCHAR)
+- [x] Add Nationality field (dropdown)
+- [x] Add ID field (VARCHAR)
+- [x] Add Company field (VARCHAR)
+- [x] Add Phone # field (VARCHAR)
+- [x] Add Vehicle Plate # field (VARCHAR)
+
+### Visitors Section Enhancement
+- [x] Add Iqama Expiry Date field from Yakeen response
+- [x] Save visitor data changes (company, etc.) after Yakeen verification
+- [x] Nationality auto-populated from Yakeen

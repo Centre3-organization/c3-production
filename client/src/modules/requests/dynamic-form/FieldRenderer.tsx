@@ -276,6 +276,170 @@ function AreaTypeField({
   );
 }
 
+// User Lookup Field Component with search functionality
+function UserLookupField({
+  field,
+  value,
+  onChange,
+  disabled,
+  error,
+  isRTL,
+  getLabel,
+  getPlaceholder,
+  getHelpText,
+}: {
+  field: FormField;
+  value: any;
+  onChange: (value: any) => void;
+  disabled: boolean;
+  error?: string;
+  isRTL: boolean;
+  getLabel: () => string;
+  getPlaceholder: () => string | undefined;
+  getHelpText: () => string | undefined;
+}) {
+  const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+
+  // Debounced search
+  useEffect(() => {
+    if (!searchQuery || searchQuery.length < 2) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const response = await fetch(
+          `/api/trpc/requestConfig.fields.getDataSourceOptions?input=${encodeURIComponent(
+            JSON.stringify({ source: "users", filterValue: searchQuery })
+          )}`
+        );
+        const result = await response.json();
+        if (result.result?.data) {
+          setSearchResults(result.result.data);
+          setShowResults(true);
+        }
+      } catch (error) {
+        console.error("User search failed:", error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const handleSelectUser = (user: any) => {
+    onChange({
+      id: user.value,
+      name: user.label,
+      email: user.email || "",
+    });
+    setSearchQuery("");
+    setShowResults(false);
+  };
+
+  const handleClear = () => {
+    onChange(null);
+    setSearchQuery("");
+  };
+
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+        {getLabel()}
+        {field.isRequired && <span className="text-red-600">*</span>}
+      </Label>
+      
+      {value?.id ? (
+        // Selected user display
+        <div className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+          <User className="h-4 w-4 text-blue-600" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-blue-800">{value.name}</p>
+            {value.email && (
+              <p className="text-xs text-blue-600">{value.email}</p>
+            )}
+          </div>
+          {!disabled && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 text-blue-600 hover:text-red-600 hover:bg-red-50"
+              onClick={handleClear}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      ) : (
+        // Search input
+        <div className="relative">
+          <div className="relative">
+            <Input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={getPlaceholder() || t("common.searchUser", "Search by name or email...")}
+              disabled={disabled}
+              className="pr-10"
+              onFocus={() => searchQuery.length >= 2 && setShowResults(true)}
+            />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+              {isSearching ? (
+                <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+              ) : (
+                <Search className="h-4 w-4 text-gray-400" />
+              )}
+            </div>
+          </div>
+          
+          {/* Search results dropdown */}
+          {showResults && searchResults.length > 0 && (
+            <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto">
+              {searchResults.map((user) => (
+                <button
+                  key={user.value}
+                  type="button"
+                  className="w-full px-3 py-2 text-left hover:bg-gray-100 flex items-center gap-2 border-b last:border-b-0"
+                  onClick={() => handleSelectUser(user)}
+                >
+                  <User className="h-4 w-4 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium">{user.label}</p>
+                    {user.email && (
+                      <p className="text-xs text-gray-500">{user.email}</p>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+          
+          {showResults && searchResults.length === 0 && searchQuery.length >= 2 && !isSearching && (
+            <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg p-3 text-center text-sm text-gray-500">
+              {t("common.noUsersFound", "No users found")}
+            </div>
+          )}
+        </div>
+      )}
+      
+      {getHelpText() && (
+        <p className="text-xs text-gray-500">{getHelpText()}</p>
+      )}
+      {error && <p className="text-xs text-red-600">{error}</p>}
+    </div>
+  );
+}
+
 // Activity Selector Field Component - shows main activity and sub-activity with requirements
 function ActivitySelectorField({
   field,
@@ -1014,35 +1178,17 @@ export function FieldRenderer({
 
     case "user_lookup":
       return (
-        <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
-            {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
-          </Label>
-          <div className="relative">
-            <Input
-              type="text"
-              value={value?.name || value || ""}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder={getPlaceholder() || t("common.searchUser", "Search user...")}
-              disabled={disabled}
-              className={cn(baseInputClass, "pr-10")}
-            />
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-              disabled={disabled}
-            >
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
-          {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
-          )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
-        </div>
+        <UserLookupField
+          field={field}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          error={error}
+          isRTL={isRTL}
+          getLabel={getLabel}
+          getPlaceholder={getPlaceholder}
+          getHelpText={getHelpText}
+        />
       );
 
     case "readonly":
