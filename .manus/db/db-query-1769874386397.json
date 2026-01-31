@@ -1,0 +1,15 @@
+{
+  "query": "SELECT u.email, u.name, sr.name as roleName \nFROM users u \nJOIN userSystemRoles usr ON u.id = usr.userId \nJOIN systemRoles sr ON usr.roleId = sr.id \nWHERE sr.name = 'Requestor' \nLIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT u.email, u.name, sr.name as roleName \nFROM users u \nJOIN userSystemRoles usr ON u.id = usr.userId \nJOIN systemRoles sr ON usr.roleId = sr.id \nWHERE sr.name = 'Requestor' \nLIMIT 1;",
+  "rows": [
+    {
+      "email": "rizwan@techbanq.net",
+      "name": "Riz A",
+      "roleName": "Requestor"
+    }
+  ],
+  "messages": [],
+  "stdout": "email\tname\troleName\nrizwan@techbanq.net\tRiz A\tRequestor\n",
+  "stderr": "",
+  "execution_time_ms": 1595
+}

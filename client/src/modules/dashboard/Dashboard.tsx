@@ -43,14 +43,33 @@ export default function Home() {
   const { t } = useTranslation();
   const [, navigate] = useLocation();
   
+  // Fetch user permissions to filter dashboard content
+  const { data: permissions } = trpc.users.getMyPermissions.useQuery();
+  
+  // Helper to check if user has a specific permission
+  const hasPermission = (category: string, action: string): boolean => {
+    if (!permissions) return false;
+    return (permissions as any)?.[category]?.[action] === true;
+  };
+  
+  // Check if user is admin/super admin (has full access)
+  const isAdmin = hasPermission('admin', 'full') || hasPermission('admin', 'access');
+  
+  // Check specific permissions for dashboard sections
+  const canViewAnalytics = hasPermission('dashboard', 'analytics') || isAdmin;
+  const canViewAlerts = hasPermission('alerts', 'view') || isAdmin;
+  const canViewApprovals = hasPermission('approvals', 'l1') || isAdmin;
+  const canViewSites = hasPermission('sites', 'read') || isAdmin;
+  const canViewZones = hasPermission('zones', 'read') || isAdmin;
+  
   // Fetch live data from dashboard API
   const { data: stats, isLoading: statsLoading, refetch: refetchStats } = trpc.dashboard.getStats.useQuery();
-  const { data: requestsByStatus, isLoading: statusLoading } = trpc.dashboard.getRequestsByStatus.useQuery();
-  const { data: visitorTraffic, isLoading: trafficLoading } = trpc.dashboard.getVisitorTraffic.useQuery();
-  const { data: zoneOccupancy, isLoading: zoneLoading } = trpc.dashboard.getZoneOccupancy.useQuery();
+  const { data: requestsByStatus, isLoading: statusLoading } = trpc.dashboard.getRequestsByStatus.useQuery(undefined, { enabled: canViewAnalytics });
+  const { data: visitorTraffic, isLoading: trafficLoading } = trpc.dashboard.getVisitorTraffic.useQuery(undefined, { enabled: canViewAnalytics });
+  const { data: zoneOccupancy, isLoading: zoneLoading } = trpc.dashboard.getZoneOccupancy.useQuery(undefined, { enabled: canViewZones });
   const { data: recentActivity, isLoading: activityLoading } = trpc.dashboard.getRecentActivity.useQuery();
-  const { data: pendingItems, isLoading: pendingLoading } = trpc.dashboard.getPendingItems.useQuery();
-  const { data: siteOverview, isLoading: siteLoading } = trpc.dashboard.getSiteOverview.useQuery();
+  const { data: pendingItems, isLoading: pendingLoading } = trpc.dashboard.getPendingItems.useQuery(undefined, { enabled: canViewApprovals });
+  const { data: siteOverview, isLoading: siteLoading } = trpc.dashboard.getSiteOverview.useQuery(undefined, { enabled: canViewSites });
 
   // Calculate max values for charts
   const maxTraffic = visitorTraffic ? Math.max(...visitorTraffic.map(t => t.visitors)) : 100;
@@ -89,53 +108,59 @@ export default function Home() {
 
       {/* KPI Cards Row - Enterprise Muted Colors */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <Card className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.activeVisitors')}</CardTitle>
-            <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-              <Users className="h-4 w-4 text-slate-600 dark:text-slate-400" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            {statsLoading ? (
-              <Skeleton className="h-8 w-16" />
-            ) : (
-              <>
-                <div className="text-2xl font-semibold text-foreground">{stats?.activeVisitors || 0}</div>
-                <p className="text-xs text-muted-foreground mt-1 flex items-center">
-                  <ArrowUpRight className="h-3 w-3 text-teal-600 mr-1" /> 
-                  <span className="text-teal-600">+12%</span>
-                  <span className="ml-1">{t('common.vsYesterday')}</span>
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        {/* Active Visitors - Only show to users with analytics permission */}
+        {canViewAnalytics && (
+          <Card className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.activeVisitors')}</CardTitle>
+              <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                <Users className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {statsLoading ? (
+                <Skeleton className="h-8 w-16" />
+              ) : (
+                <>
+                  <div className="text-2xl font-semibold text-foreground">{stats?.activeVisitors || 0}</div>
+                  <p className="text-xs text-muted-foreground mt-1 flex items-center">
+                    <ArrowUpRight className="h-3 w-3 text-teal-600 mr-1" /> 
+                    <span className="text-teal-600">+12%</span>
+                    <span className="ml-1">{t('common.vsYesterday')}</span>
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
-        <Card 
-          className="border border-amber-200 dark:border-amber-800/50 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
-          onClick={() => navigate("/approvals/l1")}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-amber-700 dark:text-amber-400 uppercase tracking-wider">{t('dashboard.pendingApprovals')}</CardTitle>
-            <div className="p-2 bg-amber-100 dark:bg-amber-900/50 rounded-lg">
-              <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            {statsLoading ? (
-              <Skeleton className="h-8 w-16" />
-            ) : (
-              <>
-                <div className="text-2xl font-semibold text-amber-700 dark:text-amber-400">{stats?.pendingApprovals || 0}</div>
-                <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 flex items-center">
-                  <AlertTriangle className="h-3 w-3 mr-1" /> 
-                  {t('common.actionRequired')}
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        {/* Pending Approvals - Only show to users with approval permission */}
+        {canViewApprovals && (
+          <Card 
+            className="border border-amber-200 dark:border-amber-800/50 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            onClick={() => navigate("/approvals/l1")}
+          >
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-xs font-medium text-amber-700 dark:text-amber-400 uppercase tracking-wider">{t('dashboard.pendingApprovals')}</CardTitle>
+              <div className="p-2 bg-amber-100 dark:bg-amber-900/50 rounded-lg">
+                <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {statsLoading ? (
+                <Skeleton className="h-8 w-16" />
+              ) : (
+                <>
+                  <div className="text-2xl font-semibold text-amber-700 dark:text-amber-400">{stats?.pendingApprovals || 0}</div>
+                  <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 flex items-center">
+                    <AlertTriangle className="h-3 w-3 mr-1" /> 
+                    {t('common.actionRequired')}
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         <Card 
           className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
@@ -181,87 +206,102 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <Card className="border border-rose-200 dark:border-rose-800/50 bg-rose-50/50 dark:bg-rose-950/20 shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-rose-700 dark:text-rose-400 uppercase tracking-wider">{t('dashboard.securityAlerts')}</CardTitle>
-            <div className="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-lg">
-              <ShieldAlert className="h-4 w-4 text-rose-600 dark:text-rose-400" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            {statsLoading ? (
-              <Skeleton className="h-8 w-16" />
-            ) : (
-              <>
-                <div className="text-2xl font-semibold text-rose-700 dark:text-rose-400">{stats?.securityAlerts || 0}</div>
-                <p className="text-xs text-rose-600 dark:text-rose-500 mt-1">{t('common.critical')}</p>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        {/* Security Alerts - Only show to users with alerts permission */}
+        {canViewAlerts && (
+          <Card className="border border-rose-200 dark:border-rose-800/50 bg-rose-50/50 dark:bg-rose-950/20 shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-xs font-medium text-rose-700 dark:text-rose-400 uppercase tracking-wider">{t('dashboard.securityAlerts')}</CardTitle>
+              <div className="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-lg">
+                <ShieldAlert className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {statsLoading ? (
+                <Skeleton className="h-8 w-16" />
+              ) : (
+                <>
+                  <div className="text-2xl font-semibold text-rose-700 dark:text-rose-400">{stats?.securityAlerts || 0}</div>
+                  <p className="text-xs text-rose-600 dark:text-rose-500 mt-1">{t('common.critical')}</p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
-        <Card 
-          className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
-          onClick={() => navigate("/sites")}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.facilities')}</CardTitle>
-            <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-              <Building2 className="h-4 w-4 text-slate-600 dark:text-slate-400" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            {statsLoading ? (
-              <Skeleton className="h-8 w-16" />
-            ) : (
-              <>
-                <div className="text-2xl font-semibold text-foreground">{stats?.sites || 0}</div>
-                <p className="text-xs text-muted-foreground mt-1">{stats?.zones || 0} {t('nav.zones')} · {stats?.areas || 0} {t('nav.areas')}</p>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        {/* Facilities - Only show to users with sites permission */}
+        {canViewSites && (
+          <Card 
+            className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            onClick={() => navigate("/sites")}
+          >
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.facilities')}</CardTitle>
+              <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                <Building2 className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {statsLoading ? (
+                <Skeleton className="h-8 w-16" />
+              ) : (
+                <>
+                  <div className="text-2xl font-semibold text-foreground">{stats?.sites || 0}</div>
+                  <p className="text-xs text-muted-foreground mt-1">{stats?.zones || 0} {t('nav.zones')} · {stats?.areas || 0} {t('nav.areas')}</p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
 
-      {/* Quick Actions Bar - Center3 Brand Style */}
-      <Card className="border-0 bg-[#4f008c] dark:bg-[#3a1066] text-white shadow-lg">
-        <CardContent className="py-4">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Activity className="h-5 w-5 text-white/80" />
-              <span className="font-medium text-slate-100">{t('dashboard.quickActions')}</span>
+      {/* Quick Actions Bar - Only show to users with approval or alerts permission */}
+      {(canViewApprovals || canViewAlerts) && (
+        <Card className="border-0 bg-[#4f008c] dark:bg-[#3a1066] text-white shadow-lg">
+          <CardContent className="py-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <Activity className="h-5 w-5 text-white/80" />
+                <span className="font-medium text-slate-100">{t('dashboard.quickActions')}</span>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {canViewApprovals && (
+                  <>
+                    <Button 
+                      size="default" 
+                      className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
+                      onClick={() => navigate("/approvals/l1")}
+                    >
+                      <CheckCircle2 className="h-4 w-4 mr-2" /> 
+                      {t('dashboard.l1Queue')} ({stats?.pendingL1 || 0})
+                    </Button>
+                    <Button 
+                      size="default" 
+                      className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
+                      onClick={() => navigate("/approvals/l2")}
+                    >
+                      <UserCheck className="h-4 w-4 mr-2" /> 
+                      {t('dashboard.l2Queue')} ({stats?.pendingManual || 0})
+                    </Button>
+                  </>
+                )}
+                {canViewAlerts && (
+                  <Button 
+                    size="default" 
+                    className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
+                    onClick={() => navigate("/global-overwatch")}
+                  >
+                    <Eye className="h-4 w-4 mr-2" /> 
+                    {t('dashboard.globalOverwatch')}
+                  </Button>
+                )}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <Button 
-                size="default" 
-                className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
-                onClick={() => navigate("/approvals/l1")}
-              >
-                <CheckCircle2 className="h-4 w-4 mr-2" /> 
-                {t('dashboard.l1Queue')} ({stats?.pendingL1 || 0})
-              </Button>
-              <Button 
-                size="default" 
-                className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
-                onClick={() => navigate("/approvals/l2")}
-              >
-                <UserCheck className="h-4 w-4 mr-2" /> 
-                {t('dashboard.l2Queue')} ({stats?.pendingManual || 0})
-              </Button>
-              <Button 
-                size="default" 
-                className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
-                onClick={() => navigate("/global-overwatch")}
-              >
-                <Eye className="h-4 w-4 mr-2" /> 
-                {t('dashboard.globalOverwatch')}
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
-      {/* Charts Row - Visitor Traffic & Zone Occupancy */}
+      {/* Charts Row - Visitor Traffic & Zone Occupancy - Only show to users with analytics permission */}
+      {canViewAnalytics && (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4 border border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -347,10 +387,13 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
+      )}
 
-      {/* Status Distribution & Pending Actions Row */}
+      {/* Status Distribution & Pending Actions Row - Only show to users with analytics or approvals permission */}
+      {(canViewAnalytics || canViewApprovals) && (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {/* Request Status Distribution */}
+        {/* Request Status Distribution - Only show to users with analytics permission */}
+        {canViewAnalytics && (
         <Card className="border border-border/50 shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
@@ -387,8 +430,10 @@ export default function Home() {
             )}
           </CardContent>
         </Card>
+        )}
 
-        {/* Pending L1 Approvals */}
+        {/* Pending L1 Approvals - Only show to users with approvals permission */}
+        {canViewApprovals && (
         <Card className="border border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
@@ -435,8 +480,10 @@ export default function Home() {
             )}
           </CardContent>
         </Card>
+        )}
 
-        {/* Pending L2 Approvals */}
+        {/* Pending L2 Approvals - Only show to users with approvals permission */}
+        {canViewApprovals && (
         <Card className="border border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
@@ -483,11 +530,14 @@ export default function Home() {
             )}
           </CardContent>
         </Card>
+        )}
       </div>
+      )}
 
       {/* Site Overview & Recent Activity Row */}
       <div className="grid gap-4 md:grid-cols-2">
-        {/* Site Overview */}
+        {/* Site Overview - Only show to users with sites permission */}
+        {canViewSites && (
         <Card className="border border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
@@ -543,8 +593,9 @@ export default function Home() {
             )}
           </CardContent>
         </Card>
+        )}
 
-        {/* Recent Activity */}
+        {/* Recent Activity - Visible to all users with dashboard access */}
         <Card className="border border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>

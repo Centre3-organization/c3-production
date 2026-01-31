@@ -137,20 +137,22 @@ export default function Layout({ children }: LayoutProps) {
   const allNavSections: NavSection[] = [
     {
       items: [
-        { icon: LayoutDashboard, labelKey: "nav.dashboard", label: "Dashboard", href: "/" },
+        { icon: LayoutDashboard, labelKey: "nav.dashboard", label: "Dashboard", href: "/", requiredPermission: "dashboard.view" },
       ]
     },
     {
       titleKey: "nav.requests",
       title: "Requests",
       items: [
-        { icon: FileText, labelKey: "nav.allRequests", label: "All Requests", href: "/requests", requiredPermission: "requests.read" },
+        // Requestors can see All Requests (scoped to their own data)
+        { icon: FileText, labelKey: "nav.allRequests", label: "All Requests", href: "/requests", requiredPermission: "requests.view" },
         { icon: CreditCard, labelKey: "nav.newRequest", label: "New Request", href: "/requests/new", requiredPermission: "requests.create" },
       ]
     },
     {
       titleKey: "nav.approvals",
       title: "Approvals",
+      requiredPermission: "approvals.l1",
       items: [
         { icon: FileCheck, labelKey: "nav.myApprovals", label: "My Approvals", href: "/approvals", requiredPermission: "approvals.l1" },
         { icon: Clock, labelKey: "nav.approvalHistory", label: "Approval History", href: "/approvals/history", requiredPermission: "approvals.l1" },
@@ -159,6 +161,7 @@ export default function Layout({ children }: LayoutProps) {
     {
       titleKey: "nav.facilities",
       title: "Site and Facilities",
+      requiredPermission: "sites.read",
       items: [
         { icon: Building2, labelKey: "nav.sites", label: "Sites", href: "/sites", requiredPermission: "sites.read" },
         { icon: Map, labelKey: "nav.zones", label: "Zones", href: "/zones", requiredPermission: "zones.read" },
@@ -177,19 +180,20 @@ export default function Layout({ children }: LayoutProps) {
     {
       titleKey: "nav.workflowManagement",
       title: "Workflow Management",
-      requiredPermission: "users.read",
+      requiredPermission: "workflows.view",
       items: [
-        { icon: Workflow, labelKey: "nav.workflows", label: "Workflow Builder", href: "/workflows", requiredPermission: "users.read" },
-        { icon: FileText, labelKey: "nav.requestTypes", label: "Request Types", href: "/settings/request-types", requiredPermission: "users.read" },
-        { icon: Clock, labelKey: "nav.shiftManagement", label: "Shift Management", href: "/shifts", requiredPermission: "users.read" },
-        { icon: UserCheck, labelKey: "nav.delegations", label: "Delegations", href: "/delegations" },
+        { icon: Workflow, labelKey: "nav.workflows", label: "Workflow Builder", href: "/workflows", requiredPermission: "workflows.view" },
+        { icon: FileText, labelKey: "nav.requestTypes", label: "Request Types", href: "/settings/request-types", requiredPermission: "requestTypes.view" },
+        { icon: Clock, labelKey: "nav.shiftManagement", label: "Shift Management", href: "/shifts", requiredPermission: "shifts.view" },
+        { icon: UserCheck, labelKey: "nav.delegations", label: "Delegations", href: "/delegations", requiredPermission: "delegations.view" },
       ]
     },
     {
       titleKey: "nav.mcm",
       title: "Card Management",
+      requiredPermission: "cards.view",
       items: [
-        { icon: CreditCard, labelKey: "nav.cardControl", label: "Card Control", href: "/mcm" },
+        { icon: CreditCard, labelKey: "nav.cardControl", label: "Card Control", href: "/mcm", requiredPermission: "cards.view" },
       ]
     },
     {
@@ -197,10 +201,10 @@ export default function Layout({ children }: LayoutProps) {
       title: "Administration",
       requiredPermission: "users.read",
       items: [
-        { icon: FolderTree, labelKey: "nav.groups", label: "Groups", href: "/groups", requiredPermission: "users.read" },
+        { icon: FolderTree, labelKey: "nav.groups", label: "Groups", href: "/groups", requiredPermission: "groups.view" },
         { icon: Users, labelKey: "nav.users", label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
-        { icon: Settings, labelKey: "nav.settings", label: "Settings", href: "/settings", requiredPermission: "users.read" },
-        { icon: Radio, labelKey: "nav.integrationHub", label: "Integration Hub", href: "/integration-hub", requiredPermission: "users.read" },
+        { icon: Settings, labelKey: "nav.settings", label: "Settings", href: "/settings", requiredPermission: "settings.view" },
+        { icon: Radio, labelKey: "nav.integrationHub", label: "Integration Hub", href: "/integration-hub", requiredPermission: "integrations.view" },
       ]
     }
   ];

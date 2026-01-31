@@ -390,21 +390,46 @@ export const usersRouter = router({
     // Get user's permissions from enterprise RBAC
     const userPerms = await getUserPermissions(ctx.user.id);
     
-    // Convert permission set to the expected format
+    // Convert permission set to the expected format - includes all modules
     const permissionsByCategory: Record<string, Record<string, boolean>> = {
-      dashboard: { view: false },
-      requests: { create: false, read: false, update: false, delete: false, approve: false },
+      // Dashboard & Analytics
+      dashboard: { view: false, analytics: false, export: false },
+      // Access Requests
+      requests: { view: false, create: false, update: false, delete: false, approve: false, reject: false },
+      // Approvals
       approvals: { l1: false, manual: false },
+      // Site Management
       sites: { create: false, read: false, update: false, delete: false },
+      // Zone Management
       zones: { create: false, read: false, update: false, lock: false },
+      // Security Alerts
       alerts: { view: false, resolve: false },
-      users: { create: false, read: false, update: false, delete: false },
-      groups: { create: false, read: false, update: false, delete: false },
+      // User Administration
+      users: { view: false, create: false, read: false, update: false, delete: false, manage_roles: false },
+      // Groups
+      groups: { view: false, create: false, update: false, delete: false },
+      // Workflow Management
+      workflows: { view: false, create: false, update: false, delete: false },
+      // Request Types
+      requestTypes: { view: false, create: false, update: false, delete: false },
+      // Shift Management
+      shifts: { view: false, create: false, update: false, delete: false },
+      // Delegations
+      delegations: { view: false, create: false, update: false, delete: false },
+      // Card Management
+      cards: { view: false, issue: false, revoke: false, control: false },
+      // Hardware
       hardware: { view: false, control: false },
+      // Reports
       reports: { view: false, export: false },
-      workflows: { create: false, read: false, update: false, delete: false },
-      settings: { read: false, update: false },
-      admin: { full: false },
+      // Settings
+      settings: { view: false, update: false },
+      // Integration Hub
+      integrations: { view: false, configure: false },
+      // Admin
+      admin: { access: false, roles: false, audit: false, full: false },
+      // Legacy compatibility
+      facilities: { view: false, create: false, update: false },
     };
 
     if (userPerms) {
@@ -425,10 +450,11 @@ export const usersRouter = router({
         }
       }
     } else {
-      // Fallback for users without a system role - minimal permissions
+      // Fallback for users without a system role - minimal Requestor permissions
       permissionsByCategory.dashboard.view = true;
+      permissionsByCategory.requests.view = true;
       permissionsByCategory.requests.create = true;
-      permissionsByCategory.requests.read = true;
+      permissionsByCategory.requests.update = true;
     }
 
     return permissionsByCategory;

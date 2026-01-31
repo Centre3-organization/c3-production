@@ -1146,3 +1146,28 @@ Time conditions:
 - [x] Update roles.router.ts to query systemRoles table instead of old roles table
 - [x] Update Users.tsx Roles tab to display systemRoles with proper permissions
 - [x] Show user counts from userSystemRoles table
+
+
+## RBAC Permission Fixes (Jan 31, 2026)
+
+### Issue 1: Missing Permission Modules
+- [x] Add Card Management permissions (view, control, issue, revoke)
+- [x] Add Workflow Builder permissions (view, create, update, delete)
+- [x] Add Request Types permissions (view, create, update, delete)
+- [x] Add Shift Management permissions (view, create, update, delete)
+- [x] Add Delegations permissions (view, create, update, delete)
+- [x] Add Groups permissions (view, create, update, delete)
+- [x] Add Settings permissions (view, update)
+- [x] Add Integration Hub permissions (view, configure)
+- [x] Update seed functions to include new permissions
+- [x] Update UI permission checkboxes to show all modules
+
+### Issue 2: Requestor Dashboard Shows Full Data
+- [x] Implement role-based dashboard data filtering
+- [x] Show only relevant statistics for Requestor role (Total Requests, Approval Rate)
+- [x] Hide admin-only dashboard widgets for non-admin users (Sites, Zones, Alerts, etc.)
+
+### Issue 3: Requestor Cannot See All Requests
+- [x] Update Requestor role to have "View All Requests" permission (scoped to own data)
+- [x] Implement data scoping so Requestors only see their own requests (via getDataScopeFilter)
+- [x] Ensure "All Requests" menu item is visible for Requestors

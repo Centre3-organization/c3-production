@@ -136,6 +136,66 @@ const permissionModules = [
     ] 
   },
   { 
+    id: "groups", 
+    label: "Groups", 
+    actions: [
+      { id: "view", label: "View Groups" },
+      { id: "create", label: "Create Group" },
+      { id: "update", label: "Edit Group" },
+      { id: "delete", label: "Delete Group" }
+    ] 
+  },
+  { 
+    id: "workflows", 
+    label: "Workflow Management", 
+    actions: [
+      { id: "view", label: "View Workflows" },
+      { id: "create", label: "Create Workflow" },
+      { id: "update", label: "Edit Workflow" },
+      { id: "delete", label: "Delete Workflow" }
+    ] 
+  },
+  { 
+    id: "requestTypes", 
+    label: "Request Types", 
+    actions: [
+      { id: "view", label: "View Request Types" },
+      { id: "create", label: "Create Request Type" },
+      { id: "update", label: "Edit Request Type" },
+      { id: "delete", label: "Delete Request Type" }
+    ] 
+  },
+  { 
+    id: "shifts", 
+    label: "Shift Management", 
+    actions: [
+      { id: "view", label: "View Shifts" },
+      { id: "create", label: "Create Shift" },
+      { id: "update", label: "Edit Shift" },
+      { id: "delete", label: "Delete Shift" }
+    ] 
+  },
+  { 
+    id: "delegations", 
+    label: "Delegations", 
+    actions: [
+      { id: "view", label: "View Delegations" },
+      { id: "create", label: "Create Delegation" },
+      { id: "update", label: "Edit Delegation" },
+      { id: "delete", label: "Delete Delegation" }
+    ] 
+  },
+  { 
+    id: "cards", 
+    label: "Card Management", 
+    actions: [
+      { id: "view", label: "View Cards" },
+      { id: "issue", label: "Issue Card" },
+      { id: "revoke", label: "Revoke Card" },
+      { id: "control", label: "Control Card" }
+    ] 
+  },
+  { 
     id: "hardware", 
     label: "Hardware", 
     actions: [
@@ -149,6 +209,22 @@ const permissionModules = [
     actions: [
       { id: "view", label: "View Reports" },
       { id: "export", label: "Export Reports" }
+    ] 
+  },
+  { 
+    id: "settings", 
+    label: "Settings", 
+    actions: [
+      { id: "view", label: "View Settings" },
+      { id: "update", label: "Update Settings" }
+    ] 
+  },
+  { 
+    id: "integrations", 
+    label: "Integration Hub", 
+    actions: [
+      { id: "view", label: "View Integrations" },
+      { id: "configure", label: "Configure Integrations" }
     ] 
   }
 ];

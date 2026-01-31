@@ -651,35 +651,107 @@ export async function seedPermissions(): Promise<void> {
   if (!db) return;
 
   const defaultPermissions: InsertPermission[] = [
+    // Dashboard & Analytics
     { code: "dashboard:view", module: "dashboard", action: "view", name: "View Dashboard", category: "Dashboard" },
     { code: "dashboard:analytics", module: "dashboard", action: "analytics", name: "View Analytics", category: "Dashboard" },
+    { code: "dashboard:export", module: "dashboard", action: "export", name: "Export Reports", category: "Dashboard" },
+    
+    // Access Requests
+    { code: "requests:view", module: "requests", action: "view", name: "View Requests", category: "Requests" },
+    { code: "requests:create", module: "requests", action: "create", name: "Create Requests", category: "Requests" },
+    { code: "requests:update", module: "requests", action: "update", name: "Update Requests", category: "Requests" },
+    { code: "requests:delete", module: "requests", action: "delete", name: "Delete Requests", category: "Requests" },
+    { code: "requests:approve", module: "requests", action: "approve", name: "Approve Requests", category: "Requests" },
+    { code: "requests:reject", module: "requests", action: "reject", name: "Reject Requests", category: "Requests" },
+    
+    // Approvals
+    { code: "approvals:l1", module: "approvals", action: "l1", name: "L1 Approval", category: "Approvals" },
+    { code: "approvals:manual", module: "approvals", action: "manual", name: "Manual Approval", category: "Approvals" },
+    
+    // Site Management
+    { code: "sites:create", module: "sites", action: "create", name: "Create Sites", category: "Sites" },
+    { code: "sites:read", module: "sites", action: "read", name: "View Sites", category: "Sites" },
+    { code: "sites:update", module: "sites", action: "update", name: "Update Sites", category: "Sites" },
+    { code: "sites:delete", module: "sites", action: "delete", name: "Delete Sites", category: "Sites" },
+    
+    // Zone Management
+    { code: "zones:create", module: "zones", action: "create", name: "Create Zones", category: "Zones" },
+    { code: "zones:read", module: "zones", action: "read", name: "View Zones", category: "Zones" },
+    { code: "zones:update", module: "zones", action: "update", name: "Update Zones", category: "Zones" },
+    { code: "zones:lock", module: "zones", action: "lock", name: "Lock/Unlock Zones", category: "Zones" },
+    
+    // Security Alerts
+    { code: "alerts:view", module: "alerts", action: "view", name: "View Alerts", category: "Alerts" },
+    { code: "alerts:resolve", module: "alerts", action: "resolve", name: "Resolve Alerts", category: "Alerts" },
+    
+    // User Administration
     { code: "users:view", module: "users", action: "view", name: "View Users", category: "Users" },
     { code: "users:create", module: "users", action: "create", name: "Create Users", category: "Users" },
     { code: "users:update", module: "users", action: "update", name: "Update Users", category: "Users" },
     { code: "users:delete", module: "users", action: "delete", name: "Delete Users", category: "Users" },
     { code: "users:manage_roles", module: "users", action: "manage_roles", name: "Manage User Roles", category: "Users" },
+    
+    // Groups
     { code: "groups:view", module: "groups", action: "view", name: "View Groups", category: "Groups" },
     { code: "groups:create", module: "groups", action: "create", name: "Create Groups", category: "Groups" },
     { code: "groups:update", module: "groups", action: "update", name: "Update Groups", category: "Groups" },
     { code: "groups:delete", module: "groups", action: "delete", name: "Delete Groups", category: "Groups" },
-    { code: "requests:view", module: "requests", action: "view", name: "View Requests", category: "Requests" },
-    { code: "requests:create", module: "requests", action: "create", name: "Create Requests", category: "Requests" },
-    { code: "requests:update", module: "requests", action: "update", name: "Update Requests", category: "Requests" },
-    { code: "requests:approve", module: "requests", action: "approve", name: "Approve Requests", category: "Requests" },
-    { code: "requests:reject", module: "requests", action: "reject", name: "Reject Requests", category: "Requests" },
-    { code: "facilities:view", module: "facilities", action: "view", name: "View Facilities", category: "Facilities" },
-    { code: "facilities:create", module: "facilities", action: "create", name: "Create Facilities", category: "Facilities" },
-    { code: "facilities:update", module: "facilities", action: "update", name: "Update Facilities", category: "Facilities" },
+    
+    // Workflow Management
     { code: "workflows:view", module: "workflows", action: "view", name: "View Workflows", category: "Workflows" },
     { code: "workflows:create", module: "workflows", action: "create", name: "Create Workflows", category: "Workflows" },
     { code: "workflows:update", module: "workflows", action: "update", name: "Update Workflows", category: "Workflows" },
+    { code: "workflows:delete", module: "workflows", action: "delete", name: "Delete Workflows", category: "Workflows" },
+    
+    // Request Types
+    { code: "requestTypes:view", module: "requestTypes", action: "view", name: "View Request Types", category: "Request Types" },
+    { code: "requestTypes:create", module: "requestTypes", action: "create", name: "Create Request Types", category: "Request Types" },
+    { code: "requestTypes:update", module: "requestTypes", action: "update", name: "Update Request Types", category: "Request Types" },
+    { code: "requestTypes:delete", module: "requestTypes", action: "delete", name: "Delete Request Types", category: "Request Types" },
+    
+    // Shift Management
+    { code: "shifts:view", module: "shifts", action: "view", name: "View Shifts", category: "Shifts" },
+    { code: "shifts:create", module: "shifts", action: "create", name: "Create Shifts", category: "Shifts" },
+    { code: "shifts:update", module: "shifts", action: "update", name: "Update Shifts", category: "Shifts" },
+    { code: "shifts:delete", module: "shifts", action: "delete", name: "Delete Shifts", category: "Shifts" },
+    
+    // Delegations
+    { code: "delegations:view", module: "delegations", action: "view", name: "View Delegations", category: "Delegations" },
+    { code: "delegations:create", module: "delegations", action: "create", name: "Create Delegations", category: "Delegations" },
+    { code: "delegations:update", module: "delegations", action: "update", name: "Update Delegations", category: "Delegations" },
+    { code: "delegations:delete", module: "delegations", action: "delete", name: "Delete Delegations", category: "Delegations" },
+    
+    // Card Management
+    { code: "cards:view", module: "cards", action: "view", name: "View Cards", category: "Cards" },
+    { code: "cards:issue", module: "cards", action: "issue", name: "Issue Cards", category: "Cards" },
+    { code: "cards:revoke", module: "cards", action: "revoke", name: "Revoke Cards", category: "Cards" },
+    { code: "cards:control", module: "cards", action: "control", name: "Control Cards", category: "Cards" },
+    
+    // Hardware
+    { code: "hardware:view", module: "hardware", action: "view", name: "View Hardware", category: "Hardware" },
+    { code: "hardware:control", module: "hardware", action: "control", name: "Control Hardware", category: "Hardware" },
+    
+    // Reports
     { code: "reports:view", module: "reports", action: "view", name: "View Reports", category: "Reports" },
     { code: "reports:export", module: "reports", action: "export", name: "Export Reports", category: "Reports" },
+    
+    // Settings
     { code: "settings:view", module: "settings", action: "view", name: "View Settings", category: "Settings" },
     { code: "settings:update", module: "settings", action: "update", name: "Update Settings", category: "Settings" },
+    
+    // Integration Hub
+    { code: "integrations:view", module: "integrations", action: "view", name: "View Integrations", category: "Integrations" },
+    { code: "integrations:configure", module: "integrations", action: "configure", name: "Configure Integrations", category: "Integrations" },
+    
+    // Admin
     { code: "admin:access", module: "admin", action: "access", name: "Access Admin Panel", category: "Admin" },
     { code: "admin:roles", module: "admin", action: "roles", name: "Manage Roles", category: "Admin" },
     { code: "admin:audit", module: "admin", action: "audit", name: "View Audit Logs", category: "Admin" },
+    
+    // Legacy compatibility
+    { code: "facilities:view", module: "facilities", action: "view", name: "View Facilities", category: "Facilities" },
+    { code: "facilities:create", module: "facilities", action: "create", name: "Create Facilities", category: "Facilities" },
+    { code: "facilities:update", module: "facilities", action: "update", name: "Update Facilities", category: "Facilities" },
   ];
 
   for (const perm of defaultPermissions) {
