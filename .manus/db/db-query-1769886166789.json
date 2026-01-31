@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO cardCompanies (name, nameAr, type, code, contactPerson, contactEmail, contactPhone, address, city, country, contractReference, contractStartDate, contractEndDate, status, isActive) VALUES \n('Schneider Electric', 'شنايدر إلكتريك', 'contractor', 'SCH-001', 'Ahmed Al-Rashid', 'centre3@se.com', '+966-11-465-8000', 'Schneider Electric Saudi Arabia', 'Riyadh', 'Saudi Arabia', 'SE-C3-2024-001', '2024-01-01', '2027-12-31', 'active', true),\n('Siemens Building Technologies', 'سيمنز لتقنيات المباني', 'contractor', 'SIE-001', 'Yasser Al-Dosari', 'centre3@siemens.com', '+966-11-218-5000', 'Siemens Saudi Arabia', 'Riyadh', 'Saudi Arabia', 'SIE-C3-2023-001', '2023-09-01', '2026-08-31', 'active', true);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute INSERT INTO cardCompanies (name, nameAr, type, code, contactPerson, contactEmail, contactPhone, address, city, country, contractReference, contractStartDate, contractEndDate, status, isActive) VALUES \n('Schneider Electric', 'شنايدر إلكتريك', 'contractor', 'SCH-001', 'Ahmed Al-Rashid', 'centre3@se.com', '+966-11-465-8000', 'Schneider Electric Saudi Arabia', 'Riyadh', 'Saudi Arabia', 'SE-C3-2024-001', '2024-01-01', '2027-12-31', 'active', true),\n('Siemens Building Technologies', 'سيمنز لتقنيات المباني', 'contractor', 'SIE-001', 'Yasser Al-Dosari', 'centre3@siemens.com', '+966-11-218-5000', 'Siemens Saudi Arabia', 'Riyadh', 'Saudi Arabia', 'SIE-C3-2023-001', '2023-09-01', '2026-08-31', 'active', true);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1544
+}

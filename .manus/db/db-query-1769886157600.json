@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO cardCompanies (name, nameAr, type, code, contactPerson, contactEmail, contactPhone, address, city, country, status, isActive) VALUES \n('Amazon Web Services (AWS)', 'أمازون ويب سيرفيسز', 'client', 'AWS-001', 'John Smith', 'aws-centre3@amazon.com', '+1-206-266-1000', 'AWS MENA Regional Office', 'Riyadh', 'Saudi Arabia', 'active', true),\n('Google Cloud Platform', 'جوجل كلاود بلاتفورم', 'client', 'GCP-001', 'Sarah Johnson', 'gcp-centre3@google.com', '+1-650-253-0000', 'Google Cloud MENA Office', 'Riyadh', 'Saudi Arabia', 'active', true),\n('Alibaba Cloud', 'علي بابا كلاود', 'client', 'ALI-001', 'Li Wei', 'alicloud-centre3@alibaba.com', '+86-571-8502-2088', 'Alibaba Cloud Middle East Office', 'Riyadh', 'Saudi Arabia', 'active', true);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute INSERT INTO cardCompanies (name, nameAr, type, code, contactPerson, contactEmail, contactPhone, address, city, country, status, isActive) VALUES \n('Amazon Web Services (AWS)', 'أمازون ويب سيرفيسز', 'client', 'AWS-001', 'John Smith', 'aws-centre3@amazon.com', '+1-206-266-1000', 'AWS MENA Regional Office', 'Riyadh', 'Saudi Arabia', 'active', true),\n('Google Cloud Platform', 'جوجل كلاود بلاتفورم', 'client', 'GCP-001', 'Sarah Johnson', 'gcp-centre3@google.com', '+1-650-253-0000', 'Google Cloud MENA Office', 'Riyadh', 'Saudi Arabia', 'active', true),\n('Alibaba Cloud', 'علي بابا كلاود', 'client', 'ALI-001', 'Li Wei', 'alicloud-centre3@alibaba.com', '+86-571-8502-2088', 'Alibaba Cloud Middle East Office', 'Riyadh', 'Saudi Arabia', 'active', true);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1573
+}

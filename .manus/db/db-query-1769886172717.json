@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, name, type, code, contactPerson, status FROM cardCompanies WHERE name LIKE '%Amazon%' OR name LIKE '%Google%' OR name LIKE '%Alibaba%' OR name LIKE '%Schneider%' OR name LIKE '%Siemens%' ORDER BY type, name;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, type, code, contactPerson, status FROM cardCompanies WHERE name LIKE '%Amazon%' OR name LIKE '%Google%' OR name LIKE '%Alibaba%' OR name LIKE '%Schneider%' OR name LIKE '%Siemens%' ORDER BY type, name;",
+  "rows": [
+    {
+      "id": "60018",
+      "name": "Schneider Electric",
+      "type": "contractor",
+      "code": "SCH-001",
+      "contactPerson": "Ahmed Al-Rashid",
+      "status": "active"
+    },
+    {
+      "id": "60019",
+      "name": "Siemens Building Technologies",
+      "type": "contractor",
+      "code": "SIE-001",
+      "contactPerson": "Yasser Al-Dosari",
+      "status": "active"
+    },
+    {
+      "id": "60017",
+      "name": "Alibaba Cloud",
+      "type": "client",
+      "code": "ALI-001",
+      "contactPerson": "Li Wei",
+      "status": "active"
+    },
+    {
+      "id": "60015",
+      "name": "Amazon Web Services (AWS)",
+      "type": "client",
+      "code": "AWS-001",
+      "contactPerson": "John Smith",
+      "status": "active"
+    },
+    {
+      "id": "60016",
+      "name": "Google Cloud Platform",
+      "type": "client",
+      "code": "GCP-001",
+      "contactPerson": "Sarah Johnson",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\ttype\tcode\tcontactPerson\tstatus\n60018\tSchneider Electric\tcontractor\tSCH-001\tAhmed Al-Rashid\tactive\n60019\tSiemens Building Technologies\tcontractor\tSIE-001\tYasser Al-Dosari\tactive\n60017\tAlibaba Cloud\tclient\tALI-001\tLi Wei\tactive\n60015\tAmazon Web Services (AWS)\tclient\tAWS-001\tJohn Smith\tactive\n60016\tGoogle Cloud Platform\tclient\tGCP-001\tSarah Johnson\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 1537
+}
