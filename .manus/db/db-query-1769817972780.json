@@ -1,0 +1,65 @@
+{
+  "query": "SELECT id, code, name, type, contactPersonEmail, contactPersonPhone, contractReference, contractStartDate, contractEndDate FROM cardCompanies WHERE type = 'client' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, name, type, contactPersonEmail, contactPersonPhone, contractReference, contractStartDate, contractEndDate FROM cardCompanies WHERE type = 'client' LIMIT 5;",
+  "rows": [
+    {
+      "id": "30002",
+      "code": "CLIENT-1769807854966",
+      "name": "Test Client Company 1769807854966",
+      "type": "client",
+      "contactPersonEmail": "NULL",
+      "contactPersonPhone": "NULL",
+      "contractReference": "NULL",
+      "contractStartDate": "NULL",
+      "contractEndDate": "NULL"
+    },
+    {
+      "id": "30009",
+      "code": "CLIENT-1769807882149",
+      "name": "Test Client Company 1769807882149",
+      "type": "client",
+      "contactPersonEmail": "NULL",
+      "contactPersonPhone": "NULL",
+      "contractReference": "NULL",
+      "contractStartDate": "NULL",
+      "contractEndDate": "NULL"
+    },
+    {
+      "id": "30016",
+      "code": "CLIENT-1769807909383",
+      "name": "Test Client Company 1769807909383",
+      "type": "client",
+      "contactPersonEmail": "NULL",
+      "contactPersonPhone": "NULL",
+      "contractReference": "NULL",
+      "contractStartDate": "NULL",
+      "contractEndDate": "NULL"
+    },
+    {
+      "id": "30023",
+      "code": "CLIENT-1769807936831",
+      "name": "Test Client Company 1769807936831",
+      "type": "client",
+      "contactPersonEmail": "NULL",
+      "contactPersonPhone": "NULL",
+      "contractReference": "NULL",
+      "contractStartDate": "NULL",
+      "contractEndDate": "NULL"
+    },
+    {
+      "id": "30030",
+      "code": "CLIENT-1769807963024",
+      "name": "Test Client Company 1769807963024",
+      "type": "client",
+      "contactPersonEmail": "NULL",
+      "contactPersonPhone": "NULL",
+      "contractReference": "NULL",
+      "contractStartDate": "NULL",
+      "contractEndDate": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\ttype\tcontactPersonEmail\tcontactPersonPhone\tcontractReference\tcontractStartDate\tcontractEndDate\n30002\tCLIENT-1769807854966\tTest Client Company 1769807854966\tclient\tNULL\tNULL\tNULL\tNULL\tNULL\n30009\tCLIENT-1769807882149\tTest Client Company 1769807882149\tclient\tNULL\tNULL\tNULL\tNULL\tNULL\n30016\tCLIENT-1769807909383\tTest Client Company 1769807909383\tclient\tNULL\tNULL\tNULL\tNULL\tNULL\n30023\tCLIENT-1769807936831\tTest Client Company 1769807936831\tclient\tNULL\tNULL\tNULL\tNULL\tNULL\n30030\tCLIENT-1769807963024\tTest Client Company 1769807963024\tclient\tNULL\tNULL\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1581
+}

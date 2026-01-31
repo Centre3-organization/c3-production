@@ -1,0 +1,14 @@
+{
+  "query": "SELECT email, name FROM users WHERE status = 'active' LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT email, name FROM users WHERE status = 'active' LIMIT 1;",
+  "rows": [
+    {
+      "email": "mohsiin@gmail.com",
+      "name": "Mohsin Qureshi"
+    }
+  ],
+  "messages": [],
+  "stdout": "email\tname\nmohsiin@gmail.com\tMohsin Qureshi\n",
+  "stderr": "",
+  "execution_time_ms": 1543
+}

@@ -991,3 +991,9 @@ Time conditions:
 
 ## Groups Creation Test (Jan 31, 2026)
 - [x] Create 10 test groups to verify the fix works (4 internal, 3 contractor, 3 client - all created successfully)
+
+## Groups Company Auto-Populate Fix (Jan 31, 2026)
+- [x] Fix company selection to auto-populate contact information fields from Master Data (was working - client companies just didn't have contact info in Master Data)
+
+## Groups UI Tooltip (Jan 31, 2026)
+- [x] Add tooltip explaining Primary/Secondary member designation in Manage Members dialog (added help icon with tooltip next to Primary label)

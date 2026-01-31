@@ -23,6 +23,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Table,
   TableBody,
@@ -58,6 +59,7 @@ import {
   Building,
   RefreshCw,
   Download,
+  HelpCircle,
 } from "lucide-react";
 
 interface GroupWithChildren {
@@ -923,6 +925,22 @@ function GroupMembersDialog({
             <div className="flex items-center gap-2">
               <Switch checked={isPrimary} onCheckedChange={setIsPrimary} />
               <Label>Primary</Label>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button 
+                    type="button" 
+                    className="inline-flex cursor-help"
+                    title="Primary: Main contact for this group. Receives notifications and approval requests first. Secondary: Regular member. May receive notifications if primary is unavailable."
+                  >
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p className="font-semibold mb-1">Primary vs Secondary</p>
+                  <p><strong>Primary:</strong> Main contact for this group. Receives notifications and approval requests first.</p>
+                  <p className="mt-1"><strong>Secondary:</strong> Regular member. May receive notifications if primary is unavailable.</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
             <Button onClick={handleAddMember} disabled={!selectedUserId || addMember.isPending}>
               <UserPlus className="h-4 w-4 mr-2" />
@@ -937,7 +955,27 @@ function GroupMembersDialog({
                 <TableRow>
                   <TableHead>User</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Primary</TableHead>
+                  <TableHead>
+                    <div className="flex items-center gap-1">
+                      Primary
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button 
+                            type="button" 
+                            className="inline-flex cursor-help"
+                            title="Primary: Main contact for this group. Receives notifications and approval requests first. Secondary: Regular member. May receive notifications if primary is unavailable."
+                          >
+                            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs">
+                          <p className="font-semibold mb-1">Primary vs Secondary</p>
+                          <p><strong>Primary:</strong> Main contact for this group. Receives notifications and approval requests first.</p>
+                          <p className="mt-1"><strong>Secondary:</strong> Regular member. May receive notifications if primary is unavailable.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  </TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="w-20">Actions</TableHead>
                 </TableRow>
