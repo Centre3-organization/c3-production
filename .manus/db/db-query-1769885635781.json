@@ -1,0 +1,190 @@
+{
+  "query": "SELECT id, name, groupType, parentGroupId, description, status, groupCategory FROM `groups` WHERE status = 'active' ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, groupType, parentGroupId, description, status, groupCategory FROM `groups` WHERE status = 'active' ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Centre3 Internal",
+      "groupType": "internal",
+      "parentGroupId": "NULL",
+      "description": "Centre3 data center internal staff and departments",
+      "status": "active",
+      "groupCategory": "organization"
+    },
+    {
+      "id": "2",
+      "name": "IT Department",
+      "groupType": "internal",
+      "parentGroupId": "1",
+      "description": "Information Technology and Infrastructure team",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "3",
+      "name": "Security Operations",
+      "groupType": "internal",
+      "parentGroupId": "1",
+      "description": "Physical and cyber security operations team",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "4",
+      "name": "Administration",
+      "groupType": "internal",
+      "parentGroupId": "1",
+      "description": "Administrative and HR support team",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "5",
+      "name": "Facilities Operations",
+      "groupType": "internal",
+      "parentGroupId": "1",
+      "description": "Data center facilities and maintenance team",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "6",
+      "name": "Amazon Web Services (AWS)",
+      "groupType": "client",
+      "parentGroupId": "NULL",
+      "description": "AWS cloud services - major client with dedicated data hall",
+      "status": "active",
+      "groupCategory": "client"
+    },
+    {
+      "id": "7",
+      "name": "AWS Technical Team",
+      "groupType": "client",
+      "parentGroupId": "6",
+      "description": "AWS infrastructure and technical operations staff",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "8",
+      "name": "AWS Security Team",
+      "groupType": "client",
+      "parentGroupId": "6",
+      "description": "AWS security and compliance personnel",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "9",
+      "name": "AWS Management",
+      "groupType": "client",
+      "parentGroupId": "6",
+      "description": "AWS account management and liaison team",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "10",
+      "name": "Google Cloud Platform",
+      "groupType": "client",
+      "parentGroupId": "NULL",
+      "description": "Google Cloud - enterprise cloud services client",
+      "status": "active",
+      "groupCategory": "client"
+    },
+    {
+      "id": "11",
+      "name": "GCP Infrastructure Team",
+      "groupType": "client",
+      "parentGroupId": "10",
+      "description": "Google Cloud infrastructure engineers",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "12",
+      "name": "GCP Operations",
+      "groupType": "client",
+      "parentGroupId": "10",
+      "description": "Google Cloud operations and support staff",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "13",
+      "name": "Schneider Electric",
+      "groupType": "contractor",
+      "parentGroupId": "NULL",
+      "description": "Schneider Electric - electrical and power systems contractor",
+      "status": "active",
+      "groupCategory": "contractor"
+    },
+    {
+      "id": "14",
+      "name": "SE Electrical Team",
+      "groupType": "contractor",
+      "parentGroupId": "13",
+      "description": "Electrical systems installation and maintenance",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "15",
+      "name": "SE UPS & Power",
+      "groupType": "contractor",
+      "parentGroupId": "13",
+      "description": "UPS and power distribution specialists",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "16",
+      "name": "SE Project Management",
+      "groupType": "contractor",
+      "parentGroupId": "13",
+      "description": "Project coordination and management",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "17",
+      "name": "Siemens Building Technologies",
+      "groupType": "contractor",
+      "parentGroupId": "NULL",
+      "description": "Siemens - HVAC, fire safety, and building automation contractor",
+      "status": "active",
+      "groupCategory": "contractor"
+    },
+    {
+      "id": "18",
+      "name": "Siemens HVAC Team",
+      "groupType": "contractor",
+      "parentGroupId": "17",
+      "description": "Heating, ventilation, and air conditioning specialists",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "19",
+      "name": "Siemens Fire & Safety",
+      "groupType": "contractor",
+      "parentGroupId": "17",
+      "description": "Fire detection and suppression systems team",
+      "status": "active",
+      "groupCategory": "department"
+    },
+    {
+      "id": "20",
+      "name": "Siemens BMS Team",
+      "groupType": "contractor",
+      "parentGroupId": "17",
+      "description": "Building Management System automation team",
+      "status": "active",
+      "groupCategory": "department"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tgroupType\tparentGroupId\tdescription\tstatus\tgroupCategory\n1\tCentre3 Internal\tinternal\tNULL\tCentre3 data center internal staff and departments\tactive\torganization\n2\tIT Department\tinternal\t1\tInformation Technology and Infrastructure team\tactive\tdepartment\n3\tSecurity Operations\tinternal\t1\tPhysical and cyber security operations team\tactive\tdepartment\n4\tAdministration\tinternal\t1\tAdministrative and HR support team\tactive\tdepartment\n5\tFacilities Operations\tinternal\t1\tData center facilities and maintenance team\tactive\tdepartment\n6\tAmazon Web Services (AWS)\tclient\tNULL\tAWS cloud services - major client with dedicated data hall\tactive\tclient\n7\tAWS Technical Team\tclient\t6\tAWS infrastructure and technical operations staff\tactive\tdepartment\n8\tAWS Security Team\tclient\t6\tAWS security and compliance personnel\tactive\tdepartment\n9\tAWS Management\tclient\t6\tAWS account management and liaison team\tactive\tdepartment\n10\tGoogle Cloud Platform\tclient\tNULL\tGoogle Cloud - enterprise cloud services client\tactive\tclient\n11\tGCP Infrastructure Team\tclient\t10\tGoogle Cloud infrastructure engineers\tactive\tdepartment\n12\tGCP Operations\tclient\t10\tGoogle Cloud operations and support staff\tactive\tdepartment\n13\tSchneider Electric\tcontractor\tNULL\tSchneider Electric - electrical and power systems contractor\tactive\tcontractor\n14\tSE Electrical Team\tcontractor\t13\tElectrical systems installation and maintenance\tactive\tdepartment\n15\tSE UPS & Power\tcontractor\t13\tUPS and power distribution specialists\tactive\tdepartment\n16\tSE Project Management\tcontractor\t13\tProject coordination and management\tactive\tdepartment\n17\tSiemens Building Technologies\tcontractor\tNULL\tSiemens - HVAC, fire safety, and building automation contractor\tactive\tcontractor\n18\tSiemens HVAC Team\tcontractor\t17\tHeating, ventilation, and air conditioning specialists\tactive\tdepartment\n19\tSiemens Fire & Safety\tcontractor\t17\tFire detection and suppression systems team\tactive\tdepartment\n20\tSiemens BMS Team\tcontractor\t17\tBuilding Management System automation team\tactive\tdepartment\n",
+  "stderr": "",
+  "execution_time_ms": 1660
+}

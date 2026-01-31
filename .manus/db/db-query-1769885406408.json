@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO `groups` (id, name, groupType, description, status, groupCategory, metadata) VALUES \n(10, 'Google Cloud Platform', 'client', 'Google Cloud - enterprise cloud services client', 'active', 'client', '{\"contractStart\": \"2023-06-01\", \"contractEnd\": \"2028-05-31\", \"accountManager\": \"Nora Al-Mutairi\", \"contactEmail\": \"gcp-centre3@google.com\"}');\n\nINSERT INTO `groups` (id, name, groupType, parentGroupId, description, status, groupCategory, metadata) VALUES \n(11, 'GCP Infrastructure Team', 'client', 10, 'Google Cloud infrastructure engineers', 'active', 'department', '{\"headCount\": 8, \"manager\": \"David Lee\"}'),\n(12, 'GCP Operations', 'client', 10, 'Google Cloud operations and support staff', 'active', 'department', '{\"headCount\": 5, \"manager\": \"Sarah Williams\"}');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute INSERT INTO `groups` (id, name, groupType, description, status, groupCategory, metadata) VALUES \n(10, 'Google Cloud Platform', 'client', 'Google Cloud - enterprise cloud services client', 'active', 'client', '{\"contractStart\": \"2023-06-01\", \"contractEnd\": \"2028-05-31\", \"accountManager\": \"Nora Al-Mutairi\", \"contactEmail\": \"gcp-centre3@google.com\"}');\n\nINSERT INTO `groups` (id, name, groupType, parentGroupId, description, status, groupCategory, metadata) VALUES \n(11, 'GCP Infrastructure Team', 'client', 10, 'Google Cloud infrastructure engineers', 'active', 'department', '{\"headCount\": 8, \"manager\": \"David Lee\"}'),\n(12, 'GCP Operations', 'client', 10, 'Google Cloud operations and support staff', 'active', 'department', '{\"headCount\": 5, \"manager\": \"Sarah Williams\"}');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1815
+}

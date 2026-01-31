@@ -525,4 +525,23 @@ export const groupsRouter = router({
       totalMembers: allMemberships.length,
     };
   }),
+
+  // Get member counts for all groups
+  getMemberCounts: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return {};
+
+    // Get all active memberships and count by groupId
+    const allMemberships = await db.select({
+      groupId: userGroupMembership.groupId,
+    }).from(userGroupMembership).where(eq(userGroupMembership.status, "active"));
+
+    // Build a map of groupId -> count
+    const counts: Record<number, number> = {};
+    for (const m of allMemberships) {
+      counts[m.groupId] = (counts[m.groupId] || 0) + 1;
+    }
+
+    return counts;
+  }),
 });

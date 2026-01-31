@@ -1389,3 +1389,30 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add assignRoleById function for role assignment by ID
 - [x] Update NewUserForm to send formData.roleId as systemRoleId
 - [x] Default to 'requestor' role (id: 8) if no role specified
+
+
+## Group Management Update (Jan 31, 2026)
+
+### Delete existing groups and create realistic examples
+- [ ] Delete all existing groups from database
+- [ ] Create Centre3 Internal group with subgroups (IT, Security, Administration, Operations)
+- [ ] Create Amazon Web Services (AWS) client group with subgroups
+- [ ] Create Google Cloud client group with subgroups
+- [ ] Create Schneider Electric contractor group with subgroups
+- [ ] Create Siemens contractor group with subgroups
+
+### Add user count column to Groups page
+- [ ] Update Groups page to show # of users in each group
+- [ ] Query user_group_members table for count
+
+## Groups/Departments Restructuring (Jan 31, 2026)
+- [x] Delete all existing group data from database
+- [x] Create 5 example organizations with realistic names:
+  - Centre3 Internal (with IT Department, Security Operations, Administration, Facilities Operations subgroups)
+  - Amazon Web Services (AWS) (with AWS Infrastructure, AWS Security, AWS Operations subgroups)
+  - Google Cloud Platform (with GCP Engineering, GCP Security, GCP Operations subgroups)
+  - Schneider Electric (with Power Systems, UPS Maintenance, Electrical Installations subgroups)
+  - Siemens Building Technologies (with HVAC Team, Fire & Safety, BMS Team subgroups)
+- [x] Add "# of Users" column to Groups page showing user count per group
+- [x] Create getMemberCounts API endpoint for user counts
+- [x] All groups have complete metadata (descriptions, contact info, contract details)

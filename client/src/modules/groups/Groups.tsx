@@ -111,6 +111,7 @@ export default function Groups() {
   const { data: stats } = trpc.groups.getStats.useQuery();
   const { data: allUsers } = trpc.users.list.useQuery({});
   const { data: companiesData } = trpc.masterData.getAllCompanies.useQuery({ isActive: true });
+  const { data: memberCounts } = trpc.groups.getMemberCounts.useQuery();
   
   // Filter companies based on group type
   const filteredCompanies = companiesData?.filter((c: { type: string }) => {
@@ -285,6 +286,15 @@ export default function Groups() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge variant="outline" className="gap-1">
+                    <Users className="h-3 w-3" />
+                    {memberCounts?.[group.id] || 0}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent>Number of users in this group</TooltipContent>
+              </Tooltip>
               <Badge variant={group.groupType === "internal" ? "default" : "secondary"}>
                 {group.groupType}
               </Badge>
