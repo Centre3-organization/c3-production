@@ -205,10 +205,7 @@ export default function Layout({ children }: LayoutProps) {
       title: "Reports",
       requiredPermission: "reports.view",
       items: [
-        { icon: BarChart3, labelKey: "nav.accessReports", label: "Access Reports", href: "/reports/access", requiredPermission: "reports.view" },
-        { icon: Shield, labelKey: "nav.securityReports", label: "Security Reports", href: "/reports/security", requiredPermission: "reports.view" },
-        { icon: ClipboardList, labelKey: "nav.auditLogs", label: "Audit Logs", href: "/reports/audit", requiredPermission: "reports.view" },
-        { icon: History, labelKey: "nav.activityHistory", label: "Activity History", href: "/reports/activity", requiredPermission: "reports.view" },
+        { icon: BarChart3, labelKey: "nav.reports", label: "Reports", href: "/reports", requiredPermission: "reports.view" },
       ]
     },
     {

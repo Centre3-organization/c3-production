@@ -15,7 +15,6 @@ import Profile from "./modules/auth/Profile";
 
 // Dashboard Module
 import Dashboard from "./modules/dashboard/Dashboard";
-import Reports from "./modules/dashboard/Reports";
 
 // Requests Module
 import RequestList from "./modules/requests/RequestList";
@@ -60,10 +59,7 @@ import IntegrationHub from "./modules/settings/IntegrationHub";
 import CardDirectory from "./modules/mcm/CardDirectory";
 
 // Reports Module
-import AccessReports from "./modules/reports/AccessReports";
-import SecurityReports from "./modules/reports/SecurityReports";
-import AuditLogs from "./modules/reports/AuditLogs";
-import ActivityHistory from "./modules/reports/ActivityHistory";
+import Reports from "./modules/reports/Reports";
 import NewCardRequest from "./modules/mcm/NewCardRequest";
 
 function Router() {
@@ -213,27 +209,7 @@ function Router() {
         </Layout>
       </Route>
       
-      {/* Protected Routes - Reports */}
-      <Route path="/reports/access">
-        <Layout>
-          <AccessReports />
-        </Layout>
-      </Route>
-      <Route path="/reports/security">
-        <Layout>
-          <SecurityReports />
-        </Layout>
-      </Route>
-      <Route path="/reports/audit">
-        <Layout>
-          <AuditLogs />
-        </Layout>
-      </Route>
-      <Route path="/reports/activity">
-        <Layout>
-          <ActivityHistory />
-        </Layout>
-      </Route>
+
       
       {/* Protected Routes - MCM (Magnetic Card Management) */}
       <Route path="/mcm">

@@ -3,9 +3,8 @@ import { useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, AlertCircle, Loader2, Mail, KeyRound, Send } from "lucide-react";
+import { Eye, EyeOff, AlertCircle, Loader2, Mail, Lock } from "lucide-react";
 import { trpc } from "@/utils/trpc";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LanguageSelector } from "@/components/LanguageSelector";
@@ -42,210 +41,138 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-[#0d0d0d]" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Left Side - Background Image with Branding (smaller) */}
-      <div className={`hidden lg:flex lg:w-[45%] relative overflow-hidden ${isRTL ? 'order-2' : 'order-1'}`}>
-        {/* Background Image - New blue data center */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/datacenter-bg.jpg')" }}
-        />
-        
-        {/* Dark Overlay */}
-        <div className={`absolute inset-0 ${isRTL ? 'bg-gradient-to-l' : 'bg-gradient-to-r'} from-black/70 via-black/50 to-black/30`} />
-        
-        {/* Content Overlay */}
-        <div className="relative z-10 flex flex-col justify-between p-10 w-full">
-          {/* Top Logo */}
-          <div className="flex justify-between items-center">
-            <img 
-              src="/center3-logo-white.png" 
-              alt="center3" 
-              className="h-8 w-auto"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-              }}
-            />
+    <div className="min-h-screen w-full flex" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Left Side - Purple Gradient with Logo */}
+      <div className={`hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#4f008c] via-[#6b21a8] to-[#4f008c] relative overflow-hidden ${isRTL ? 'order-2' : 'order-1'}`}>
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center w-full px-16">
+          {/* Logo with background */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-12 py-8 mb-8">
+            <div className="flex items-center gap-3">
+              {/* Diamond Icon */}
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 5L55 30L30 55L5 30L30 5Z" stroke="white" strokeWidth="2" fill="none"/>
+                <path d="M30 15L45 30L30 45L15 30L30 15Z" stroke="white" strokeWidth="2" fill="none"/>
+                <circle cx="30" cy="30" r="4" fill="#ff375e"/>
+              </svg>
+              <span className="text-4xl font-bold text-white tracking-wide">center3</span>
+            </div>
           </div>
           
-          {/* Center Branding */}
-          <div className={`flex flex-col ${isRTL ? 'items-end text-right' : 'items-start text-left'} max-w-lg`}>
-            {/* Brand Logo Large */}
-            <div className="mb-6">
-              <img 
-                src="/center3-logo-white.png" 
-                alt="center3" 
-                className="h-16 w-auto mb-3"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.innerHTML = '<span class="text-4xl font-bold text-white">center<span class="text-[#4f008c]">3</span></span>';
-                }}
-              />
-              {/* Purple accent bar */}
-              <div className={`flex items-center gap-0 mt-2`}>
-                {isRTL ? (
-                  <>
-                    <div className="h-1.5 w-6 bg-[#ff375e]"></div>
-                    <div className="h-1.5 w-24 bg-[#4f008c]"></div>
-                  </>
-                ) : (
-                  <>
-                    <div className="h-1.5 w-24 bg-[#4f008c]"></div>
-                    <div className="h-1.5 w-6 bg-[#ff375e]"></div>
-                  </>
-                )}
-              </div>
-            </div>
-            
-            {/* Tagline */}
-            <h2 className="text-2xl font-bold text-white mb-3">
-              {t('common.tagline')}
-            </h2>
-            <p className="text-base text-gray-300 leading-relaxed">
-              {t('auth.heroDescription')}
+          {/* Tagline */}
+          <h2 className="text-white text-xl font-medium text-center mb-2">
+            Enterprise Data Center Security Operations
+          </h2>
+          <h3 className="text-white/90 text-lg text-center mb-16">
+            & Access Governance Platform
+          </h3>
+          
+          {/* Bottom tagline */}
+          <div className="absolute bottom-12 left-0 right-0 text-center">
+            <p className="text-white/80 text-sm tracking-widest">
+              Secure • Reliable • Enterprise-Grade
             </p>
-            
-            {/* Carousel Dots */}
-            <div className="flex items-center gap-2 mt-6">
-              <div className="w-2 h-2 rounded-full bg-white/50"></div>
-              <div className="w-6 h-2 rounded-full bg-white"></div>
-              <div className="w-2 h-2 rounded-full bg-white/50"></div>
-            </div>
           </div>
-          
-          {/* Bottom Spacer */}
-          <div></div>
         </div>
       </div>
 
-      {/* Right Side - Login Form (bigger) */}
-      <div className={`w-full lg:w-[55%] flex flex-col min-h-screen bg-white ${isRTL ? 'order-1' : 'order-2'}`}>
-        {/* Main Form Container */}
-        <div className="flex-1 flex items-center justify-center px-8 lg:px-16">
-          <div className="w-full max-w-md">
-            {/* Mobile Logo */}
-            <div className="lg:hidden mb-8 text-center">
-              <img 
-                src="/center3-logo.png" 
-                alt="center3" 
-                className="h-12 w-auto mx-auto"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                }}
-              />
-            </div>
-
+      {/* Right Side - Login Form */}
+      <div className={`w-full lg:w-1/2 flex items-center justify-center bg-gray-50 ${isRTL ? 'order-1' : 'order-2'}`}>
+        <div className="w-full max-w-md px-8">
+          {/* Form Card */}
+          <div className="bg-white rounded-2xl shadow-lg p-10">
             {/* Header */}
-            <div className={`mb-10 ${isRTL ? 'text-right' : 'text-left'}`}>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {t('auth.login')}
-              </h1>
+            <div className="text-center mb-8">
+              <h1 className="text-2xl font-semibold text-gray-900 mb-2">Welcome Back</h1>
+              <p className="text-gray-500 text-sm">Sign in to access your account</p>
             </div>
 
             {/* Error Alert */}
             {error && (
-              <Alert variant="destructive" className="mb-6 border-[#ff375e] bg-[#ff375e]/10">
-                <AlertCircle className="h-4 w-4 text-[#ff375e]" />
-                <AlertDescription className="text-[#ff375e]">{error}</AlertDescription>
+              <Alert variant="destructive" className="mb-6">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
             {/* Login Form */}
-            <form onSubmit={handleLogin} className="space-y-8">
+            <form onSubmit={handleLogin} className="space-y-5">
               {/* Email Field */}
               <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Email</label>
                 <div className="relative">
-                  <Mail className={`absolute ${isRTL ? 'right-0' : 'left-0'} top-1/2 -translate-y-1/2 h-5 w-5 text-[#4f008c]`} />
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder={t('common.email')}
-                    required 
-                    className={`h-14 bg-transparent border-0 border-b-2 border-[#4f008c] rounded-none text-gray-900 placeholder:text-[#4f008c] focus:border-[#4f008c] focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 ${isRTL ? 'text-right pr-8 pl-0' : 'text-left pl-8 pr-0'}`}
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    disabled={loginMutation.isPending}
-                    autoComplete="email"
-                    dir={isRTL ? 'rtl' : 'ltr'}
+                    className="h-12 pl-4 pr-4 bg-gray-50 border-gray-200 rounded-lg focus:bg-white"
                   />
                 </div>
               </div>
 
               {/* Password Field */}
               <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Password</label>
                 <div className="relative">
-                  <KeyRound className={`absolute ${isRTL ? 'right-0' : 'left-0'} top-1/2 -translate-y-1/2 h-5 w-5 text-[#4f008c]`} />
-                  <Input 
-                    id="password" 
+                  <Input
                     type={showPassword ? "text" : "password"}
-                    placeholder={t('auth.password')}
-                    required 
-                    className={`h-14 bg-transparent border-0 border-b-2 border-[#4f008c] rounded-none text-gray-900 placeholder:text-[#4f008c] focus:border-[#4f008c] focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 ${isRTL ? 'text-right pr-8 pl-10' : 'text-left pl-8 pr-10'}`}
+                    placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    disabled={loginMutation.isPending}
-                    autoComplete="current-password"
-                    dir="ltr"
+                    className="h-12 pl-4 pr-12 bg-gray-50 border-gray-200 rounded-lg focus:bg-white"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-1/2 -translate-y-1/2 text-[#4f008c] hover:text-[#7333a3] transition-colors`}
+                    className={`absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 ${isRTL ? 'left-4' : 'right-4'}`}
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Lock className="h-5 w-5" />}
                   </button>
                 </div>
               </div>
 
-              {/* Forgot Password */}
-              <div className={`flex items-center ${isRTL ? 'justify-start' : 'justify-start'}`}>
-                <Send className={`h-4 w-4 text-[#ff375e] ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                <a href="#" className="text-sm font-medium text-gray-900 underline hover:text-[#4f008c] transition-colors">
-                  {t('auth.forgotPassword')}
-                </a>
+              {/* Remember Me */}
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="remember"
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                />
+                <label htmlFor="remember" className="text-sm text-gray-600 cursor-pointer">
+                  Remember this device for 30 days
+                </label>
               </div>
 
-              {/* Login Button */}
-              <Button 
-                type="submit" 
-                className="w-full h-14 text-base font-semibold bg-[#ff375e] hover:bg-[#e62e52] text-white rounded-md transition-all duration-200" 
+              {/* Submit Button */}
+              <Button
+                type="submit"
                 disabled={loginMutation.isPending}
+                className="w-full h-12 bg-[#4f008c] hover:bg-[#3d006d] text-white font-medium rounded-lg text-base"
               >
                 {loginMutation.isPending ? (
-                  <>
-                    <Loader2 className={`h-5 w-5 animate-spin ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {t('common.loading')}
-                  </>
+                  <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  t('auth.login')
+                  "Sign In"
                 )}
               </Button>
             </form>
 
-            {/* Language Selector - Below form, bigger */}
-            <div className="mt-10 flex justify-center">
-              <LanguageSelector 
-                variant="minimal" 
-                modal={true} 
-                className="text-gray-700 hover:text-gray-900 text-base px-4 py-2 border border-gray-300 rounded-lg hover:border-[#4f008c] transition-colors" 
-              />
+            {/* Language Selector */}
+            <div className="mt-6 flex justify-center">
+              <LanguageSelector />
             </div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="border-t border-gray-200 py-4 px-8">
-          <div className={`flex items-center justify-center gap-6 text-sm text-gray-600 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <a href="#" className="hover:text-[#4f008c] transition-colors font-medium">center3</a>
-            <a href="#" className="hover:text-[#4f008c] transition-colors">{t('footer.privacyNotice')}</a>
-            <a href="#" className="hover:text-[#4f008c] transition-colors">{t('footer.termsOfUse')}</a>
-            <a href="#" className="hover:text-[#4f008c] transition-colors">{t('footer.faq')}</a>
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+              <span>© 2026 Centre3</span>
+              <span>•</span>
+              <a href="#" className="hover:text-primary">Privacy Policy</a>
+              <span>•</span>
+              <a href="#" className="hover:text-primary">Terms of Service</a>
+            </div>
           </div>
         </div>
       </div>

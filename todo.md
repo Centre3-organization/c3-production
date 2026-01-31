@@ -1495,3 +1495,10 @@ Create a unified data source system that can pull options from anywhere in the p
   - roles.router.ts
 - [x] Create permission-enforcement.test.ts with 10 passing tests
 - [x] Add cache invalidation for role permissions
+
+
+## UI Changes - Reports & Login (Jan 31, 2026)
+- [x] Remove Reports sub-items from sidebar (Access Reports, Security Reports, etc.)
+- [x] Create single Reports page with Salesforce-style list layout
+- [x] Show "Coming Soon" message when clicking on reports
+- [x] Update login page to match new design (centered logo, purple gradient, cleaner form)
