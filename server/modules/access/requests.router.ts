@@ -1239,7 +1239,11 @@ export const requestsRouter = router({
       
       const { task, instance, stage } = taskData[0];
       
-      if (task.assignedTo !== ctx.user.id) {
+      // Check if user is Super Admin or Admin - they can approve ANY task
+      const userPerms = await getUserPermissions(ctx.user.id);
+      const isAdminOrSuperAdmin = userPerms?.roleCode === "super_admin" || userPerms?.roleCode === "admin";
+      
+      if (!isAdminOrSuperAdmin && task.assignedTo !== ctx.user.id) {
         throw new Error("You are not authorized to approve this task");
       }
       
@@ -1388,7 +1392,11 @@ export const requestsRouter = router({
       
       const { task, instance, stage } = taskData[0];
       
-      if (task.assignedTo !== ctx.user.id) {
+      // Check if user is Super Admin or Admin - they can reject ANY task
+      const userPerms = await getUserPermissions(ctx.user.id);
+      const isAdminOrSuperAdmin = userPerms?.roleCode === "super_admin" || userPerms?.roleCode === "admin";
+      
+      if (!isAdminOrSuperAdmin && task.assignedTo !== ctx.user.id) {
         throw new Error("You are not authorized to reject this task");
       }
       
@@ -1531,7 +1539,11 @@ export const requestsRouter = router({
       
       const { task, instance, stage } = taskData[0];
       
-      if (task.assignedTo !== ctx.user.id) {
+      // Check if user is Super Admin or Admin - they can request clarification on ANY task
+      const userPerms = await getUserPermissions(ctx.user.id);
+      const isAdminOrSuperAdmin = userPerms?.roleCode === "super_admin" || userPerms?.roleCode === "admin";
+      
+      if (!isAdminOrSuperAdmin && task.assignedTo !== ctx.user.id) {
         throw new Error("You are not authorized to request clarification on this task");
       }
       

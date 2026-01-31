@@ -856,7 +856,7 @@ export default function Approvals() {
 
       {/* Details Dialog */}
       <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5 text-[#0f62fe]" />
@@ -865,18 +865,21 @@ export default function Approvals() {
           </DialogHeader>
           
           {selectedRequest && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* Header info */}
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-100">
                 <div>
-                  <span className="font-mono text-lg font-medium">{selectedRequest.request?.requestNumber}</span>
-                  <div className="flex items-center gap-2 mt-1">
+                  <span className="font-mono text-xl font-bold text-gray-900">{selectedRequest.request?.requestNumber}</span>
+                  <div className="flex items-center gap-2 mt-2">
                     <Badge variant="outline" className={typeColors[selectedRequest.request?.type] || "bg-gray-100"}>
                       {typeLabels[selectedRequest.request?.type] || selectedRequest.request?.type}
                     </Badge>
                     <Badge variant="outline" className={getStageColor(selectedRequest.stageOrder || 1)}>
                       {selectedRequest.stageName || `Stage ${selectedRequest.stageOrder}`}
                       {isFinalStage(selectedRequest) && " (Final)"}
+                    </Badge>
+                    <Badge variant="outline" className="bg-gray-100 text-gray-700">
+                      {selectedRequest.request?.status?.replace(/_/g, " ").toUpperCase() || "PENDING"}
                     </Badge>
                   </div>
                 </div>
@@ -887,46 +890,150 @@ export default function Approvals() {
                 />
               </div>
               
-              {/* Details grid */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.visitor", "Visitor")}</label>
-                    <p className="text-sm font-medium">{selectedRequest.request?.visitorName || "N/A"}</p>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.company", "Company")}</label>
-                    <p className="text-sm font-medium">{selectedRequest.request?.visitorCompany || "N/A"}</p>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.site", "Site")}</label>
-                    <p className="text-sm font-medium">{selectedRequest.request?.siteName || "N/A"}</p>
+              {/* Main Details Grid - 3 columns */}
+              <div className="grid grid-cols-3 gap-6">
+                {/* Column 1: Visitor Information */}
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold text-gray-900 border-b pb-2 flex items-center gap-2">
+                    <User className="h-4 w-4 text-purple-600" />
+                    {t("approvals.visitorInfo", "Visitor Information")}
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.fullName", "Full Name")}</label>
+                      <p className="text-sm font-medium">{selectedRequest.request?.visitorName || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.company", "Company")}</label>
+                      <p className="text-sm font-medium">{selectedRequest.request?.visitorCompany || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.idType", "ID Type")}</label>
+                      <p className="text-sm font-medium">{selectedRequest.request?.visitorIdType?.replace(/_/g, " ").toUpperCase() || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.idNumber", "ID Number")}</label>
+                      <p className="text-sm font-medium font-mono">{selectedRequest.request?.visitorIdNumber || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.phone", "Phone")}</label>
+                      <p className="text-sm font-medium">{selectedRequest.request?.visitorPhone || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.email", "Email")}</label>
+                      <p className="text-sm font-medium">{selectedRequest.request?.visitorEmail || "N/A"}</p>
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.purpose", "Purpose")}</label>
-                    <p className="text-sm font-medium">{selectedRequest.request?.purpose || "N/A"}</p>
+                
+                {/* Column 2: Visit Details */}
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold text-gray-900 border-b pb-2 flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-blue-600" />
+                    {t("approvals.visitDetails", "Visit Details")}
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.purpose", "Purpose")}</label>
+                      <p className="text-sm font-medium">{selectedRequest.request?.purpose || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.startDate", "Start Date")}</label>
+                      <p className="text-sm font-medium">
+                        {selectedRequest.request?.startDate ? format(new Date(selectedRequest.request.startDate), "EEEE, MMM d, yyyy") : "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.endDate", "End Date")}</label>
+                      <p className="text-sm font-medium">
+                        {selectedRequest.request?.endDate ? format(new Date(selectedRequest.request.endDate), "EEEE, MMM d, yyyy") : "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.visitTime", "Visit Time")}</label>
+                      <p className="text-sm font-medium">
+                        {selectedRequest.request?.startTime || "00:00"} - {selectedRequest.request?.endTime || "23:59"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.createdAt", "Submitted On")}</label>
+                      <p className="text-sm font-medium">
+                        {selectedRequest.request?.createdAt ? format(new Date(selectedRequest.request.createdAt), "MMM d, yyyy 'at' HH:mm") : "N/A"}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.dates", "Dates")}</label>
-                    <p className="text-sm font-medium">
-                      {selectedRequest.request?.startDate ? format(new Date(selectedRequest.request.startDate), "MMM d, yyyy") : "N/A"}
-                      {selectedRequest.request?.endDate && selectedRequest.request.endDate !== selectedRequest.request.startDate && (
-                        <> - {format(new Date(selectedRequest.request.endDate), "MMM d, yyyy")}</>
+                </div>
+                
+                {/* Column 3: Location & Workflow */}
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold text-gray-900 border-b pb-2 flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-green-600" />
+                    {t("approvals.locationWorkflow", "Location & Workflow")}
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.site", "Site")}</label>
+                      <p className="text-sm font-medium">{selectedRequest.request?.siteName || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.workflow", "Workflow")}</label>
+                      <p className="text-sm font-medium">{selectedRequest.workflowName || "Default"}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.currentStage", "Current Stage")}</label>
+                      <p className="text-sm font-medium">{selectedRequest.stageName || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.progress", "Progress")}</label>
+                      <p className="text-sm font-medium">
+                        Stage {selectedRequest.stageOrder || 1} of {selectedRequest.totalStages || 1}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.assignedTo", "Assigned To")}</label>
+                      <p className="text-sm font-medium">
+                        {selectedRequest.assignedToId ? `User #${selectedRequest.assignedToId}` : "Unassigned"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Approval Timeline */}
+              <div className="border-t pt-4">
+                <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <History className="h-4 w-4 text-orange-600" />
+                  {t("approvals.approvalTimeline", "Approval Timeline")}
+                </h4>
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: selectedRequest.totalStages || 1 }).map((_, idx) => (
+                    <div key={idx} className="flex items-center">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
+                        idx + 1 < (selectedRequest.stageOrder || 1) 
+                          ? "bg-green-100 text-green-700 border-2 border-green-500" 
+                          : idx + 1 === (selectedRequest.stageOrder || 1)
+                            ? "bg-amber-100 text-amber-700 border-2 border-amber-500"
+                            : "bg-gray-100 text-gray-500 border-2 border-gray-300"
+                      }`}>
+                        {idx + 1 < (selectedRequest.stageOrder || 1) ? (
+                          <CheckCircle2 className="h-4 w-4" />
+                        ) : (
+                          idx + 1
+                        )}
+                      </div>
+                      {idx < (selectedRequest.totalStages || 1) - 1 && (
+                        <div className={`w-8 h-0.5 ${
+                          idx + 1 < (selectedRequest.stageOrder || 1) ? "bg-green-500" : "bg-gray-300"
+                        }`} />
                       )}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground uppercase">{t("approvals.workflow", "Workflow")}</label>
-                    <p className="text-sm font-medium">{selectedRequest.workflowName || "Default"}</p>
-                  </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           )}
           
-          <DialogFooter>
+          <DialogFooter className="border-t pt-4">
             <Button variant="outline" onClick={() => setDetailsDialogOpen(false)}>
               {t("common.close", "Close")}
             </Button>

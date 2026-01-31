@@ -1565,3 +1565,14 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Initialize workflow instances for existing pending requests
 - [x] Create approvalTasks for all pending requests
 - [x] Verify 39 pending approvals now visible in My Approvals page
+
+
+## Request Details Enhancement & TEP/MOP Requests (Feb 1, 2026)
+- [ ] Enhance Request Details dialog to show all request information
+- [ ] Add visitor details section (ID type, ID number, phone, email)
+- [ ] Add zones/areas information
+- [ ] Add approval history/timeline
+- [ ] Add form data fields from dynamic form
+- [ ] Create 20 TEP/MOP test requests with workflow instances
+
+- [ ] Fix Super Admin/Admin authorization to approve any request
