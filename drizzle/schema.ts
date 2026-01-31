@@ -1682,3 +1682,75 @@ export const mcmRequests = mysqlTable("mcmRequests", {
 
 export type McmRequest = typeof mcmRequests.$inferSelect;
 export type InsertMcmRequest = typeof mcmRequests.$inferInsert;
+
+
+// ============================================================================
+// SECURITY & AUDIT TABLES
+// ============================================================================
+
+export const securityEvents = mysqlTable("securityEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  eventType: varchar("eventType", { length: 50 }).notNull(),
+  userId: int("userId"),
+  userEmail: varchar("userEmail", { length: 320 }),
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: varchar("userAgent", { length: 500 }),
+  resourceType: varchar("resourceType", { length: 100 }),
+  resourceId: varchar("resourceId", { length: 100 }),
+  action: varchar("action", { length: 50 }),
+  details: text("details"),
+  severity: mysqlEnum("severity", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  success: boolean("success").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SecurityEvent = typeof securityEvents.$inferSelect;
+export type InsertSecurityEvent = typeof securityEvents.$inferInsert;
+
+export const auditTrail = mysqlTable("auditTrail", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  action: mysqlEnum("action", ["create", "update", "delete"]).notNull(),
+  resourceType: varchar("resourceType", { length: 100 }).notNull(),
+  resourceId: varchar("resourceId", { length: 100 }).notNull(),
+  oldValues: text("oldValues"),
+  newValues: text("newValues"),
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: varchar("userAgent", { length: 500 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AuditTrail = typeof auditTrail.$inferSelect;
+export type InsertAuditTrail = typeof auditTrail.$inferInsert;
+
+// MFA table for user authentication
+export const userMfa = mysqlTable("userMfa", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  secret: varchar("secret", { length: 500 }).notNull(), // Encrypted
+  backupCodes: text("backupCodes"), // JSON array of hashed codes
+  isEnabled: boolean("isEnabled").default(false).notNull(),
+  enabledAt: timestamp("enabledAt"),
+  lastUsedAt: timestamp("lastUsedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserMfa = typeof userMfa.$inferSelect;
+export type InsertUserMfa = typeof userMfa.$inferInsert;
+
+// User sessions for session management
+export const userSessions = mysqlTable("userSessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  sessionId: varchar("sessionId", { length: 64 }).notNull().unique(),
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: varchar("userAgent", { length: 500 }),
+  isActive: boolean("isActive").default(true).notNull(),
+  lastActivityAt: timestamp("lastActivityAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type UserSession = typeof userSessions.$inferSelect;
+export type InsertUserSession = typeof userSessions.$inferInsert;
