@@ -1436,3 +1436,9 @@ Create a unified data source system that can pull options from anywhere in the p
   - Added module-level checkboxes with permission count badges
   - Grid layout for individual permissions
   - Footer shows total permissions selected count
+
+## Reports Section in Sidebar (Jan 31, 2026)
+- [x] Add Reports section to left sidebar navigation (like Card Management)
+- [x] Create sub-items for Reports section (Access Reports, Security Reports, Audit Logs, Activity History)
+- [x] Create Reports pages (AccessReports.tsx, SecurityReports.tsx, AuditLogs.tsx, ActivityHistory.tsx)
+- [x] Add routes for all Reports pages in App.tsx

@@ -29,7 +29,11 @@ import {
   FolderTree,
   Workflow,
   Clock,
-  UserCheck
+  UserCheck,
+  BarChart3,
+  ClipboardList,
+  Shield,
+  History
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -194,6 +198,17 @@ export default function Layout({ children }: LayoutProps) {
       requiredPermission: "cards.view",
       items: [
         { icon: CreditCard, labelKey: "nav.cardControl", label: "Card Control", href: "/mcm", requiredPermission: "cards.view" },
+      ]
+    },
+    {
+      titleKey: "nav.reports",
+      title: "Reports",
+      requiredPermission: "reports.view",
+      items: [
+        { icon: BarChart3, labelKey: "nav.accessReports", label: "Access Reports", href: "/reports/access", requiredPermission: "reports.view" },
+        { icon: Shield, labelKey: "nav.securityReports", label: "Security Reports", href: "/reports/security", requiredPermission: "reports.view" },
+        { icon: ClipboardList, labelKey: "nav.auditLogs", label: "Audit Logs", href: "/reports/audit", requiredPermission: "reports.view" },
+        { icon: History, labelKey: "nav.activityHistory", label: "Activity History", href: "/reports/activity", requiredPermission: "reports.view" },
       ]
     },
     {
