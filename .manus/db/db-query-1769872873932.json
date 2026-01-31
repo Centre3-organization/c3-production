@@ -1,0 +1,26 @@
+{
+  "query": "SELECT usr.id, usr.userId, usr.roleId, sr.name as roleName, u.name as userName, u.email\nFROM userSystemRoles usr\nJOIN systemRoles sr ON usr.roleId = sr.id\nJOIN users u ON usr.userId = u.id\nWHERE sr.code = 'super_admin'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT usr.id, usr.userId, usr.roleId, sr.name as roleName, u.name as userName, u.email\nFROM userSystemRoles usr\nJOIN systemRoles sr ON usr.roleId = sr.id\nJOIN users u ON usr.userId = u.id\nWHERE sr.code = 'super_admin'",
+  "rows": [
+    {
+      "id": "3",
+      "userId": "3",
+      "roleId": "1",
+      "roleName": "Super Admin",
+      "userName": "Mohsin Qureshi",
+      "email": "mohsiin@gmail.com"
+    },
+    {
+      "id": "1",
+      "userId": "3",
+      "roleId": "1",
+      "roleName": "Super Admin",
+      "userName": "Mohsin Qureshi",
+      "email": "mohsiin@gmail.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\troleId\troleName\tuserName\temail\n3\t3\t1\tSuper Admin\tMohsin Qureshi\tmohsiin@gmail.com\n1\t3\t1\tSuper Admin\tMohsin Qureshi\tmohsiin@gmail.com\n",
+  "stderr": "",
+  "execution_time_ms": 1567
+}

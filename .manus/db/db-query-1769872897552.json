@@ -1,0 +1,64 @@
+{
+  "query": "SELECT * FROM userSystemRoles ORDER BY userId, roleId",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT * FROM userSystemRoles ORDER BY userId, roleId",
+  "rows": [
+    {
+      "id": "5",
+      "userId": "1",
+      "roleId": "8",
+      "assignedBy": "NULL",
+      "assignedAt": "2026-01-31 14:21:55",
+      "expiresAt": "NULL",
+      "isActive": "1"
+    },
+    {
+      "id": "1",
+      "userId": "3",
+      "roleId": "1",
+      "assignedBy": "NULL",
+      "assignedAt": "2026-01-31 14:01:53",
+      "expiresAt": "NULL",
+      "isActive": "1"
+    },
+    {
+      "id": "3",
+      "userId": "3",
+      "roleId": "1",
+      "assignedBy": "NULL",
+      "assignedAt": "2026-01-31 14:06:05",
+      "expiresAt": "NULL",
+      "isActive": "1"
+    },
+    {
+      "id": "4",
+      "userId": "90182",
+      "roleId": "8",
+      "assignedBy": "NULL",
+      "assignedAt": "2026-01-31 14:09:30",
+      "expiresAt": "NULL",
+      "isActive": "1"
+    },
+    {
+      "id": "2",
+      "userId": "90183",
+      "roleId": "2",
+      "assignedBy": "NULL",
+      "assignedAt": "2026-01-31 14:01:53",
+      "expiresAt": "NULL",
+      "isActive": "0"
+    },
+    {
+      "id": "6",
+      "userId": "90183",
+      "roleId": "3",
+      "assignedBy": "3",
+      "assignedAt": "2026-01-31 14:58:59",
+      "expiresAt": "NULL",
+      "isActive": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\troleId\tassignedBy\tassignedAt\texpiresAt\tisActive\n5\t1\t8\tNULL\t2026-01-31 14:21:55\tNULL\t1\n1\t3\t1\tNULL\t2026-01-31 14:01:53\tNULL\t1\n3\t3\t1\tNULL\t2026-01-31 14:06:05\tNULL\t1\n4\t90182\t8\tNULL\t2026-01-31 14:09:30\tNULL\t1\n2\t90183\t2\tNULL\t2026-01-31 14:01:53\tNULL\t0\n6\t90183\t3\t3\t2026-01-31 14:58:59\tNULL\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1516
+}

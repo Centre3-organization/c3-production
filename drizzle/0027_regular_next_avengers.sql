@@ -1,0 +1,1 @@
+ALTER TABLE `userSystemRoles` ADD CONSTRAINT `unique_user_role` UNIQUE(`userId`,`roleId`);

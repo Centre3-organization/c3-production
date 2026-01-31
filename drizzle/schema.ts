@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean, decimal, date } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean, decimal, date, unique } from "drizzle-orm/mysql-core";
 
 // ============================================================================
 // EXISTING TABLES (matching current database structure)
@@ -1852,7 +1852,10 @@ export const userSystemRoles = mysqlTable("userSystemRoles", {
   assignedAt: timestamp("assignedAt").defaultNow().notNull(),
   expiresAt: timestamp("expiresAt"), // For temporary role assignments
   isActive: boolean("isActive").default(true).notNull(),
-});
+}, (table) => ({
+  // Unique constraint to prevent duplicate role assignments
+  uniqueUserRole: unique("unique_user_role").on(table.userId, table.roleId),
+}));
 
 export type UserSystemRole = typeof userSystemRoles.$inferSelect;
 export type InsertUserSystemRole = typeof userSystemRoles.$inferInsert;
