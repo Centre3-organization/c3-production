@@ -1547,3 +1547,9 @@ Create a unified data source system that can pull options from anywhere in the p
 - [ ] Test all 20 workflow scenarios
 - [ ] Verify administrator intervention capability
 - [ ] Verify super-admin intervention capability
+
+
+## Test Requests Creation (Feb 1, 2026)
+- [x] Create 20 test requests for all workflow test cases
+- [x] Set all requests to "Pending First Approval" status
+- [x] Verify requests appear in the system with correct workflow assignment

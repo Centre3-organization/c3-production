@@ -1,0 +1,175 @@
+{
+  "query": "SELECT id, code, name FROM sites WHERE status = 'active' LIMIT 10;\nSELECT id, email, name FROM users WHERE email LIKE '%@centre3.com' OR email LIKE '%@aws.com' OR email LIKE '%@google.com' LIMIT 30;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, name FROM sites WHERE status = 'active' LIMIT 10;\nSELECT id, email, name FROM users WHERE email LIKE '%@centre3.com' OR email LIKE '%@aws.com' OR email LIKE '%@google.com' LIMIT 30;",
+  "rows": [
+    {
+      "id": "2",
+      "code": "RDC46",
+      "name": "RDC46 Data Centre"
+    },
+    {
+      "id": "3",
+      "code": "RDC05",
+      "name": "RDC05 Data Centre"
+    },
+    {
+      "id": "4",
+      "code": "RDC301",
+      "name": "RDC301 Data Centre"
+    },
+    {
+      "id": "5",
+      "code": "ITCC",
+      "name": "ITCC Data Centre"
+    },
+    {
+      "id": "6",
+      "code": "RDCKAFD",
+      "name": "RDCKAFD Data Centre"
+    },
+    {
+      "id": "7",
+      "code": "RDC102",
+      "name": "RDC102 Data Centre"
+    },
+    {
+      "id": "8",
+      "code": "RDC103",
+      "name": "RDC103 Data Centre"
+    },
+    {
+      "id": "9",
+      "code": "RDC104",
+      "name": "RDC104 Data Centre"
+    },
+    {
+      "id": "10",
+      "code": "DDC21",
+      "name": "DDC21 Data Centre"
+    },
+    {
+      "id": "11",
+      "code": "DDC352",
+      "name": "DDC352 Data Centre"
+    },
+    {
+      "id": "id",
+      "code": "email",
+      "name": "name"
+    },
+    {
+      "id": "150003",
+      "code": "ali-test-1769869315536@centre3.com",
+      "name": "Ali Test"
+    },
+    {
+      "id": "150004",
+      "code": "full-user-1769869316102@centre3.com",
+      "name": "Full User"
+    },
+    {
+      "id": "150012",
+      "code": "securityofficer@centre3.com",
+      "name": "Ahmed Al-Security"
+    },
+    {
+      "id": "150013",
+      "code": "sitemanager@centre3.com",
+      "name": "Mohammed Al-Site"
+    },
+    {
+      "id": "150014",
+      "code": "securitymanager@centre3.com",
+      "name": "Khalid Al-Manager"
+    },
+    {
+      "id": "150015",
+      "code": "riyadhsecurityofficer@centre3.com",
+      "name": "Faisal Al-Riyadh"
+    },
+    {
+      "id": "150016",
+      "code": "jaborofficer@centre3.com",
+      "name": "Omar Al-Jabor"
+    },
+    {
+      "id": "150017",
+      "code": "facilitymanager@centre3.com",
+      "name": "Sultan Al-Facility"
+    },
+    {
+      "id": "150018",
+      "code": "accesscontroller@centre3.com",
+      "name": "Nasser Al-Access"
+    },
+    {
+      "id": "150019",
+      "code": "shiftlead@centre3.com",
+      "name": "Turki Al-Shift"
+    },
+    {
+      "id": "150020",
+      "code": "dutymanager@centre3.com",
+      "name": "Saad Al-Duty"
+    },
+    {
+      "id": "150021",
+      "code": "operationsmanager@centre3.com",
+      "name": "Abdulaziz Al-Operations"
+    },
+    {
+      "id": "150022",
+      "code": "user1@aws.com",
+      "name": "John Smith"
+    },
+    {
+      "id": "150023",
+      "code": "user2@aws.com",
+      "name": "Sarah Johnson"
+    },
+    {
+      "id": "150024",
+      "code": "manager@aws.com",
+      "name": "Michael Brown"
+    },
+    {
+      "id": "150025",
+      "code": "engineer@aws.com",
+      "name": "Emily Davis"
+    },
+    {
+      "id": "150026",
+      "code": "admin@aws.com",
+      "name": "David Wilson"
+    },
+    {
+      "id": "150027",
+      "code": "user1@google.com",
+      "name": "James Anderson"
+    },
+    {
+      "id": "150028",
+      "code": "user2@google.com",
+      "name": "Jennifer Taylor"
+    },
+    {
+      "id": "150029",
+      "code": "manager@google.com",
+      "name": "Robert Martinez"
+    },
+    {
+      "id": "150030",
+      "code": "engineer@google.com",
+      "name": "Lisa Garcia"
+    },
+    {
+      "id": "150031",
+      "code": "admin@google.com",
+      "name": "William Lee"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\n2\tRDC46\tRDC46 Data Centre\n3\tRDC05\tRDC05 Data Centre\n4\tRDC301\tRDC301 Data Centre\n5\tITCC\tITCC Data Centre\n6\tRDCKAFD\tRDCKAFD Data Centre\n7\tRDC102\tRDC102 Data Centre\n8\tRDC103\tRDC103 Data Centre\n9\tRDC104\tRDC104 Data Centre\n10\tDDC21\tDDC21 Data Centre\n11\tDDC352\tDDC352 Data Centre\nid\temail\tname\n150003\tali-test-1769869315536@centre3.com\tAli Test\n150004\tfull-user-1769869316102@centre3.com\tFull User\n150012\tsecurityofficer@centre3.com\tAhmed Al-Security\n150013\tsitemanager@centre3.com\tMohammed Al-Site\n150014\tsecuritymanager@centre3.com\tKhalid Al-Manager\n150015\triyadhsecurityofficer@centre3.com\tFaisal Al-Riyadh\n150016\tjaborofficer@centre3.com\tOmar Al-Jabor\n150017\tfacilitymanager@centre3.com\tSultan Al-Facility\n150018\taccesscontroller@centre3.com\tNasser Al-Access\n150019\tshiftlead@centre3.com\tTurki Al-Shift\n150020\tdutymanager@centre3.com\tSaad Al-Duty\n150021\toperationsmanager@centre3.com\tAbdulaziz Al-Operations\n150022\tuser1@aws.com\tJohn Smith\n150023\tuser2@aws.com\tSarah Johnson\n150024\tmanager@aws.com\tMichael Brown\n150025\tengineer@aws.com\tEmily Davis\n150026\tadmin@aws.com\tDavid Wilson\n150027\tuser1@google.com\tJames Anderson\n150028\tuser2@google.com\tJennifer Taylor\n150029\tmanager@google.com\tRobert Martinez\n150030\tengineer@google.com\tLisa Garcia\n150031\tadmin@google.com\tWilliam Lee\n",
+  "stderr": "",
+  "execution_time_ms": 1804
+}
