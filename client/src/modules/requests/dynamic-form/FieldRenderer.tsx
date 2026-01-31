@@ -1221,11 +1221,13 @@ export function FieldRenderer({
         } else if (fieldCode === "email") {
           displayValue = user.email || "";
         } else if (fieldCode === "company") {
-          displayValue = (user as any).company || "";
+          // Company comes from contractorCompany or jobTitle for now
+          displayValue = (user as any).jobTitle || (user as any).subContractorCompany || "Centre3";
         } else if (fieldCode === "mobile") {
-          displayValue = (user as any).mobile || (user as any).phone || "";
+          displayValue = (user as any).phone || "";
         } else if (fieldCode === "department") {
-          displayValue = (user as any).department || "";
+          // Department needs to be fetched separately - show department name if available
+          displayValue = (user as any).departmentName || "";
         }
       }
       return (

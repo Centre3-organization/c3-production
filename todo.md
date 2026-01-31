@@ -1339,3 +1339,19 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Verify Site filters by City
 - [x] Test the updated location cascade - WORKING
 - [ ] Clean up duplicate cities in database (Dammam, Dhahran, Jeddah, etc. appear twice)
+
+
+## Remaining Admin Visit Form Fixes (Jan 31, 2026)
+
+### VIP Details Section Conditional Visibility - COMPLETED
+- [x] Make VIP Details section show/hide based on VIP Visit toggle (Yes/No)
+- [x] Update DynamicForm to evaluate section-level showCondition (already implemented)
+- [x] Set showCondition in database for VIP Details section
+
+### User Profile Company/Department - COMPLETED
+- [x] Add department (Administration) and job title to mohsiin@gmail.com user profile
+- [x] Update auth.me to include departmentName in user object
+- [x] Update FieldRenderer to use correct user fields (phone, departmentName, jobTitle)
+
+### Duplicate Cities Cleanup - COMPLETED
+- [x] Remove duplicate cities from database (7 duplicates removed)

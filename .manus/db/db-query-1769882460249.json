@@ -1,0 +1,30 @@
+{
+  "query": "SELECT id, name FROM departments LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name FROM departments LIMIT 5;",
+  "rows": [
+    {
+      "id": "14",
+      "name": "IT Operations"
+    },
+    {
+      "id": "15",
+      "name": "Security"
+    },
+    {
+      "id": "16",
+      "name": "Facilities"
+    },
+    {
+      "id": "17",
+      "name": "Engineering"
+    },
+    {
+      "id": "18",
+      "name": "Administration"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n14\tIT Operations\n15\tSecurity\n16\tFacilities\n17\tEngineering\n18\tAdministration\n",
+  "stderr": "",
+  "execution_time_ms": 1535
+}

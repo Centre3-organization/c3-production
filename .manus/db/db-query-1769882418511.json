@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, code, name, showCondition, displayOrder FROM formSections WHERE code = 'vip_details' OR name LIKE '%VIP%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, name, showCondition, displayOrder FROM formSections WHERE code = 'vip_details' OR name LIKE '%VIP%';",
+  "rows": [
+    {
+      "id": "5",
+      "code": "vip_details",
+      "name": "VIP Details",
+      "showCondition": "{\"field\": \"vip_visit\", \"operator\": \"equals\", \"value\": \"yes\"}",
+      "displayOrder": "6"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tshowCondition\tdisplayOrder\n5\tvip_details\tVIP Details\t{\"field\": \"vip_visit\", \"operator\": \"equals\", \"value\": \"yes\"}\t6\n",
+  "stderr": "",
+  "execution_time_ms": 1554
+}

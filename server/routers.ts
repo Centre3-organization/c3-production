@@ -73,7 +73,22 @@ export const appRouter = router({
   
   // Auth routes
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
+    me: publicProcedure.query(async (opts) => {
+      const user = opts.ctx.user;
+      if (!user) return null;
+      
+      // Fetch department name if user has departmentId
+      let departmentName = "";
+      if (user.departmentId) {
+        const dept = await db.getDepartmentById(user.departmentId);
+        departmentName = dept?.name || "";
+      }
+      
+      return {
+        ...user,
+        departmentName,
+      };
+    }),
     
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
