@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE users SET phone = CONCAT('+966 5', LPAD(FLOOR(RAND() * 100000000), 8, '0')) WHERE phone IS NULL OR phone = '';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute UPDATE users SET phone = CONCAT('+966 5', LPAD(FLOOR(RAND() * 100000000), 8, '0')) WHERE phone IS NULL OR phone = '';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1558
+}

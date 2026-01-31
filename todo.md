@@ -1355,3 +1355,22 @@ Create a unified data source system that can pull options from anywhere in the p
 
 ### Duplicate Cities Cleanup - COMPLETED
 - [x] Remove duplicate cities from database (7 duplicates removed)
+
+
+## Mobile Field Bug (Jan 31, 2026)
+
+### Bug: Mobile number field not showing in Basic Information
+- [ ] Check if mobile field exists in database for Basic Information section
+- [ ] Verify field is active and has correct displayOrder
+- [ ] Fix field configuration or rendering issue
+
+
+## User Profile Data Update (Jan 31, 2026) - COMPLETED
+
+### Add missing profile data to all users
+- [x] Check which users are missing phone numbers (3 users)
+- [x] Check which users are missing department assignments (2 users with invalid dept IDs)
+- [x] Check which users are missing job titles (2 users)
+- [x] Update all users with dummy phone numbers where missing (+966 5XXXXXXXX format)
+- [x] Update all users with department assignments (Administration as default)
+- [x] Update all users with job titles ('Staff' as default)

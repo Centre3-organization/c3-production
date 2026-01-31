@@ -1,0 +1,8 @@
+{
+  "query": "SELECT f.id, f.fieldKey, f.label, f.fieldType, f.isRequired, f.isActive, f.displayOrder, f.optionsSource, s.name as sectionName\nFROM formFields f\nJOIN formSections s ON f.sectionId = s.id\nWHERE s.name = 'Basic Information'\nORDER BY f.displayOrder;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT f.id, f.fieldKey, f.label, f.fieldType, f.isRequired, f.isActive, f.displayOrder, f.optionsSource, s.name as sectionName\nFROM formFields f\nJOIN formSections s ON f.sectionId = s.id\nWHERE s.name = 'Basic Information'\nORDER BY f.displayOrder;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'f.fieldkey' in 'field list'"
+  ]
+}
