@@ -1595,3 +1595,9 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix Super Admin/Admin authorization to approve/reject/clarify any request
 - [x] Verify multi-stage approval flow works correctly (1/3 → 2/3 → 3/3)
 - [x] Test approval creates new tasks for next stage approvers
+
+
+## Clarification & Approval History Fixes (Feb 1, 2026)
+- [ ] Fix "Task is not pending" error when requesting clarification
+- [ ] Add approval history with comments to request details dialog
+- [ ] Show comments from each completed stage in the approval timeline

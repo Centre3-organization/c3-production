@@ -1,0 +1,9 @@
+{
+  "query": "SELECT at.id, at.status, at.decision, ai.status as instanceStatus, r.requestNumber \nFROM approvalTasks at \nJOIN approvalInstances ai ON at.instanceId = ai.id \nJOIN requests r ON ai.requestId = r.id \nWHERE r.requestNumber LIKE '%SS0020%' \nORDER BY at.id DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT at.id, at.status, at.decision, ai.status as instanceStatus, r.requestNumber \nFROM approvalTasks at \nJOIN approvalInstances ai ON at.instanceId = ai.id \nJOIN requests r ON ai.requestId = r.id \nWHERE r.requestNumber LIKE '%SS0020%' \nORDER BY at.id DESC LIMIT 10;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1529
+}

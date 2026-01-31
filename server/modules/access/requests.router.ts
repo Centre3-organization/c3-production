@@ -255,10 +255,37 @@ export const requestsRouter = router({
     
     const requestsMap = new Map(requestsData.map(r => [r.id, r]));
     
+    // Get approval history for each instance (previous stage approvals with comments)
+    const instanceIds = Array.from(new Set(tasks.map(t => t.instanceId)));
+    const historyData = await db
+      .select({
+        instanceId: approvalHistory.instanceId,
+        actionType: approvalHistory.actionType,
+        actionBy: approvalHistory.actionBy,
+        actionAt: approvalHistory.actionAt,
+        details: approvalHistory.details,
+        userName: users.name,
+        userEmail: users.email,
+      })
+      .from(approvalHistory)
+      .leftJoin(users, eq(approvalHistory.actionBy, users.id))
+      .where(inArray(approvalHistory.instanceId, instanceIds))
+      .orderBy(approvalHistory.actionAt);
+    
+    // Group history by instanceId
+    const historyMap = new Map<number, any[]>();
+    for (const h of historyData) {
+      if (!historyMap.has(h.instanceId)) {
+        historyMap.set(h.instanceId, []);
+      }
+      historyMap.get(h.instanceId)!.push(h);
+    }
+    
     return tasks.map(task => ({
       ...task,
       totalStages: stageCountMap.get(task.workflowId) || 1,
       request: requestsMap.get(task.requestId),
+      approvalHistory: historyMap.get(task.instanceId) || [],
     }));
   }),
   

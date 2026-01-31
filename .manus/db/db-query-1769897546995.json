@@ -1,0 +1,42 @@
+{
+  "query": "SELECT at.id, at.status, at.decision, ai.status as instanceStatus, r.requestNumber, asStage.stageName\nFROM approvalTasks at \nJOIN approvalInstances ai ON at.instanceId = ai.id \nJOIN requests r ON ai.requestId = r.id \nJOIN approvalStages asStage ON at.stageId = asStage.id\nWHERE asStage.stageName LIKE '%Site Manager%' \nORDER BY at.id DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT at.id, at.status, at.decision, ai.status as instanceStatus, r.requestNumber, asStage.stageName\nFROM approvalTasks at \nJOIN approvalInstances ai ON at.instanceId = ai.id \nJOIN requests r ON ai.requestId = r.id \nJOIN approvalStages asStage ON at.stageId = asStage.id\nWHERE asStage.stageName LIKE '%Site Manager%' \nORDER BY at.id DESC LIMIT 10;",
+  "rows": [
+    {
+      "id": "30205",
+      "status": "need_clarification",
+      "decision": "need_clarification",
+      "instanceStatus": "need_clarification",
+      "requestNumber": "REQ-20260131-SSOQ2O",
+      "stageName": "Site Manager Approval"
+    },
+    {
+      "id": "30204",
+      "status": "pending",
+      "decision": "NULL",
+      "instanceStatus": "need_clarification",
+      "requestNumber": "REQ-20260131-SSOQ2O",
+      "stageName": "Site Manager Approval"
+    },
+    {
+      "id": "30201",
+      "status": "approved",
+      "decision": "NULL",
+      "instanceStatus": "in_progress",
+      "requestNumber": "REQ-20260131-TC020",
+      "stageName": "Site Manager Approval"
+    },
+    {
+      "id": "30200",
+      "status": "pending",
+      "decision": "NULL",
+      "instanceStatus": "in_progress",
+      "requestNumber": "REQ-20260131-TC020",
+      "stageName": "Site Manager Approval"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tstatus\tdecision\tinstanceStatus\trequestNumber\tstageName\n30205\tneed_clarification\tneed_clarification\tneed_clarification\tREQ-20260131-SSOQ2O\tSite Manager Approval\n30204\tpending\tNULL\tneed_clarification\tREQ-20260131-SSOQ2O\tSite Manager Approval\n30201\tapproved\tNULL\tin_progress\tREQ-20260131-TC020\tSite Manager Approval\n30200\tpending\tNULL\tin_progress\tREQ-20260131-TC020\tSite Manager Approval\n",
+  "stderr": "",
+  "execution_time_ms": 1530
+}

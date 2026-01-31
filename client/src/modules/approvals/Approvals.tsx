@@ -1039,13 +1039,15 @@ export default function Approvals() {
                 </div>
               </div>
               
-              {/* Approval Timeline */}
+              {/* Approval Timeline with Comments */}
               <div className="border-t pt-4">
                 <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <History className="h-4 w-4 text-orange-600" />
                   {t("approvals.approvalTimeline", "Approval Timeline")}
                 </h4>
-                <div className="flex items-center gap-2">
+                
+                {/* Stage Progress Indicator */}
+                <div className="flex items-center gap-2 mb-4">
                   {Array.from({ length: selectedRequest.totalStages || 1 }).map((_, idx) => (
                     <div key={idx} className="flex items-center">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
@@ -1069,6 +1071,70 @@ export default function Approvals() {
                     </div>
                   ))}
                 </div>
+                
+                {/* Detailed History with Comments */}
+                {selectedRequest.approvalHistory && selectedRequest.approvalHistory.length > 0 ? (
+                  <div className="space-y-3 max-h-48 overflow-y-auto">
+                    {selectedRequest.approvalHistory.map((history: any, idx: number) => {
+                      const actionColors: Record<string, string> = {
+                        approved: "bg-green-50 border-green-200 text-green-800",
+                        rejected: "bg-red-50 border-red-200 text-red-800",
+                        info_requested: "bg-amber-50 border-amber-200 text-amber-800",
+                        submitted: "bg-blue-50 border-blue-200 text-blue-800",
+                        escalated: "bg-purple-50 border-purple-200 text-purple-800",
+                      };
+                      const actionIcons: Record<string, React.ReactNode> = {
+                        approved: <CheckCircle2 className="h-4 w-4 text-green-600" />,
+                        rejected: <XCircle className="h-4 w-4 text-red-600" />,
+                        info_requested: <HelpCircle className="h-4 w-4 text-amber-600" />,
+                        submitted: <Send className="h-4 w-4 text-blue-600" />,
+                        escalated: <ArrowUpRight className="h-4 w-4 text-purple-600" />,
+                      };
+                      const actionLabels: Record<string, string> = {
+                        approved: "Approved",
+                        rejected: "Rejected",
+                        info_requested: "Clarification Requested",
+                        submitted: "Submitted",
+                        escalated: "Escalated",
+                      };
+                      
+                      const details = history.details as any || {};
+                      const stageName = details.stageName || "Unknown Stage";
+                      const comments = details.comments || details.reason || "";
+                      
+                      return (
+                        <div key={idx} className={`p-3 rounded-lg border ${actionColors[history.actionType] || "bg-gray-50 border-gray-200"}`}>
+                          <div className="flex items-center justify-between mb-1">
+                            <div className="flex items-center gap-2">
+                              {actionIcons[history.actionType] || <Clock className="h-4 w-4 text-gray-500" />}
+                              <span className="font-medium text-sm">
+                                {actionLabels[history.actionType] || history.actionType}
+                              </span>
+                              <Badge variant="outline" className="text-xs">
+                                {stageName}
+                              </Badge>
+                            </div>
+                            <span className="text-xs text-muted-foreground">
+                              {history.actionAt ? format(new Date(history.actionAt), "MMM d, yyyy HH:mm") : ""}
+                            </span>
+                          </div>
+                          <div className="text-xs text-muted-foreground mb-1">
+                            By: {history.userName || history.userEmail || "System"}
+                          </div>
+                          {comments && (
+                            <div className="mt-2 p-2 bg-white/50 rounded text-sm italic">
+                              "{comments}"
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">
+                    {t("approvals.noHistoryYet", "No approval history yet. This request is awaiting first approval.")}
+                  </p>
+                )}
               </div>
             </div>
           )}
