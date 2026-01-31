@@ -1067,3 +1067,419 @@ export async function getWorkflowDetails(workflowId: number) {
     conditions,
   };
 }
+
+
+/**
+ * Send Back Types
+ */
+export type SendBackTarget = 
+  | "requestor"           // Send back to original requester
+  | "previous_stage"      // Send back to previous stage
+  | "specific_stage"      // Send back to a specific stage by ID
+  | "specific_person"     // Send back to a specific person
+  | "group";              // Send back to a group
+
+export interface SendBackOptions {
+  target: SendBackTarget;
+  targetStageId?: number;      // For specific_stage
+  targetUserId?: number;       // For specific_person
+  targetGroupId?: number;      // For group
+  reason: string;              // Required reason for send back
+  requiredActions?: string[];  // What the recipient needs to do
+  deadlineHours?: number;      // Optional deadline
+}
+
+/**
+ * Process a Send Back action
+ * This returns the request to a previous point for clarification/correction
+ */
+export async function processSendBack(
+  taskId: number,
+  userId: number,
+  options: SendBackOptions
+): Promise<WorkflowResult> {
+  const db = await getDb();
+  if (!db) {
+    return { success: false, error: "Database not available" };
+  }
+
+  try {
+    // Get the task
+    const [task] = await db
+      .select()
+      .from(approvalTasks)
+      .where(eq(approvalTasks.id, taskId));
+
+    if (!task) {
+      return { success: false, error: "Task not found" };
+    }
+
+    if (task.status !== "pending") {
+      return { success: false, error: "Task is not pending" };
+    }
+
+    // Get instance
+    const [instance] = await db
+      .select()
+      .from(approvalInstances)
+      .where(eq(approvalInstances.id, task.instanceId));
+
+    if (!instance) {
+      return { success: false, error: "Instance not found" };
+    }
+
+    // Get current stage
+    const [currentStage] = await db
+      .select()
+      .from(approvalStages)
+      .where(eq(approvalStages.id, task.stageId));
+
+    // Update current task as sent back
+    await db
+      .update(approvalTasks)
+      .set({
+        status: "sent_back",
+        decision: "sent_back",
+        comments: options.reason,
+        decidedAt: new Date(),
+      })
+      .where(eq(approvalTasks.id, taskId));
+
+    // Record send back in history
+    await db.insert(approvalHistory).values({
+      instanceId: instance.id,
+      taskId,
+      stageId: task.stageId,
+      actionType: "sent_back",
+      actionBy: userId,
+      actionByType: "user",
+      details: {
+        target: options.target,
+        targetStageId: options.targetStageId,
+        targetUserId: options.targetUserId,
+        targetGroupId: options.targetGroupId,
+        reason: options.reason,
+        requiredActions: options.requiredActions,
+      },
+    });
+
+    // Determine who to send back to
+    let sendBackToUserId: number | null = null;
+    let sendBackToStageId: number | null = null;
+
+    switch (options.target) {
+      case "requestor":
+        // Get the original requester from the request
+        const requestResult = await db.execute(
+          sql`SELECT requesterId FROM accessRequests WHERE id = ${instance.requestId}`
+        );
+        const requestRows = requestResult as unknown as Array<{ requesterId: number }>;
+        if (requestRows[0]?.requesterId) {
+          sendBackToUserId = requestRows[0].requesterId;
+        }
+        break;
+
+      case "previous_stage":
+        // Find the previous stage
+        const prevStage = await db
+          .select()
+          .from(approvalStages)
+          .where(
+            and(
+              eq(approvalStages.workflowId, instance.workflowId),
+              sql`${approvalStages.stageOrder} < ${currentStage?.stageOrder || 1}`
+            )
+          )
+          .orderBy(desc(approvalStages.stageOrder))
+          .limit(1);
+
+        if (prevStage[0]) {
+          sendBackToStageId = prevStage[0].id;
+          // Get the approver who approved that stage
+          const prevTask = await db
+            .select()
+            .from(approvalTasks)
+            .where(
+              and(
+                eq(approvalTasks.instanceId, instance.id),
+                eq(approvalTasks.stageId, prevStage[0].id),
+                eq(approvalTasks.status, "approved")
+              )
+            )
+            .limit(1);
+          if (prevTask[0]) {
+            sendBackToUserId = prevTask[0].assignedTo;
+          }
+        }
+        break;
+
+      case "specific_stage":
+        if (options.targetStageId) {
+          sendBackToStageId = options.targetStageId;
+          // Get the approver who approved that stage
+          const stageTask = await db
+            .select()
+            .from(approvalTasks)
+            .where(
+              and(
+                eq(approvalTasks.instanceId, instance.id),
+                eq(approvalTasks.stageId, options.targetStageId),
+                eq(approvalTasks.status, "approved")
+              )
+            )
+            .limit(1);
+          if (stageTask[0]) {
+            sendBackToUserId = stageTask[0].assignedTo;
+          }
+        }
+        break;
+
+      case "specific_person":
+        if (options.targetUserId) {
+          sendBackToUserId = options.targetUserId;
+        }
+        break;
+
+      case "group":
+        if (options.targetGroupId) {
+          // Get primary member of the group
+          const groupMember = await db
+            .select({ userId: userGroupMembership.userId })
+            .from(userGroupMembership)
+            .where(
+              and(
+                eq(userGroupMembership.groupId, options.targetGroupId),
+                eq(userGroupMembership.isPrimaryGroup, true),
+                eq(userGroupMembership.status, "active")
+              )
+            )
+            .limit(1);
+          if (groupMember[0]) {
+            sendBackToUserId = groupMember[0].userId;
+          }
+        }
+        break;
+    }
+
+    if (!sendBackToUserId) {
+      return { success: false, error: "Could not determine send back recipient" };
+    }
+
+    // Calculate deadline
+    const dueAt = options.deadlineHours
+      ? new Date(Date.now() + options.deadlineHours * 60 * 60 * 1000)
+      : null;
+
+    // Create a new task for the send back recipient
+    await db.insert(approvalTasks).values({
+      instanceId: instance.id,
+      stageId: sendBackToStageId || task.stageId,
+      assignedTo: sendBackToUserId,
+      assignedVia: "send_back",
+      originalAssignee: userId, // Who sent it back
+      status: "pending_clarification",
+      dueAt,
+      metadata: {
+        sendBackReason: options.reason,
+        requiredActions: options.requiredActions,
+        sentBackBy: userId,
+        sentBackAt: new Date().toISOString(),
+      },
+    });
+
+    // Update instance status
+    await db
+      .update(approvalInstances)
+      .set({
+        status: "pending_clarification",
+        metadata: {
+          ...((instance.metadata as any) || {}),
+          lastSendBack: {
+            by: userId,
+            to: sendBackToUserId,
+            reason: options.reason,
+            at: new Date().toISOString(),
+          },
+        },
+      })
+      .where(eq(approvalInstances.id, instance.id));
+
+    // Record task assignment in history
+    await db.insert(approvalHistory).values({
+      instanceId: instance.id,
+      stageId: sendBackToStageId || task.stageId,
+      actionType: "clarification_requested",
+      actionBy: userId,
+      actionByType: "user",
+      details: {
+        assignee: sendBackToUserId,
+        reason: options.reason,
+        requiredActions: options.requiredActions,
+      },
+    });
+
+    return {
+      success: true,
+      instanceId: instance.id,
+      currentStage: currentStage?.stageName || "Pending Clarification",
+    };
+  } catch (error) {
+    console.error("Error processing send back:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+/**
+ * Process clarification response (when someone responds to a send back)
+ */
+export async function processClarificationResponse(
+  taskId: number,
+  userId: number,
+  response: string,
+  attachments?: string[]
+): Promise<WorkflowResult> {
+  const db = await getDb();
+  if (!db) {
+    return { success: false, error: "Database not available" };
+  }
+
+  try {
+    // Get the task
+    const [task] = await db
+      .select()
+      .from(approvalTasks)
+      .where(eq(approvalTasks.id, taskId));
+
+    if (!task) {
+      return { success: false, error: "Task not found" };
+    }
+
+    if (task.status !== "pending_clarification") {
+      return { success: false, error: "Task is not pending clarification" };
+    }
+
+    // Get instance
+    const [instance] = await db
+      .select()
+      .from(approvalInstances)
+      .where(eq(approvalInstances.id, task.instanceId));
+
+    if (!instance) {
+      return { success: false, error: "Instance not found" };
+    }
+
+    // Update the clarification task as completed
+    await db
+      .update(approvalTasks)
+      .set({
+        status: "clarification_provided",
+        comments: response,
+        decidedAt: new Date(),
+        metadata: {
+          ...((task.metadata as any) || {}),
+          clarificationResponse: response,
+          attachments,
+          respondedAt: new Date().toISOString(),
+        },
+      })
+      .where(eq(approvalTasks.id, taskId));
+
+    // Record in history
+    await db.insert(approvalHistory).values({
+      instanceId: instance.id,
+      taskId,
+      stageId: task.stageId,
+      actionType: "clarification_provided",
+      actionBy: userId,
+      actionByType: "user",
+      details: {
+        response,
+        attachments,
+      },
+    });
+
+    // Get the original approver who sent it back
+    const metadata = task.metadata as any;
+    const sentBackBy = metadata?.sentBackBy;
+
+    if (sentBackBy) {
+      // Create a new task for the original approver to review
+      await db.insert(approvalTasks).values({
+        instanceId: instance.id,
+        stageId: task.stageId,
+        assignedTo: sentBackBy,
+        assignedVia: "clarification_response",
+        status: "pending",
+        metadata: {
+          clarificationResponse: response,
+          attachments,
+          respondedBy: userId,
+        },
+      });
+
+      // Record task assignment
+      await db.insert(approvalHistory).values({
+        instanceId: instance.id,
+        stageId: task.stageId,
+        actionType: "task_reassigned",
+        actionByType: "system",
+        details: {
+          assignee: sentBackBy,
+          reason: "Clarification provided, ready for review",
+        },
+      });
+    }
+
+    // Update instance status back to in_progress
+    await db
+      .update(approvalInstances)
+      .set({
+        status: "in_progress",
+        metadata: {
+          ...((instance.metadata as any) || {}),
+          lastClarification: {
+            by: userId,
+            response,
+            at: new Date().toISOString(),
+          },
+        },
+      })
+      .where(eq(approvalInstances.id, instance.id));
+
+    return {
+      success: true,
+      instanceId: instance.id,
+      currentStage: "Review Clarification",
+    };
+  } catch (error) {
+    console.error("Error processing clarification response:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+/**
+ * Get send back history for an instance
+ */
+export async function getSendBackHistory(instanceId: number) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const history = await db
+    .select()
+    .from(approvalHistory)
+    .where(
+      and(
+        eq(approvalHistory.instanceId, instanceId),
+        sql`${approvalHistory.actionType} IN ('sent_back', 'clarification_requested', 'clarification_provided')`
+      )
+    )
+    .orderBy(desc(approvalHistory.actionAt));
+
+  return history;
+}

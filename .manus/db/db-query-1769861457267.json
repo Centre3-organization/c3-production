@@ -1,0 +1,28 @@
+{
+  "query": "SELECT email, firstName, lastName, role FROM users ORDER BY createdAt DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT email, firstName, lastName, role FROM users ORDER BY createdAt DESC LIMIT 10;",
+  "rows": [
+    {
+      "email": "ali@techbanq.net",
+      "firstName": "Ali",
+      "lastName": "Aarish",
+      "role": "admin"
+    },
+    {
+      "email": "rizwan@techbanq.net",
+      "firstName": "Riz",
+      "lastName": "A",
+      "role": "user"
+    },
+    {
+      "email": "mohsiin@gmail.com",
+      "firstName": "Mohsin",
+      "lastName": "Qureshi",
+      "role": "admin"
+    }
+  ],
+  "messages": [],
+  "stdout": "email\tfirstName\tlastName\trole\nali@techbanq.net\tAli\tAarish\tadmin\nrizwan@techbanq.net\tRiz\tA\tuser\nmohsiin@gmail.com\tMohsin\tQureshi\tadmin\n",
+  "stderr": "",
+  "execution_time_ms": 1546
+}

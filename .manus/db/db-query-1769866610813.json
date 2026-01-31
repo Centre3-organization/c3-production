@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE approvalHistory \nMODIFY COLUMN actionType ENUM('workflow_started', 'workflow_completed', 'stage_started', 'stage_completed', 'task_assigned', 'task_reassigned', 'decision_made', 'info_requested', 'info_provided', 'escalation_triggered', 'delegation_applied', 'sla_warning', 'sla_breach', 'comment_added', 'document_attached', 'sent_back', 'clarification_requested', 'clarification_provided') NOT NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE approvalHistory \nMODIFY COLUMN actionType ENUM('workflow_started', 'workflow_completed', 'stage_started', 'stage_completed', 'task_assigned', 'task_reassigned', 'decision_made', 'info_requested', 'info_provided', 'escalation_triggered', 'delegation_applied', 'sla_warning', 'sla_breach', 'comment_added', 'document_attached', 'sent_back', 'clarification_requested', 'clarification_provided') NOT NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1669
+}

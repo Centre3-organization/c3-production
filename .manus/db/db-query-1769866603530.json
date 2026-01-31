@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE approvalTasks \nMODIFY COLUMN assignedVia ENUM('direct', 'role', 'group', 'shift', 'delegation', 'escalation', 'send_back', 'clarification_response') NOT NULL,\nMODIFY COLUMN status ENUM('pending', 'approved', 'rejected', 'need_clarification', 'info_requested', 'reassigned', 'expired', 'skipped', 'sent_back', 'pending_clarification', 'clarification_provided') NOT NULL DEFAULT 'pending',\nMODIFY COLUMN decision ENUM('approved', 'rejected', 'info_requested', 'need_clarification', 'sent_back');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE approvalTasks \nMODIFY COLUMN assignedVia ENUM('direct', 'role', 'group', 'shift', 'delegation', 'escalation', 'send_back', 'clarification_response') NOT NULL,\nMODIFY COLUMN status ENUM('pending', 'approved', 'rejected', 'need_clarification', 'info_requested', 'reassigned', 'expired', 'skipped', 'sent_back', 'pending_clarification', 'clarification_provided') NOT NULL DEFAULT 'pending',\nMODIFY COLUMN decision ENUM('approved', 'rejected', 'info_requested', 'need_clarification', 'sent_back');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1819
+}

@@ -1,0 +1,2 @@
+ALTER TABLE `approvalInstances` MODIFY COLUMN `status` enum('pending','in_progress','approved','rejected','cancelled','info_requested','need_clarification','pending_clarification') NOT NULL DEFAULT 'pending';--> statement-breakpoint
+ALTER TABLE `approvalTasks` ADD `metadata` json;

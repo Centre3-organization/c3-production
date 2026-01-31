@@ -21,6 +21,7 @@ import {
   requestVehicles
 } from "../../../drizzle/schema";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "../../_core/trpc";
+import { getDataScopeFilter, hasPermission } from "../../services/enterprise-rbac.service";
 // Workflow engine functions are defined locally
 
 // Generate request number: REQ-YYYYMMDD-XXXXXX (max 20 chars to fit column)
@@ -55,6 +56,57 @@ export const requestsRouter = router({
       if (input?.status) conditions.push(eq(requests.status, input.status));
       if (input?.type) conditions.push(eq(requests.type, input.type));
       if (input?.siteId) conditions.push(eq(requests.siteId, input.siteId));
+      
+      // Apply RBAC data scoping
+      const dataScope = await getDataScopeFilter(ctx.user.id, "requests");
+      
+      // Apply scope-based filtering
+      if (!dataScope) {
+        // No scope defined - default to self-only for safety
+        conditions.push(eq(requests.requestorId, ctx.user.id));
+      } else {
+        switch (dataScope.scopeType) {
+          case "self":
+            // User can only see their own requests
+            conditions.push(eq(requests.requestorId, ctx.user.id));
+            break;
+          case "group":
+            // User can see requests from their groups
+            if (dataScope.groupIds && dataScope.groupIds.length > 0) {
+              // Get all users in the same groups
+              const groupUsers = await db
+                .select({ userId: sql<number>`DISTINCT userId` })
+                .from(sql`userGroupMembership`)
+                .where(inArray(sql`groupId`, dataScope.groupIds));
+              const userIds = groupUsers.map(u => u.userId);
+              if (userIds.length > 0) {
+                conditions.push(
+                  or(
+                    eq(requests.requestorId, ctx.user.id),
+                    inArray(requests.requestorId, userIds)
+                  )
+                );
+              } else {
+                conditions.push(eq(requests.requestorId, ctx.user.id));
+              }
+            } else {
+              conditions.push(eq(requests.requestorId, ctx.user.id));
+            }
+            break;
+          case "site":
+            // User can see requests for their assigned sites
+            if (dataScope.siteIds && dataScope.siteIds.length > 0) {
+              conditions.push(inArray(requests.siteId, dataScope.siteIds));
+            }
+            break;
+          case "global":
+            // No additional filtering - user can see all requests
+            break;
+          default:
+            // Default to self-only for safety
+            conditions.push(eq(requests.requestorId, ctx.user.id));
+        }
+      }
       
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
       

@@ -1067,3 +1067,45 @@ Time conditions:
 - [ ] Conditional stage skipping
 - [ ] Return to previous stage for revision
 - [ ] Workflow branching logic
+
+
+## RBAC System Implementation (Jan 31, 2026) - APPROVED & COMPLETED
+
+### Phase 1: Database Schema
+- [x] Create system_roles table with predefined roles (9 roles seeded)
+- [x] Create permissions table with module:action structure (40 permissions)
+- [x] Create role_permissions junction table
+- [x] Create userSystemRoles assignment table
+- [x] Create dataScopeRules table
+- [x] Create userSiteAssignments table
+- [x] Create userZoneAssignments table
+
+### Phase 2: Core Services
+- [x] Create enterprise-rbac.service.ts with permission checking
+- [x] Implement getDataScopeFilter for visibility rules
+- [x] Create permissionMiddleware.ts for API protection
+- [x] Implement role-based data filtering in requests router
+
+### Phase 3: Workflow Engine Enhancement
+- [x] Add Send Back action to workflow stages (sendBackRequest function)
+- [x] Implement send back target types (requestor, previous_stage, specific_stage, specific_person, group)
+- [x] Add approval modes (single, any, all, majority, sequential)
+- [x] Add clarification response endpoint (respondToClarification)
+- [x] Update approvalTasks schema with send_back statuses
+- [x] Update approvalHistory schema with send_back actions
+
+### Phase 4: API Routes & Integration
+- [x] Add sendBack endpoint to workflows router
+- [x] Add respondToClarification endpoint to workflows router
+- [x] Integrate RBAC data scoping in requests.router.ts
+- [x] Export permission functions from enterprise-rbac.service.ts
+
+### Phase 5: Testing
+- [x] Write unit tests for RBAC service (19 tests passing)
+- [x] Write unit tests for workflow send back (16 tests passing)
+- [x] Total: 35 tests passing
+
+### Phase 6: Documentation
+- [x] Create comprehensive documentation with 50 use cases
+- [x] Document all components (roles, permissions, scopes, modes)
+- [x] Create Word document for release

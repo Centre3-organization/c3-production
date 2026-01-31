@@ -32,6 +32,10 @@ import {
   listWorkflows,
   getWorkflowDetails,
   RequestContext,
+  processSendBack,
+  processClarificationResponse,
+  getSendBackHistory,
+  SendBackTarget,
 } from "./workflow-engine";
 
 export const workflowsRouter = router({
@@ -804,5 +808,124 @@ export const workflowsRouter = router({
       { value: "tdp", label: "TDP (Technical Data Package)" },
       { value: "mhv", label: "MHV (Material Handling Vehicle)" },
     ];
+  }),
+
+  // ============================================
+  // SEND BACK FUNCTIONALITY
+  // ============================================
+
+  // Send back a task for clarification
+  sendBack: protectedProcedure
+    .input(z.object({
+      taskId: z.number(),
+      target: z.enum(["requestor", "previous_stage", "specific_stage", "specific_person", "group"]),
+      targetStageId: z.number().optional(),
+      targetUserId: z.number().optional(),
+      targetGroupId: z.number().optional(),
+      reason: z.string().min(1, "Reason is required"),
+      requiredActions: z.array(z.string()).optional(),
+      deadlineHours: z.number().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      return await processSendBack(input.taskId, ctx.user.id, {
+        target: input.target as SendBackTarget,
+        targetStageId: input.targetStageId,
+        targetUserId: input.targetUserId,
+        targetGroupId: input.targetGroupId,
+        reason: input.reason,
+        requiredActions: input.requiredActions,
+        deadlineHours: input.deadlineHours,
+      });
+    }),
+
+  // Respond to a clarification request
+  respondToClarification: protectedProcedure
+    .input(z.object({
+      taskId: z.number(),
+      response: z.string().min(1, "Response is required"),
+      attachments: z.array(z.string()).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      return await processClarificationResponse(
+        input.taskId,
+        ctx.user.id,
+        input.response,
+        input.attachments
+      );
+    }),
+
+  // Get send back history for a request
+  getSendBackHistory: protectedProcedure
+    .input(z.object({
+      requestId: z.number(),
+      requestType: z.string(),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      // Get instance ID first
+      const [instance] = await db
+        .select({ id: approvalInstances.id })
+        .from(approvalInstances)
+        .where(
+          and(
+            eq(approvalInstances.requestId, input.requestId),
+            eq(approvalInstances.requestType, input.requestType)
+          )
+        )
+        .orderBy(desc(approvalInstances.createdAt))
+        .limit(1);
+
+      if (!instance) return [];
+
+      return await getSendBackHistory(instance.id);
+    }),
+
+  // Get pending clarification tasks for current user
+  myPendingClarifications: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+
+    const tasks = await db
+      .select()
+      .from(approvalTasks)
+      .where(
+        and(
+          eq(approvalTasks.assignedTo, ctx.user.id),
+          eq(approvalTasks.status, "pending_clarification")
+        )
+      );
+
+    // Enrich with instance and stage info
+    const enriched = await Promise.all(
+      tasks.map(async (task) => {
+        const [instance] = await db
+          .select()
+          .from(approvalInstances)
+          .where(eq(approvalInstances.id, task.instanceId));
+
+        const [stage] = await db
+          .select()
+          .from(approvalStages)
+          .where(eq(approvalStages.id, task.stageId));
+
+        const [workflow] = instance
+          ? await db
+              .select()
+              .from(approvalWorkflows)
+              .where(eq(approvalWorkflows.id, instance.workflowId))
+          : [null];
+
+        return {
+          ...task,
+          instance,
+          stage,
+          workflow,
+        };
+      })
+    );
+
+    return enriched;
   }),
 });

@@ -989,7 +989,8 @@ export const approvalInstances = mysqlTable("approvalInstances", {
     "rejected",
     "cancelled",
     "info_requested",
-    "need_clarification"
+    "need_clarification",
+    "pending_clarification"
   ]).default("pending").notNull(),
   // Access grant fields - set on final approval
   entryMethod: mysqlEnum("entryMethod", ["qr_code", "rfid", "card"]),
@@ -1027,7 +1028,9 @@ export const approvalTasks = mysqlTable("approvalTasks", {
     "group",
     "shift",
     "delegation",
-    "escalation"
+    "escalation",
+    "send_back",
+    "clarification_response"
   ]).notNull(),
   originalAssignee: int("originalAssignee"), // If assigned via delegation
   status: mysqlEnum("status", [
@@ -1038,15 +1041,28 @@ export const approvalTasks = mysqlTable("approvalTasks", {
     "info_requested",
     "reassigned",
     "expired",
-    "skipped"
+    "skipped",
+    "sent_back",
+    "pending_clarification",
+    "clarification_provided"
   ]).default("pending").notNull(),
-  decision: mysqlEnum("decision", ["approved", "rejected", "info_requested", "need_clarification"]),
+  decision: mysqlEnum("decision", ["approved", "rejected", "info_requested", "need_clarification", "sent_back"]),
   comments: text("comments"),
   clarificationTarget: mysqlEnum("clarificationTarget", ["last_approver", "requestor"]),
   infoRequest: json("infoRequest").$type<{
     questions?: string[];
     requiredDocuments?: string[];
     deadlineHours?: number;
+  }>(),
+  metadata: json("metadata").$type<{
+    sendBackReason?: string;
+    requiredActions?: string[];
+    sentBackBy?: number;
+    sentBackAt?: string;
+    clarificationResponse?: string;
+    attachments?: string[];
+    respondedAt?: string;
+    respondedBy?: number;
   }>(),
   dueAt: timestamp("dueAt"),
   decidedAt: timestamp("decidedAt"),
@@ -1082,7 +1098,10 @@ export const approvalHistory = mysqlTable("approvalHistory", {
     "sla_warning",
     "sla_breach",
     "comment_added",
-    "document_attached"
+    "document_attached",
+    "sent_back",
+    "clarification_requested",
+    "clarification_provided"
   ]).notNull(),
   actionBy: int("actionBy"), // NULL for system actions
   actionByType: mysqlEnum("actionByType", ["user", "system", "scheduler"]).default("user").notNull(),
@@ -1109,6 +1128,15 @@ export const approvalHistory = mysqlTable("approvalHistory", {
     rfidTag?: string;
     clarificationTarget?: string;
     targetInfo?: string;
+    // Send back related fields
+    target?: string;
+    targetStageId?: number;
+    targetUserId?: number;
+    targetGroupId?: number;
+    reason?: string;
+    requiredActions?: string[];
+    response?: string;
+    attachments?: string[];
   }>(),
   ipAddress: varchar("ipAddress", { length: 45 }),
   userAgent: text("userAgent"),
@@ -1754,3 +1782,208 @@ export const userSessions = mysqlTable("userSessions", {
 
 export type UserSession = typeof userSessions.$inferSelect;
 export type InsertUserSession = typeof userSessions.$inferInsert;
+
+
+// ============================================================================
+// ENTERPRISE RBAC SYSTEM
+// ============================================================================
+
+/**
+ * System Roles - Predefined system roles with hierarchy levels
+ * These are the core roles that define what modules/features a user can access
+ */
+export const systemRoles = mysqlTable("systemRoles", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 100 }).notNull(),
+  nameAr: varchar("nameAr", { length: 100 }),
+  description: text("description"),
+  level: int("level").notNull(), // 0=Super Admin, 1=Admin, 2=Manager, 3=Officer, 4=User, 5=Viewer
+  isSystem: boolean("isSystem").default(true).notNull(), // Cannot be deleted
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SystemRole = typeof systemRoles.$inferSelect;
+export type InsertSystemRole = typeof systemRoles.$inferInsert;
+
+/**
+ * Permissions - Granular permissions using module:action pattern
+ * Example: "users:create", "requests:approve", "settings:view"
+ */
+export const permissions = mysqlTable("permissions", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 100 }).notNull().unique(), // e.g., "users:create"
+  module: varchar("module", { length: 50 }).notNull(), // e.g., "users"
+  action: varchar("action", { length: 50 }).notNull(), // e.g., "create"
+  name: varchar("name", { length: 100 }).notNull(),
+  nameAr: varchar("nameAr", { length: 100 }),
+  description: text("description"),
+  category: varchar("category", { length: 50 }), // For grouping in UI
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Permission = typeof permissions.$inferSelect;
+export type InsertPermission = typeof permissions.$inferInsert;
+
+/**
+ * Role Permissions - Junction table linking roles to permissions
+ */
+export const rolePermissions = mysqlTable("rolePermissions", {
+  id: int("id").autoincrement().primaryKey(),
+  roleId: int("roleId").notNull(),
+  permissionId: int("permissionId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RolePermission = typeof rolePermissions.$inferSelect;
+export type InsertRolePermission = typeof rolePermissions.$inferInsert;
+
+/**
+ * User System Roles - Links users to their system role
+ */
+export const userSystemRoles = mysqlTable("userSystemRoles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  roleId: int("roleId").notNull(),
+  assignedBy: int("assignedBy"),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"), // For temporary role assignments
+  isActive: boolean("isActive").default(true).notNull(),
+});
+
+export type UserSystemRole = typeof userSystemRoles.$inferSelect;
+export type InsertUserSystemRole = typeof userSystemRoles.$inferInsert;
+
+/**
+ * Data Scope Rules - Defines what data a role can see
+ * Scope: global, site, zone, group, self
+ */
+export const dataScopeRules = mysqlTable("dataScopeRules", {
+  id: int("id").autoincrement().primaryKey(),
+  roleId: int("roleId").notNull(),
+  resourceType: varchar("resourceType", { length: 50 }).notNull(), // e.g., "requests", "users", "groups"
+  scopeType: mysqlEnum("scopeType", ["global", "site", "zone", "group", "department", "self"]).notNull(),
+  scopeConfig: json("scopeConfig").$type<{
+    includeSubordinates?: boolean; // Include data from users reporting to them
+    includeGroupMembers?: boolean; // Include data from same group
+    includeManagedGroups?: boolean; // Include data from groups they manage
+    customFilter?: Record<string, unknown>; // Additional filtering rules
+  }>(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DataScopeRule = typeof dataScopeRules.$inferSelect;
+export type InsertDataScopeRule = typeof dataScopeRules.$inferInsert;
+
+/**
+ * User Site Assignments - Which sites a user can access/manage
+ */
+export const userSiteAssignments = mysqlTable("userSiteAssignments", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  siteId: int("siteId").notNull(),
+  accessLevel: mysqlEnum("accessLevel", ["view", "operate", "manage", "admin"]).default("view").notNull(),
+  isPrimary: boolean("isPrimary").default(false).notNull(), // Primary site for the user
+  assignedBy: int("assignedBy"),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  isActive: boolean("isActive").default(true).notNull(),
+});
+
+export type UserSiteAssignment = typeof userSiteAssignments.$inferSelect;
+export type InsertUserSiteAssignment = typeof userSiteAssignments.$inferInsert;
+
+/**
+ * User Zone Assignments - Which zones a user can access/manage
+ */
+export const userZoneAssignments = mysqlTable("userZoneAssignments", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  zoneId: int("zoneId").notNull(),
+  accessLevel: mysqlEnum("accessLevel", ["view", "operate", "manage", "admin"]).default("view").notNull(),
+  assignedBy: int("assignedBy"),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  isActive: boolean("isActive").default(true).notNull(),
+});
+
+export type UserZoneAssignment = typeof userZoneAssignments.$inferSelect;
+export type InsertUserZoneAssignment = typeof userZoneAssignments.$inferInsert;
+
+/**
+ * Group Access Policies - Defines what sites/zones a group can access
+ */
+export const groupAccessPolicies = mysqlTable("groupAccessPolicies", {
+  id: int("id").autoincrement().primaryKey(),
+  groupId: int("groupId").notNull(),
+  siteId: int("siteId"),
+  zoneId: int("zoneId"),
+  accessType: mysqlEnum("accessType", ["allowed", "restricted", "escorted"]).default("allowed").notNull(),
+  accessHours: json("accessHours").$type<{
+    monday?: { start: string; end: string };
+    tuesday?: { start: string; end: string };
+    wednesday?: { start: string; end: string };
+    thursday?: { start: string; end: string };
+    friday?: { start: string; end: string };
+    saturday?: { start: string; end: string };
+    sunday?: { start: string; end: string };
+  }>(),
+  requiresEscort: boolean("requiresEscort").default(false).notNull(),
+  maxVisitDuration: int("maxVisitDuration"), // In hours
+  validFrom: timestamp("validFrom"),
+  validUntil: timestamp("validUntil"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EnterpriseGroupAccessPolicy = typeof groupAccessPolicies.$inferSelect;
+export type InsertEnterpriseGroupAccessPolicy = typeof groupAccessPolicies.$inferInsert;
+
+/**
+ * Workflow Send Back Actions - Tracks send back requests in workflow
+ */
+export const workflowSendBacks = mysqlTable("workflowSendBacks", {
+  id: int("id").autoincrement().primaryKey(),
+  instanceId: int("instanceId").notNull(),
+  taskId: int("taskId").notNull(),
+  fromStageId: int("fromStageId").notNull(),
+  
+  // Target type for send back
+  targetType: mysqlEnum("targetType", [
+    "requestor",
+    "previous_approver",
+    "specific_stage",
+    "specific_user",
+    "group"
+  ]).notNull(),
+  
+  // Target references
+  targetStageId: int("targetStageId"), // For specific_stage
+  targetUserId: int("targetUserId"), // For specific_user
+  targetGroupId: int("targetGroupId"), // For group
+  
+  // Send back details
+  reason: text("reason").notNull(),
+  requestedInfo: text("requestedInfo"),
+  deadline: timestamp("deadline"),
+  
+  // Response tracking
+  status: mysqlEnum("status", ["pending", "responded", "expired"]).default("pending").notNull(),
+  respondedBy: int("respondedBy"),
+  respondedAt: timestamp("respondedAt"),
+  responseComments: text("responseComments"),
+  
+  // Tracking
+  sendBackCount: int("sendBackCount").default(1).notNull(), // How many times sent back
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type WorkflowSendBack = typeof workflowSendBacks.$inferSelect;
+export type InsertWorkflowSendBack = typeof workflowSendBacks.$inferInsert;

@@ -1,0 +1,52 @@
+{
+  "query": "SELECT id, name, description, permissions, isSystem FROM roles WHERE isActive = 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, description, permissions, isSystem FROM roles WHERE isActive = 1;",
+  "rows": [
+    {
+      "id": "30004",
+      "name": "Administrator",
+      "description": "Full system access",
+      "permissions": "{\"alerts\": {\"resolve\": true, \"view\": true}, \"approvals\": {\"l1\": true, \"manual\": true}, \"hardware\": {\"control\": true, \"view\": true}, \"reports\": {\"export\": true, \"view\": true}, \"requests\": {\"create\": true, \"delete\": true, \"read\": true, \"update\": true}, \"sites\": {\"create\": true, \"delete\": true, \"read\": true, \"update\": true}, \"users\": {\"create\": true, \"delete\": true, \"read\": true, \"update\": true}, \"zones\": {\"create\": true, \"lock\": true, \"read\": true, \"update\": true}}",
+      "isSystem": "1"
+    },
+    {
+      "id": "30005",
+      "name": "Security Supervisor",
+      "description": "Manages security operations and approvals",
+      "permissions": "{\"alerts\": {\"resolve\": true, \"view\": true}, \"approvals\": {\"l1\": true, \"manual\": true}, \"hardware\": {\"control\": true, \"view\": true}, \"reports\": {\"export\": true, \"view\": true}, \"requests\": {\"create\": true, \"delete\": false, \"read\": true, \"update\": true}, \"sites\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"users\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"zones\": {\"create\": false, \"lock\": true, \"read\": true, \"update\": false}}",
+      "isSystem": "1"
+    },
+    {
+      "id": "30006",
+      "name": "Security Guard",
+      "description": "Monitors and responds to security events",
+      "permissions": "{\"alerts\": {\"resolve\": false, \"view\": true}, \"approvals\": {\"l1\": false, \"manual\": false}, \"hardware\": {\"control\": false, \"view\": true}, \"reports\": {\"export\": false, \"view\": false}, \"requests\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"sites\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"users\": {\"create\": false, \"delete\": false, \"read\": false, \"update\": false}, \"zones\": {\"create\": false, \"lock\": false, \"read\": true, \"update\": false}}",
+      "isSystem": "1"
+    },
+    {
+      "id": "30007",
+      "name": "Requestor",
+      "description": "Can create and manage access requests",
+      "permissions": "{\"alerts\": {\"resolve\": false, \"view\": false}, \"approvals\": {\"l1\": false, \"manual\": false}, \"hardware\": {\"control\": false, \"view\": false}, \"reports\": {\"export\": false, \"view\": false}, \"requests\": {\"create\": true, \"delete\": false, \"read\": true, \"update\": false}, \"sites\": {\"create\": false, \"delete\": false, \"read\": false, \"update\": false}, \"users\": {\"create\": false, \"delete\": false, \"read\": false, \"update\": false}, \"zones\": {\"create\": false, \"lock\": false, \"read\": false, \"update\": false}}",
+      "isSystem": "1"
+    },
+    {
+      "id": "30008",
+      "name": "L1 Approver",
+      "description": "Can approve L1 level requests",
+      "permissions": "{\"alerts\": {\"resolve\": false, \"view\": true}, \"approvals\": {\"l1\": true, \"manual\": false}, \"hardware\": {\"control\": false, \"view\": false}, \"reports\": {\"export\": false, \"view\": true}, \"requests\": {\"create\": true, \"delete\": false, \"read\": true, \"update\": true}, \"sites\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"users\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"zones\": {\"create\": false, \"lock\": false, \"read\": true, \"update\": false}}",
+      "isSystem": "1"
+    },
+    {
+      "id": "30009",
+      "name": "New Role",
+      "description": "A new custom role",
+      "permissions": "{\"requests\": {\"create\": true, \"delete\": false, \"read\": true, \"update\": false}}",
+      "isSystem": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tdescription\tpermissions\tisSystem\n30004\tAdministrator\tFull system access\t{\"alerts\": {\"resolve\": true, \"view\": true}, \"approvals\": {\"l1\": true, \"manual\": true}, \"hardware\": {\"control\": true, \"view\": true}, \"reports\": {\"export\": true, \"view\": true}, \"requests\": {\"create\": true, \"delete\": true, \"read\": true, \"update\": true}, \"sites\": {\"create\": true, \"delete\": true, \"read\": true, \"update\": true}, \"users\": {\"create\": true, \"delete\": true, \"read\": true, \"update\": true}, \"zones\": {\"create\": true, \"lock\": true, \"read\": true, \"update\": true}}\t1\n30005\tSecurity Supervisor\tManages security operations and approvals\t{\"alerts\": {\"resolve\": true, \"view\": true}, \"approvals\": {\"l1\": true, \"manual\": true}, \"hardware\": {\"control\": true, \"view\": true}, \"reports\": {\"export\": true, \"view\": true}, \"requests\": {\"create\": true, \"delete\": false, \"read\": true, \"update\": true}, \"sites\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"users\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"zones\": {\"create\": false, \"lock\": true, \"read\": true, \"update\": false}}\t1\n30006\tSecurity Guard\tMonitors and responds to security events\t{\"alerts\": {\"resolve\": false, \"view\": true}, \"approvals\": {\"l1\": false, \"manual\": false}, \"hardware\": {\"control\": false, \"view\": true}, \"reports\": {\"export\": false, \"view\": false}, \"requests\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"sites\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"users\": {\"create\": false, \"delete\": false, \"read\": false, \"update\": false}, \"zones\": {\"create\": false, \"lock\": false, \"read\": true, \"update\": false}}\t1\n30007\tRequestor\tCan create and manage access requests\t{\"alerts\": {\"resolve\": false, \"view\": false}, \"approvals\": {\"l1\": false, \"manual\": false}, \"hardware\": {\"control\": false, \"view\": false}, \"reports\": {\"export\": false, \"view\": false}, \"requests\": {\"create\": true, \"delete\": false, \"read\": true, \"update\": false}, \"sites\": {\"create\": false, \"delete\": false, \"read\": false, \"update\": false}, \"users\": {\"create\": false, \"delete\": false, \"read\": false, \"update\": false}, \"zones\": {\"create\": false, \"lock\": false, \"read\": false, \"update\": false}}\t1\n30008\tL1 Approver\tCan approve L1 level requests\t{\"alerts\": {\"resolve\": false, \"view\": true}, \"approvals\": {\"l1\": true, \"manual\": false}, \"hardware\": {\"control\": false, \"view\": false}, \"reports\": {\"export\": false, \"view\": true}, \"requests\": {\"create\": true, \"delete\": false, \"read\": true, \"update\": true}, \"sites\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"users\": {\"create\": false, \"delete\": false, \"read\": true, \"update\": false}, \"zones\": {\"create\": false, \"lock\": false, \"read\": true, \"update\": false}}\t1\n30009\tNew Role\tA new custom role\t{\"requests\": {\"create\": true, \"delete\": false, \"read\": true, \"update\": false}}\t0\n",
+  "stderr": "",
+  "execution_time_ms": 1517
+}

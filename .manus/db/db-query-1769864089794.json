@@ -1,0 +1,101 @@
+{
+  "query": "SELECT id, name, groupType, status, parentGroupId FROM `groups` WHERE status = 'active' ORDER BY groupType, name;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, groupType, status, parentGroupId FROM `groups` WHERE status = 'active' ORDER BY groupType, name;",
+  "rows": [
+    {
+      "id": "30009",
+      "name": "Test Internal Group 1",
+      "groupType": "internal",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30010",
+      "name": "Test Internal Group 2",
+      "groupType": "internal",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30011",
+      "name": "Test Internal Group 3",
+      "groupType": "internal",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30018",
+      "name": "Test Internal Group 4",
+      "groupType": "internal",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30021",
+      "name": "Company to Get 1769807937939",
+      "groupType": "contractor",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30019",
+      "name": "Parent Contractor 1769807882368",
+      "groupType": "contractor",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30012",
+      "name": "Test Contractor Group 1",
+      "groupType": "contractor",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30013",
+      "name": "Test Contractor Group 2",
+      "groupType": "contractor",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30014",
+      "name": "Test Contractor Group 3",
+      "groupType": "contractor",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30020",
+      "name": "Test Client Company 1769807963024",
+      "groupType": "client",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30015",
+      "name": "Test Client Group 1",
+      "groupType": "client",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30016",
+      "name": "Test Client Group 2",
+      "groupType": "client",
+      "status": "active",
+      "parentGroupId": "NULL"
+    },
+    {
+      "id": "30017",
+      "name": "Test Client Group 3",
+      "groupType": "client",
+      "status": "active",
+      "parentGroupId": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tgroupType\tstatus\tparentGroupId\n30009\tTest Internal Group 1\tinternal\tactive\tNULL\n30010\tTest Internal Group 2\tinternal\tactive\tNULL\n30011\tTest Internal Group 3\tinternal\tactive\tNULL\n30018\tTest Internal Group 4\tinternal\tactive\tNULL\n30021\tCompany to Get 1769807937939\tcontractor\tactive\tNULL\n30019\tParent Contractor 1769807882368\tcontractor\tactive\tNULL\n30012\tTest Contractor Group 1\tcontractor\tactive\tNULL\n30013\tTest Contractor Group 2\tcontractor\tactive\tNULL\n30014\tTest Contractor Group 3\tcontractor\tactive\tNULL\n30020\tTest Client Company 1769807963024\tclient\tactive\tNULL\n30015\tTest Client Group 1\tclient\tactive\tNULL\n30016\tTest Client Group 2\tclient\tactive\tNULL\n30017\tTest Client Group 3\tclient\tactive\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1592
+}

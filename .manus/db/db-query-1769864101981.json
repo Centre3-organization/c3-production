@@ -1,0 +1,31 @@
+{
+  "query": "SELECT u.id, u.email, u.role, u.roleId, r.name as roleName FROM users u LEFT JOIN roles r ON u.roleId = r.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT u.id, u.email, u.role, u.roleId, r.name as roleName FROM users u LEFT JOIN roles r ON u.roleId = r.id;",
+  "rows": [
+    {
+      "id": "3",
+      "email": "mohsiin@gmail.com",
+      "role": "admin",
+      "roleId": "30004",
+      "roleName": "Administrator"
+    },
+    {
+      "id": "90182",
+      "email": "rizwan@techbanq.net",
+      "role": "user",
+      "roleId": "NULL",
+      "roleName": "NULL"
+    },
+    {
+      "id": "90183",
+      "email": "ali@techbanq.net",
+      "role": "admin",
+      "roleId": "NULL",
+      "roleName": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\trole\troleId\troleName\n3\tmohsiin@gmail.com\tadmin\t30004\tAdministrator\n90182\trizwan@techbanq.net\tuser\tNULL\tNULL\n90183\tali@techbanq.net\tadmin\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1517
+}
