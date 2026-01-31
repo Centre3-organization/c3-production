@@ -1217,3 +1217,16 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Integrate with Yakeen API for ID verification (simulated)
 - [x] Auto-populate visitor details from Yakeen response
 - [x] Show verification status indicator (Verified/Manual badges)
+
+
+## Field Type Validation Bug Fix (Jan 31, 2026)
+
+### Bug: Invalid fieldType validation error
+- [x] Fix frontend fieldType value from 'select' to 'dropdown' in RequestTypeConfig.tsx
+- [x] Ensure all field types are properly accepted (dropdown, text, etc.)
+
+### UI Improvement: Options Source Section
+- [x] Improve Options Source UI styling with better visual hierarchy (grouped cards)
+- [x] Add clearer labels and descriptions for data source options (icons, categories)
+- [x] Add cascading filter UI with blue highlight and link icon
+- [x] Show selected data source info with confirmation message

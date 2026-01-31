@@ -475,7 +475,7 @@ export default function RequestTypeConfig() {
     const fieldType = selectedFieldType as any;
     
     // Prepare options for select/radio fields
-    const isDropdownType = ["dropdown", "dropdown_multi", "radio", "checkbox_group", "select"].includes(fieldType);
+    const isDropdownType = ["dropdown", "dropdown_multi", "radio", "checkbox_group"].includes(fieldType);
     const options = isDropdownType && selectedDataSource === "static"
       ? fieldOptions.filter(opt => opt.value && opt.label)
       : undefined;
@@ -586,7 +586,7 @@ export default function RequestTypeConfig() {
     { value: "phone", label: "Phone" },
     { value: "date", label: "Date" },
     { value: "datetime", label: "Date & Time" },
-    { value: "select", label: "Dropdown" },
+    { value: "dropdown", label: "Dropdown" },
     { value: "dropdown_multi", label: "Multi-Select" },
     { value: "checkbox", label: "Checkbox" },
     { value: "checkbox_group", label: "Checkbox Group" },
@@ -597,28 +597,61 @@ export default function RequestTypeConfig() {
     { value: "readonly", label: "Read Only" },
   ];
 
-  const showOptionsEditor = ["dropdown", "dropdown_multi", "radio", "checkbox_group", "select"].includes(selectedFieldType);
+  const showOptionsEditor = ["dropdown", "dropdown_multi", "radio", "checkbox_group"].includes(selectedFieldType);
   const showDataSourceSelector = showOptionsEditor;
 
-  // Data source options for dropdown fields
-  const dataSourceOptions = [
-    { value: "static", label: "Manual Options", description: "Define options manually" },
-    { value: "countries", label: "Countries", description: "From master data" },
-    { value: "regions", label: "Regions", description: "Filter by Country" },
-    { value: "cities", label: "Cities", description: "Filter by Region" },
-    { value: "sites", label: "Sites", description: "All sites or filter by City" },
-    { value: "zones", label: "Zones", description: "Filter by Site" },
-    { value: "areas", label: "Areas", description: "Filter by Zone" },
-    { value: "departments", label: "Departments", description: "Organization departments" },
-    { value: "groups", label: "Groups", description: "User groups" },
-    { value: "users", label: "Users", description: "User lookup" },
-    { value: "contractors", label: "Contractors", description: "Contractor companies" },
-    { value: "request_types", label: "Request Types", description: "Filter by Category" },
-    { value: "approval_roles", label: "Approval Roles", description: "Workflow roles" },
-    { value: "user_sites", label: "My Sites", description: "Current user's assigned sites" },
-    { value: "user_groups", label: "My Groups", description: "Current user's groups" },
-    { value: "user_departments", label: "My Department", description: "Current user's department" },
+  // Data source options for dropdown fields - grouped by category
+  const dataSourceGroups = [
+    {
+      label: "Manual Entry",
+      options: [
+        { value: "static", label: "Manual Options", description: "Define options manually", icon: "✏️" },
+      ]
+    },
+    {
+      label: "Location Hierarchy",
+      options: [
+        { value: "countries", label: "Countries", description: "Master data countries", icon: "🌍" },
+        { value: "regions", label: "Regions", description: "Filter by Country", icon: "🗺️" },
+        { value: "cities", label: "Cities", description: "Filter by Region", icon: "🏙️" },
+      ]
+    },
+    {
+      label: "Facilities",
+      options: [
+        { value: "sites", label: "Sites", description: "All sites or filter by City", icon: "🏢" },
+        { value: "zones", label: "Zones", description: "Filter by Site", icon: "📍" },
+        { value: "areas", label: "Areas", description: "Filter by Zone", icon: "📐" },
+      ]
+    },
+    {
+      label: "Organization",
+      options: [
+        { value: "departments", label: "Departments", description: "Organization departments", icon: "🏛️" },
+        { value: "groups", label: "Groups", description: "User groups", icon: "👥" },
+        { value: "users", label: "Users", description: "User lookup", icon: "👤" },
+        { value: "contractors", label: "Contractors", description: "Contractor companies", icon: "🏗️" },
+      ]
+    },
+    {
+      label: "System Data",
+      options: [
+        { value: "request_types", label: "Request Types", description: "Filter by Category", icon: "📋" },
+        { value: "approval_roles", label: "Approval Roles", description: "Workflow roles", icon: "✅" },
+      ]
+    },
+    {
+      label: "Current User Context",
+      options: [
+        { value: "user_sites", label: "My Sites", description: "Current user's assigned sites", icon: "📌" },
+        { value: "user_groups", label: "My Groups", description: "Current user's groups", icon: "👥" },
+        { value: "user_departments", label: "My Department", description: "Current user's department", icon: "🏢" },
+      ]
+    },
   ];
+
+  // Flatten for easy lookup
+  const dataSourceOptions = dataSourceGroups.flatMap(g => g.options);
 
   // Cascading filter field mapping
   const cascadingFilters: Record<string, { label: string; sourceField: string }> = {
@@ -1394,80 +1427,126 @@ export default function RequestTypeConfig() {
 
             {/* Data Source Selector for dropdown fields */}
             {showDataSourceSelector && (
-              <div className="border rounded-lg p-4 bg-muted/30 space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Options Source</Label>
-                  <Select
-                    value={selectedDataSource}
-                    onValueChange={(value) => {
-                      setSelectedDataSource(value);
-                      if (value !== "static") {
-                        setFieldOptions([]); // Clear manual options when using data source
-                      }
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select data source" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {dataSourceOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>
-                          <div className="flex flex-col">
-                            <span>{opt.label}</span>
-                            <span className="text-xs text-muted-foreground">{opt.description}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              <div className="border rounded-lg overflow-hidden bg-gray-50">
+                {/* Header */}
+                <div className="px-4 py-3 bg-primary/5 border-b">
+                  <h4 className="font-semibold text-sm flex items-center gap-2">
+                    <span className="w-5 h-5 rounded bg-primary/10 flex items-center justify-center text-xs">📋</span>
+                    Options Source
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Choose where dropdown options come from
+                  </p>
                 </div>
 
-                {/* Filter By Field selector for cascading dropdowns */}
-                {cascadingFilters[selectedDataSource] && (
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">{cascadingFilters[selectedDataSource].label}</Label>
-                    <Select
-                      value={filterByField}
-                      onValueChange={setFilterByField}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select field to filter by" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">
-                          <span className="text-muted-foreground">No filter (show all)</span>
-                        </SelectItem>
-                        {(fields || []).filter((f: FormField) => 
-                          ["dropdown", "dropdown_multi", "select"].includes(f.fieldType) &&
-                          f.code !== editingItem?.code
-                        ).map((f: FormField) => (
-                          <SelectItem key={f.code} value={f.code}>
-                            {f.name} ({f.code})
-                          </SelectItem>
+                <div className="p-4 space-y-4">
+                  {/* Data Source Selection - Card Style */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {dataSourceGroups.map((group) => (
+                      <div key={group.label} className="space-y-1">
+                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-1">
+                          {group.label}
+                        </p>
+                        {group.options.map((opt) => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => {
+                              setSelectedDataSource(opt.value);
+                              if (opt.value !== "static") {
+                                setFieldOptions([]);
+                              }
+                            }}
+                            className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all flex items-center gap-2 ${
+                              selectedDataSource === opt.value
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "bg-white border hover:bg-gray-100 hover:border-primary/30"
+                            }`}
+                          >
+                            <span className="text-base">{opt.icon}</span>
+                            <div className="flex-1 min-w-0">
+                              <span className="font-medium block truncate">{opt.label}</span>
+                            </div>
+                          </button>
                         ))}
-                      </SelectContent>
-                    </Select>
-                    <p className="text-xs text-muted-foreground">
-                      Options will be filtered based on the selected value of this field
-                    </p>
+                      </div>
+                    ))}
                   </div>
-                )}
 
-                {/* Manual Options Editor - only show when static is selected */}
-                {selectedDataSource === "static" && (
-                  <FieldOptionsEditor
-                    options={fieldOptions}
-                    onChange={setFieldOptions}
-                  />
-                )}
+                  {/* Selected Source Info */}
+                  {selectedDataSource && (
+                    <div className={`rounded-lg p-3 border-2 ${
+                      selectedDataSource === "static" 
+                        ? "border-amber-200 bg-amber-50" 
+                        : "border-green-200 bg-green-50"
+                    }`}>
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">
+                          {dataSourceOptions.find(o => o.value === selectedDataSource)?.icon}
+                        </span>
+                        <div className="flex-1">
+                          <p className="font-semibold text-sm">
+                            {dataSourceOptions.find(o => o.value === selectedDataSource)?.label}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {dataSourceOptions.find(o => o.value === selectedDataSource)?.description}
+                          </p>
+                          {selectedDataSource !== "static" && (
+                            <p className="text-xs text-green-700 mt-1 font-medium">
+                              ✓ Options will be loaded dynamically from the system
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
-                {/* Preview of data source */}
-                {selectedDataSource !== "static" && (
-                  <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded">
-                    <p className="font-medium">Data Source: {dataSourceOptions.find(o => o.value === selectedDataSource)?.label}</p>
-                    <p>Options will be loaded dynamically from the system when the form is displayed.</p>
-                  </div>
-                )}
+                  {/* Filter By Field selector for cascading dropdowns */}
+                  {cascadingFilters[selectedDataSource] && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-blue-600">🔗</span>
+                        <Label className="text-sm font-semibold text-blue-800">
+                          Cascading Filter: {cascadingFilters[selectedDataSource].label}
+                        </Label>
+                      </div>
+                      <Select
+                        value={filterByField}
+                        onValueChange={setFilterByField}
+                      >
+                        <SelectTrigger className="bg-white">
+                          <SelectValue placeholder="Select field to filter by" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">
+                            <span className="text-muted-foreground">No filter (show all)</span>
+                          </SelectItem>
+                          {(fields || []).filter((f: FormField) => 
+                            ["dropdown", "dropdown_multi"].includes(f.fieldType) &&
+                            f.code !== editingItem?.code
+                          ).map((f: FormField) => (
+                            <SelectItem key={f.code} value={f.code}>
+                              {f.name} ({f.code})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-blue-600">
+                        💡 Options will be filtered based on the selected value of this field
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Manual Options Editor - only show when static is selected */}
+                  {selectedDataSource === "static" && (
+                    <div className="border-t pt-4">
+                      <FieldOptionsEditor
+                        options={fieldOptions}
+                        onChange={setFieldOptions}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
