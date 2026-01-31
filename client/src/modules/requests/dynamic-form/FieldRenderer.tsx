@@ -108,7 +108,7 @@ function SiteTypeField({
       <div className="space-y-1.5">
         <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
           {getLabel()}
-          {field.isRequired && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
         </Label>
         <div className="flex items-center justify-center p-4 border rounded-md">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -173,7 +173,7 @@ function ZoneTypeField({
       <div className="space-y-1.5">
         <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
           {getLabel()}
-          {field.isRequired && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
         </Label>
         <div className="flex items-center justify-center p-4 border rounded-md">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -238,7 +238,7 @@ function AreaTypeField({
       <div className="space-y-1.5">
         <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
           {getLabel()}
-          {field.isRequired && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
         </Label>
         <div className="flex items-center justify-center p-4 border rounded-md">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -355,7 +355,7 @@ function UserLookupField({
     <div className="space-y-1.5">
       <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
         {getLabel()}
-        {field.isRequired && <span className="text-red-600">*</span>}
+        {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
       </Label>
       
       {value?.id ? (
@@ -524,7 +524,7 @@ function ActivitySelectorField({
       <div className="space-y-1.5">
         <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
           {getLabel()}
-          {field.isRequired && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
         </Label>
         <div className="flex items-center justify-center p-4 border rounded-md">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -540,7 +540,7 @@ function ActivitySelectorField({
         <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
           <Activity className="h-3.5 w-3.5" />
           {isRTL ? "النشاط الرئيسي" : "Main Activity"}
-          {field.isRequired && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
         </Label>
         <Select
           value={selectedMainActivityId?.toString() || ""}
@@ -566,7 +566,7 @@ function ActivitySelectorField({
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             <ClipboardList className="h-3.5 w-3.5" />
             {isRTL ? "النشاط الفرعي" : "Sub-Activity"}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           {loadingSub ? (
             <div className="flex items-center justify-center p-4 border rounded-md">
@@ -800,7 +800,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <Input
             type={field.fieldType === "email" ? "email" : "text"}
@@ -823,7 +823,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <Input
             type="number"
@@ -847,7 +847,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <Textarea
             value={value || ""}
@@ -869,7 +869,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <Input
             type="date"
@@ -890,7 +890,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <Input
             type="datetime-local"
@@ -911,7 +911,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <Select
             value={value || ""}
@@ -948,7 +948,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <div className="border rounded-md p-3 space-y-2">
             {getOptions().map((opt) => (
@@ -1005,7 +1005,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <RadioGroup
             value={value || ""}
@@ -1047,7 +1047,7 @@ export function FieldRenderer({
               className="text-sm font-medium cursor-pointer flex items-center gap-1"
             >
               {getLabel()}
-              {field.isRequired && <span className="text-red-600">*</span>}
+              {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
             </Label>
           </div>
           {getHelpText() && (
@@ -1063,7 +1063,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {getOptions().map((opt) => (
@@ -1106,7 +1106,7 @@ export function FieldRenderer({
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
             {getLabel()}
-            {field.isRequired && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-[#0f62fe]/50 transition-colors">
             <input

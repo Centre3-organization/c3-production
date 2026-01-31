@@ -1,0 +1,26 @@
+{
+  "query": "SELECT f.id, f.code, f.name, f.sectionId, s.name as section_name, s.code as section_code\nFROM formFields f\nJOIN formSections s ON f.sectionId = s.id\nWHERE s.code = 'attachments';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT f.id, f.code, f.name, f.sectionId, s.name as section_name, s.code as section_code\nFROM formFields f\nJOIN formSections s ON f.sectionId = s.id\nWHERE s.code = 'attachments';",
+  "rows": [
+    {
+      "id": "30",
+      "code": "supporting_documents",
+      "name": "Supporting Documents",
+      "sectionId": "6",
+      "section_name": "Attachments",
+      "section_code": "attachments"
+    },
+    {
+      "id": "30007",
+      "code": "iqama_expiry_date",
+      "name": "Iqama Expiry Date",
+      "sectionId": "6",
+      "section_name": "Attachments",
+      "section_code": "attachments"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tsectionId\tsection_name\tsection_code\n30\tsupporting_documents\tSupporting Documents\t6\tAttachments\tattachments\n30007\tiqama_expiry_date\tIqama Expiry Date\t6\tAttachments\tattachments\n",
+  "stderr": "",
+  "execution_time_ms": 1532
+}

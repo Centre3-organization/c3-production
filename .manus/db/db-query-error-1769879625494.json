@@ -1,0 +1,8 @@
+{
+  "query": "SELECT f.id, f.code, f.name, f.field_type, f.is_required, f.display_order, s.name as section_name, s.code as section_code\nFROM formFields f\nJOIN formSections s ON f.sectionId = s.id\nWHERE f.name LIKE '%0%' OR f.code LIKE '%0%'\nORDER BY s.display_order, f.display_order;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT f.id, f.code, f.name, f.field_type, f.is_required, f.display_order, s.name as section_name, s.code as section_code\nFROM formFields f\nJOIN formSections s ON f.sectionId = s.id\nWHERE f.name LIKE '%0%' OR f.code LIKE '%0%'\nORDER BY s.display_order, f.display_order;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 's.display_order' in 'order clause'"
+  ]
+}

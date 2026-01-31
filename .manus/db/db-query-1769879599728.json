@@ -1,0 +1,217 @@
+{
+  "query": "SHOW TABLES;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SHOW TABLES;",
+  "rows": [
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "approvalDelegations"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "approvalHistory"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "approvalInstances"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "approvalRoles"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "approvalStages"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "approvalTasks"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "approvalWorkflows"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "approvals"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "approvers"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "areaTypes"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "areas"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "auditLogs"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "auditTrail"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "cardAccessLevels"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "cardAuditLog"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "cardCompanies"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "cities"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "countries"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "dataScopeRules"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "departments"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "escalationRules"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "fieldOptions"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "formFields"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "formSections"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "groupAccessPolicies"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "groupAccessPolicy"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "groupSecuritySettings"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "groups"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "magneticCards"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "mainActivities"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "mcmAccessLevels"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "mcmRequests"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "permissions"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "regions"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "requestAssets"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "requestCategories"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "requestMaterials"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "requestTypes"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "requestVehicles"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "requestVisitors"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "requestZones"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "requests"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "rolePermissions"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "roleTypes"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "roles"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "securityAlerts"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "securityEvents"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "shiftAssignments"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "shiftDefinitions"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "shiftSchedules"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "siteTypes"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "sites"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "stageApprovers"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "subActivities"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "systemRoles"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "systemSettings"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "userApprovalRoles"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "userGroupMembership"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "userMfa"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "userSessions"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "userSiteAssignments"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "userSystemRoles"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "userZoneAssignments"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "users"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "workflowConditions"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "workflowSendBacks"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "zoneTypes"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN": "zones"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_WqXabcMRQ5aEFJ4QyeefuN\n__drizzle_migrations\napprovalDelegations\napprovalHistory\napprovalInstances\napprovalRoles\napprovalStages\napprovalTasks\napprovalWorkflows\napprovals\napprovers\nareaTypes\nareas\nauditLogs\nauditTrail\ncardAccessLevels\ncardAuditLog\ncardCompanies\ncities\ncountries\ndataScopeRules\ndepartments\nescalationRules\nfieldOptions\nformFields\nformSections\ngroupAccessPolicies\ngroupAccessPolicy\ngroupSecuritySettings\ngroups\nmagneticCards\nmainActivities\nmcmAccessLevels\nmcmRequests\npermissions\nregions\nrequestAssets\nrequestCategories\nrequestMaterials\nrequestTypes\nrequestVehicles\nrequestVisitors\nrequestZones\nrequests\nrolePermissions\nroleTypes\nroles\nsecurityAlerts\nsecurityEvents\nshiftAssignments\nshiftDefinitions\nshiftSchedules\nsiteTypes\nsites\nstageApprovers\nsubActivities\nsystemRoles\nsystemSettings\nuserApprovalRoles\nuserGroupMembership\nuserMfa\nuserSessions\nuserSiteAssignments\nuserSystemRoles\nuserZoneAssignments\nusers\nworkflowConditions\nworkflowSendBacks\nzoneTypes\nzones\n",
+  "stderr": "",
+  "execution_time_ms": 1506
+}

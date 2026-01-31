@@ -1,0 +1,8 @@
+{
+  "query": "SELECT f.id, f.code, f.name, f.field_type, f.is_required, f.display_order, s.name as section_name\nFROM form_section_fields f\nJOIN form_sections s ON f.section_id = s.id\nWHERE s.code = 'basic_info'\nORDER BY f.display_order;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT f.id, f.code, f.name, f.field_type, f.is_required, f.display_order, s.name as section_name\nFROM form_section_fields f\nJOIN form_sections s ON f.section_id = s.id\nWHERE s.code = 'basic_info'\nORDER BY f.display_order;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'wqxabcmrq5aefj4qyeefun.form_section_fields' doesn't exist"
+  ]
+}

@@ -1282,3 +1282,17 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add update mutation in requests router
 - [x] Update getById to return formData, categoryId, selectedTypeIds
 - [ ] Test draft editing workflow (manual testing required)
+
+
+## Admin Visit Form Bugs (Jan 31, 2026)
+
+### Bug: Field labels showing '0' suffix (e.g., VISIT DESCRIPTION0, ADDITIONAL NOTES0) - FIXED
+- [x] Investigate why non-mandatory fields show '0' suffix in labels
+- [x] Fix field label rendering in FieldRenderer component (changed to Boolean(field.isRequired))
+
+### Bug: Form not reflecting updated configuration
+- [x] Check if form definition query is returning updated sections
+- [ ] Verify VIP Details section is being returned from API (7 sections exist but VIP Details not showing)
+
+### Bug: Iqama Expiry Date in Attachments section
+- [x] Remove Iqama Expiry Date field from Attachments section in database

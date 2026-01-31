@@ -1,0 +1,15 @@
+{
+  "query": "SELECT f.id, f.code, f.name FROM formFields f JOIN formSections s ON f.sectionId = s.id WHERE s.code = 'attachments';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT f.id, f.code, f.name FROM formFields f JOIN formSections s ON f.sectionId = s.id WHERE s.code = 'attachments';",
+  "rows": [
+    {
+      "id": "30",
+      "code": "supporting_documents",
+      "name": "Supporting Documents"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\n30\tsupporting_documents\tSupporting Documents\n",
+  "stderr": "",
+  "execution_time_ms": 1517
+}

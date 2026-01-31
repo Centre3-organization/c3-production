@@ -1,0 +1,82 @@
+{
+  "query": "SELECT f.id, f.code, f.name, f.fieldType, f.isRequired, f.displayOrder, s.name as section_name\nFROM formFields f\nJOIN formSections s ON f.sectionId = s.id\nWHERE s.code = 'basic_info'\nORDER BY f.displayOrder;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT f.id, f.code, f.name, f.fieldType, f.isRequired, f.displayOrder, s.name as section_name\nFROM formFields f\nJOIN formSections s ON f.sectionId = s.id\nWHERE s.code = 'basic_info'\nORDER BY f.displayOrder;",
+  "rows": [
+    {
+      "id": "1",
+      "code": "requestor_name",
+      "name": "Requestor Name",
+      "fieldType": "readonly",
+      "isRequired": "1",
+      "displayOrder": "1",
+      "section_name": "Basic Information"
+    },
+    {
+      "id": "2",
+      "code": "company",
+      "name": "Company",
+      "fieldType": "readonly",
+      "isRequired": "1",
+      "displayOrder": "2",
+      "section_name": "Basic Information"
+    },
+    {
+      "id": "3",
+      "code": "email",
+      "name": "Email",
+      "fieldType": "readonly",
+      "isRequired": "1",
+      "displayOrder": "3",
+      "section_name": "Basic Information"
+    },
+    {
+      "id": "4",
+      "code": "mobile",
+      "name": "Mobile",
+      "fieldType": "readonly",
+      "isRequired": "1",
+      "displayOrder": "4",
+      "section_name": "Basic Information"
+    },
+    {
+      "id": "5",
+      "code": "department",
+      "name": "Department",
+      "fieldType": "readonly",
+      "isRequired": "1",
+      "displayOrder": "5",
+      "section_name": "Basic Information"
+    },
+    {
+      "id": "6",
+      "code": "sub_type",
+      "name": "Purpose of Entry",
+      "fieldType": "dropdown",
+      "isRequired": "1",
+      "displayOrder": "6",
+      "section_name": "Basic Information"
+    },
+    {
+      "id": "7",
+      "code": "purpose",
+      "name": "Visit description",
+      "fieldType": "textarea",
+      "isRequired": "0",
+      "displayOrder": "7",
+      "section_name": "Basic Information"
+    },
+    {
+      "id": "8",
+      "code": "notes",
+      "name": "Additional Notes",
+      "fieldType": "textarea",
+      "isRequired": "0",
+      "displayOrder": "8",
+      "section_name": "Basic Information"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tfieldType\tisRequired\tdisplayOrder\tsection_name\n1\trequestor_name\tRequestor Name\treadonly\t1\t1\tBasic Information\n2\tcompany\tCompany\treadonly\t1\t2\tBasic Information\n3\temail\tEmail\treadonly\t1\t3\tBasic Information\n4\tmobile\tMobile\treadonly\t1\t4\tBasic Information\n5\tdepartment\tDepartment\treadonly\t1\t5\tBasic Information\n6\tsub_type\tPurpose of Entry\tdropdown\t1\t6\tBasic Information\n7\tpurpose\tVisit description\ttextarea\t0\t7\tBasic Information\n8\tnotes\tAdditional Notes\ttextarea\t0\t8\tBasic Information\n",
+  "stderr": "",
+  "execution_time_ms": 1614
+}
