@@ -1119,3 +1119,30 @@ Time conditions:
 - [x] Update users.router.ts to include systemRole in user response
 - [x] Update Layout.tsx to display systemRole name instead of legacy role
 - [x] Test user profile displays correct system role name (Super Admin shown in UI)
+
+
+## RBAC UI Features (Jan 31, 2026)
+
+### Feature 1: Role Assignment UI
+- [x] Create RoleAssignmentDialog component for assigning roles to users
+- [x] Add backend endpoint for assigning/removing user roles (users.assignRole)
+- [x] Integrate dialog into Users page with role column
+- [x] Show current role and allow role changes
+
+### Feature 2: Permission-based UI Visibility
+- [x] Create usePermissions hook to check user permissions (via trpc.users.getMyPermissions)
+- [x] Update Layout.tsx to hide menu items based on permissions
+- [x] Add permission checks to navigation items (requiredPermission property)
+- [x] Filter navigation sections based on user permissions
+
+### Feature 3: Role Management Page
+- [x] Create Roles page to list all system roles (Roles & Permissions tab in Users page)
+- [x] Add RolePermissionsEditor component to view/edit role permissions (Edit Role dialog)
+- [x] Add backend endpoints for updating role permissions (roles.updatePermissions)
+- [x] Add route and navigation for Roles page (Users & Roles in sidebar)
+
+
+## Bug Fix: Roles Tab Showing Old Roles (Jan 31, 2026)
+- [x] Update roles.router.ts to query systemRoles table instead of old roles table
+- [x] Update Users.tsx Roles tab to display systemRoles with proper permissions
+- [x] Show user counts from userSystemRoles table

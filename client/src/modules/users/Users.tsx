@@ -190,6 +190,9 @@ export default function Users() {
   // Fetch roles from backend
   const { data: rolesData, isLoading: rolesLoading, error: rolesError, refetch: refetchRoles } = trpc.roles.list.useQuery({});
 
+  // Fetch system roles for role assignment
+  const { data: systemRolesData } = trpc.users.getSystemRoles.useQuery();
+
   // Fetch departments from backend
   const { data: departmentsData } = trpc.departments.list.useQuery({});
 
@@ -204,6 +207,18 @@ export default function Users() {
     },
     onError: (error: any) => {
       toast.error("Failed to update user", { description: error.message });
+    },
+  });
+
+  // Assign role mutation
+  const assignRoleMutation = trpc.users.assignRole.useMutation({
+    onSuccess: () => {
+      toast.success("Role assigned successfully");
+      refetchUsers();
+      setEditUserRoleOpen(false);
+    },
+    onError: (error: any) => {
+      toast.error("Failed to assign role", { description: error.message });
     },
   });
 
@@ -365,17 +380,20 @@ export default function Users() {
     if (!selectedRole) return;
 
     if (selectedRole.isNew) {
+      // Generate a code from the name
+      const code = selectedRole.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
       createRoleMutation.mutate({
         name: selectedRole.name,
+        code: code,
         description: selectedRole.description,
-        permissions: selectedRole.permissions || {},
+        level: 50, // Default level for custom roles
+        permissions: [], // Permissions will be set separately
       });
     } else {
       updateRoleMutation.mutate({
         id: selectedRole.id,
         name: selectedRole.name,
         description: selectedRole.description,
-        permissions: selectedRole.permissions,
       });
     }
   };
@@ -755,7 +773,9 @@ export default function Users() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className="text-sm">{user.role === "admin" ? "Administrator" : "Requestor"}</span>
+                        <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                          {(user as any).systemRole?.name || (user.role === "admin" ? "Administrator" : "Requestor")}
+                        </Badge>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -787,7 +807,7 @@ export default function Users() {
                             <DropdownMenuItem onClick={(e) => { 
                               e.stopPropagation(); 
                               setEditUserRoleUser(user);
-                              setSelectedRoleValue(user.role);
+                              setSelectedRoleValue((user as any).systemRole?.code || "");
                               setEditUserRoleOpen(true);
                             }}>
                               <Edit2 className="h-4 w-4 mr-2" /> Change Role
@@ -913,45 +933,68 @@ export default function Users() {
 
       {/* Edit User Role Dialog */}
       <Dialog open={editUserRoleOpen} onOpenChange={setEditUserRoleOpen}>
-        <DialogContent className="sm:max-w-[400px]">
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Edit User Role</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-purple-600" />
+              Assign System Role
+            </DialogTitle>
             <DialogDescription>
-              Change the system role for {editUserRoleUser?.name || editUserRoleUser?.email}
+              Change the system role for <span className="font-medium">{editUserRoleUser?.name || editUserRoleUser?.firstName + ' ' + editUserRoleUser?.lastName || editUserRoleUser?.email}</span>
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <Label>System Role</Label>
-            <Select value={selectedRoleValue} onValueChange={setSelectedRoleValue}>
-              <SelectTrigger className="mt-2">
-                <SelectValue placeholder="Select role" />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((role: any) => (
-                  <SelectItem key={role.id} value={role.id.toString()}>
-                    {role.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="py-4 space-y-4">
+            <div className="space-y-2">
+              <Label>Current Role</Label>
+              <div className="p-3 bg-muted rounded-lg">
+                <span className="font-medium">{editUserRoleUser?.systemRole?.name || 'No role assigned'}</span>
+                {editUserRoleUser?.systemRole?.description && (
+                  <p className="text-sm text-muted-foreground mt-1">{editUserRoleUser?.systemRole?.description}</p>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>New System Role</Label>
+              <Select value={selectedRoleValue} onValueChange={setSelectedRoleValue}>
+                <SelectTrigger className="mt-2">
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(systemRolesData || []).map((role: any) => (
+                    <SelectItem key={role.code} value={role.code}>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{role.name}</span>
+                        <span className="text-xs text-muted-foreground">{role.description}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {selectedRoleValue && (
+              <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                <p className="text-sm text-purple-800">
+                  <strong>Note:</strong> Changing a user's role will immediately update their permissions and access levels.
+                </p>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditUserRoleOpen(false)}>Cancel</Button>
             <Button 
               className="bg-purple-600 hover:bg-purple-700"
-              disabled={updateUserMutation.isPending}
+              disabled={assignRoleMutation.isPending || !selectedRoleValue}
               onClick={() => {
-                if (editUserRoleUser) {
-                  updateUserMutation.mutate({
-                    id: editUserRoleUser.id,
-                    roleId: selectedRoleValue ? parseInt(selectedRoleValue) : undefined,
+                if (editUserRoleUser && selectedRoleValue) {
+                  assignRoleMutation.mutate({
+                    userId: editUserRoleUser.id,
+                    roleCode: selectedRoleValue,
                   });
-                  setEditUserRoleOpen(false);
                 }
               }}
             >
-              {updateUserMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Save Changes
+              {assignRoleMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Assign Role
             </Button>
           </DialogFooter>
         </DialogContent>

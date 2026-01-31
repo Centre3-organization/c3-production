@@ -193,8 +193,43 @@ export async function listUsers(options?: {
     filteredResult = result.filter(u => memberIds.has(u.id));
   }
 
+  // Get system roles for all users
+  const userIds = filteredResult.map(u => u.id);
+  let userRolesMap = new Map<number, any>();
+  
+  if (userIds.length > 0) {
+    const userRolesData = await db
+      .select({
+        userId: userSystemRoles.userId,
+        roleId: systemRoles.id,
+        roleCode: systemRoles.code,
+        roleName: systemRoles.name,
+        roleLevel: systemRoles.level,
+        roleDescription: systemRoles.description,
+      })
+      .from(userSystemRoles)
+      .innerJoin(systemRoles, eq(userSystemRoles.roleId, systemRoles.id))
+      .where(eq(userSystemRoles.isActive, true));
+    
+    for (const ur of userRolesData) {
+      userRolesMap.set(ur.userId, {
+        id: ur.roleId,
+        code: ur.roleCode,
+        name: ur.roleName,
+        level: ur.roleLevel,
+        description: ur.roleDescription,
+      });
+    }
+  }
+
+  // Add systemRole to each user
+  const usersWithRoles = filteredResult.map(u => ({
+    ...u,
+    systemRole: userRolesMap.get(u.id) || null,
+  }));
+
   return {
-    users: filteredResult,
+    users: usersWithRoles,
     total: options?.groupId ? filteredResult.length : (countResult[0]?.count || 0),
   };
 }

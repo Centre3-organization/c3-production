@@ -10,7 +10,7 @@ import {
   getDepartmentById,
 } from "../../infra/db/connection";
 import bcrypt from "bcryptjs";
-import { getUserSystemRole } from "../../services/enterprise-rbac.service";
+import { getUserSystemRole, assignRole, getAllSystemRoles, getUserPermissions } from "../../services/enterprise-rbac.service";
 
 export const usersRouter = router({
   // Yakeen verification endpoint (mock implementation)
@@ -355,36 +355,82 @@ export const usersRouter = router({
       return { success: true };
     }),
 
-  // Get current user's permissions
+  // Assign system role to a user
+  assignRole: adminProcedure
+    .input(
+      z.object({
+        userId: z.number(),
+        roleCode: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.user) {
+        throw new Error("Not authenticated");
+      }
+
+      const success = await assignRole(input.userId, input.roleCode, ctx.user.id);
+      if (!success) {
+        throw new Error("Failed to assign role. Role may not exist.");
+      }
+
+      return { success: true };
+    }),
+
+  // Get all available system roles
+  getSystemRoles: protectedProcedure.query(async () => {
+    return getAllSystemRoles();
+  }),
+
+  // Get current user's permissions based on their system role
   getMyPermissions: protectedProcedure.query(async ({ ctx }) => {
     if (!ctx.user) {
       return null;
     }
 
-    // If user is admin, return full permissions
-    if (ctx.user.role === "admin") {
-      return {
-        requests: { create: true, read: true, update: true, delete: true },
-        approvals: { l1: true, manual: true },
-        sites: { create: true, read: true, update: true, delete: true },
-        zones: { create: true, read: true, update: true, lock: true },
-        alerts: { view: true, resolve: true },
-        users: { create: true, read: true, update: true, delete: true },
-        hardware: { view: true, control: true },
-        reports: { view: true, export: true },
-      };
-    }
-
-    // Default minimal permissions for regular users
-    return {
-      requests: { create: true, read: true, update: false, delete: false },
+    // Get user's permissions from enterprise RBAC
+    const userPerms = await getUserPermissions(ctx.user.id);
+    
+    // Convert permission set to the expected format
+    const permissionsByCategory: Record<string, Record<string, boolean>> = {
+      dashboard: { view: false },
+      requests: { create: false, read: false, update: false, delete: false, approve: false },
       approvals: { l1: false, manual: false },
-      sites: { create: false, read: true, update: false, delete: false },
-      zones: { create: false, read: true, update: false, lock: false },
+      sites: { create: false, read: false, update: false, delete: false },
+      zones: { create: false, read: false, update: false, lock: false },
       alerts: { view: false, resolve: false },
       users: { create: false, read: false, update: false, delete: false },
+      groups: { create: false, read: false, update: false, delete: false },
       hardware: { view: false, control: false },
       reports: { view: false, export: false },
+      workflows: { create: false, read: false, update: false, delete: false },
+      settings: { read: false, update: false },
+      admin: { full: false },
     };
+
+    if (userPerms) {
+      // Parse permissions from the set (format: "module:action")
+      for (const perm of Array.from(userPerms.permissions)) {
+        const [module, action] = perm.split(':');
+        if (module && action && permissionsByCategory[module]) {
+          permissionsByCategory[module][action] = true;
+        }
+      }
+
+      // Super admin and admin have all permissions
+      if (userPerms.roleCode === 'super_admin' || userPerms.roleCode === 'admin') {
+        for (const category of Object.keys(permissionsByCategory)) {
+          for (const action of Object.keys(permissionsByCategory[category])) {
+            permissionsByCategory[category][action] = true;
+          }
+        }
+      }
+    } else {
+      // Fallback for users without a system role - minimal permissions
+      permissionsByCategory.dashboard.view = true;
+      permissionsByCategory.requests.create = true;
+      permissionsByCategory.requests.read = true;
+    }
+
+    return permissionsByCategory;
   }),
 });
