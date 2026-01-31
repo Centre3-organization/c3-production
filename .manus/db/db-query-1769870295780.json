@@ -1,0 +1,87 @@
+{
+  "query": "SELECT id, code, name, level, isSystem FROM systemRoles ORDER BY level;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, name, level, isSystem FROM systemRoles ORDER BY level;",
+  "rows": [
+    {
+      "id": "1",
+      "code": "super_admin",
+      "name": "Super Admin",
+      "level": "0",
+      "isSystem": "1"
+    },
+    {
+      "id": "2",
+      "code": "admin",
+      "name": "Administrator",
+      "level": "1",
+      "isSystem": "1"
+    },
+    {
+      "id": "3",
+      "code": "security_manager",
+      "name": "Security Manager",
+      "level": "2",
+      "isSystem": "1"
+    },
+    {
+      "id": "4",
+      "code": "site_manager",
+      "name": "Site Manager",
+      "level": "2",
+      "isSystem": "1"
+    },
+    {
+      "id": "5",
+      "code": "security_officer",
+      "name": "Security Officer",
+      "level": "3",
+      "isSystem": "1"
+    },
+    {
+      "id": "6",
+      "code": "account_manager",
+      "name": "Account Manager",
+      "level": "3",
+      "isSystem": "1"
+    },
+    {
+      "id": "7",
+      "code": "approver",
+      "name": "Approver",
+      "level": "4",
+      "isSystem": "1"
+    },
+    {
+      "id": "10",
+      "code": "zone_manager",
+      "name": "Zone Manager",
+      "level": "4",
+      "isSystem": "1"
+    },
+    {
+      "id": "8",
+      "code": "requestor",
+      "name": "Requestor",
+      "level": "5",
+      "isSystem": "1"
+    },
+    {
+      "id": "9",
+      "code": "viewer",
+      "name": "Viewer",
+      "level": "6",
+      "isSystem": "1"
+    },
+    {
+      "id": "11",
+      "code": "guest",
+      "name": "Guest",
+      "level": "8",
+      "isSystem": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tlevel\tisSystem\n1\tsuper_admin\tSuper Admin\t0\t1\n2\tadmin\tAdministrator\t1\t1\n3\tsecurity_manager\tSecurity Manager\t2\t1\n4\tsite_manager\tSite Manager\t2\t1\n5\tsecurity_officer\tSecurity Officer\t3\t1\n6\taccount_manager\tAccount Manager\t3\t1\n7\tapprover\tApprover\t4\t1\n10\tzone_manager\tZone Manager\t4\t1\n8\trequestor\tRequestor\t5\t1\n9\tviewer\tViewer\t6\t1\n11\tguest\tGuest\t8\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1556
+}

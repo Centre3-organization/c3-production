@@ -10,6 +10,7 @@ import {
   getDepartmentById,
 } from "../../infra/db/connection";
 import bcrypt from "bcryptjs";
+import { getUserSystemRole } from "../../services/enterprise-rbac.service";
 
 export const usersRouter = router({
   // Yakeen verification endpoint (mock implementation)
@@ -94,7 +95,19 @@ export const usersRouter = router({
     if (!ctx.user) {
       throw new Error("Not authenticated");
     }
-    return ctx.user;
+    
+    // Get user's system role
+    const systemRole = await getUserSystemRole(ctx.user.id);
+    
+    return {
+      ...ctx.user,
+      systemRole: systemRole ? {
+        id: systemRole.id,
+        code: systemRole.code,
+        name: systemRole.name,
+        level: systemRole.level,
+      } : null,
+    };
   }),
 
   // List all users with filters
@@ -123,8 +136,17 @@ export const usersRouter = router({
         throw new Error("User not found");
       }
 
+      // Get user's system role
+      const systemRole = await getUserSystemRole(input.id);
+
       return {
         ...user,
+        systemRole: systemRole ? {
+          id: systemRole.id,
+          code: systemRole.code,
+          name: systemRole.name,
+          level: systemRole.level,
+        } : null,
       };
     }),
 

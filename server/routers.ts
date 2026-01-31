@@ -40,13 +40,27 @@ import { requestConfigRouter } from "./modules/request-config/requestConfig.rout
 // MCM Module (Magnetic Card Management)
 import { mcmRouter } from "./modules/mcm/mcm.router";
 
-import { seedDefaultRoles, seedDefaultDepartments } from "./infra/db/connection";
+import { 
+  seedDefaultRoles, 
+  seedDefaultDepartments,
+  seedSystemRoles,
+  seedPermissions,
+  seedRolePermissions,
+  assignOwnerSuperAdmin
+} from "./infra/db/connection";
 
 // Initialize default data on server start
 (async () => {
   try {
     await seedDefaultRoles();
     await seedDefaultDepartments();
+    
+    // Seed enterprise RBAC system
+    await seedSystemRoles();
+    await seedPermissions();
+    await seedRolePermissions();
+    await assignOwnerSuperAdmin();
+    
     console.log("[Seed] Default data seeded successfully");
   } catch (error) {
     console.error("[Seed] Failed to seed default data:", error);

@@ -1,0 +1,38 @@
+{
+  "query": "SELECT usr.id, usr.userId, usr.roleId, sr.name as roleName, u.name as userName FROM userSystemRoles usr JOIN systemRoles sr ON usr.roleId = sr.id JOIN users u ON usr.userId = u.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT usr.id, usr.userId, usr.roleId, sr.name as roleName, u.name as userName FROM userSystemRoles usr JOIN systemRoles sr ON usr.roleId = sr.id JOIN users u ON usr.userId = u.id;",
+  "rows": [
+    {
+      "id": "1",
+      "userId": "3",
+      "roleId": "1",
+      "roleName": "Super Admin",
+      "userName": "Mohsin Qureshi"
+    },
+    {
+      "id": "2",
+      "userId": "90183",
+      "roleId": "2",
+      "roleName": "Administrator",
+      "userName": "Ali Aarish"
+    },
+    {
+      "id": "3",
+      "userId": "3",
+      "roleId": "1",
+      "roleName": "Super Admin",
+      "userName": "Mohsin Qureshi"
+    },
+    {
+      "id": "4",
+      "userId": "90182",
+      "roleId": "8",
+      "roleName": "Requestor",
+      "userName": "Riz A"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\troleId\troleName\tuserName\n1\t3\t1\tSuper Admin\tMohsin Qureshi\n2\t90183\t2\tAdministrator\tAli Aarish\n3\t3\t1\tSuper Admin\tMohsin Qureshi\n4\t90182\t8\tRequestor\tRiz A\n",
+  "stderr": "",
+  "execution_time_ms": 1534
+}

@@ -11,7 +11,13 @@ import {
   InsertRole,
   Department,
   Role,
-  User
+  User,
+  systemRoles,
+  permissions,
+  rolePermissions,
+  userSystemRoles,
+  InsertSystemRole,
+  InsertPermission
 } from "../../../drizzle/schema";
 
 import { ENV } from '../../_core/env';
@@ -491,5 +497,323 @@ export async function seedDefaultDepartments(): Promise<void> {
       await db.insert(departments).values(dept);
       console.log(`[Seed] Created department: ${dept.name}`);
     }
+  }
+}
+
+
+// ============================================================================
+// SEED SYSTEM ROLES (Enterprise RBAC)
+// ============================================================================
+
+export async function seedSystemRoles(): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+
+  const defaultSystemRoles: InsertSystemRole[] = [
+    {
+      code: "super_admin",
+      name: "Super Admin",
+      nameAr: "المدير الأعلى",
+      description: "Full system access with all permissions.",
+      level: 0,
+      isSystem: true,
+      isActive: true,
+    },
+    {
+      code: "admin",
+      name: "Administrator",
+      nameAr: "مدير النظام",
+      description: "System administrator with access to most features.",
+      level: 1,
+      isSystem: true,
+      isActive: true,
+    },
+    {
+      code: "security_manager",
+      name: "Security Manager",
+      nameAr: "مدير الأمن",
+      description: "Manages security operations and approvals.",
+      level: 2,
+      isSystem: true,
+      isActive: true,
+    },
+    {
+      code: "site_manager",
+      name: "Site Manager",
+      nameAr: "مدير الموقع",
+      description: "Manages operations for assigned sites.",
+      level: 3,
+      isSystem: true,
+      isActive: true,
+    },
+    {
+      code: "zone_manager",
+      name: "Zone Manager",
+      nameAr: "مدير المنطقة",
+      description: "Manages operations for assigned zones.",
+      level: 4,
+      isSystem: true,
+      isActive: true,
+    },
+    {
+      code: "approver",
+      name: "Approver",
+      nameAr: "المعتمد",
+      description: "Can approve access requests.",
+      level: 5,
+      isSystem: true,
+      isActive: true,
+    },
+    {
+      code: "requestor",
+      name: "Requestor",
+      nameAr: "مقدم الطلب",
+      description: "Can create and manage access requests.",
+      level: 6,
+      isSystem: true,
+      isActive: true,
+    },
+    {
+      code: "viewer",
+      name: "Viewer",
+      nameAr: "المشاهد",
+      description: "Read-only access to view data.",
+      level: 7,
+      isSystem: true,
+      isActive: true,
+    },
+    {
+      code: "guest",
+      name: "Guest",
+      nameAr: "ضيف",
+      description: "Limited access for external visitors.",
+      level: 8,
+      isSystem: true,
+      isActive: true,
+    },
+  ];
+
+  for (const role of defaultSystemRoles) {
+    const existing = await db
+      .select()
+      .from(systemRoles)
+      .where(eq(systemRoles.code, role.code))
+      .limit(1);
+
+    if (existing.length === 0) {
+      await db.insert(systemRoles).values(role);
+      console.log(`[Seed] Created system role: ${role.name}`);
+    }
+  }
+}
+
+// ============================================================================
+// SEED PERMISSIONS
+// ============================================================================
+
+export async function seedPermissions(): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+
+  const defaultPermissions: InsertPermission[] = [
+    { code: "dashboard:view", module: "dashboard", action: "view", name: "View Dashboard", category: "Dashboard" },
+    { code: "dashboard:analytics", module: "dashboard", action: "analytics", name: "View Analytics", category: "Dashboard" },
+    { code: "users:view", module: "users", action: "view", name: "View Users", category: "Users" },
+    { code: "users:create", module: "users", action: "create", name: "Create Users", category: "Users" },
+    { code: "users:update", module: "users", action: "update", name: "Update Users", category: "Users" },
+    { code: "users:delete", module: "users", action: "delete", name: "Delete Users", category: "Users" },
+    { code: "users:manage_roles", module: "users", action: "manage_roles", name: "Manage User Roles", category: "Users" },
+    { code: "groups:view", module: "groups", action: "view", name: "View Groups", category: "Groups" },
+    { code: "groups:create", module: "groups", action: "create", name: "Create Groups", category: "Groups" },
+    { code: "groups:update", module: "groups", action: "update", name: "Update Groups", category: "Groups" },
+    { code: "groups:delete", module: "groups", action: "delete", name: "Delete Groups", category: "Groups" },
+    { code: "requests:view", module: "requests", action: "view", name: "View Requests", category: "Requests" },
+    { code: "requests:create", module: "requests", action: "create", name: "Create Requests", category: "Requests" },
+    { code: "requests:update", module: "requests", action: "update", name: "Update Requests", category: "Requests" },
+    { code: "requests:approve", module: "requests", action: "approve", name: "Approve Requests", category: "Requests" },
+    { code: "requests:reject", module: "requests", action: "reject", name: "Reject Requests", category: "Requests" },
+    { code: "facilities:view", module: "facilities", action: "view", name: "View Facilities", category: "Facilities" },
+    { code: "facilities:create", module: "facilities", action: "create", name: "Create Facilities", category: "Facilities" },
+    { code: "facilities:update", module: "facilities", action: "update", name: "Update Facilities", category: "Facilities" },
+    { code: "workflows:view", module: "workflows", action: "view", name: "View Workflows", category: "Workflows" },
+    { code: "workflows:create", module: "workflows", action: "create", name: "Create Workflows", category: "Workflows" },
+    { code: "workflows:update", module: "workflows", action: "update", name: "Update Workflows", category: "Workflows" },
+    { code: "reports:view", module: "reports", action: "view", name: "View Reports", category: "Reports" },
+    { code: "reports:export", module: "reports", action: "export", name: "Export Reports", category: "Reports" },
+    { code: "settings:view", module: "settings", action: "view", name: "View Settings", category: "Settings" },
+    { code: "settings:update", module: "settings", action: "update", name: "Update Settings", category: "Settings" },
+    { code: "admin:access", module: "admin", action: "access", name: "Access Admin Panel", category: "Admin" },
+    { code: "admin:roles", module: "admin", action: "roles", name: "Manage Roles", category: "Admin" },
+    { code: "admin:audit", module: "admin", action: "audit", name: "View Audit Logs", category: "Admin" },
+  ];
+
+  for (const perm of defaultPermissions) {
+    const existing = await db
+      .select()
+      .from(permissions)
+      .where(eq(permissions.code, perm.code))
+      .limit(1);
+
+    if (existing.length === 0) {
+      await db.insert(permissions).values({ ...perm, isActive: true });
+      console.log(`[Seed] Created permission: ${perm.code}`);
+    }
+  }
+}
+
+// ============================================================================
+// SEED ROLE PERMISSIONS
+// ============================================================================
+
+export async function seedRolePermissions(): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+
+  const allRoles = await db.select().from(systemRoles);
+  const allPerms = await db.select().from(permissions);
+
+  const roleMap = new Map(allRoles.map(r => [r.code, r.id]));
+  const permMap = new Map(allPerms.map(p => [p.code, p.id]));
+
+  const rolePermissionMap: Record<string, string[]> = {
+    super_admin: allPerms.map(p => p.code),
+    admin: [
+      "dashboard:view", "dashboard:analytics",
+      "users:view", "users:create", "users:update", "users:delete", "users:manage_roles",
+      "groups:view", "groups:create", "groups:update", "groups:delete",
+      "requests:view", "requests:create", "requests:update", "requests:approve", "requests:reject",
+      "facilities:view", "facilities:create", "facilities:update",
+      "workflows:view", "workflows:create", "workflows:update",
+      "reports:view", "reports:export",
+      "settings:view", "settings:update",
+      "admin:access", "admin:roles", "admin:audit",
+    ],
+    security_manager: [
+      "dashboard:view", "dashboard:analytics",
+      "users:view",
+      "groups:view",
+      "requests:view", "requests:approve", "requests:reject",
+      "facilities:view",
+      "reports:view", "reports:export",
+      "admin:access", "admin:audit",
+    ],
+    site_manager: [
+      "dashboard:view",
+      "users:view",
+      "groups:view",
+      "requests:view", "requests:approve",
+      "facilities:view", "facilities:update",
+      "reports:view",
+    ],
+    zone_manager: [
+      "dashboard:view",
+      "users:view",
+      "groups:view",
+      "requests:view", "requests:approve",
+      "facilities:view",
+      "reports:view",
+    ],
+    approver: [
+      "dashboard:view",
+      "users:view",
+      "groups:view",
+      "requests:view", "requests:approve", "requests:reject",
+      "facilities:view",
+      "reports:view",
+    ],
+    requestor: [
+      "dashboard:view",
+      "users:view",
+      "groups:view",
+      "requests:view", "requests:create", "requests:update",
+      "facilities:view",
+    ],
+    viewer: [
+      "dashboard:view",
+      "users:view",
+      "groups:view",
+      "requests:view",
+      "facilities:view",
+      "reports:view",
+    ],
+    guest: [
+      "dashboard:view",
+      "requests:view",
+      "facilities:view",
+    ],
+  };
+
+  for (const [roleCode, permCodes] of Object.entries(rolePermissionMap)) {
+    const roleId = roleMap.get(roleCode);
+    if (!roleId) continue;
+
+    for (const permCode of permCodes) {
+      const permId = permMap.get(permCode);
+      if (!permId) continue;
+
+      const existing = await db
+        .select()
+        .from(rolePermissions)
+        .where(and(
+          eq(rolePermissions.roleId, roleId),
+          eq(rolePermissions.permissionId, permId)
+        ))
+        .limit(1);
+
+      if (existing.length === 0) {
+        await db.insert(rolePermissions).values({ roleId, permissionId: permId });
+      }
+    }
+  }
+
+  console.log("[Seed] Role permissions seeded successfully");
+}
+
+// ============================================================================
+// ASSIGN OWNER TO SUPER ADMIN ROLE
+// ============================================================================
+
+export async function assignOwnerSuperAdmin(): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+
+  const owner = await db
+    .select()
+    .from(users)
+    .where(eq(users.openId, ENV.ownerOpenId))
+    .limit(1);
+
+  if (owner.length === 0) {
+    console.log("[Seed] Owner user not found, skipping super admin assignment");
+    return;
+  }
+
+  const superAdminRole = await db
+    .select()
+    .from(systemRoles)
+    .where(eq(systemRoles.code, "super_admin"))
+    .limit(1);
+
+  if (superAdminRole.length === 0) {
+    console.log("[Seed] Super Admin role not found, skipping assignment");
+    return;
+  }
+
+  const existing = await db
+    .select()
+    .from(userSystemRoles)
+    .where(and(
+      eq(userSystemRoles.userId, owner[0].id),
+      eq(userSystemRoles.roleId, superAdminRole[0].id)
+    ))
+    .limit(1);
+
+  if (existing.length === 0) {
+    await db.insert(userSystemRoles).values({
+      userId: owner[0].id,
+      roleId: superAdminRole[0].id,
+      isActive: true,
+    });
+    console.log(`[Seed] Assigned Super Admin role to owner: ${owner[0].name || owner[0].email}`);
   }
 }

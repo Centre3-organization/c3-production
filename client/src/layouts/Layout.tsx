@@ -253,9 +253,11 @@ export default function Layout({ children }: LayoutProps) {
   // Get user display info - prioritize currentUser from database over authUser from OAuth
   const userName = currentUser?.name || authUser?.name || "User";
   const userEmail = currentUser?.email || authUser?.email || "";
-  const userRoleName = currentUser?.role === 'admin' 
-    ? (isRTL ? 'مدير النظام' : 'Administrator') 
-    : (isRTL ? 'مستخدم' : 'User');
+  // Use system role name if available, otherwise fall back to legacy role
+  const userRoleName = (currentUser as any)?.systemRole?.name 
+    || (currentUser?.role === 'admin' 
+      ? (isRTL ? 'مدير النظام' : 'Administrator') 
+      : (isRTL ? 'مستخدم' : 'User'));
   const userInitials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || "U";
 
   // Get translated label

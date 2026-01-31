@@ -1109,3 +1109,13 @@ Time conditions:
 - [x] Create comprehensive documentation with 50 use cases
 - [x] Document all components (roles, permissions, scopes, modes)
 - [x] Create Word document for release
+
+
+## Enterprise RBAC System Roles Update (Jan 31, 2026)
+- [x] Add seedSystemRoles function to seed 9 enterprise roles (Super Admin, Administrator, Security Manager, Site Manager, Zone Manager, Approver, Requestor, Viewer, Guest)
+- [x] Add seedPermissions function to seed 29 granular permissions across 8 modules
+- [x] Add seedRolePermissions function to link roles to permissions
+- [x] Add assignOwnerSuperAdmin function to auto-assign Super Admin role to owner
+- [x] Update users.router.ts to include systemRole in user response
+- [x] Update Layout.tsx to display systemRole name instead of legacy role
+- [x] Test user profile displays correct system role name (Super Admin shown in UI)
