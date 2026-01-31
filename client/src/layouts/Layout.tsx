@@ -308,11 +308,11 @@ export default function Layout({ children }: LayoutProps) {
           !sidebarOpen && !isMobile && "justify-center px-0"
         )}>
           {(sidebarOpen || isMobile) ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full">
               <img 
-                src="/center3-logo-white.png" 
+                src="/center3-sidebar-logo.png?v=3" 
                 alt="center3" 
-                className="h-[50px] w-[200px] object-contain"
+                className="h-[40px] max-w-full object-contain"
               />
             </div>
           ) : (
