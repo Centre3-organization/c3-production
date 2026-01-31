@@ -64,7 +64,7 @@ interface FormField {
     "sites" | "zones" | "areas" | 
     "departments" | "groups" | "users" | "contractors" | 
     "request_types" | "approval_roles" | 
-    "user_sites" | "user_groups" | "user_departments";
+    "user_sites" | "user_groups" | "user_departments" | "user_profile";
   optionsApi?: string;
   dependsOnField?: string;
   filterByField?: string;
@@ -315,14 +315,22 @@ function UserLookupField({
     const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
+        // Use proper tRPC batch format with credentials
+        const input = {
+          "0": {
+            json: {
+              source: "users",
+              search: searchQuery,
+            }
+          }
+        };
         const response = await fetch(
-          `/api/trpc/requestConfig.fields.getDataSourceOptions?input=${encodeURIComponent(
-            JSON.stringify({ source: "users", filterValue: searchQuery })
-          )}`
+          `/api/trpc/requestConfig.fields.getDataSourceOptions?batch=1&input=${encodeURIComponent(JSON.stringify(input))}`,
+          { credentials: 'include' }
         );
         const result = await response.json();
-        if (result.result?.data) {
-          setSearchResults(result.result.data);
+        if (result[0]?.result?.data?.json) {
+          setSearchResults(result[0].result.data.json);
           setShowResults(true);
         }
       } catch (error) {
@@ -744,10 +752,22 @@ export function FieldRenderer({
   const loadDataSourceOptions = async (source: string, filterValue?: any) => {
     setIsLoadingOptions(true);
     try {
-      const response = await fetch(`/api/trpc/requestConfig.fields.getDataSourceOptions?input=${encodeURIComponent(JSON.stringify({ source, filterValue }))}`);
+      // Use fetch with proper batch format for tRPC
+      const input = {
+        "0": {
+          json: {
+            source,
+            filterValue: filterValue ? String(filterValue) : undefined,
+          }
+        }
+      };
+      const response = await fetch(
+        `/api/trpc/requestConfig.fields.getDataSourceOptions?batch=1&input=${encodeURIComponent(JSON.stringify(input))}`,
+        { credentials: 'include' }
+      );
       const result = await response.json();
-      if (result.result?.data) {
-        setDynamicOptions(result.result.data.map((item: any) => ({
+      if (result[0]?.result?.data?.json) {
+        setDynamicOptions(result[0].result.data.json.map((item: any) => ({
           value: String(item.value),
           label: item.label,
           labelAr: item.labelAr,
@@ -1191,7 +1211,23 @@ export function FieldRenderer({
         />
       );
 
-    case "readonly":
+    case "readonly": {
+      // Auto-populate from user profile if optionsSource is user_profile
+      let displayValue = value || field.defaultValue || "";
+      if (field.optionsSource === "user_profile" && user) {
+        const fieldCode = field.code;
+        if (fieldCode === "requestor_name") {
+          displayValue = user.name || user.email || "";
+        } else if (fieldCode === "email") {
+          displayValue = user.email || "";
+        } else if (fieldCode === "company") {
+          displayValue = (user as any).company || "";
+        } else if (fieldCode === "mobile") {
+          displayValue = (user as any).mobile || (user as any).phone || "";
+        } else if (fieldCode === "department") {
+          displayValue = (user as any).department || "";
+        }
+      }
       return (
         <div className="space-y-1.5">
           <Label className="text-xs font-bold text-gray-600 uppercase">
@@ -1199,7 +1235,7 @@ export function FieldRenderer({
           </Label>
           <Input
             type="text"
-            value={value || field.defaultValue || ""}
+            value={displayValue}
             readOnly
             className="bg-gray-50"
           />
@@ -1208,6 +1244,7 @@ export function FieldRenderer({
           )}
         </div>
       );
+    }
 
     case "site_type":
       return (

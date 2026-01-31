@@ -1,0 +1,80 @@
+{
+  "query": "SELECT * FROM countries LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT * FROM countries LIMIT 10;",
+  "rows": [
+    {
+      "id": "1",
+      "code": "SA",
+      "name": "Saudi Arabia",
+      "isActive": "1",
+      "createdAt": "2026-01-27 08:54:04"
+    },
+    {
+      "id": "2",
+      "code": "BH",
+      "name": "Bahrain",
+      "isActive": "1",
+      "createdAt": "2026-01-27 08:54:41"
+    },
+    {
+      "id": "4",
+      "code": "AE",
+      "name": "United Arab Emirates",
+      "isActive": "1",
+      "createdAt": "2026-01-28 19:32:11"
+    },
+    {
+      "id": "5",
+      "code": "QA",
+      "name": "Qatar",
+      "isActive": "1",
+      "createdAt": "2026-01-28 19:32:11"
+    },
+    {
+      "id": "6",
+      "code": "KW",
+      "name": "Kuwait",
+      "isActive": "1",
+      "createdAt": "2026-01-28 19:32:11"
+    },
+    {
+      "id": "8",
+      "code": "OM",
+      "name": "Oman",
+      "isActive": "1",
+      "createdAt": "2026-01-28 19:32:11"
+    },
+    {
+      "id": "9",
+      "code": "EG",
+      "name": "Egypt",
+      "isActive": "1",
+      "createdAt": "2026-01-28 19:32:19"
+    },
+    {
+      "id": "10",
+      "code": "JO",
+      "name": "Jordan",
+      "isActive": "1",
+      "createdAt": "2026-01-28 19:32:19"
+    },
+    {
+      "id": "11",
+      "code": "LB",
+      "name": "Lebanon",
+      "isActive": "1",
+      "createdAt": "2026-01-28 19:32:19"
+    },
+    {
+      "id": "12",
+      "code": "IQ",
+      "name": "Iraq",
+      "isActive": "1",
+      "createdAt": "2026-01-28 19:32:19"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tisActive\tcreatedAt\n1\tSA\tSaudi Arabia\t1\t2026-01-27 08:54:04\n2\tBH\tBahrain\t1\t2026-01-27 08:54:41\n4\tAE\tUnited Arab Emirates\t1\t2026-01-28 19:32:11\n5\tQA\tQatar\t1\t2026-01-28 19:32:11\n6\tKW\tKuwait\t1\t2026-01-28 19:32:11\n8\tOM\tOman\t1\t2026-01-28 19:32:11\n9\tEG\tEgypt\t1\t2026-01-28 19:32:19\n10\tJO\tJordan\t1\t2026-01-28 19:32:19\n11\tLB\tLebanon\t1\t2026-01-28 19:32:19\n12\tIQ\tIraq\t1\t2026-01-28 19:32:19\n",
+  "stderr": "",
+  "execution_time_ms": 1555
+}

@@ -1306,3 +1306,36 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Check Secure cookie flag for HTTPS
 - [x] Verify JWT token is being set correctly
 - [x] Fix cross-origin cookie issue (SameSite=none requires Secure=true)
+
+
+## Admin Visit Form Critical Issues (Jan 31, 2026)
+
+### Issue 1: Country dropdown is empty - FIXED
+- [x] Check if countries data exists in database
+- [x] Seed countries, regions, cities data (20 countries, 25 cities for Saudi Arabia)
+- [x] Fix dropdown to fetch from correct data source API
+- [x] Fix LIMIT clause SQL errors in data source queries
+
+### Issue 2: VIP Details section not showing in sidebar
+- [x] Check if VIP Details section exists in database (it does)
+- [x] Moved vip_visit toggle to Basic Information section
+- [ ] VIP Details section conditional visibility needs frontend fix
+
+### Issue 3: Host user search not returning results - FIXED
+- [x] Check user search API endpoint
+- [x] Fix UserLookupField component to properly search users
+- [x] Test with existing users in database - working
+
+### Issue 4: Basic Information auto-populated - PARTIALLY FIXED
+- [x] Requestor Name, Email, Mobile auto-populate from user profile
+- [ ] Company/Department empty because user doesn't have these set in profile
+
+
+## Location Cascade Fix (Jan 31, 2026) - COMPLETED
+
+### Change location cascade to Country → City → Site (skip Region filtering)
+- [x] Make Region field optional and show all regions (no filtering)
+- [x] Update City field to filter by Country instead of Region
+- [x] Verify Site filters by City
+- [x] Test the updated location cascade - WORKING
+- [ ] Clean up duplicate cities in database (Dammam, Dhahran, Jeddah, etc. appear twice)

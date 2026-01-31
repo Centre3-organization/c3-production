@@ -1,0 +1,19 @@
+{
+  "query": "SELECT s.id, s.code, s.name, s.displayOrder, s.isActive, s.requestTypeId,\n       (SELECT COUNT(*) FROM formFields f WHERE f.sectionId = s.id) as fieldCount\nFROM formSections s \nWHERE s.name LIKE '%VIP%' OR s.code LIKE '%vip%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT s.id, s.code, s.name, s.displayOrder, s.isActive, s.requestTypeId,\n       (SELECT COUNT(*) FROM formFields f WHERE f.sectionId = s.id) as fieldCount\nFROM formSections s \nWHERE s.name LIKE '%VIP%' OR s.code LIKE '%vip%';",
+  "rows": [
+    {
+      "id": "5",
+      "code": "vip_details",
+      "name": "VIP Details",
+      "displayOrder": "6",
+      "isActive": "1",
+      "requestTypeId": "1",
+      "fieldCount": "7"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tdisplayOrder\tisActive\trequestTypeId\tfieldCount\n5\tvip_details\tVIP Details\t6\t1\t1\t7\n",
+  "stderr": "",
+  "execution_time_ms": 1518
+}

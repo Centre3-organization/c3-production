@@ -1010,36 +1010,35 @@ export const formFieldsRouter = router({
     .query(async ({ input, ctx }) => {
       const connection = await getConnection();
       try {
-        const limit = input.limit || 100;
+        const limit = Number(input.limit) || 100;
         let options: Array<{ value: string; label: string; labelAr?: string }> = [];
         
         switch (input.source) {
           // ============ MASTER DATA SOURCES ============
           case "countries": {
             const [rows] = await connection.execute(`
-              SELECT id as value, name as label, nameAr as labelAr 
+              SELECT id as value, name as label, name as labelAr 
               FROM countries 
-              WHERE isActive = true
+              WHERE isActive = 1
               ORDER BY name ASC
-              LIMIT ?
-            `, [limit]);
+              LIMIT ${limit}
+            `);
             options = rows as any;
             break;
           }
           
           case "regions": {
             let query = `
-              SELECT id as value, name as label, nameAr as labelAr 
+              SELECT id as value, name as label, name as labelAr 
               FROM regions 
-              WHERE isActive = true
+              WHERE isActive = 1
             `;
             const params: any[] = [];
             if (input.filterValue) {
-              query += ` AND countryId = ?`;
+              query += ` AND id IN (SELECT DISTINCT regionId FROM sites WHERE countryId = ?)`;
               params.push(input.filterValue);
             }
-            query += ` ORDER BY name ASC LIMIT ?`;
-            params.push(limit);
+            query += ` ORDER BY name ASC LIMIT ${limit}`;
             const [rows] = await connection.execute(query, params);
             options = rows as any;
             break;
@@ -1047,17 +1046,16 @@ export const formFieldsRouter = router({
           
           case "cities": {
             let query = `
-              SELECT id as value, name as label, nameAr as labelAr 
+              SELECT id as value, name as label, name as labelAr 
               FROM cities 
-              WHERE isActive = true
+              WHERE isActive = 1
             `;
             const params: any[] = [];
             if (input.filterValue) {
-              query += ` AND regionId = ?`;
+              query += ` AND countryId = ?`;
               params.push(input.filterValue);
             }
-            query += ` ORDER BY name ASC LIMIT ?`;
-            params.push(limit);
+            query += ` ORDER BY name ASC LIMIT ${limit}`;
             const [rows] = await connection.execute(query, params);
             options = rows as any;
             break;
@@ -1066,9 +1064,9 @@ export const formFieldsRouter = router({
           // ============ FACILITY SOURCES ============
           case "sites": {
             let query = `
-              SELECT id as value, name as label, nameAr as labelAr 
+              SELECT id as value, name as label, name as labelAr 
               FROM sites 
-              WHERE isActive = true
+              WHERE status = 'active'
             `;
             const params: any[] = [];
             if (input.filterValue) {
@@ -1079,8 +1077,7 @@ export const formFieldsRouter = router({
               query += ` AND (name LIKE ? OR code LIKE ?)`;
               params.push(`%${input.search}%`, `%${input.search}%`);
             }
-            query += ` ORDER BY name ASC LIMIT ?`;
-            params.push(limit);
+            query += ` ORDER BY name ASC LIMIT ${limit}`;
             const [rows] = await connection.execute(query, params);
             options = rows as any;
             break;
@@ -1088,17 +1085,16 @@ export const formFieldsRouter = router({
           
           case "zones": {
             let query = `
-              SELECT id as value, name as label, nameAr as labelAr 
+              SELECT id as value, name as label, name as labelAr 
               FROM zones 
-              WHERE isActive = true
+              WHERE status = 'active'
             `;
             const params: any[] = [];
             if (input.filterValue) {
               query += ` AND siteId = ?`;
               params.push(input.filterValue);
             }
-            query += ` ORDER BY name ASC LIMIT ?`;
-            params.push(limit);
+            query += ` ORDER BY name ASC LIMIT ${Number(limit)}`;
             const [rows] = await connection.execute(query, params);
             options = rows as any;
             break;
@@ -1106,17 +1102,16 @@ export const formFieldsRouter = router({
           
           case "areas": {
             let query = `
-              SELECT id as value, name as label, nameAr as labelAr 
+              SELECT id as value, name as label, name as labelAr 
               FROM areas 
-              WHERE isActive = true
+              WHERE status = 'active'
             `;
             const params: any[] = [];
             if (input.filterValue) {
               query += ` AND zoneId = ?`;
               params.push(input.filterValue);
             }
-            query += ` ORDER BY name ASC LIMIT ?`;
-            params.push(limit);
+            query += ` ORDER BY name ASC LIMIT ${Number(limit)}`;
             const [rows] = await connection.execute(query, params);
             options = rows as any;
             break;
@@ -1125,29 +1120,28 @@ export const formFieldsRouter = router({
           // ============ ORGANIZATION SOURCES ============
           case "departments": {
             const [rows] = await connection.execute(`
-              SELECT id as value, name as label, nameAr as labelAr 
+              SELECT id as value, name as label, name as labelAr 
               FROM departments 
-              WHERE isActive = true
+              WHERE isActive = 1
               ORDER BY name ASC
-              LIMIT ?
-            `, [limit]);
+              LIMIT ${limit}
+            `);
             options = rows as any;
             break;
           }
           
           case "groups": {
             let query = `
-              SELECT id as value, name as label, nameAr as labelAr 
+              SELECT id as value, name as label, name as labelAr 
               FROM \`groups\` 
-              WHERE isActive = true
+              WHERE status = 'active'
             `;
             const params: any[] = [];
             if (input.search) {
               query += ` AND name LIKE ?`;
               params.push(`%${input.search}%`);
             }
-            query += ` ORDER BY name ASC LIMIT ?`;
-            params.push(limit);
+            query += ` ORDER BY name ASC LIMIT ${limit}`;
             const [rows] = await connection.execute(query, params);
             options = rows as any;
             break;
@@ -1155,7 +1149,7 @@ export const formFieldsRouter = router({
           
           case "users": {
             let query = `
-              SELECT id as value, CONCAT(COALESCE(firstName, ''), ' ', COALESCE(lastName, '')) as label 
+              SELECT id as value, COALESCE(name, email) as label, email as labelAr 
               FROM users 
               WHERE status = 'active'
             `;
@@ -1166,11 +1160,10 @@ export const formFieldsRouter = router({
               params.push(input.filterValue);
             }
             if (input.search) {
-              query += ` AND (firstName LIKE ? OR lastName LIKE ? OR email LIKE ?)`;
-              params.push(`%${input.search}%`, `%${input.search}%`, `%${input.search}%`);
+              query += ` AND (name LIKE ? OR email LIKE ?)`;
+              params.push(`%${input.search}%`, `%${input.search}%`);
             }
-            query += ` ORDER BY firstName ASC LIMIT ?`;
-            params.push(limit);
+            query += ` ORDER BY name ASC LIMIT ${limit}`;
             const [rows] = await connection.execute(query, params);
             options = rows as any;
             break;
@@ -1182,8 +1175,8 @@ export const formFieldsRouter = router({
               FROM cardCompanies 
               WHERE isActive = true AND companyType IN ('contractor', 'sub_contractor')
               ORDER BY companyName ASC
-              LIMIT ?
-            `, [limit]);
+              LIMIT ${limit}
+            `);
             options = rows as any;
             break;
           }
@@ -1201,8 +1194,7 @@ export const formFieldsRouter = router({
               query += ` AND categoryId = ?`;
               params.push(input.filterValue);
             }
-            query += ` ORDER BY displayOrder ASC LIMIT ?`;
-            params.push(limit);
+            query += ` ORDER BY displayOrder ASC LIMIT ${limit}`;
             const [rows] = await connection.execute(query, params);
             options = rows as any;
             break;
@@ -1214,8 +1206,8 @@ export const formFieldsRouter = router({
               FROM approvalRoles 
               WHERE isActive = true
               ORDER BY name ASC
-              LIMIT ?
-            `, [limit]);
+              LIMIT ${limit}
+            `);
             options = rows as any;
             break;
           }
@@ -1230,8 +1222,8 @@ export const formFieldsRouter = router({
               LEFT JOIN userGroupMembership ugm ON ugm.groupId = gap.groupId AND ugm.userId = ?
               WHERE s.isActive = true AND (ugm.userId IS NOT NULL OR s.id = (SELECT defaultSiteId FROM users WHERE id = ?))
               ORDER BY s.name ASC
-              LIMIT ?
-            `, [ctx.user.id, ctx.user.id, limit]);
+              LIMIT ${limit}
+            `, [ctx.user.id, ctx.user.id]);
             options = rows as any;
             break;
           }
@@ -1244,8 +1236,8 @@ export const formFieldsRouter = router({
               INNER JOIN userGroupMembership ugm ON ugm.groupId = g.id
               WHERE ugm.userId = ? AND g.isActive = true
               ORDER BY g.name ASC
-              LIMIT ?
-            `, [ctx.user.id, limit]);
+              LIMIT ${limit}
+            `, [ctx.user.id]);
             options = rows as any;
             break;
           }

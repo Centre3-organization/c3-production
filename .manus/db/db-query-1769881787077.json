@@ -1,0 +1,60 @@
+{
+  "query": "SELECT id, name, countryId FROM cities LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, countryId FROM cities LIMIT 10;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Riyadh",
+      "countryId": "1"
+    },
+    {
+      "id": "2",
+      "name": "Jeddah",
+      "countryId": "1"
+    },
+    {
+      "id": "3",
+      "name": "Dammam",
+      "countryId": "1"
+    },
+    {
+      "id": "4",
+      "name": "Makkah",
+      "countryId": "1"
+    },
+    {
+      "id": "5",
+      "name": "Qassim",
+      "countryId": "1"
+    },
+    {
+      "id": "6",
+      "name": "Madinah",
+      "countryId": "1"
+    },
+    {
+      "id": "7",
+      "name": "Manama",
+      "countryId": "2"
+    },
+    {
+      "id": "10",
+      "name": "Medina",
+      "countryId": "1"
+    },
+    {
+      "id": "11",
+      "name": "Mecca",
+      "countryId": "1"
+    },
+    {
+      "id": "13",
+      "name": "Khobar",
+      "countryId": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcountryId\n1\tRiyadh\t1\n2\tJeddah\t1\n3\tDammam\t1\n4\tMakkah\t1\n5\tQassim\t1\n6\tMadinah\t1\n7\tManama\t2\n10\tMedina\t1\n11\tMecca\t1\n13\tKhobar\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1590
+}
