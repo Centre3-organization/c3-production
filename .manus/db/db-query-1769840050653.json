@@ -1,0 +1,35 @@
+{
+  "query": "SELECT id, name, code FROM sites LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, code FROM sites LIMIT 5;",
+  "rows": [
+    {
+      "id": "2",
+      "name": "RDC46 Data Centre",
+      "code": "RDC46"
+    },
+    {
+      "id": "3",
+      "name": "RDC05 Data Centre",
+      "code": "RDC05"
+    },
+    {
+      "id": "4",
+      "name": "RDC301 Data Centre",
+      "code": "RDC301"
+    },
+    {
+      "id": "5",
+      "name": "ITCC Data Centre",
+      "code": "ITCC"
+    },
+    {
+      "id": "6",
+      "name": "RDCKAFD Data Centre",
+      "code": "RDCKAFD"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcode\n2\tRDC46 Data Centre\tRDC46\n3\tRDC05 Data Centre\tRDC05\n4\tRDC301 Data Centre\tRDC301\n5\tITCC Data Centre\tITCC\n6\tRDCKAFD Data Centre\tRDCKAFD\n",
+  "stderr": "",
+  "execution_time_ms": 1530
+}

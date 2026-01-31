@@ -1,0 +1,34 @@
+{
+  "query": "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME LIKE '%approval%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME LIKE '%approval%';",
+  "rows": [
+    {
+      "TABLE_NAME": "approvals"
+    },
+    {
+      "TABLE_NAME": "approvalRoles"
+    },
+    {
+      "TABLE_NAME": "approvalWorkflows"
+    },
+    {
+      "TABLE_NAME": "approvalStages"
+    },
+    {
+      "TABLE_NAME": "approvalDelegations"
+    },
+    {
+      "TABLE_NAME": "approvalInstances"
+    },
+    {
+      "TABLE_NAME": "approvalTasks"
+    },
+    {
+      "TABLE_NAME": "approvalHistory"
+    }
+  ],
+  "messages": [],
+  "stdout": "TABLE_NAME\napprovals\napprovalRoles\napprovalWorkflows\napprovalStages\napprovalDelegations\napprovalInstances\napprovalTasks\napprovalHistory\n",
+  "stderr": "",
+  "execution_time_ms": 1543
+}
