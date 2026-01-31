@@ -2,7 +2,7 @@ import { z } from "zod";
 import { eq, desc, sql } from "drizzle-orm";
 import { getDb } from "../../infra/db/connection";
 import { sites, countries, regions, cities, siteTypes } from "../../../drizzle/schema";
-import { adminProcedure, protectedProcedure, publicProcedure, router } from "../../_core/trpc";
+import { protectedProcedure, publicProcedure, router, requirePermission } from "../../_core/trpc";
 
 // Input validation schemas
 const createSiteSchema = z.object({
@@ -146,7 +146,7 @@ export const sitesRouter = router({
   }),
   
   // Create a new site
-  create: adminProcedure
+  create: requirePermission("sites:create")
     .input(createSiteSchema)
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -192,7 +192,7 @@ export const sitesRouter = router({
     }),
   
   // Update an existing site
-  update: adminProcedure
+  update: requirePermission("sites:update")
     .input(updateSiteSchema)
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -227,7 +227,7 @@ export const sitesRouter = router({
     }),
   
   // Delete a site (soft delete by setting status to inactive)
-  delete: adminProcedure
+  delete: requirePermission("sites:delete")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -240,7 +240,7 @@ export const sitesRouter = router({
     }),
   
   // Hard delete a site (admin only, use with caution)
-  hardDelete: adminProcedure
+  hardDelete: requirePermission("sites:delete")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();

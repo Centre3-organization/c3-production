@@ -2,7 +2,7 @@ import { z } from "zod";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { getDb } from "../../infra/db/connection";
 import { areas, zones, sites, areaTypes } from "../../../drizzle/schema";
-import { adminProcedure, protectedProcedure, publicProcedure, router } from "../../_core/trpc";
+import { protectedProcedure, publicProcedure, router, requirePermission } from "../../_core/trpc";
 
 // Infrastructure specs schema
 const infrastructureSpecsSchema = z.object({
@@ -159,7 +159,7 @@ export const areasRouter = router({
     }),
   
   // Create a new area
-  create: adminProcedure
+  create: requirePermission("areas:create")
     .input(createAreaSchema)
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -205,7 +205,7 @@ export const areasRouter = router({
     }),
   
   // Update an existing area
-  update: adminProcedure
+  update: requirePermission("areas:update")
     .input(updateAreaSchema)
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -246,7 +246,7 @@ export const areasRouter = router({
     }),
   
   // Delete an area (soft delete)
-  delete: adminProcedure
+  delete: requirePermission("areas:delete")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();

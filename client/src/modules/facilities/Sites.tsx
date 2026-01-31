@@ -34,6 +34,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type Site = {
   id: number;
@@ -59,6 +60,9 @@ type Site = {
 };
 
 export default function Sites() {
+  // Permission checks
+  const { canCreate, canUpdate, canDelete, canRead } = usePermissions('sites');
+  
   const [view, setView] = useState<"list" | "form">("list");
   const [selectedSite, setSelectedSite] = useState<Site | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -245,9 +249,11 @@ export default function Sites() {
               <ChevronDown className="h-5 w-5 text-blue-600" />
             </div>
             <div className="flex items-center gap-2">
-              <Button onClick={handleCreate} className="h-9 bg-[#0f62fe] hover:bg-blue-700 text-white px-4 flex items-center gap-2">
-                <Plus className="h-4 w-4" /> Add Site
-              </Button>
+              {canCreate && (
+                <Button onClick={handleCreate} className="h-9 bg-[#0f62fe] hover:bg-blue-700 text-white px-4 flex items-center gap-2">
+                  <Plus className="h-4 w-4" /> Add Site
+                </Button>
+              )}
             </div>
           </div>
 
@@ -316,7 +322,7 @@ export default function Sites() {
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <Button variant="ghost" size="sm" className="h-7 text-[#0f62fe] font-medium hover:bg-blue-50" onClick={handleCreate}>Create</Button>
+                {canCreate && <Button variant="ghost" size="sm" className="h-7 text-[#0f62fe] font-medium hover:bg-blue-50" onClick={handleCreate}>Create</Button>}
                 <Separator orientation="vertical" className="h-4 mx-1" />
                 <Button variant="ghost" size="icon" className="h-7 w-7 text-[#0f62fe]"><Download className="h-4 w-4" /></Button>
                 <Button variant="ghost" size="icon" className="h-7 w-7 text-[#0f62fe]"><Filter className="h-4 w-4" /></Button>
@@ -356,8 +362,8 @@ export default function Sites() {
                       filteredSites.map((site) => (
                         <TableRow 
                           key={site.id} 
-                          className="hover:bg-blue-50/50 cursor-pointer group border-b border-gray-100" 
-                          onClick={() => handleEdit(site)}
+                          className={`hover:bg-blue-50/50 border-b border-gray-100 ${canUpdate ? 'cursor-pointer' : ''} group`} 
+                          onClick={() => canUpdate && handleEdit(site)}
                         >
                           <TableCell onClick={(e) => e.stopPropagation()}><Checkbox /></TableCell>
                           <TableCell className="font-medium text-[#0f62fe]">{site.code}</TableCell>
@@ -373,15 +379,17 @@ export default function Sites() {
                           <TableCell className="text-gray-600 text-xs">{formatDate(site.createdAt)}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-1">
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-7 w-7 text-gray-400 hover:text-red-600"
-                                onClick={(e) => handleDelete(site.id, e)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                              <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-[#0f62fe]" />
+                              {canDelete && (
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="h-7 w-7 text-gray-400 hover:text-red-600"
+                                  onClick={(e) => handleDelete(site.id, e)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              )}
+                              {canUpdate && <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-[#0f62fe]" />}
                             </div>
                           </TableCell>
                         </TableRow>

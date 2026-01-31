@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO permissions (code, module, action, name, category, isActive, createdAt) VALUES \n('areas:create', 'areas', 'create', 'Create Areas', 'Facilities', 1, NOW()),\n('areas:read', 'areas', 'read', 'View Areas', 'Facilities', 1, NOW()),\n('areas:update', 'areas', 'update', 'Update Areas', 'Facilities', 1, NOW()),\n('areas:delete', 'areas', 'delete', 'Delete Areas', 'Facilities', 1, NOW());",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute INSERT INTO permissions (code, module, action, name, category, isActive, createdAt) VALUES \n('areas:create', 'areas', 'create', 'Create Areas', 'Facilities', 1, NOW()),\n('areas:read', 'areas', 'read', 'View Areas', 'Facilities', 1, NOW()),\n('areas:update', 'areas', 'update', 'Update Areas', 'Facilities', 1, NOW()),\n('areas:delete', 'areas', 'delete', 'Delete Areas', 'Facilities', 1, NOW());",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1586
+}

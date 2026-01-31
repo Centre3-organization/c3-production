@@ -41,6 +41,7 @@ import {
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useErrorDialog } from "@/components/ui/error-dialog";
 import { toast } from "sonner";
+import { usePermissions } from "@/hooks/usePermissions";
 import {
   Plus,
   Search,
@@ -77,6 +78,9 @@ interface GroupWithChildren {
 }
 
 export default function Groups() {
+  // Permission checks
+  const { canCreate, canUpdate, canDelete, canRead, hasPermission } = usePermissions('groups');
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState<"all" | "internal" | "contractor" | "client">("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -308,10 +312,12 @@ export default function Groups() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => openEditDialog(group)}>
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit Group
-                  </DropdownMenuItem>
+                  {canUpdate && (
+                    <DropdownMenuItem onClick={() => openEditDialog(group)}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Group
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     onClick={() => {
                       setSelectedGroup(group);
@@ -339,16 +345,18 @@ export default function Groups() {
                     <Settings className="h-4 w-4 mr-2" />
                     Security Settings
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setSelectedGroup(group);
-                      setIsDeleteDialogOpen(true);
-                    }}
-                    className="text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete Group
-                  </DropdownMenuItem>
+                  {canDelete && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedGroup(group);
+                        setIsDeleteDialogOpen(true);
+                      }}
+                      className="text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete Group
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -376,10 +384,12 @@ export default function Groups() {
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Create Group
-          </Button>
+          {canCreate && (
+            <Button onClick={() => setIsCreateDialogOpen(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Create Group
+            </Button>
+          )}
         </div>
       </div>
 

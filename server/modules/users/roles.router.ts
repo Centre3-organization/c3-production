@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, protectedProcedure, adminProcedure } from "../../_core/trpc";
+import { router, protectedProcedure, requirePermission } from "../../_core/trpc";
 import { getDb } from "../../db";
 import { eq, and, sql, like, or } from "drizzle-orm";
 import {
@@ -156,7 +156,7 @@ export const rolesRouter = router({
   }),
 
   // Update role permissions (admin only)
-  updatePermissions: adminProcedure
+  updatePermissions: requirePermission("roles:update")
     .input(
       z.object({
         roleId: z.number(),
@@ -215,7 +215,7 @@ export const rolesRouter = router({
     }),
 
   // Create new custom role (admin only)
-  create: adminProcedure
+  create: requirePermission("roles:create")
     .input(
       z.object({
         name: z.string().min(1).max(100),
@@ -276,7 +276,7 @@ export const rolesRouter = router({
     }),
 
   // Update role (admin only)
-  update: adminProcedure
+  update: requirePermission("roles:update")
     .input(
       z.object({
         id: z.number(),
@@ -316,7 +316,7 @@ export const rolesRouter = router({
     }),
 
   // Delete role (admin only) - soft delete
-  delete: adminProcedure
+  delete: requirePermission("roles:delete")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();

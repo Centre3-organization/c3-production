@@ -1462,3 +1462,36 @@ Create a unified data source system that can pull options from anywhere in the p
   - Verified permissions persist after reopening Edit Role dialog
   - Verified database contains correct permission records
 - [x] Document test results - see test-results-permission-fix.md
+
+## Permission Enforcement Fixes (Jan 31, 2026)
+- [ ] FIX: Settings/Users permissions not working for Administrator role
+- [ ] FIX: Site Management permissions not enforced (user can add sites with only View permission)
+- [ ] FIX: Zone Management permissions not enforced
+- [ ] ADD: Area Management module to Edit Role authorization objects
+- [ ] Ensure all authorization objects enforce permissions correctly on frontend
+- [ ] Test all permission scenarios after fixes
+
+
+## Permission Enforcement Comprehensive Fix (Jan 31, 2026)
+- [x] FIX: Role permission changes not persisting to database
+  - ROOT CAUSE: Permission codes used dots (.) in UI but colons (:) in database
+  - FIX: Changed convertPermissionsToArray function to use colons
+- [x] FIX: Settings/Users permissions not working for Administrator role
+  - Updated users.router.ts to use requirePermission instead of adminProcedure
+- [x] FIX: Site Management permissions not enforced
+  - Updated sites.router.ts to use requirePermission for create/update/delete
+  - Added usePermissions hook to Sites.tsx to hide Add/Edit/Delete buttons
+- [x] Add Area Management module to Edit Role authorization objects
+  - Added areas module with create/read/update/delete permissions
+  - Added areas permissions to database
+- [x] Create usePermissions hook for frontend permission checking
+- [x] Add permission checks to Sites.tsx, Zones.tsx, Areas.tsx, Groups.tsx
+- [x] Update backend routers to use requirePermission:
+  - sites.router.ts
+  - zones.router.ts
+  - areas.router.ts
+  - groups.router.ts
+  - users.router.ts
+  - roles.router.ts
+- [x] Create permission-enforcement.test.ts with 10 passing tests
+- [x] Add cache invalidation for role permissions

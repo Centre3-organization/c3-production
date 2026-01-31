@@ -2,7 +2,7 @@ import { z } from "zod";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { getDb } from "../../infra/db/connection";
 import { zones, sites, zoneTypes } from "../../../drizzle/schema";
-import { adminProcedure, protectedProcedure, publicProcedure, router } from "../../_core/trpc";
+import { protectedProcedure, publicProcedure, router, requirePermission } from "../../_core/trpc";
 
 // Security controls schema
 const securityControlsSchema = z.object({
@@ -160,7 +160,7 @@ export const zonesRouter = router({
     }),
   
   // Create a new zone
-  create: adminProcedure
+  create: requirePermission("zones:create")
     .input(createZoneSchema)
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -208,7 +208,7 @@ export const zonesRouter = router({
     }),
   
   // Update an existing zone
-  update: adminProcedure
+  update: requirePermission("zones:update")
     .input(updateZoneSchema)
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -249,7 +249,7 @@ export const zonesRouter = router({
     }),
   
   // Delete a zone (soft delete)
-  delete: adminProcedure
+  delete: requirePermission("zones:delete")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -262,7 +262,7 @@ export const zonesRouter = router({
     }),
   
   // Lock a zone (emergency lock)
-  lock: protectedProcedure
+  lock: requirePermission("zones:lock")
     .input(z.object({
       id: z.number(),
       reason: z.string().min(1),
@@ -291,7 +291,7 @@ export const zonesRouter = router({
     }),
   
   // Unlock a zone
-  unlock: protectedProcedure
+  unlock: requirePermission("zones:lock")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();

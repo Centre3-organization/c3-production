@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, protectedProcedure, adminProcedure } from "../../_core/trpc";
+import { router, protectedProcedure, requirePermission } from "../../_core/trpc";
 import {
   getUserById,
   listUsers,
@@ -151,7 +151,7 @@ export const usersRouter = router({
     }),
 
   // Create a new user (admin only)
-  create: adminProcedure
+  create: requirePermission("users:create")
     .input(
       z.object({
         // Step 1: User Type
@@ -259,7 +259,7 @@ export const usersRouter = router({
     }),
 
   // Update user profile (admin only for most fields)
-  update: adminProcedure
+  update: requirePermission("users:update")
     .input(
       z.object({
         id: z.number(),
@@ -311,7 +311,7 @@ export const usersRouter = router({
     }),
 
   // Delete user (admin only)
-  delete: adminProcedure
+  delete: requirePermission("users:delete")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       await deleteUser(input.id);
@@ -344,7 +344,7 @@ export const usersRouter = router({
     }),
 
   // Change user password (admin only)
-  changePassword: adminProcedure
+  changePassword: requirePermission("users:update")
     .input(
       z.object({
         userId: z.number(),
@@ -358,7 +358,7 @@ export const usersRouter = router({
     }),
 
   // Activate user (admin only)
-  activate: adminProcedure
+  activate: requirePermission("users:update")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       await updateUser(input.id, { status: "active" } as any);
@@ -366,7 +366,7 @@ export const usersRouter = router({
     }),
 
   // Deactivate user (admin only)
-  deactivate: adminProcedure
+  deactivate: requirePermission("users:update")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       await updateUser(input.id, { status: "inactive" } as any);
@@ -374,7 +374,7 @@ export const usersRouter = router({
     }),
 
   // Assign system role to a user
-  assignRole: adminProcedure
+  assignRole: requirePermission("users:update")
     .input(
       z.object({
         userId: z.number(),

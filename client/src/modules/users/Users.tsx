@@ -118,6 +118,16 @@ const permissionModules = [
     ] 
   },
   { 
+    id: "areas", 
+    label: "Area Management", 
+    actions: [
+      { id: "create", label: "Create Areas" },
+      { id: "read", label: "View Areas" },
+      { id: "update", label: "Update Areas" },
+      { id: "delete", label: "Delete Areas" }
+    ] 
+  },
+  { 
     id: "alerts", 
     label: "Security Alerts", 
     actions: [

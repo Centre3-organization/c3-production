@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, publicProcedure, protectedProcedure } from "../../_core/trpc";
+import { router, publicProcedure, protectedProcedure, requirePermission } from "../../_core/trpc";
 import { eq, and, isNull, sql, desc, asc } from "drizzle-orm";
 import { getDb } from "../../db";
 import { 
@@ -94,7 +94,7 @@ export const groupsRouter = router({
     }),
 
   // Create new group
-  create: protectedProcedure
+  create: requirePermission("groups:create")
     .input(z.object({
       name: z.string().min(1).max(100),
       groupType: z.enum(["internal", "contractor", "client"]),
@@ -129,7 +129,7 @@ export const groupsRouter = router({
     }),
 
   // Update group
-  update: protectedProcedure
+  update: requirePermission("groups:update")
     .input(z.object({
       id: z.number(),
       name: z.string().min(1).max(100).optional(),
@@ -160,7 +160,7 @@ export const groupsRouter = router({
     }),
 
   // Delete group (soft delete by setting status to inactive)
-  delete: protectedProcedure
+  delete: requirePermission("groups:delete")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
