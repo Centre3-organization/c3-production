@@ -123,9 +123,9 @@ export default function Layout({ children }: LayoutProps) {
   const hasPermission = (permissionPath: string): boolean => {
     if (!permissions) return false;
     
-    // Admin has all permissions
-    if (currentUser?.role === 'admin') return true;
-    
+    // Use the actual permissions from the user's system role
+    // The getMyPermissions endpoint already handles super_admin/admin role escalation
+    // based on the role's actual permission assignments
     const [category, action] = permissionPath.split('.');
     const categoryPerms = (permissions as any)?.[category];
     if (!categoryPerms) return false;

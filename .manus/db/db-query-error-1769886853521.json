@@ -1,0 +1,8 @@
+{
+  "query": "SELECT u.id, u.name, u.email, u.role, sr.id as system_role_id, sr.code as role_code, sr.name as role_name, sr.level\nFROM users u\nLEFT JOIN user_system_roles usr ON u.id = usr.userId AND usr.isActive = 1\nLEFT JOIN system_roles sr ON usr.roleId = sr.id\nWHERE u.name LIKE '%Abdullah%' OR u.name LIKE '%Alzakari%' OR u.email LIKE '%abdullah%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT u.id, u.name, u.email, u.role, sr.id as system_role_id, sr.code as role_code, sr.name as role_name, sr.level\nFROM users u\nLEFT JOIN user_system_roles usr ON u.id = usr.userId AND usr.isActive = 1\nLEFT JOIN system_roles sr ON usr.roleId = sr.id\nWHERE u.name LIKE '%Abdullah%' OR u.name LIKE '%Alzakari%' OR u.email LIKE '%abdullah%';",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'wqxabcmrq5aefj4qyeefun.user_system_roles' doesn't exist"
+  ]
+}

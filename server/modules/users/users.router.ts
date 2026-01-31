@@ -459,8 +459,9 @@ export const usersRouter = router({
         }
       }
 
-      // Super admin and admin have all permissions
-      if (userPerms.roleCode === 'super_admin' || userPerms.roleCode === 'admin') {
+      // Only super_admin has all permissions automatically
+      // Admin and other roles use their actual assigned permissions
+      if (userPerms.roleCode === 'super_admin') {
         for (const category of Object.keys(permissionsByCategory)) {
           for (const action of Object.keys(permissionsByCategory[category])) {
             permissionsByCategory[category][action] = true;

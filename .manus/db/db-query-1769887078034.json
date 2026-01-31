@@ -1,0 +1,25 @@
+{
+  "query": "SELECT id, name, description FROM roles WHERE name LIKE '%Admin%' OR description LIKE '%approv%' LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, description FROM roles WHERE name LIKE '%Admin%' OR description LIKE '%approv%' LIMIT 20;",
+  "rows": [
+    {
+      "id": "90002",
+      "name": "Administrator",
+      "description": "Full system access"
+    },
+    {
+      "id": "90003",
+      "name": "Security Supervisor",
+      "description": "Manages security operations and approvals"
+    },
+    {
+      "id": "90006",
+      "name": "L1 Approver",
+      "description": "Can approve L1 level requests"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tdescription\n90002\tAdministrator\tFull system access\n90003\tSecurity Supervisor\tManages security operations and approvals\n90006\tL1 Approver\tCan approve L1 level requests\n",
+  "stderr": "",
+  "execution_time_ms": 1539
+}

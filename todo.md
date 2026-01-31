@@ -1421,3 +1421,18 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add client companies to Master Data (Amazon, Google, Alibaba)
 - [x] Add contractor companies to Master Data (Schneider Electric, Siemens)
 - [x] Verify companies appear in Master Data UI
+
+## CRITICAL: Permission Enforcement Issues (Jan 31, 2026)
+- [x] FIX: Administrator role without Request Types permission can still access Request Type Configuration page
+  - Removed automatic all-permissions bypass for 'admin' role in Layout.tsx hasPermission function
+  - Updated getMyPermissions endpoint to only give all permissions to 'super_admin', not 'admin'
+  - Admin users now use their actual assigned role permissions
+- [x] FIX: 'Manual Approvce' typo - Verified spelling is correct as 'Manual Approval' in code
+- [x] Verify permission enforcement works correctly after fix
+- [x] Redesign Edit Role UI with SAP-style authorization management interface
+  - Added Role Properties section with gray background
+  - Added Authorization Objects section with purple header
+  - Added Select All / Clear All buttons
+  - Added module-level checkboxes with permission count badges
+  - Grid layout for individual permissions
+  - Footer shows total permissions selected count

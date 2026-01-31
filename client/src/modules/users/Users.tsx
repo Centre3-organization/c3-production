@@ -1076,87 +1076,199 @@ export default function Users() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Role Dialog */}
+      {/* Edit Role Dialog - SAP-style Authorization Management */}
       <Dialog open={editRoleOpen} onOpenChange={setEditRoleOpen}>
-        <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{selectedRole?.isNew ? "Create New Role" : "Edit Role"}</DialogTitle>
-            <DialogDescription>
-              Configure the role name, description, and permissions
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="sm:max-w-[900px] max-h-[85vh] overflow-hidden flex flex-col p-0">
+          {/* Header Section */}
+          <div className="px-6 pt-6 pb-4 border-b bg-gradient-to-r from-purple-50 to-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <DialogTitle className="text-xl font-semibold text-gray-900">
+                  {selectedRole?.isNew ? "Create New Role" : "Edit Role"}
+                </DialogTitle>
+                <DialogDescription className="mt-1">
+                  Configure role properties and authorization objects
+                </DialogDescription>
+              </div>
+              <Badge variant="outline" className="bg-purple-100 text-purple-700 border-purple-200">
+                {selectedRole?.isNew ? "New" : "Editing"}
+              </Badge>
+            </div>
+          </div>
+          
           {selectedRole && (
-            <div className="space-y-6 py-4">
-              <div className="grid gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="roleName">Role Name</Label>
-                  <Input 
-                    id="roleName" 
-                    value={selectedRole.name}
-                    onChange={(e) => setSelectedRole({...selectedRole, name: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="roleDescription">Description</Label>
-                  <Input 
-                    id="roleDescription" 
-                    value={selectedRole.description || ""}
-                    onChange={(e) => setSelectedRole({...selectedRole, description: e.target.value})}
-                  />
+            <div className="flex-1 overflow-y-auto px-6 py-4">
+              {/* Role Properties Section */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+                  <Shield className="h-4 w-4" />
+                  Role Properties
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="roleName" className="text-xs font-medium text-gray-600 uppercase">
+                      Role Name <span className="text-red-500">*</span>
+                    </Label>
+                    <Input 
+                      id="roleName" 
+                      value={selectedRole.name}
+                      onChange={(e) => setSelectedRole({...selectedRole, name: e.target.value})}
+                      className="h-9 bg-white"
+                      placeholder="Enter role name"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="roleDescription" className="text-xs font-medium text-gray-600 uppercase">
+                      Description
+                    </Label>
+                    <Input 
+                      id="roleDescription" 
+                      value={selectedRole.description || ""}
+                      onChange={(e) => setSelectedRole({...selectedRole, description: e.target.value})}
+                      className="h-9 bg-white"
+                      placeholder="Role description"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <Separator />
-
-              <div className="space-y-4">
-                <h4 className="font-medium">Permissions</h4>
-                {permissionModules.map((module) => (
-                  <div key={module.id} className="space-y-2">
-                    <Label className="text-sm font-medium">{module.label}</Label>
-                    <div className="flex flex-wrap gap-4 pl-4">
-                      {module.actions.map((action) => (
-                        <div key={action.id} className="flex items-center space-x-2">
-                          <Checkbox 
-                            id={`${module.id}-${action.id}`}
-                            checked={selectedRole.permissions?.[module.id]?.[action.id] || false}
-                            onCheckedChange={(checked) => {
-                              setSelectedRole({
-                                ...selectedRole,
-                                permissions: {
-                                  ...selectedRole.permissions,
-                                  [module.id]: {
-                                    ...selectedRole.permissions?.[module.id],
-                                    [action.id]: checked
-                                  }
-                                }
-                              });
-                            }}
-                          />
-                          <Label htmlFor={`${module.id}-${action.id}`} className="text-sm font-normal">
-                            {action.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
+              {/* Authorization Objects Section - SAP Style Table */}
+              <div className="border rounded-lg overflow-hidden">
+                <div className="bg-purple-600 text-white px-4 py-3 flex items-center justify-between">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide flex items-center gap-2">
+                    <Key className="h-4 w-4" />
+                    Authorization Objects
+                  </h3>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="secondary" 
+                      className="h-7 text-xs bg-white/20 hover:bg-white/30 text-white border-0"
+                      onClick={() => {
+                        const allPerms: Record<string, Record<string, boolean>> = {};
+                        permissionModules.forEach(m => {
+                          allPerms[m.id] = {};
+                          m.actions.forEach(a => { allPerms[m.id][a.id] = true; });
+                        });
+                        setSelectedRole({...selectedRole, permissions: allPerms});
+                      }}
+                    >
+                      Select All
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="secondary" 
+                      className="h-7 text-xs bg-white/20 hover:bg-white/30 text-white border-0"
+                      onClick={() => setSelectedRole({...selectedRole, permissions: {}})}
+                    >
+                      Clear All
+                    </Button>
                   </div>
-                ))}
+                </div>
+                
+                {/* Permission Table */}
+                <div className="divide-y divide-gray-100">
+                  {permissionModules.map((module, idx) => {
+                    const modulePerms = selectedRole.permissions?.[module.id] || {};
+                    const allChecked = module.actions.every(a => modulePerms[a.id]);
+                    const someChecked = module.actions.some(a => modulePerms[a.id]);
+                    
+                    return (
+                      <div key={module.id} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                        {/* Module Header Row */}
+                        <div className="flex items-center px-4 py-2.5 border-b border-gray-100">
+                          <div className="flex items-center gap-3 flex-1">
+                            <Checkbox 
+                              id={`module-${module.id}`}
+                              checked={allChecked}
+                              className={someChecked && !allChecked ? 'data-[state=checked]:bg-purple-300' : ''}
+                              onCheckedChange={(checked) => {
+                                const newModulePerms: Record<string, boolean> = {};
+                                module.actions.forEach(a => { newModulePerms[a.id] = !!checked; });
+                                setSelectedRole({
+                                  ...selectedRole,
+                                  permissions: {
+                                    ...selectedRole.permissions,
+                                    [module.id]: newModulePerms
+                                  }
+                                });
+                              }}
+                            />
+                            <span className="font-medium text-sm text-gray-900">{module.label}</span>
+                            <Badge variant="outline" className="text-[10px] h-5 bg-gray-100 text-gray-600 border-gray-200">
+                              {module.actions.filter(a => modulePerms[a.id]).length}/{module.actions.length}
+                            </Badge>
+                          </div>
+                        </div>
+                        
+                        {/* Actions Grid */}
+                        <div className="px-4 py-3 pl-10">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2">
+                            {module.actions.map((action) => (
+                              <div key={action.id} className="flex items-center gap-2">
+                                <Checkbox 
+                                  id={`${module.id}-${action.id}`}
+                                  checked={modulePerms[action.id] || false}
+                                  onCheckedChange={(checked) => {
+                                    setSelectedRole({
+                                      ...selectedRole,
+                                      permissions: {
+                                        ...selectedRole.permissions,
+                                        [module.id]: {
+                                          ...selectedRole.permissions?.[module.id],
+                                          [action.id]: checked
+                                        }
+                                      }
+                                    });
+                                  }}
+                                  className="h-4 w-4"
+                                />
+                                <Label 
+                                  htmlFor={`${module.id}-${action.id}`} 
+                                  className="text-sm text-gray-700 cursor-pointer hover:text-purple-600 transition-colors"
+                                >
+                                  {action.label}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditRoleOpen(false)}>Cancel</Button>
-            <Button 
-              className="bg-purple-600 hover:bg-purple-700"
-              onClick={handleSaveRole}
-              disabled={createRoleMutation.isPending || updateRoleMutation.isPending}
-            >
-              {(createRoleMutation.isPending || updateRoleMutation.isPending) && (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          
+          {/* Footer */}
+          <div className="px-6 py-4 border-t bg-gray-50 flex items-center justify-between">
+            <div className="text-xs text-gray-500">
+              {selectedRole && (
+                <span>
+                  {Object.values(selectedRole.permissions || {}).reduce((acc: number, mod: any) => 
+                    acc + Object.values(mod || {}).filter(Boolean).length, 0
+                  )} permissions selected
+                </span>
               )}
-              <Save className="h-4 w-4 mr-2" />
-              {selectedRole?.isNew ? "Create Role" : "Save Changes"}
-            </Button>
-          </DialogFooter>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={() => setEditRoleOpen(false)}>
+                Cancel
+              </Button>
+              <Button 
+                className="bg-purple-600 hover:bg-purple-700 min-w-[140px]"
+                onClick={handleSaveRole}
+                disabled={createRoleMutation.isPending || updateRoleMutation.isPending}
+              >
+                {(createRoleMutation.isPending || updateRoleMutation.isPending) && (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                )}
+                <Save className="h-4 w-4 mr-2" />
+                {selectedRole?.isNew ? "Create Role" : "Save Changes"}
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
