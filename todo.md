@@ -1693,3 +1693,11 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Ensure fields are positioned correctly (after Requestor Name, before existing fields)
 - [x] Enhanced auth.me to return companyName from cardCompanies table
 - [x] Updated FieldRenderer to use companyName from user profile
+
+## WP, MOP, MHV Form Sections (Feb 8, 2026)
+- [x] Add Basic Information section to WP with fields: Requestor Name, Company, Email, Department, Purpose of Entry, Description
+- [x] Add Location section to WP with fields: Country, Region, City, Site, Zone, Area (cascading dropdowns)
+- [x] Add Basic Information section to MOP with fields: Requestor Name, Company, Email, Department, Purpose of Entry, Description
+- [x] Add Location section to MOP with fields: Country, Region, City, Site, Zone, Area (cascading dropdowns)
+- [x] Add Basic Information section to MHV with fields: Requestor Name, Company, Email, Department, Purpose of Entry, Description
+- [x] Add Location section to MHV with fields: Country, Region, City, Site, Zone, Area (cascading dropdowns)
