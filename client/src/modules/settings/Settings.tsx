@@ -953,9 +953,7 @@ export default function Settings() {
                   <TabsTrigger value="areatypes" className="gap-1">
                     <Grid3X3 className="h-4 w-4" /> Area Types
                   </TabsTrigger>
-                  <TabsTrigger value="companies" className="gap-1">
-                    <Building2 className="h-4 w-4" /> Companies
-                  </TabsTrigger>
+
                 </TabsList>
 
                 {/* ============================================================================ */}

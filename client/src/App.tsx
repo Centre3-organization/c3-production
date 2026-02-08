@@ -43,6 +43,9 @@ import Users from "./modules/users/Users";
 // Groups Module
 import Groups from "./modules/groups/Groups";
 
+// Administration Module
+import Companies from "./modules/administration/Companies";
+
 // Workflows Module
 import { WorkflowBuilder } from "./modules/workflows/WorkflowBuilder";
 import { ShiftManagement } from "./modules/workflows/ShiftManagement";
@@ -164,6 +167,11 @@ function Router() {
       <Route path="/groups">
         <Layout>
           <Groups />
+        </Layout>
+      </Route>
+      <Route path="/companies">
+        <Layout>
+          <Companies />
         </Layout>
       </Route>
       <Route path="/users">

@@ -214,6 +214,7 @@ export default function Layout({ children }: LayoutProps) {
       requiredPermission: "users.read",
       items: [
         { icon: FolderTree, labelKey: "nav.groups", label: "Groups", href: "/groups", requiredPermission: "groups.view" },
+        { icon: Building2, labelKey: "nav.companies", label: "Companies", href: "/companies", requiredPermission: "settings.view" },
         { icon: Users, labelKey: "nav.users", label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
         { icon: Settings, labelKey: "nav.settings", label: "Settings", href: "/settings", requiredPermission: "settings.view" },
         { icon: Radio, labelKey: "nav.integrationHub", label: "Integration Hub", href: "/integration-hub", requiredPermission: "integrations.view" },

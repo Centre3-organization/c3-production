@@ -1646,3 +1646,9 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add "Download Form PDF" button to Decision Details dialog (ApprovalHistory.tsx) - added with handleDownloadPdf function
 - [x] Investigate admin approval visibility - confirmed working: 59 unique combos + 1 legacy = 60 shown correctly. 2 orphaned requests explained (1 no workflow instance, 1 in need_clarification status)
 - [x] Server now returns requestId in final approval response for PDF button to work in QR dialog
+
+## Sidebar Navigation Update (Feb 8, 2026)
+- [x] Move Companies from Master Data section to Administration section in sidebar
+- [x] Created standalone Companies page at /companies with stats cards, search, and filter
+- [x] Added Companies nav item under Administration in sidebar
+- [x] Removed Companies tab from Master Data in Settings to avoid duplication
