@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import FormTemplateBuilder from "./FormTemplateBuilder";
+import MaterialTypesTab from "@/modules/masterdata/MaterialTypes";
 import { 
   Settings as SettingsIcon, 
   Building2, 
@@ -17,6 +18,7 @@ import {
   Building,
   Layers,
   Grid3X3,
+  Package,
   Activity,
   UserCog,
   Users2,
@@ -953,7 +955,9 @@ export default function Settings() {
                   <TabsTrigger value="areatypes" className="gap-1">
                     <Grid3X3 className="h-4 w-4" /> Area Types
                   </TabsTrigger>
-
+                  <TabsTrigger value="materialtypes" className="gap-1">
+                    <Package className="h-4 w-4" /> Material Types
+                  </TabsTrigger>
                 </TabsList>
 
                 {/* ============================================================================ */}
@@ -1835,7 +1839,10 @@ export default function Settings() {
                     isDeleting={deleteAreaTypeMutation.isPending}
                   />
                 </TabsContent>
-
+                {/* Material Types Tab */}
+                <TabsContent value="materialtypes">
+                  <MaterialTypesTab />
+                </TabsContent>
                 {/* Companies Tab */}
                 <TabsContent value="companies">
                   <div className="space-y-4">

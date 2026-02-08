@@ -1739,3 +1739,6 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Conditional visibility: Decision 1 (Material=Yes) shows Material tables, Decision 2 (Vehicle=Yes) shows Vehicle sections
 - [x] Integrate materialTypes master data as dropdown options in Type field
 - [x] Added material_types to dynamicDataSources, optionsSource type, and getDataSourceOptions procedure
+
+## Material Types Tab in Master Data Settings (Feb 8, 2026)
+- [x] Add Material Types tab to Master Data section in System Settings page
