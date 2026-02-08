@@ -45,6 +45,7 @@ import Groups from "./modules/groups/Groups";
 
 // Administration Module
 import Companies from "./modules/administration/Companies";
+import MaterialTypes from "./modules/masterdata/MaterialTypes";
 import CompanyDetail from "./modules/administration/CompanyDetail";
 
 // Workflows Module
@@ -178,6 +179,11 @@ function Router() {
       <Route path="/companies">
         <Layout>
           <Companies />
+        </Layout>
+      </Route>
+      <Route path="/material-types">
+        <Layout>
+          <MaterialTypes />
         </Layout>
       </Route>
       <Route path="/users">

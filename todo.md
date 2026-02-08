@@ -1722,3 +1722,9 @@ Create a unified data source system that can pull options from anywhere in the p
 
 ## Fix Checkbox Group Layout (Feb 8, 2026)
 - [x] Fix checkbox_group items overlapping — display in clean vertical list with proper spacing
+
+## Material Type Master Data (Feb 8, 2026)
+- [x] Create materialTypes table in schema (id, name, nameAr, code, description, isActive, createdAt, updatedAt)
+- [x] Add tRPC procedures for CRUD operations in masterData router
+- [x] Create Material Types UI page under Master Data navigation section
+- [x] Seed 21 sample material types: Cabinet/Rack, Chassis, Power Strip, PDU, PSU, Power Module, Server, Blade Server, Switch, Switch Module, Router, Patch Panel, KVM Switch, KVM, Storage Device, Receptacle, Cables, Tools, PC/Laptop, Screen, Others

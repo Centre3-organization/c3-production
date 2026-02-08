@@ -11,6 +11,7 @@ import {
   AlertTriangle, 
   Settings, 
   LogOut,
+  Package,
   ChevronDown,
   ChevronRight,
   Menu,
@@ -206,6 +207,14 @@ export default function Layout({ children }: LayoutProps) {
       requiredPermission: "reports.view",
       items: [
         { icon: BarChart3, labelKey: "nav.reports", label: "Reports", href: "/reports", requiredPermission: "reports.view" },
+      ]
+    },
+    {
+      titleKey: "nav.masterData",
+      title: "Master Data",
+      requiredPermission: "settings.view",
+      items: [
+        { icon: Package, labelKey: "nav.materialTypes", label: "Material Types", href: "/material-types", requiredPermission: "settings.view" },
       ]
     },
     {

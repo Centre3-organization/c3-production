@@ -2182,3 +2182,22 @@ export const requestComments = mysqlTable("requestComments", {
 
 export type RequestComment = typeof requestComments.$inferSelect;
 export type InsertRequestComment = typeof requestComments.$inferInsert;
+
+
+// ============================================================================
+// MATERIAL TYPES (Master Data)
+// ============================================================================
+
+export const materialTypes = mysqlTable("materialTypes", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameAr: varchar("nameAr", { length: 255 }),
+  code: varchar("code", { length: 100 }).notNull().unique(),
+  description: text("description"),
+  isActive: boolean("isActive").default(true).notNull(),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MaterialType = typeof materialTypes.$inferSelect;
+export type InsertMaterialType = typeof materialTypes.$inferInsert;

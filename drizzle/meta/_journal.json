@@ -225,6 +225,13 @@
       "when": 1770572718517,
       "tag": "0031_fast_lady_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "5",
+      "when": 1770574340436,
+      "tag": "0032_minor_clint_barton",
+      "breakpoints": true
     }
   ]
 }

@@ -17,7 +17,8 @@ import {
   cardCompanies,
   magneticCards,
   groups,
-  requests
+  requests,
+  materialTypes
 } from "../../../drizzle/schema";
 import { adminProcedure, publicProcedure, router } from "../../_core/trpc";
 
@@ -1498,5 +1499,72 @@ export const masterDataRouter = router({
       await db.update(cardCompanies).set({ isActive: false }).where(eq(cardCompanies.id, input.id));
       
       return { success: true };
+    }),
+
+  // ============================================================================
+  // MATERIAL TYPES
+  // ============================================================================
+
+  getMaterialTypes: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    const result = await db.select().from(materialTypes).where(eq(materialTypes.isActive, true)).orderBy(asc(materialTypes.displayOrder), asc(materialTypes.name));
+    return result;
+  }),
+
+  getAllMaterialTypes: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    const result = await db.select().from(materialTypes).orderBy(asc(materialTypes.displayOrder), asc(materialTypes.name));
+    return result;
+  }),
+
+  createMaterialType: adminProcedure
+    .input(z.object({
+      name: z.string().min(1).max(255),
+      nameAr: z.string().max(255).optional(),
+      code: z.string().min(1).max(100),
+      description: z.string().optional(),
+      displayOrder: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.insert(materialTypes).values({
+        name: input.name,
+        nameAr: input.nameAr || null,
+        code: input.code.toUpperCase().replace(/[^A-Z0-9_]/g, '_'),
+        description: input.description || null,
+        displayOrder: input.displayOrder || 0,
+      });
+      return { success: true, message: "Material type created successfully" };
+    }),
+
+  updateMaterialType: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      name: z.string().min(1).max(255).optional(),
+      nameAr: z.string().max(255).optional(),
+      code: z.string().min(1).max(100).optional(),
+      description: z.string().optional(),
+      isActive: z.boolean().optional(),
+      displayOrder: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, ...data } = input;
+      if (data.code) data.code = data.code.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+      await db.update(materialTypes).set(data).where(eq(materialTypes.id, id));
+      return { success: true, message: "Material type updated successfully" };
+    }),
+
+  deleteMaterialType: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.update(materialTypes).set({ isActive: false }).where(eq(materialTypes.id, input.id));
+      return { success: true, message: "Material type deleted successfully" };
     }),
 });
