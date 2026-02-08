@@ -1230,8 +1230,8 @@ export function FieldRenderer({
         } else if (fieldCode === "email") {
           displayValue = user.email || "";
         } else if (fieldCode === "company") {
-          // Company comes from contractorCompany or jobTitle for now
-          displayValue = (user as any).jobTitle || (user as any).subContractorCompany || "Centre3";
+          // Company comes from auth.me enriched companyName
+          displayValue = (user as any).companyName || (user as any).subContractorCompany || "Centre3";
         } else if (fieldCode === "mobile") {
           displayValue = (user as any).phone || "";
         } else if (fieldCode === "department") {

@@ -17,7 +17,8 @@ import {
   rolePermissions,
   userSystemRoles,
   InsertSystemRole,
-  InsertPermission
+  InsertPermission,
+  cardCompanies
 } from "../../../drizzle/schema";
 
 import { ENV } from '../../_core/env';
@@ -293,6 +294,14 @@ export async function getDepartmentById(id: number): Promise<Department | undefi
   if (!db) return undefined;
 
   const result = await db.select().from(departments).where(eq(departments.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getCompanyById(id: number): Promise<{ id: number; name: string } | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select({ id: cardCompanies.id, name: cardCompanies.name }).from(cardCompanies).where(eq(cardCompanies.id, id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 

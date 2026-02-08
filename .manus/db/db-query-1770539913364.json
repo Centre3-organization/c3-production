@@ -1,0 +1,58 @@
+{
+  "query": "SELECT rt.id, rt.name, rt.code, rt.categoryId FROM requestTypes rt;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT rt.id, rt.name, rt.code, rt.categoryId FROM requestTypes rt;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Admin Visit",
+      "code": "admin_visit",
+      "categoryId": "1"
+    },
+    {
+      "id": "2",
+      "name": "Temporary Entry Permission",
+      "code": "tep",
+      "categoryId": "2"
+    },
+    {
+      "id": "3",
+      "name": "Work Permission",
+      "code": "wp",
+      "categoryId": "2"
+    },
+    {
+      "id": "4",
+      "name": "Method of Procedure",
+      "code": "mop",
+      "categoryId": "2"
+    },
+    {
+      "id": "5",
+      "name": "Material/Vehicle Permit",
+      "code": "mhv",
+      "categoryId": "2"
+    },
+    {
+      "id": "6",
+      "name": "Visitor Registration",
+      "code": "VR01",
+      "categoryId": "3"
+    },
+    {
+      "id": "7",
+      "name": "BAsic",
+      "code": "TEPq",
+      "categoryId": "4"
+    },
+    {
+      "id": "8",
+      "name": "Location",
+      "code": "Lo139",
+      "categoryId": "4"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcode\tcategoryId\n1\tAdmin Visit\tadmin_visit\t1\n2\tTemporary Entry Permission\ttep\t2\n3\tWork Permission\twp\t2\n4\tMethod of Procedure\tmop\t2\n5\tMaterial/Vehicle Permit\tmhv\t2\n6\tVisitor Registration\tVR01\t3\n7\tBAsic\tTEPq\t4\n8\tLocation\tLo139\t4\n",
+  "stderr": "",
+  "execution_time_ms": 1676
+}

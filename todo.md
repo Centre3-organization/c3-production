@@ -1685,3 +1685,11 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix Zone → Area cascade (areas filtered by selected zone)
 - [x] Apply to both Admin Visit and TEP form types
 - [x] Clear dependent fields when parent selection changes (recursive descendant clearing)
+
+## TEP Basic Information Field Additions (Feb 8, 2026)
+- [x] Add Company field (readonly, required, col 6) to TEP Basic Information section
+- [x] Add Email field (readonly, required, col 6) to TEP Basic Information section
+- [x] Add Department field (readonly, required, col 6) to TEP Basic Information section
+- [x] Ensure fields are positioned correctly (after Requestor Name, before existing fields)
+- [x] Enhanced auth.me to return companyName from cardCompanies table
+- [x] Updated FieldRenderer to use companyName from user profile

@@ -90,9 +90,19 @@ export const appRouter = router({
         departmentName = dept?.name || "";
       }
       
+      // Fetch company name if user has contractorCompanyId
+      let companyName = "Centre3";
+      if (user.contractorCompanyId) {
+        const company = await db.getCompanyById(user.contractorCompanyId);
+        companyName = company?.name || "Centre3";
+      } else if (user.userType === "centre3_employee") {
+        companyName = "Centre3";
+      }
+      
       return {
         ...user,
         departmentName,
+        companyName,
       };
     }),
     

@@ -1,0 +1,20 @@
+{
+  "query": "\nSELECT rt.id, rt.name, rt.code FROM requestTypes rt WHERE rt.name LIKE '%TEP%' OR rt.code LIKE '%TEP%' OR rt.code LIKE '%tep%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute \nSELECT rt.id, rt.name, rt.code FROM requestTypes rt WHERE rt.name LIKE '%TEP%' OR rt.code LIKE '%TEP%' OR rt.code LIKE '%tep%';\n",
+  "rows": [
+    {
+      "id": "2",
+      "name": "Temporary Entry Permission",
+      "code": "tep"
+    },
+    {
+      "id": "7",
+      "name": "BAsic",
+      "code": "TEPq"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcode\n2\tTemporary Entry Permission\ttep\n7\tBAsic\tTEPq\n",
+  "stderr": "",
+  "execution_time_ms": 1694
+}

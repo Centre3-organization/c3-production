@@ -1,0 +1,9 @@
+{
+  "query": "\nSELECT fs.id as section_id, fs.name as section_name, fs.displayOrder as section_order,\n       ff.id as field_id, ff.name as field_name, ff.code, ff.fieldType, ff.isRequired, ff.columnSpan, ff.displayOrder as field_order, ff.isActive, ff.optionsSource\nFROM formSections fs\nLEFT JOIN formFields ff ON ff.sectionId = fs.id\nWHERE fs.name LIKE '%Basic%' \n  AND fs.requestTypeId IN (SELECT id FROM requestTypes WHERE name LIKE '%TEP%')\nORDER BY fs.displayOrder, ff.displayOrder;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute \nSELECT fs.id as section_id, fs.name as section_name, fs.displayOrder as section_order,\n       ff.id as field_id, ff.name as field_name, ff.code, ff.fieldType, ff.isRequired, ff.columnSpan, ff.displayOrder as field_order, ff.isActive, ff.optionsSource\nFROM formSections fs\nLEFT JOIN formFields ff ON ff.sectionId = fs.id\nWHERE fs.name LIKE '%Basic%' \n  AND fs.requestTypeId IN (SELECT id FROM requestTypes WHERE name LIKE '%TEP%')\nORDER BY fs.displayOrder, ff.displayOrder;\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1570
+}
