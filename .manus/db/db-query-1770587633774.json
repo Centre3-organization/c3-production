@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE `stageApprovers` MODIFY COLUMN `approverType` enum('user','role','approval_role','group','group_role','hierarchy_level','dynamic_field','manager_chain') NOT NULL",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE `stageApprovers` MODIFY COLUMN `approverType` enum('user','role','approval_role','group','group_role','hierarchy_level','dynamic_field','manager_chain') NOT NULL",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2130
+}

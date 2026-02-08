@@ -98,7 +98,6 @@ const CONDITION_TYPES = [
   // Time-based conditions
   { value: "time_range", label: "Time Range", category: "Time", icon: Clock },
   { value: "working_hours", label: "Working Hours", category: "Time", icon: Clock },
-  { value: "shift_id", label: "Shift", category: "Time", icon: Calendar },
   { value: "day_of_week", label: "Day of Week", category: "Time", icon: Calendar },
 ];
 
@@ -162,7 +161,6 @@ const STAGE_TYPES = [
   { value: "group_role", label: "Group Role" },
   { value: "group_hierarchy", label: "Group Hierarchy" },
   { value: "dynamic_field", label: "Dynamic Field (e.g., Host)" },
-  { value: "shift_based", label: "Shift-Based Assignment" },
   { value: "manager", label: "Manager" },
   { value: "external_manager", label: "External Manager" },
   { value: "site_manager", label: "Site Manager" },
@@ -204,9 +202,6 @@ export function WorkflowBuilder() {
   const { data: groups } = trpc.groups.list.useQuery();
   const { data: departments } = trpc.departments.list.useQuery();
   const { data: roles } = trpc.roles.list.useQuery();
-  // Shifts query - placeholder until shifts router is available
-  const shifts: { id: number; name: string }[] = [];
-
   // Mutations
   const createWorkflow = trpc.workflows.create.useMutation({
     onSuccess: () => {
@@ -386,7 +381,7 @@ export function WorkflowBuilder() {
     addStage.mutate({
       workflowId: selectedWorkflow,
       stageName: newStage.stageName,
-      stageType: newStage.stageType as "individual" | "role" | "group" | "group_hierarchy" | "dynamic_field" | "shift_based" | "manager" | "external_manager" | "site_manager" | "zone_owner" | "custom_resolver",
+      stageType: newStage.stageType as "individual" | "role" | "group" | "group_hierarchy" | "dynamic_field" | "manager" | "external_manager" | "site_manager" | "zone_owner" | "custom_resolver",
       approvalMode: newStage.approvalMode as "any" | "all" | "percentage",
       requiredApprovals: newStage.requiredApprovals,
       approvalPercentage: newStage.approvalPercentage,
@@ -455,8 +450,6 @@ export function WorkflowBuilder() {
         return DAYS_OF_WEEK;
       case "access_level":
         return ACCESS_LEVELS;
-      case "shift_id":
-        return shifts?.map((s: { id: number; name: string }) => ({ value: String(s.id), label: s.name })) || [];
       case "has_mop":
       case "has_mhv":
       case "vip_visit":
@@ -475,7 +468,7 @@ export function WorkflowBuilder() {
     return [
       "site_id", "zone_id", "area_id", "requester_group", "requester_department",
       "requester_role", "process_type", "requester_type", "activity_risk",
-      "day_of_week", "access_level", "shift_id", "has_mop", "has_mhv",
+      "day_of_week", "access_level", "has_mop", "has_mhv",
       "vip_visit", "escort_required"
     ].includes(conditionType);
   };

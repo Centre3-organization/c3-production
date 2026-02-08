@@ -1936,3 +1936,14 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Remove Shift Management DB schema/tables (kept schema tables to avoid migration issues, removed router)
 - [x] Remove Shift Management DB helpers (removed resolveShiftApprover function)
 - [x] Remove Quick Create button from sidebar
+
+## Drop Shift Tables & Clean Up Approver Type (Feb 9, 2026)
+- [x] Remove shiftSchedules, shiftDefinitions, shiftAssignments tables from drizzle/schema.ts
+- [x] Remove related type exports (ShiftSchedule, ShiftDefinition, ShiftAssignment, etc.)
+- [x] Push migration to drop tables from database (applied via SQL)
+- [x] Remove shift_assignment from stageApprovers approverType enum in schema
+- [x] Remove shift_based from approvalStages stageType enum in schema
+- [x] Remove shift_id from workflowConditions conditionType enum in schema
+- [x] Remove shift_assignment from workflow builder UI dropdown
+- [x] Remove shift_based from workflow builder UI stage type options
+- [x] Remove shift from approvalInstances resolvedVia enum in schema (assignedVia)

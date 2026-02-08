@@ -742,7 +742,6 @@ export const workflowConditions = mysqlTable("workflowConditions", {
     "request_duration",
     "vip_visit",
     "working_hours",
-    "shift_id",
     "day_of_week",
     "escort_required",
     "access_level"
@@ -782,7 +781,6 @@ export const approvalStages = mysqlTable("approvalStages", {
     "group",
     "group_hierarchy",
     "dynamic_field",
-    "shift_based",
     "manager",
     "external_manager",
     "site_manager",
@@ -826,7 +824,6 @@ export const stageApprovers = mysqlTable("stageApprovers", {
     "group_role",
     "hierarchy_level",
     "dynamic_field",
-    "shift_assignment",
     "manager_chain"
   ]).notNull(),
   approverReference: varchar("approverReference", { length: 255 }), // User ID, role code, group ID, field name
@@ -837,8 +834,6 @@ export const stageApprovers = mysqlTable("stageApprovers", {
     levels?: number;
     stopAtGroupType?: string;
     fieldType?: string;
-    scheduleId?: number;
-    roleInShift?: string;
     fallback?: string;
     filterBySite?: boolean;
     skipIfSameAsPrevious?: boolean;
@@ -892,61 +887,6 @@ export const escalationRules = mysqlTable("escalationRules", {
 export type EscalationRule = typeof escalationRules.$inferSelect;
 export type InsertEscalationRule = typeof escalationRules.$inferInsert;
 
-/**
- * Shift Schedules - Defines shift schedules for sites
- */
-export const shiftSchedules = mysqlTable("shiftSchedules", {
-  id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  siteId: int("siteId"), // NULL for default schedule
-  timezone: varchar("timezone", { length: 50 }).default("Asia/Riyadh").notNull(),
-  isDefault: boolean("isDefault").default(false).notNull(),
-  isActive: boolean("isActive").default(true).notNull(),
-  createdBy: int("createdBy"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-
-export type ShiftSchedule = typeof shiftSchedules.$inferSelect;
-export type InsertShiftSchedule = typeof shiftSchedules.$inferInsert;
-
-/**
- * Shift Definitions - Defines individual shifts within a schedule
- */
-export const shiftDefinitions = mysqlTable("shiftDefinitions", {
-  id: int("id").autoincrement().primaryKey(),
-  scheduleId: int("scheduleId").notNull(),
-  name: varchar("name", { length: 100 }).notNull(),
-  startTime: varchar("startTime", { length: 5 }).notNull(), // HH:MM format
-  endTime: varchar("endTime", { length: 5 }).notNull(), // HH:MM format
-  daysOfWeek: json("daysOfWeek").$type<number[]>().notNull(), // 0=Sunday, 6=Saturday
-  isActive: boolean("isActive").default(true).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-
-export type ShiftDefinition = typeof shiftDefinitions.$inferSelect;
-export type InsertShiftDefinition = typeof shiftDefinitions.$inferInsert;
-
-/**
- * Shift Assignments - Assigns users to shifts with roles
- */
-export const shiftAssignments = mysqlTable("shiftAssignments", {
-  id: int("id").autoincrement().primaryKey(),
-  shiftId: int("shiftId").notNull(),
-  userId: int("userId").notNull(),
-  roleInShift: varchar("roleInShift", { length: 100 }).notNull(), // e.g., "Security Incharge"
-  isPrimary: boolean("isPrimary").default(true).notNull(),
-  validFrom: timestamp("validFrom"),
-  validUntil: timestamp("validUntil"),
-  isActive: boolean("isActive").default(true).notNull(),
-  createdBy: int("createdBy"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-
-export type ShiftAssignment = typeof shiftAssignments.$inferSelect;
-export type InsertShiftAssignment = typeof shiftAssignments.$inferInsert;
 
 /**
  * Approval Delegations - Temporary delegation of approval authority
@@ -1026,7 +966,6 @@ export const approvalTasks = mysqlTable("approvalTasks", {
     "direct",
     "role",
     "group",
-    "shift",
     "delegation",
     "escalation",
     "send_back",

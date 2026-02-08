@@ -426,9 +426,6 @@ async function resolveSingleApprover(
       }
       return [];
 
-    case "shift_assignment":
-      // Shift management removed - return empty
-      return [];
 
     case "manager_chain":
       // Find requester's manager

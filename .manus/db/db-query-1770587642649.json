@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE `workflowConditions` MODIFY COLUMN `conditionType` enum('process_type','category','sub_category','site_id','region','zone_id','area_id','requester_group','requester_type','requester_department','requester_role','activity_risk','has_mop','has_mhv','visitor_count','time_range','request_duration','vip_visit','working_hours','day_of_week','escort_required','access_level') NOT NULL",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute ALTER TABLE `workflowConditions` MODIFY COLUMN `conditionType` enum('process_type','category','sub_category','site_id','region','zone_id','area_id','requester_group','requester_type','requester_department','requester_role','activity_risk','has_mop','has_mhv','visitor_count','time_range','request_duration','vip_visit','working_hours','day_of_week','escort_required','access_level') NOT NULL",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2944
+}
