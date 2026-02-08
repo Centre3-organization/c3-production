@@ -26,6 +26,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { format } from "date-fns";
+import { FioriPageHeader } from "@/components/fiori";
 
 export function DelegationManagement() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -95,70 +96,38 @@ export function DelegationManagement() {
   const asDelegate = myDelegations?.asDelegate || [];
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Delegation Management</h1>
-          <p className="text-[#6B6B6B]">Delegate your approval authority to other users</p>
-        </div>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Delegation
-        </Button>
-      </div>
+    <div className="space-y-0">
+      {/* SAP Fiori Page Header */}
+      <FioriPageHeader
+        title="Delegation Management"
+        subtitle="Delegate your approval authority to other users"
+        icon={<UserCheck className="h-5 w-5" />}
+        actions={
+          <Button className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2" size="sm" onClick={() => setIsCreateDialogOpen(true)}>
+            <Plus className="h-4 w-4" /> Create Delegation
+          </Button>
+        }
+      />
 
-      {/* Active Delegations Summary */}
-      <div className="grid grid-cols-3 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-full bg-[#E8DCF5]">
-                <ArrowRight className="h-6 w-6 text-[#5B2C93]" />
+      {/* KPI Strip */}
+      <div className="grid grid-cols-3 gap-4 mb-5">
+        {[
+          { label: "Active Delegations", value: asDelegator.filter((d: any) => d.isActive).length, icon: ArrowRight, color: "#5B2C93", bg: "#E8DCF5" },
+          { label: "Delegated to Me", value: asDelegate.filter((d: any) => d.isActive).length, icon: UserCheck, color: "#059669", bg: "#D1FAE5" },
+          { label: "Scheduled", value: asDelegator.filter((d: any) => { const now = new Date(); const start = new Date(d.validFrom); return d.isActive && now < start; }).length, icon: Clock, color: "#D97706", bg: "#FEF3C7" },
+        ].map((kpi) => (
+          <div key={kpi.label} className="bg-white border border-[#E0E0E0] rounded-lg px-4 py-3">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: kpi.bg }}>
+                <kpi.icon className="h-4 w-4" style={{ color: kpi.color }} />
               </div>
               <div>
-                <p className="text-2xl font-medium">
-                  {asDelegator.filter((d: any) => d.isActive).length}
-                </p>
-                <p className="text-sm text-[#6B6B6B]">Active Delegations</p>
+                <p className="text-xs text-[#6B6B6B] font-medium">{kpi.label}</p>
+                <p className="text-xl font-semibold text-[#2C2C2C]">{kpi.value}</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-full bg-[#D1FAE5]">
-                <UserCheck className="h-6 w-6 text-[#059669]" />
-              </div>
-              <div>
-                <p className="text-2xl font-medium">
-                  {asDelegate.filter((d: any) => d.isActive).length}
-                </p>
-                <p className="text-sm text-[#6B6B6B]">Delegated to Me</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-full bg-[#FEF3C7]">
-                <Clock className="h-6 w-6 text-[#D97706]" />
-              </div>
-              <div>
-                <p className="text-2xl font-medium">
-                  {asDelegator.filter((d: any) => {
-                    const now = new Date();
-                    const start = new Date(d.validFrom);
-                    return d.isActive && now < start;
-                  }).length}
-                </p>
-                <p className="text-sm text-[#6B6B6B]">Scheduled</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        ))}
       </div>
 
       {/* My Delegations */}

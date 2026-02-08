@@ -24,6 +24,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { FioriPageHeader } from "@/components/fiori";
 import {
   Dialog,
   DialogContent,
@@ -228,22 +229,18 @@ export default function ViewSite() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-medium tracking-tight text-[#2C2C2C] flex items-center gap-2">
-            <Globe className="h-8 w-8 text-[#5B2C93]" />
-            Global Overwatch
-          </h1>
-          <p className="text-[#6B6B6B]">Centralized command for all data center facilities.</p>
-        </div>
-        <div className="flex items-center gap-2">
+    <div className="space-y-0">
+      <FioriPageHeader
+        title="Global Overwatch"
+        subtitle="Centralized command for all data center facilities"
+        icon={<Globe className="h-5 w-5" />}
+        actions={
           <div className="relative w-64">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
-            <Input placeholder="Search global assets..." className="pl-9 bg-white" />
+            <Input placeholder="Search global assets..." className="pl-9 bg-white h-8 text-xs border-[#E0E0E0]" />
           </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Site Selector & Overview */}
       <div className="grid gap-6 md:grid-cols-12">

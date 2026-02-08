@@ -64,6 +64,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { Languages, ExternalLink } from "lucide-react";
+import { FioriPageHeader } from "@/components/fiori";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
@@ -609,19 +610,16 @@ export default function Settings() {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
-            <SettingsIcon className="h-8 w-8 text-[#5B2C93]" />
-            System Settings
-          </h1>
-          <p className="text-[#6B6B6B]">Configure global preferences and master data.</p>
-        </div>
-      </div>
+    <div className="space-y-0">
+      <FioriPageHeader
+        title="System Settings"
+        subtitle="Configure global preferences and master data"
+        icon={<SettingsIcon className="h-5 w-5" />}
+      />
 
       <Tabs defaultValue="general" className="w-full">
-        <TabsList className="grid w-full grid-cols-7 lg:w-[1050px]">
+        <div className="bg-white border border-[#E0E0E0] rounded-t-lg px-4 pt-3 mb-0">
+        <TabsList className="bg-transparent h-auto p-0 gap-1">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="departments">Departments</TabsTrigger>
           <TabsTrigger value="masterdata">Master Data</TabsTrigger>
@@ -630,6 +628,7 @@ export default function Settings() {
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="forms">Form Templates</TabsTrigger>
         </TabsList>
+        </div>
         
         <TabsContent value="general" className="mt-6 space-y-6">
           <Card>

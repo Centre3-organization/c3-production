@@ -1,31 +1,18 @@
-import { useState } from "react";
-import { 
-  ShieldAlert, 
-  Bell, 
-  CheckCircle2, 
-  Clock, 
-  Filter, 
-  Search, 
+import { useState, useMemo } from "react";
+import {
+  ShieldAlert,
   AlertTriangle,
   Eye,
   MoreHorizontal,
   MapPin,
   Video,
   PhoneCall,
-  UserX
+  Clock,
+  CheckCircle2,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,56 +29,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import {
+  FioriPageHeader,
+  FioriFilterBar,
+  FioriTable,
+  FioriStatusBadge,
+} from "@/components/fiori";
+import type { FioriColumn } from "@/components/fiori";
 
 // Mock data for alerts
 const initialAlerts = [
-  { 
-    id: "ALT-2025-089", 
-    type: "Breach Attempt", 
-    severity: "Critical", 
-    location: "Riyadh Main DC - Zone C", 
-    timestamp: "Just now", 
-    status: "New",
-    description: "Unauthorized access attempt detected at Server Hall 1. Biometric mismatch repeated 3 times."
-  },
-  { 
-    id: "ALT-2025-088", 
-    type: "Door Forced", 
-    severity: "High", 
-    location: "Jeddah DR - Gate 1", 
-    timestamp: "15 mins ago", 
-    status: "Viewed",
-    description: "Perimeter gate sensor indicates forced entry. CCTV shows vehicle impact."
-  },
-  { 
-    id: "ALT-2025-087", 
-    type: "Loitering", 
-    severity: "Medium", 
-    location: "Riyadh Main DC - Lobby", 
-    timestamp: "1 hour ago", 
-    status: "Action Taken",
-    description: "Individual loitering near security desk for >20 minutes without badge."
-  },
-  { 
-    id: "ALT-2025-086", 
-    type: "Device Offline", 
-    severity: "Low", 
-    location: "Dammam Edge - Cam 04", 
-    timestamp: "2 hours ago", 
-    status: "Action Taken",
-    description: "Camera feed signal lost. Maintenance ticket #4421 created."
-  },
-  { 
-    id: "ALT-2025-085", 
-    type: "Fire Alarm", 
-    severity: "Critical", 
-    location: "Riyadh Main DC - Zone B", 
-    timestamp: "Yesterday", 
-    status: "Resolved",
-    description: "False alarm triggered by maintenance dust. System reset."
-  }
+  { id: "ALT-2025-089", type: "Breach Attempt", severity: "Critical", location: "Riyadh Main DC - Zone C", timestamp: "Just now", status: "New", description: "Unauthorized access attempt detected at Server Hall 1. Biometric mismatch repeated 3 times." },
+  { id: "ALT-2025-088", type: "Door Forced", severity: "High", location: "Jeddah DR - Gate 1", timestamp: "15 mins ago", status: "Viewed", description: "Perimeter gate sensor indicates forced entry. CCTV shows vehicle impact." },
+  { id: "ALT-2025-087", type: "Loitering", severity: "Medium", location: "Riyadh Main DC - Lobby", timestamp: "1 hour ago", status: "Action Taken", description: "Individual loitering near security desk for >20 minutes without badge." },
+  { id: "ALT-2025-086", type: "Device Offline", severity: "Low", location: "Dammam Edge - Cam 04", timestamp: "2 hours ago", status: "Action Taken", description: "Camera feed signal lost. Maintenance ticket #4421 created." },
+  { id: "ALT-2025-085", type: "Fire Alarm", severity: "Critical", location: "Riyadh Main DC - Zone B", timestamp: "Yesterday", status: "Resolved", description: "False alarm triggered by maintenance dust. System reset." },
 ];
 
 export default function SecurityAlerts() {
@@ -99,288 +52,211 @@ export default function SecurityAlerts() {
   const [selectedAlert, setSelectedAlert] = useState<any>(null);
   const [viewOpen, setViewOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredAlerts = activeTab === "all" 
-    ? alerts 
-    : alerts.filter(a => 
-        activeTab === "new" ? a.status === "New" : 
-        activeTab === "critical" ? a.severity === "Critical" : true
-      );
+  const filteredAlerts = useMemo(() => {
+    let result = alerts;
+    if (activeTab === "new") result = result.filter((a) => a.status === "New");
+    else if (activeTab === "critical") result = result.filter((a) => a.severity === "Critical");
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((a) => a.id.toLowerCase().includes(q) || a.type.toLowerCase().includes(q) || a.location.toLowerCase().includes(q));
+    }
+    return result;
+  }, [alerts, activeTab, searchQuery]);
+
+  const stats = useMemo(() => ({
+    critical: alerts.filter((a) => a.severity === "Critical" && a.status !== "Resolved").length,
+    newAlerts: alerts.filter((a) => a.status === "New").length,
+    investigating: alerts.filter((a) => a.status === "Viewed").length,
+    resolved: 14,
+  }), [alerts]);
 
   const handleView = (alert: any) => {
     setSelectedAlert(alert);
     setViewOpen(true);
-    
-    // Mark as viewed if new
     if (alert.status === "New") {
-      const updatedAlerts = alerts.map(a => 
-        a.id === alert.id ? { ...a, status: "Viewed" } : a
-      );
-      setAlerts(updatedAlerts);
+      setAlerts(alerts.map((a) => (a.id === alert.id ? { ...a, status: "Viewed" } : a)));
     }
   };
 
   const handleAction = (action: string) => {
     if (!selectedAlert) return;
-    
-    const updatedAlerts = alerts.map(a => 
-      a.id === selectedAlert.id ? { ...a, status: "Action Taken" } : a
-    );
-    setAlerts(updatedAlerts);
+    setAlerts(alerts.map((a) => (a.id === selectedAlert.id ? { ...a, status: "Action Taken" } : a)));
     setViewOpen(false);
-    
-    toast.success(`Action Recorded: ${action}`, {
-      description: `Alert ${selectedAlert.id} status updated to 'Action Taken'.`
-    });
+    toast.success(`Action Recorded: ${action}`, { description: `Alert ${selectedAlert.id} status updated.` });
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "Critical": return "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]";
+      case "Critical": return "bg-[#FFE5E5] text-[#DC2626] border-[#DC2626]";
       case "High": return "bg-[#FEF3C7] text-[#D97706] border-[#D97706]";
-      case "Medium": return "bg-[#FEF3C7] text-[#D97706] border-[#D97706]";
+      case "Medium": return "bg-[#FFF4E5] text-[#D97706] border-[#D97706]";
       default: return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "New": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] animate-pulse";
-      case "Viewed": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
-      case "Action Taken": return "bg-[#D1FAE5] text-[#059669] border-[#059669]";
-      case "Resolved": return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
-      default: return "bg-[#F5F5F5] text-[#6B6B6B]";
-    }
-  };
+  const activeFilterChips = useMemo(() => {
+    const chips: { key: string; label: string; onRemove: () => void }[] = [];
+    if (activeTab !== "all") chips.push({ key: "tab", label: `Filter: ${activeTab}`, onRemove: () => setActiveTab("all") });
+    return chips;
+  }, [activeTab]);
+
+  const columns: FioriColumn<any>[] = useMemo(() => [
+    {
+      key: "id",
+      header: "Alert ID",
+      width: "140px",
+      render: (a: any) => <span className="font-mono text-sm font-medium text-[#5B2C93]">{a.id}</span>,
+    },
+    {
+      key: "type",
+      header: "Type",
+      render: (a: any) => <span className="font-medium text-[#2C2C2C]">{a.type}</span>,
+    },
+    {
+      key: "severity",
+      header: "Severity",
+      render: (a: any) => (
+        <Badge variant="outline" className={`${getSeverityColor(a.severity)} text-xs`}>
+          {a.severity}
+        </Badge>
+      ),
+    },
+    {
+      key: "location",
+      header: "Location",
+      render: (a: any) => (
+        <div className="flex items-center gap-1.5 text-sm text-[#6B6B6B]">
+          <MapPin className="h-3 w-3" />
+          {a.location}
+        </div>
+      ),
+    },
+    {
+      key: "timestamp",
+      header: "Time",
+      render: (a: any) => <span className="text-sm text-[#6B6B6B]">{a.timestamp}</span>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (a: any) => (
+        <FioriStatusBadge
+          status={a.status === "New" ? "pending" : a.status === "Viewed" ? "info" : a.status === "Action Taken" ? "success" : a.status === "Resolved" ? "inactive" : "pending"}
+          label={a.status}
+        />
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right" as const,
+      width: "80px",
+      render: (a: any) => (
+        <Button variant="ghost" size="sm" className="h-8 gap-1 text-[#5B2C93]" onClick={(e) => { e.stopPropagation(); handleView(a); }}>
+          <Eye className="h-4 w-4" /> View
+        </Button>
+      ),
+    },
+  ], [alerts]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
-            <ShieldAlert className="h-8 w-8 text-[#FF6B6B]" />
-            Security Alerts
-          </h1>
-          <p className="text-sm text-[#6B6B6B]">Real-time incident monitoring and response log</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="relative w-64">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
-            <Input placeholder="Search alerts..." className="pl-9 bg-white" />
+    <div className="space-y-0">
+      {/* SAP Fiori Page Header */}
+      <FioriPageHeader
+        title="Security Alerts"
+        subtitle="Real-time incident monitoring and response log"
+        icon={<ShieldAlert className="h-5 w-5 text-[#DC2626]" />}
+        count={filteredAlerts.length}
+      />
+
+      {/* KPI Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        {[
+          { label: "Active Critical", value: stats.critical, icon: AlertTriangle, color: "#DC2626", bg: "#FFE5E5" },
+          { label: "New Alerts", value: stats.newAlerts, icon: Bell, color: "#5B2C93", bg: "#E8DCF5" },
+          { label: "Under Investigation", value: stats.investigating, icon: Eye, color: "#D97706", bg: "#FEF3C7" },
+          { label: "Resolved Today", value: stats.resolved, icon: CheckCircle2, color: "#059669", bg: "#D1FAE5" },
+        ].map((kpi) => (
+          <div key={kpi.label} className="bg-white border border-[#E0E0E0] rounded-lg px-4 py-3">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: kpi.bg }}>
+                <kpi.icon className="h-4 w-4" style={{ color: kpi.color }} />
+              </div>
+              <div>
+                <p className="text-xs text-[#6B6B6B] font-medium">{kpi.label}</p>
+                <p className="text-xl font-semibold text-[#2C2C2C]">{kpi.value}</p>
+              </div>
+            </div>
           </div>
-          <Button variant="outline" size="icon">
-            <Filter className="h-4 w-4" />
-          </Button>
-        </div>
+        ))}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4 mb-6">
-        <Card className="bg-[#FFE5E5] border-[#FF6B6B]/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-[#FF6B6B]">Active Critical</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-medium text-[#FF6B6B]">
-              {alerts.filter(a => a.severity === "Critical" && a.status !== "Resolved").length}
-            </div>
-            <p className="text-xs text-[#FF6B6B] mt-1">Requires immediate response</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-[#E8DCF5] border-[#5B2C93]/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-[#5B2C93]">New Alerts</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-medium text-[#5B2C93]">
-              {alerts.filter(a => a.status === "New").length}
-            </div>
-            <p className="text-xs text-[#5B2C93] mt-1">Unacknowledged incidents</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-[#E8DCF5] border-[#5B2C93]/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-[#5B2C93]">Under Investigation</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-medium text-[#5B2C93]">
-              {alerts.filter(a => a.status === "Viewed").length}
-            </div>
-            <p className="text-xs text-[#5B2C93] mt-1">Being processed</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-[#D1FAE5] border-[#059669]/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-[#059669]">Resolved Today</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-medium text-[#059669]">14</div>
-            <p className="text-xs text-[#059669] mt-1">Incidents closed</p>
-          </CardContent>
-        </Card>
-      </div>
+      {/* SAP Fiori Filter Bar */}
+      <FioriFilterBar
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search alerts by ID, type, or location..."
+        activeFilters={activeFilterChips}
+        onClearAll={() => setActiveTab("all")}
+        filters={
+          <div className="flex gap-1">
+            {[
+              { key: "all", label: "All Alerts" },
+              { key: "new", label: "New", dot: stats.newAlerts > 0 },
+              { key: "critical", label: "Critical Only" },
+            ].map((tab) => (
+              <Button
+                key={tab.key}
+                variant={activeTab === tab.key ? "default" : "ghost"}
+                size="sm"
+                className={`h-8 text-xs relative ${activeTab === tab.key ? "bg-[#5B2C93] text-white hover:bg-[#3D1C5E]" : "text-[#6B6B6B]"}`}
+                onClick={() => setActiveTab(tab.key)}
+              >
+                {tab.label}
+                {tab.dot && activeTab !== tab.key && (
+                  <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#DC2626]" />
+                )}
+              </Button>
+            ))}
+          </div>
+        }
+      />
 
-      <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
-          <TabsTrigger value="all">All Alerts</TabsTrigger>
-          <TabsTrigger value="new" className="relative">
-            New
-            {alerts.filter(a => a.status === "New").length > 0 && (
-              <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-[#FF6B6B]" />
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="critical">Critical Only</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="all" className="mt-4">
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Alert ID</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Severity</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Time</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAlerts.map((alert) => (
-                  <TableRow key={alert.id} className={alert.status === "New" ? "bg-[#E8DCF5]/50" : ""}>
-                    <TableCell className="font-medium">{alert.id}</TableCell>
-                    <TableCell>{alert.type}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getSeverityColor(alert.severity)}>
-                        {alert.severity}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{alert.location}</TableCell>
-                    <TableCell className="text-[#6B6B6B]">{alert.timestamp}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getStatusColor(alert.status)}>
-                        {alert.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" onClick={() => handleView(alert)}>
-                        <Eye className="h-4 w-4 mr-2" /> View
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="new" className="mt-4">
-          {/* Same table structure, filtered by logic above */}
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Alert ID</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Severity</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Time</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAlerts.map((alert) => (
-                  <TableRow key={alert.id} className="bg-[#E8DCF5]/50">
-                    <TableCell className="font-medium">{alert.id}</TableCell>
-                    <TableCell>{alert.type}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getSeverityColor(alert.severity)}>
-                        {alert.severity}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{alert.location}</TableCell>
-                    <TableCell className="text-[#6B6B6B]">{alert.timestamp}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getStatusColor(alert.status)}>
-                        {alert.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" onClick={() => handleView(alert)}>
-                        <Eye className="h-4 w-4 mr-2" /> View
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="critical" className="mt-4">
-           <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Alert ID</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Severity</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Time</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAlerts.map((alert) => (
-                  <TableRow key={alert.id}>
-                    <TableCell className="font-medium">{alert.id}</TableCell>
-                    <TableCell>{alert.type}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getSeverityColor(alert.severity)}>
-                        {alert.severity}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{alert.location}</TableCell>
-                    <TableCell className="text-[#6B6B6B]">{alert.timestamp}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getStatusColor(alert.status)}>
-                        {alert.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" onClick={() => handleView(alert)}>
-                        <Eye className="h-4 w-4 mr-2" /> View
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {/* SAP Fiori Table */}
+      <FioriTable
+        columns={columns}
+        data={filteredAlerts}
+        isLoading={false}
+        rowKey={(a: any) => a.id}
+        onRowClick={(a: any) => handleView(a)}
+        rowClassName={(a: any) => a.status === "New" ? "bg-[#E8DCF5]/30" : ""}
+        emptyIcon={<ShieldAlert className="h-10 w-10" />}
+        emptyTitle="No alerts found"
+        emptyDescription="All clear. No security alerts match your criteria."
+        footerInfo={`Showing ${filteredAlerts.length} of ${alerts.length} alerts`}
+      />
 
       {/* Alert Details Dialog */}
       <Dialog open={viewOpen} onOpenChange={setViewOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl p-0">
+          <div className="px-6 pt-5 pb-4 border-b border-[#E0E0E0]">
             <DialogTitle className="flex items-center gap-2 text-xl">
-              <AlertTriangle className="h-6 w-6 text-[#FF6B6B]" />
+              <AlertTriangle className="h-5 w-5 text-[#DC2626]" />
               Incident Details
             </DialogTitle>
-            <DialogDescription>
-              {selectedAlert?.id} - {selectedAlert?.timestamp}
+            <DialogDescription className="mt-1">
+              {selectedAlert?.id} \u2014 {selectedAlert?.timestamp}
             </DialogDescription>
-          </DialogHeader>
-          
+          </div>
+
           {selectedAlert && (
-            <div className="space-y-6 py-4">
-              <div className="flex items-center justify-between p-4 bg-[#F5F5F5]/30 rounded-lg border">
+            <div className="px-6 py-4 space-y-5">
+              <div className="flex items-center justify-between p-4 bg-[#FAFAFA] rounded-lg border border-[#E0E0E0]">
                 <div className="space-y-1">
-                  <span className="text-sm text-[#6B6B6B]">Incident Type</span>
-                  <p className="font-medium text-lg">{selectedAlert.type}</p>
+                  <span className="text-xs text-[#6B6B6B] uppercase tracking-wider">Incident Type</span>
+                  <p className="font-semibold text-lg text-[#2C2C2C]">{selectedAlert.type}</p>
                 </div>
                 <Badge className={`${getSeverityColor(selectedAlert.severity)} text-sm px-3 py-1`}>
                   {selectedAlert.severity} Severity
@@ -389,64 +265,56 @@ export default function SecurityAlerts() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <span className="text-sm text-[#6B6B6B] flex items-center gap-1">
+                  <span className="text-xs text-[#6B6B6B] flex items-center gap-1 uppercase tracking-wider">
                     <MapPin className="h-3 w-3" /> Location
                   </span>
-                  <p className="font-medium">{selectedAlert.location}</p>
+                  <p className="font-medium text-[#2C2C2C]">{selectedAlert.location}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm text-[#6B6B6B] flex items-center gap-1">
+                  <span className="text-xs text-[#6B6B6B] flex items-center gap-1 uppercase tracking-wider">
                     <Clock className="h-3 w-3" /> Detected At
                   </span>
-                  <p className="font-medium">{selectedAlert.timestamp}</p>
+                  <p className="font-medium text-[#2C2C2C]">{selectedAlert.timestamp}</p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <h4 className="font-medium text-sm">Description</h4>
-                <p className="text-sm text-[#6B6B6B] bg-[#F5F5F5] p-3 rounded-md border">
+                <h4 className="text-xs text-[#6B6B6B] uppercase tracking-wider">Description</h4>
+                <p className="text-sm text-[#2C2C2C] bg-[#FAFAFA] p-3 rounded-md border border-[#E0E0E0]">
                   {selectedAlert.description}
                 </p>
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" className="flex-1 gap-2">
+                <Button variant="outline" className="flex-1 gap-2 border-[#E0E0E0]">
                   <Video className="h-4 w-4" /> View Playback
                 </Button>
-                <Button variant="outline" className="flex-1 gap-2">
+                <Button variant="outline" className="flex-1 gap-2 border-[#E0E0E0]">
                   <PhoneCall className="h-4 w-4" /> Contact Guard
                 </Button>
               </div>
             </div>
           )}
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <div className="px-6 py-4 border-t border-[#E0E0E0] bg-[#FAFAFA] flex justify-end gap-2">
             <Button variant="outline" onClick={() => setViewOpen(false)}>Close</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
+                <Button className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2">
                   Take Action <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Response Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleAction("Dispatch Patrol")}>
-                  Dispatch Patrol Unit
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleAction("Lockdown Zone")}>
-                  Initiate Zone Lockdown
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleAction("False Alarm")}>
-                  Mark as False Alarm
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleAction("Dispatch Patrol")}>Dispatch Patrol Unit</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleAction("Lockdown Zone")}>Initiate Zone Lockdown</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleAction("False Alarm")}>Mark as False Alarm</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleAction("Escalate")} className="text-[#FF6B6B]">
-                  Escalate to Supervisor
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleAction("Escalate")} className="text-[#DC2626]">Escalate to Supervisor</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

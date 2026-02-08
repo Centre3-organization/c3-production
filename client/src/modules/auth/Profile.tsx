@@ -18,6 +18,7 @@ import {
 import { trpc } from "@/utils/trpc";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
+import { FioriPageHeader } from "@/components/fiori";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -119,30 +120,31 @@ export default function Profile() {
   const lastName = user.name?.split(" ").slice(1).join(" ") || "";
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Profile</h1>
-          <p className="text-[#6B6B6B]">Manage your account settings</p>
-        </div>
-        <div className="flex gap-2">
-          {isEditing ? (
-            <>
-              <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
-              <Button 
-                className="bg-[#5B2C93] hover:bg-[#5B2C93]"
-                onClick={handleSave}
-                disabled={updateProfileMutation.isPending}
-              >
-                {updateProfileMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                <Save className="h-4 w-4 mr-2" /> Save Changes
-              </Button>
-            </>
-          ) : (
-            <Button variant="outline" onClick={handleEditClick}>Edit Profile</Button>
-          )}
-        </div>
-      </div>
+    <div className="space-y-0">
+      <FioriPageHeader
+        title="Profile"
+        subtitle="Manage your account settings"
+        icon={<Mail className="h-5 w-5" />}
+        actions={
+          <div className="flex gap-2">
+            {isEditing ? (
+              <>
+                <Button variant="outline" size="sm" className="border-[#E0E0E0]" onClick={() => setIsEditing(false)}>Cancel</Button>
+                <Button 
+                  className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2" size="sm"
+                  onClick={handleSave}
+                  disabled={updateProfileMutation.isPending}
+                >
+                  {updateProfileMutation.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+                  <Save className="h-4 w-4" /> Save Changes
+                </Button>
+              </>
+            ) : (
+              <Button variant="outline" size="sm" className="border-[#E0E0E0]" onClick={handleEditClick}>Edit Profile</Button>
+            )}
+          </div>
+        }
+      />
 
       <div className="grid gap-6 md:grid-cols-12">
         {/* Profile Sidebar */}

@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useErrorDialog } from "@/components/ui/error-dialog";
+import { FioriPageHeader } from "@/components/fiori";
 
 // Process type options
 const PROCESS_TYPES = [
@@ -519,13 +520,18 @@ export function WorkflowBuilder() {
     <>
       <ConfirmDialogComponent />
       <ErrorDialogComponent />
-      <div className="flex h-full">
+      <FioriPageHeader
+        title="Workflow Builder"
+        subtitle="Create and manage approval workflow rules"
+        icon={<Workflow className="h-5 w-5" />}
+      />
+      <div className="flex" style={{ height: 'calc(100vh - 160px)' }}>
       {/* Workflow List Panel */}
-      <div className="w-80 border-r bg-[#F5F5F5]/30 flex flex-col">
-        <div className="p-4 border-b">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium">Workflows</h2>
-            <Button size="sm" onClick={() => setIsCreateDialogOpen(true)}>
+      <div className="w-80 border-r border-[#E0E0E0] bg-[#FAFAFA] flex flex-col">
+        <div className="p-4 border-b border-[#E0E0E0]">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-[#2C2C2C] uppercase tracking-wider">Workflows</h2>
+            <Button size="sm" className="bg-[#5B2C93] hover:bg-[#3D1C5E] h-8" onClick={() => setIsCreateDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-1" />
               New
             </Button>

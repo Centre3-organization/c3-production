@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { 
-  Search, 
   Plus, 
   Save, 
-  ArrowLeft, 
   ShieldAlert, 
   Lock, 
   Unlock,
@@ -11,20 +9,27 @@ import {
   Video, 
   Fingerprint,
   Trash2,
-  RefreshCw,
-  Loader2
+  Loader2,
+  Download,
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { usePermissions } from "@/hooks/usePermissions";
+import {
+  FioriPageHeader,
+  FioriFilterBar,
+  FioriTable,
+  FioriFormSection,
+  FioriStatusBadge,
+} from "@/components/fiori";
+import type { FioriColumn } from "@/components/fiori";
 
 type Zone = {
   id: number;
@@ -58,6 +63,8 @@ export default function Zones() {
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [siteFilter, setSiteFilter] = useState<string>("all");
+  const [securityFilter, setSecurityFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   
   const [formData, setFormData] = useState({
     siteId: "",
@@ -86,93 +93,46 @@ export default function Zones() {
   const { data: zoneTypes = [] } = trpc.masterData.getZoneTypes.useQuery();
 
   const createMutation = trpc.zones.create.useMutation({
-    onSuccess: () => {
-      toast.success("Zone created successfully");
-      refetch();
-      setView("list");
-      resetForm();
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to create zone");
-    },
+    onSuccess: () => { toast.success("Zone created successfully"); refetch(); setView("list"); resetForm(); },
+    onError: (error) => toast.error(error.message || "Failed to create zone"),
   });
 
   const updateMutation = trpc.zones.update.useMutation({
-    onSuccess: () => {
-      toast.success("Zone updated successfully");
-      refetch();
-      setView("list");
-      resetForm();
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to update zone");
-    },
+    onSuccess: () => { toast.success("Zone updated successfully"); refetch(); setView("list"); resetForm(); },
+    onError: (error) => toast.error(error.message || "Failed to update zone"),
   });
 
   const deleteMutation = trpc.zones.delete.useMutation({
-    onSuccess: () => {
-      toast.success("Zone deleted successfully");
-      refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to delete zone");
-    },
+    onSuccess: () => { toast.success("Zone deleted successfully"); refetch(); },
+    onError: (error) => toast.error(error.message || "Failed to delete zone"),
   });
 
   const lockMutation = trpc.zones.lock.useMutation({
-    onSuccess: () => {
-      toast.success("Zone locked successfully");
-      refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to lock zone");
-    },
+    onSuccess: () => { toast.success("Zone locked successfully"); refetch(); },
+    onError: (error) => toast.error(error.message || "Failed to lock zone"),
   });
 
   const unlockMutation = trpc.zones.unlock.useMutation({
-    onSuccess: () => {
-      toast.success("Zone unlocked successfully");
-      refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to unlock zone");
-    },
+    onSuccess: () => { toast.success("Zone unlocked successfully"); refetch(); },
+    onError: (error) => toast.error(error.message || "Failed to unlock zone"),
   });
 
   const resetForm = () => {
     setFormData({
-      siteId: "",
-      code: "",
-      name: "",
-      description: "",
-      zoneTypeId: "",
-      securityLevel: "medium",
-      accessPolicy: "supervised",
-      maxCapacity: 0,
-      securityControls: {
-        cctvEnabled: false,
-        biometricRequired: false,
-        badgeRequired: true,
-        emergencyLock: false,
-        fireSuppress: false,
-        tempMonitor: false,
-      },
+      siteId: "", code: "", name: "", description: "", zoneTypeId: "",
+      securityLevel: "medium", accessPolicy: "supervised", maxCapacity: 0,
+      securityControls: { cctvEnabled: false, biometricRequired: false, badgeRequired: true, emergencyLock: false, fireSuppress: false, tempMonitor: false },
       status: "active",
     });
     setSelectedZone(null);
   };
 
-  const handleCreate = () => {
-    resetForm();
-    setView("form");
-  };
+  const handleCreate = () => { resetForm(); setView("form"); };
 
   const handleEdit = (zone: Zone) => {
     setSelectedZone(zone);
     setFormData({
-      siteId: zone.siteId.toString(),
-      code: zone.code,
-      name: zone.name,
+      siteId: zone.siteId.toString(), code: zone.code, name: zone.name,
       description: zone.description || "",
       zoneTypeId: zone.zoneTypeId?.toString() || "",
       securityLevel: zone.securityLevel,
@@ -196,191 +156,184 @@ export default function Zones() {
       toast.error("Please fill in required fields");
       return;
     }
-
     const payload = {
-      siteId: parseInt(formData.siteId),
-      code: formData.code,
-      name: formData.name,
+      siteId: parseInt(formData.siteId), code: formData.code, name: formData.name,
       description: formData.description || undefined,
       zoneTypeId: formData.zoneTypeId ? parseInt(formData.zoneTypeId) : undefined,
-      securityLevel: formData.securityLevel,
-      accessPolicy: formData.accessPolicy,
-      maxCapacity: formData.maxCapacity,
-      securityControls: formData.securityControls,
+      securityLevel: formData.securityLevel, accessPolicy: formData.accessPolicy,
+      maxCapacity: formData.maxCapacity, securityControls: formData.securityControls,
       status: formData.status,
     };
-
-    if (selectedZone) {
-      updateMutation.mutate({ id: selectedZone.id, ...payload });
-    } else {
-      createMutation.mutate(payload);
-    }
+    if (selectedZone) { updateMutation.mutate({ id: selectedZone.id, ...payload }); }
+    else { createMutation.mutate(payload); }
   };
 
   const handleDelete = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm("Are you sure you want to delete this zone?")) {
-      deleteMutation.mutate({ id });
-    }
+    if (confirm("Are you sure you want to delete this zone?")) { deleteMutation.mutate({ id }); }
   };
 
   const handleLock = (zone: Zone, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (zone.isLocked) {
-      unlockMutation.mutate({ id: zone.id });
-    } else {
+    if (zone.isLocked) { unlockMutation.mutate({ id: zone.id }); }
+    else {
       const reason = prompt("Enter lock reason:");
-      if (reason) {
-        lockMutation.mutate({ id: zone.id, reason });
-      }
+      if (reason) { lockMutation.mutate({ id: zone.id, reason }); }
     }
   };
 
-  const filteredZones = zones.filter((zone) => {
-    const matchesSearch = 
-      zone.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      zone.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (zone.siteName?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
-    
-    return matchesSearch;
-  });
+  const filteredZones = useMemo(() => {
+    return zones.filter((zone) => {
+      const matchesSearch = !searchTerm ||
+        zone.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        zone.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (zone.siteName?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
+      const matchesSecurity = securityFilter === "all" || zone.securityLevel === securityFilter;
+      const matchesStatus = statusFilter === "all" || zone.status === statusFilter;
+      return matchesSearch && matchesSecurity && matchesStatus;
+    });
+  }, [zones, searchTerm, securityFilter, statusFilter]);
 
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      month: "short",
-      day: "2-digit",
-      year: "numeric",
-    });
+    return new Date(date).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" });
   };
 
-  const getSecurityLevelBadge = (level: string) => {
-    const styles: Record<string, string> = {
-      critical: "border-[#DC2626] text-[#991B1B] bg-[#FEE2E2]",
-      high: "border-[#D97706] text-[#92400E] bg-[#FEF3C7]",
-      medium: "border-[#D97706] text-[#92400E] bg-[#FEF3C7]",
-      low: "border-[#059669] text-[#065F46] bg-[#D1FAE5]",
-    };
-    return styles[level] || "border-[#D1D5DB] text-[#374151] bg-[#F3F4F6]";
-  };
+  const activeFilters = [
+    ...(siteFilter !== "all" ? [{ key: "site", label: `Site: ${sites.find(s => s.id.toString() === siteFilter)?.name || siteFilter}`, onRemove: () => setSiteFilter("all") }] : []),
+    ...(securityFilter !== "all" ? [{ key: "security", label: `Security: ${securityFilter}`, onRemove: () => setSecurityFilter("all") }] : []),
+    ...(statusFilter !== "all" ? [{ key: "status", label: `Status: ${statusFilter}`, onRemove: () => setStatusFilter("all") }] : []),
+  ];
 
-  const getStatusBadge = (status: string) => {
-    const styles: Record<string, string> = {
-      active: "bg-[#DCFCE7] text-[#166534]",
-      inactive: "bg-[#F3F4F6] text-[#374151]",
-      maintenance: "bg-[#FEF3C7] text-[#92400E]",
-    };
-    return styles[status] || "bg-[#F3F4F6] text-[#374151]";
-  };
+  const columns: FioriColumn<Zone>[] = [
+    {
+      key: "code", header: "Zone Code", width: "120px",
+      render: (zone) => <span className="font-mono text-sm font-medium text-[#5B2C93]">{zone.code}</span>,
+    },
+    {
+      key: "name", header: "Zone Name",
+      render: (zone) => (
+        <div>
+          <span className="font-medium text-[#2C2C2C]">{zone.name}</span>
+          {zone.description && <p className="text-xs text-[#6B6B6B] mt-0.5 truncate max-w-[200px]">{zone.description}</p>}
+        </div>
+      ),
+    },
+    {
+      key: "site", header: "Parent Site",
+      render: (zone) => <span className="text-[#6B6B6B]">{zone.siteCode ? `${zone.siteCode} — ${zone.siteName}` : "—"}</span>,
+    },
+    {
+      key: "type", header: "Type",
+      render: (zone) => <span className="text-[#6B6B6B]">{zone.zoneTypeName || "—"}</span>,
+    },
+    {
+      key: "security", header: "Security",
+      render: (zone) => <FioriStatusBadge status={zone.securityLevel} />,
+    },
+    {
+      key: "access", header: "Access Policy",
+      render: (zone) => zone.accessPolicy ? <FioriStatusBadge status={zone.accessPolicy} /> : <span className="text-[#B0B0B0]">—</span>,
+    },
+    {
+      key: "locked", header: "Lock",
+      render: (zone) => zone.isLocked ? (
+        <span className="inline-flex items-center gap-1 text-xs font-medium text-[#DC2626] bg-[#FFE5E5] px-2 py-0.5 rounded-full">
+          <Lock className="h-3 w-3" /> Locked
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 text-xs font-medium text-[#0D9488] bg-[#E8F9F8] px-2 py-0.5 rounded-full">
+          <Unlock className="h-3 w-3" /> Open
+        </span>
+      ),
+    },
+    {
+      key: "status", header: "Status",
+      render: (zone) => <FioriStatusBadge status={zone.status} />,
+    },
+    {
+      key: "created", header: "Created",
+      render: (zone) => <span className="text-xs text-[#6B6B6B]">{formatDate(zone.createdAt)}</span>,
+    },
+    {
+      key: "actions", header: "", width: "80px", align: "right",
+      render: (zone) => (
+        <div className="flex items-center gap-0.5">
+          {canLock && (
+            <Button variant="ghost" size="icon"
+              className={`h-7 w-7 ${zone.isLocked ? "text-[#0D9488] hover:text-[#0D9488] hover:bg-[#E8F9F8]" : "text-[#D97706] hover:text-[#D97706] hover:bg-[#FFF4E5]"}`}
+              onClick={(e) => handleLock(zone, e)}
+              title={zone.isLocked ? "Unlock Zone" : "Lock Zone"}
+            >
+              {zone.isLocked ? <Unlock className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+            </Button>
+          )}
+          {canDelete && (
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-[#B0B0B0] hover:text-[#DC2626] hover:bg-[#FFE5E5]"
+              onClick={(e) => handleDelete(zone.id, e)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      ),
+    },
+  ];
 
+  // ─── FORM VIEW ───
   if (view === "form") {
     return (
-      <div className="space-y-4">
-        {/* Form Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setView("list"); resetForm(); }}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div>
-              <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">
-                {selectedZone ? "Edit Zone" : "Create New Zone"}
-              </h1>
-              <p className="text-sm text-[#6B6B6B]">
-                {selectedZone ? `Editing ${selectedZone.name}` : "Add a new security zone"}
-              </p>
+      <div className="space-y-0">
+        <FioriPageHeader
+          title={selectedZone ? "Edit Zone" : "Create New Zone"}
+          subtitle={selectedZone ? `Editing ${selectedZone.name}` : "Add a new security zone"}
+          onBack={() => { setView("list"); resetForm(); }}
+          actions={
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => { setView("list"); resetForm(); }} className="border-[#E0E0E0] text-[#6B6B6B]">Cancel</Button>
+              <Button onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending} className="bg-[#5B2C93] hover:bg-[#3D1C5E]">
+                {(createMutation.isPending || updateMutation.isPending) ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</> : <><Save className="h-4 w-4 mr-2" /> Save Zone</>}
+              </Button>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => { setView("list"); resetForm(); }}>
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleSave}
-              disabled={createMutation.isPending || updateMutation.isPending}
-            >
-              {(createMutation.isPending || updateMutation.isPending) ? (
-                <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</>
-              ) : (
-                <><Save className="h-4 w-4 mr-2" /> Save Zone</>
-              )}
-            </Button>
-          </div>
-        </div>
+          }
+        />
 
-        {/* Form Content */}
         <div className="max-w-4xl space-y-6">
-          {/* Zone Details */}
-          <div className="bg-white border rounded-lg shadow-sm">
-            <div className="px-6 py-4 border-b flex justify-between items-center">
-              <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
-                <ShieldAlert className="h-5 w-5 text-[#5B2C93]" /> Zone Details
-              </h2>
-              <span className="text-xs text-[#6B6B6B] italic">* Indicates mandatory field</span>
-            </div>
-            
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-1">
-                <Label className="text-sm font-medium text-[#2C2C2C]">Parent Site <span className="text-[#DC2626]">*</span></Label>
-                <Select 
-                  value={formData.siteId}
-                  onValueChange={(value) => setFormData({ ...formData, siteId: value })}
-                >
+          <FioriFormSection title="Zone Details" icon={<ShieldAlert className="h-4 w-4" />} showMandatory>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+              <div className="space-y-1.5">
+                <Label className="text-sm text-[#2C2C2C]">Parent Site <span className="text-[#DC2626]">*</span></Label>
+                <Select value={formData.siteId} onValueChange={(value) => setFormData({ ...formData, siteId: value })}>
                   <SelectTrigger><SelectValue placeholder="Select Site" /></SelectTrigger>
-                  <SelectContent>
-                    {sites.map((site) => (
-                      <SelectItem key={site.id} value={site.id.toString()}>{site.code} - {site.name}</SelectItem>
-                    ))}
-                  </SelectContent>
+                  <SelectContent>{sites.map((site) => <SelectItem key={site.id} value={site.id.toString()}>{site.code} - {site.name}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
-              <div className="space-y-1">
-                <Label className="text-sm font-medium text-[#2C2C2C]">Zone Type</Label>
-                <Select 
-                  value={formData.zoneTypeId}
-                  onValueChange={(value) => setFormData({ ...formData, zoneTypeId: value })}
-                >
+              <div className="space-y-1.5">
+                <Label className="text-sm text-[#2C2C2C]">Zone Code <span className="text-[#DC2626]">*</span></Label>
+                <Input value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} placeholder="e.g. ZN-A01" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm text-[#2C2C2C]">Zone Name <span className="text-[#DC2626]">*</span></Label>
+                <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Server Hall Alpha" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm text-[#2C2C2C]">Zone Type</Label>
+                <Select value={formData.zoneTypeId} onValueChange={(value) => setFormData({ ...formData, zoneTypeId: value })}>
                   <SelectTrigger><SelectValue placeholder="Select Type" /></SelectTrigger>
-                  <SelectContent>
-                    {zoneTypes.map((type) => (
-                      <SelectItem key={type.id} value={type.id.toString()}>{type.name}</SelectItem>
-                    ))}
-                  </SelectContent>
+                  <SelectContent>{zoneTypes.map((type) => <SelectItem key={type.id} value={type.id.toString()}>{type.name}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
-              
-              <div className="space-y-1">
-                <Label className="text-sm font-medium text-[#2C2C2C]">Zone Code <span className="text-[#DC2626]">*</span></Label>
-                <Input 
-                  value={formData.code}
-                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                  placeholder="e.g. ZONE-A" 
-                />
+              <div className="md:col-span-2 space-y-1.5">
+                <Label className="text-sm text-[#2C2C2C]">Description</Label>
+                <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Zone description..." rows={2} />
               </div>
-              <div className="space-y-1">
-                <Label className="text-sm font-medium text-[#2C2C2C]">Zone Name <span className="text-[#DC2626]">*</span></Label>
-                <Input 
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g. Server Room A" 
-                />
-              </div>
-              
-              <div className="space-y-1 md:col-span-2">
-                <Label className="text-sm font-medium text-[#2C2C2C]">Description</Label>
-                <Textarea 
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Zone description..." 
-                  rows={3}
-                />
-              </div>
+            </div>
+          </FioriFormSection>
 
-              <div className="space-y-1">
-                <Label className="text-sm font-medium text-[#2C2C2C]">Security Level</Label>
-                <Select 
-                  value={formData.securityLevel}
-                  onValueChange={(value: "low" | "medium" | "high" | "critical") => setFormData({ ...formData, securityLevel: value })}
-                >
+          <FioriFormSection title="Security Configuration" icon={<Shield className="h-4 w-4" />}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+              <div className="space-y-1.5">
+                <Label className="text-sm text-[#2C2C2C]">Security Level</Label>
+                <Select value={formData.securityLevel} onValueChange={(value: any) => setFormData({ ...formData, securityLevel: value })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="low">Low</SelectItem>
@@ -390,12 +343,9 @@ export default function Zones() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-1">
-                <Label className="text-sm font-medium text-[#2C2C2C]">Access Policy</Label>
-                <Select 
-                  value={formData.accessPolicy}
-                  onValueChange={(value: "open" | "supervised" | "restricted" | "prohibited") => setFormData({ ...formData, accessPolicy: value })}
-                >
+              <div className="space-y-1.5">
+                <Label className="text-sm text-[#2C2C2C]">Access Policy</Label>
+                <Select value={formData.accessPolicy} onValueChange={(value: any) => setFormData({ ...formData, accessPolicy: value })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="open">Open</SelectItem>
@@ -405,22 +355,13 @@ export default function Zones() {
                   </SelectContent>
                 </Select>
               </div>
-
-              <div className="space-y-1">
-                <Label className="text-sm font-medium text-[#2C2C2C]">Max Capacity</Label>
-                <Input 
-                  type="number"
-                  value={formData.maxCapacity}
-                  onChange={(e) => setFormData({ ...formData, maxCapacity: parseInt(e.target.value) || 0 })}
-                  placeholder="Maximum capacity" 
-                />
+              <div className="space-y-1.5">
+                <Label className="text-sm text-[#2C2C2C]">Max Capacity</Label>
+                <Input type="number" value={formData.maxCapacity} onChange={(e) => setFormData({ ...formData, maxCapacity: parseInt(e.target.value) || 0 })} />
               </div>
-              <div className="space-y-1">
-                <Label className="text-sm font-medium text-[#2C2C2C]">Status</Label>
-                <Select 
-                  value={formData.status}
-                  onValueChange={(value: "active" | "inactive" | "maintenance") => setFormData({ ...formData, status: value })}
-                >
+              <div className="space-y-1.5">
+                <Label className="text-sm text-[#2C2C2C]">Status</Label>
+                <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="active">Active</SelectItem>
@@ -430,261 +371,121 @@ export default function Zones() {
                 </Select>
               </div>
             </div>
-          </div>
+          </FioriFormSection>
 
-          {/* Security Controls */}
-          <div className="bg-white border rounded-lg shadow-sm">
-            <div className="px-6 py-4 border-b">
-              <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
-                <Lock className="h-5 w-5 text-[#5B2C93]" /> Security Controls
-              </h2>
+          <FioriFormSection title="Security Controls" icon={<Video className="h-4 w-4" />}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { key: "cctvEnabled", label: "CCTV Monitoring", desc: "Video surveillance", icon: <Video className="h-5 w-5 text-[#6B6B6B]" /> },
+                { key: "biometricRequired", label: "Biometric Access", desc: "Fingerprint/iris scan", icon: <Fingerprint className="h-5 w-5 text-[#6B6B6B]" /> },
+                { key: "badgeRequired", label: "Badge Required", desc: "ID card access", icon: <Shield className="h-5 w-5 text-[#6B6B6B]" /> },
+                { key: "emergencyLock", label: "Emergency Lock", desc: "Auto-lockdown capable", icon: <Lock className="h-5 w-5 text-[#6B6B6B]" /> },
+                { key: "fireSuppress", label: "Fire Suppression", desc: "Auto fire system", icon: <ShieldAlert className="h-5 w-5 text-[#6B6B6B]" /> },
+                { key: "tempMonitor", label: "Temp Monitoring", desc: "Environmental sensors", icon: <Thermometer className="h-5 w-5 text-[#6B6B6B]" /> },
+              ].map((control) => (
+                <div key={control.key} className="flex items-center justify-between p-3 border border-[#E0E0E0] rounded-lg bg-[#FAFAFA]">
+                  <div className="flex items-center gap-3">
+                    {control.icon}
+                    <div>
+                      <p className="text-sm font-medium text-[#2C2C2C]">{control.label}</p>
+                      <p className="text-xs text-[#6B6B6B]">{control.desc}</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={(formData.securityControls as any)[control.key]}
+                    onCheckedChange={(checked) => setFormData({
+                      ...formData,
+                      securityControls: { ...formData.securityControls, [control.key]: checked }
+                    })}
+                  />
+                </div>
+              ))}
             </div>
-            
-            <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Video className="h-5 w-5 text-[#6B6B6B]" />
-                  <div>
-                    <p className="font-medium text-[#2C2C2C]">CCTV Monitoring</p>
-                    <p className="text-xs text-[#6B6B6B]">24/7 video surveillance</p>
-                  </div>
-                </div>
-                <Switch 
-                  checked={formData.securityControls.cctvEnabled}
-                  onCheckedChange={(checked) => setFormData({ 
-                    ...formData, 
-                    securityControls: { ...formData.securityControls, cctvEnabled: checked } 
-                  })}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Fingerprint className="h-5 w-5 text-[#6B6B6B]" />
-                  <div>
-                    <p className="font-medium text-[#2C2C2C]">Biometric Access</p>
-                    <p className="text-xs text-[#6B6B6B]">Fingerprint/Face required</p>
-                  </div>
-                </div>
-                <Switch 
-                  checked={formData.securityControls.biometricRequired}
-                  onCheckedChange={(checked) => setFormData({ 
-                    ...formData, 
-                    securityControls: { ...formData.securityControls, biometricRequired: checked } 
-                  })}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <ShieldAlert className="h-5 w-5 text-[#6B6B6B]" />
-                  <div>
-                    <p className="font-medium text-[#2C2C2C]">Badge Required</p>
-                    <p className="text-xs text-[#6B6B6B]">Access card needed</p>
-                  </div>
-                </div>
-                <Switch 
-                  checked={formData.securityControls.badgeRequired}
-                  onCheckedChange={(checked) => setFormData({ 
-                    ...formData, 
-                    securityControls: { ...formData.securityControls, badgeRequired: checked } 
-                  })}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Lock className="h-5 w-5 text-[#6B6B6B]" />
-                  <div>
-                    <p className="font-medium text-[#2C2C2C]">Emergency Lock</p>
-                    <p className="text-xs text-[#6B6B6B]">Auto-lock on emergency</p>
-                  </div>
-                </div>
-                <Switch 
-                  checked={formData.securityControls.emergencyLock}
-                  onCheckedChange={(checked) => setFormData({ 
-                    ...formData, 
-                    securityControls: { ...formData.securityControls, emergencyLock: checked } 
-                  })}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <ShieldAlert className="h-5 w-5 text-[#6B6B6B]" />
-                  <div>
-                    <p className="font-medium text-[#2C2C2C]">Fire Suppression</p>
-                    <p className="text-xs text-[#6B6B6B]">Auto fire system</p>
-                  </div>
-                </div>
-                <Switch 
-                  checked={formData.securityControls.fireSuppress}
-                  onCheckedChange={(checked) => setFormData({ 
-                    ...formData, 
-                    securityControls: { ...formData.securityControls, fireSuppress: checked } 
-                  })}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Thermometer className="h-5 w-5 text-[#6B6B6B]" />
-                  <div>
-                    <p className="font-medium text-[#2C2C2C]">Temp Monitoring</p>
-                    <p className="text-xs text-[#6B6B6B]">Environmental sensors</p>
-                  </div>
-                </div>
-                <Switch 
-                  checked={formData.securityControls.tempMonitor}
-                  onCheckedChange={(checked) => setFormData({ 
-                    ...formData, 
-                    securityControls: { ...formData.securityControls, tempMonitor: checked } 
-                  })}
-                />
-              </div>
-            </div>
-          </div>
+          </FioriFormSection>
         </div>
       </div>
     );
   }
 
+  // ─── LIST VIEW ───
   return (
-    <div className="space-y-4">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Security Zones</h1>
-          <p className="text-sm text-[#6B6B6B]">Manage security zones and access levels</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
-            <RefreshCw className="h-4 w-4" /> Refresh
-          </Button>
-          {canCreate && (
-            <Button onClick={handleCreate} className="gap-2">
-              <Plus className="h-4 w-4" /> Add Zone
+    <div className="space-y-0">
+      <FioriPageHeader
+        title="Security Zones"
+        subtitle="Manage security zones and access levels"
+        icon={<ShieldAlert className="h-5 w-5" />}
+        count={filteredZones.length}
+        onRefresh={() => refetch()}
+        actions={
+          <>
+            <Button variant="outline" size="sm" onClick={() => toast.info("Export feature coming soon")} className="gap-1.5 text-[#6B6B6B] border-[#E0E0E0]">
+              <Download className="h-3.5 w-3.5" /> Export
             </Button>
-          )}
-        </div>
-      </div>
+            {canCreate && (
+              <Button onClick={handleCreate} size="sm" className="gap-1.5 bg-[#5B2C93] hover:bg-[#3D1C5E]">
+                <Plus className="h-4 w-4" /> Add Zone
+              </Button>
+            )}
+          </>
+        }
+      />
 
-      {/* Filter Bar */}
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
-          <Input 
-            placeholder="Search zones..." 
-            className="pl-9"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <Select value={siteFilter} onValueChange={setSiteFilter}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="All Sites" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Sites</SelectItem>
-            {sites.map((site) => (
-              <SelectItem key={site.id} value={site.id.toString()}>{site.code} - {site.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <FioriFilterBar
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Search by code, name, or site..."
+        activeFilters={activeFilters}
+        onClearAll={() => { setSiteFilter("all"); setSecurityFilter("all"); setStatusFilter("all"); }}
+        filters={
+          <>
+            <Select value={siteFilter} onValueChange={setSiteFilter}>
+              <SelectTrigger className="w-[180px] h-9 text-sm bg-[#F5F5F5] border-[#E0E0E0]">
+                <SelectValue placeholder="All Sites" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Sites</SelectItem>
+                {sites.map((site) => <SelectItem key={site.id} value={site.id.toString()}>{site.code} - {site.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Select value={securityFilter} onValueChange={setSecurityFilter}>
+              <SelectTrigger className="w-[150px] h-9 text-sm bg-[#F5F5F5] border-[#E0E0E0]">
+                <SelectValue placeholder="Security Level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Levels</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="critical">Critical</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[140px] h-9 text-sm bg-[#F5F5F5] border-[#E0E0E0]">
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="inactive">Inactive</SelectItem>
+                <SelectItem value="maintenance">Maintenance</SelectItem>
+              </SelectContent>
+            </Select>
+          </>
+        }
+      />
 
-      {/* Data Table */}
-      <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
-        {isLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
-          </div>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="font-medium text-xs uppercase tracking-wider">Zone Code</TableHead>
-                <TableHead className="font-medium text-xs uppercase tracking-wider">Zone Name</TableHead>
-                <TableHead className="font-medium text-xs uppercase tracking-wider">Parent Site</TableHead>
-                <TableHead className="font-medium text-xs uppercase tracking-wider">Type</TableHead>
-                <TableHead className="font-medium text-xs uppercase tracking-wider">Security Level</TableHead>
-                <TableHead className="font-medium text-xs uppercase tracking-wider">Locked</TableHead>
-                <TableHead className="font-medium text-xs uppercase tracking-wider">Status</TableHead>
-                <TableHead className="font-medium text-xs uppercase tracking-wider">Created</TableHead>
-                <TableHead className="w-[100px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredZones.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={9} className="text-center py-8 text-[#6B6B6B]">
-                    No zones found. Click "Add Zone" to create one.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredZones.map((zone) => (
-                  <TableRow 
-                    key={zone.id} 
-                    className={`${canUpdate ? 'cursor-pointer hover:bg-[#F9FAFB]' : ''}`} 
-                    onClick={() => canUpdate && handleEdit(zone)}
-                  >
-                    <TableCell className="font-medium text-[#5B2C93]">{zone.code}</TableCell>
-                    <TableCell className="text-[#2C2C2C]">{zone.name}</TableCell>
-                    <TableCell className="text-[#6B6B6B]">{zone.siteCode || "-"}</TableCell>
-                    <TableCell className="text-[#6B6B6B]">{zone.zoneTypeName || "-"}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getSecurityLevelBadge(zone.securityLevel)}>
-                        {zone.securityLevel}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {zone.isLocked ? (
-                        <Badge className="bg-[#FEE2E2] text-[#991B1B] hover:bg-[#FEE2E2]">
-                          <Lock className="h-3 w-3 mr-1" /> Locked
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="bg-[#D1FAE5] text-[#065F46] border-[#059669]">
-                          <Unlock className="h-3 w-3 mr-1" /> Open
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium capitalize ${getStatusBadge(zone.status)}`}>
-                        {zone.status}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-[#6B6B6B] text-xs">{formatDate(zone.createdAt)}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        {canLock && (
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className={`h-7 w-7 ${zone.isLocked ? "text-[#059669] hover:text-[#059669]" : "text-[#DC2626] hover:text-[#DC2626]"}`}
-                            onClick={(e) => handleLock(zone, e)}
-                            title={zone.isLocked ? "Unlock Zone" : "Lock Zone"}
-                          >
-                            {zone.isLocked ? <Unlock className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
-                          </Button>
-                        )}
-                        {canDelete && (
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="h-7 w-7 text-[#6B6B6B] hover:text-[#DC2626]"
-                            onClick={(e) => handleDelete(zone.id, e)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        )}
+      <div className="mt-4">
+        <FioriTable
+          columns={columns}
+          data={filteredZones}
+          isLoading={isLoading}
+          rowKey={(zone) => zone.id}
+          onRowClick={canUpdate ? handleEdit : undefined}
+          emptyIcon={<ShieldAlert className="h-10 w-10" />}
+          emptyTitle="No zones found"
+          emptyDescription='Click "Add Zone" to create your first security zone.'
+          footerInfo={`Showing ${filteredZones.length} of ${zones.length} zones`}
+        />
       </div>
     </div>
   );

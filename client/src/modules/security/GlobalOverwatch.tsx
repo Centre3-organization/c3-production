@@ -1,33 +1,30 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Shield, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Clock, 
-  MapPin, 
-  Users, 
+import {
+  Shield,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  MapPin,
+  Users,
   Layers,
   RefreshCw,
   Eye,
   Bell,
   Activity,
   ChevronRight,
-  Search,
-  Filter,
   AlertCircle,
   ShieldAlert,
   Building2,
   Zap,
-  Radio
+  Radio,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -35,7 +32,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -46,6 +42,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { FioriPageHeader, FioriStatusBadge } from "@/components/fiori";
 
 export default function GlobalOverwatch() {
   const [, navigate] = useLocation();
@@ -54,34 +51,24 @@ export default function GlobalOverwatch() {
   const [selectedAlert, setSelectedAlert] = useState<any>(null);
   const [resolveDialogOpen, setResolveDialogOpen] = useState(false);
   const [resolutionNotes, setResolutionNotes] = useState("");
-  
+
   // Fetch data
   const { data: stats, isLoading: statsLoading, refetch: refetchStats } = trpc.dashboard.getStats.useQuery();
   const { data: siteOverview, isLoading: siteLoading } = trpc.dashboard.getSiteOverview.useQuery();
   const { data: alertCounts, isLoading: alertCountsLoading } = trpc.securityAlerts.getActiveCounts.useQuery();
   const { data: alertsData, isLoading: alertsLoading, refetch: refetchAlerts } = trpc.securityAlerts.getAll.useQuery({
-    status: statusFilter === "all" ? undefined : statusFilter as any,
-    severity: severityFilter === "all" ? undefined : severityFilter as any,
+    status: statusFilter === "all" ? undefined : (statusFilter as any),
+    severity: severityFilter === "all" ? undefined : (severityFilter as any),
     limit: 20,
   });
-  
+
   // Mutations
   const acknowledgeMutation = trpc.securityAlerts.acknowledge.useMutation({
-    onSuccess: () => {
-      toast.success("Alert acknowledged");
-      refetchAlerts();
-      refetchStats();
-    },
+    onSuccess: () => { toast.success("Alert acknowledged"); refetchAlerts(); refetchStats(); },
   });
-  
   const investigateMutation = trpc.securityAlerts.investigate.useMutation({
-    onSuccess: () => {
-      toast.success("Investigation started");
-      refetchAlerts();
-      refetchStats();
-    },
+    onSuccess: () => { toast.success("Investigation started"); refetchAlerts(); refetchStats(); },
   });
-  
   const resolveMutation = trpc.securityAlerts.resolve.useMutation({
     onSuccess: () => {
       toast.success("Alert resolved");
@@ -93,33 +80,21 @@ export default function GlobalOverwatch() {
     },
   });
 
-  const handleAcknowledge = (id: number) => {
-    acknowledgeMutation.mutate({ id });
-  };
-
-  const handleInvestigate = (id: number) => {
-    investigateMutation.mutate({ id });
-  };
-
+  const handleAcknowledge = (id: number) => acknowledgeMutation.mutate({ id });
+  const handleInvestigate = (id: number) => investigateMutation.mutate({ id });
   const handleResolve = (falseAlarm: boolean = false) => {
-    if (selectedAlert) {
-      resolveMutation.mutate({
-        id: selectedAlert.id,
-        resolutionNotes,
-        falseAlarm,
-      });
-    }
+    if (selectedAlert) resolveMutation.mutate({ id: selectedAlert.id, resolutionNotes, falseAlarm });
   };
 
   const severityColors: Record<string, { bg: string; text: string; border: string }> = {
-    critical: { bg: "bg-[#FFE5E5]", text: "text-[#FF6B6B]", border: "border-[#FF6B6B]" },
+    critical: { bg: "bg-[#FFE5E5]", text: "text-[#DC2626]", border: "border-[#DC2626]" },
     high: { bg: "bg-[#FEF3C7]", text: "text-[#D97706]", border: "border-[#D97706]" },
-    medium: { bg: "bg-[#FEF3C7]", text: "text-[#D97706]", border: "border-[#D97706]" },
+    medium: { bg: "bg-[#FFF4E5]", text: "text-[#D97706]", border: "border-[#D97706]" },
     low: { bg: "bg-[#F5F5F5]", text: "text-[#2C2C2C]", border: "border-[#E0E0E0]" },
   };
 
   const statusColors: Record<string, { bg: string; text: string }> = {
-    active: { bg: "bg-[#FFE5E5]", text: "text-[#FF6B6B]" },
+    active: { bg: "bg-[#FFE5E5]", text: "text-[#DC2626]" },
     acknowledged: { bg: "bg-[#FEF3C7]", text: "text-[#D97706]" },
     investigating: { bg: "bg-[#E8DCF5]", text: "text-[#5B2C93]" },
     resolved: { bg: "bg-[#D1FAE5]", text: "text-[#059669]" },
@@ -140,158 +115,86 @@ export default function GlobalOverwatch() {
   };
 
   return (
-    <div className="space-y-6 font-manrope">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
-            <Eye className="h-6 w-6 text-[#6B6B6B]" />
-            Global Overwatch
-          </h1>
-          <p className="text-sm text-[#6B6B6B]">Real-time security monitoring across all facilities</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="default" 
-            onClick={() => {
-              refetchStats();
-              refetchAlerts();
-            }}
-            className="gap-2 h-10 px-4"
-          >
-            <RefreshCw className="h-4 w-4" />
-            Refresh
-          </Button>
-        </div>
-      </div>
+    <div className="space-y-0">
+      {/* SAP Fiori Page Header */}
+      <FioriPageHeader
+        title="Global Overwatch"
+        subtitle="Real-time security monitoring across all facilities"
+        icon={<Eye className="h-5 w-5" />}
+        onRefresh={() => { refetchStats(); refetchAlerts(); }}
+      />
 
-      {/* Alert Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <Card className="border border-[#FF6B6B] bg-[#FFE5E5]/50 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#FF6B6B] uppercase tracking-wider">Critical</CardTitle>
-            <div className="p-2 bg-[#FFE5E5] rounded-lg">
-              <AlertCircle className="h-4 w-4 text-[#FF6B6B]" />
+      {/* KPI Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-5">
+        {[
+          { label: "Critical", value: alertCounts?.critical || 0, icon: AlertCircle, color: "#DC2626", bg: "#FFE5E5", borderColor: "#DC2626" },
+          { label: "High", value: alertCounts?.high || 0, icon: AlertTriangle, color: "#D97706", bg: "#FEF3C7", borderColor: "#D97706" },
+          { label: "Medium", value: alertCounts?.medium || 0, icon: Bell, color: "#D97706", bg: "#FFF4E5", borderColor: "#D97706" },
+          { label: "Low", value: alertCounts?.low || 0, icon: Activity, color: "#6B6B6B", bg: "#F5F5F5", borderColor: "#E0E0E0" },
+          { label: "Total Active", value: alertCounts?.total || 0, icon: Shield, color: "#059669", bg: "#D1FAE5", borderColor: "#059669" },
+        ].map((kpi) => (
+          <div key={kpi.label} className="bg-white rounded-lg px-4 py-3 border" style={{ borderColor: kpi.borderColor }}>
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: kpi.bg }}>
+                <kpi.icon className="h-4 w-4" style={{ color: kpi.color }} />
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-wider font-medium" style={{ color: kpi.color }}>{kpi.label}</p>
+                {alertCountsLoading ? (
+                  <Skeleton className="h-7 w-10" />
+                ) : (
+                  <p className="text-xl font-semibold" style={{ color: kpi.color }}>{kpi.value}</p>
+                )}
+              </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            {alertCountsLoading ? (
-              <Skeleton className="h-8 w-12" />
-            ) : (
-              <div className="text-2xl font-medium text-[#FF6B6B]">{alertCounts?.critical || 0}</div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="border border-[#D97706] bg-[#FEF3C7]/50 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#D97706] uppercase tracking-wider">High</CardTitle>
-            <div className="p-2 bg-[#FEF3C7] rounded-lg">
-              <AlertTriangle className="h-4 w-4 text-[#D97706]" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            {alertCountsLoading ? (
-              <Skeleton className="h-8 w-12" />
-            ) : (
-              <div className="text-2xl font-medium text-[#D97706]">{alertCounts?.high || 0}</div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="border border-[#D97706] bg-[#FEF3C7]/50 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#D97706] uppercase tracking-wider">Medium</CardTitle>
-            <div className="p-2 bg-[#FEF3C7] rounded-lg">
-              <Bell className="h-4 w-4 text-[#D97706]" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            {alertCountsLoading ? (
-              <Skeleton className="h-8 w-12" />
-            ) : (
-              <div className="text-2xl font-medium text-[#D97706]">{alertCounts?.medium || 0}</div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="border border-[#E0E0E0] bg-[#F5F5F5]/50 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">Low</CardTitle>
-            <div className="p-2 bg-[#F5F5F5] rounded-lg">
-              <Activity className="h-4 w-4 text-[#6B6B6B]" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            {alertCountsLoading ? (
-              <Skeleton className="h-8 w-12" />
-            ) : (
-              <div className="text-2xl font-medium text-[#6B6B6B]">{alertCounts?.low || 0}</div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="border border-[#059669] bg-[#D1FAE5]/50 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#059669] uppercase tracking-wider">Total Active</CardTitle>
-            <div className="p-2 bg-[#D1FAE5] rounded-lg">
-              <Shield className="h-4 w-4 text-[#059669]" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            {alertCountsLoading ? (
-              <Skeleton className="h-8 w-12" />
-            ) : (
-              <div className="text-2xl font-medium text-[#059669]">{alertCounts?.total || 0}</div>
-            )}
-          </CardContent>
-        </Card>
+          </div>
+        ))}
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-5 lg:grid-cols-3">
         {/* Security Alerts Panel */}
-        <div className="lg:col-span-2 space-y-4">
-          <Card className="border border-[#E0E0E0]/50 shadow-sm">
-            <CardHeader className="pb-3">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <CardTitle className="text-base font-medium flex items-center gap-2">
-                  <ShieldAlert className="h-4 w-4 text-[#6B6B6B]" />
-                  Security Alerts
-                </CardTitle>
-                <div className="flex items-center gap-2">
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[140px] h-9">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Status</SelectItem>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="acknowledged">Acknowledged</SelectItem>
-                      <SelectItem value="investigating">Investigating</SelectItem>
-                      <SelectItem value="resolved">Resolved</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={severityFilter} onValueChange={setSeverityFilter}>
-                    <SelectTrigger className="w-[130px] h-9">
-                      <SelectValue placeholder="Severity" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Severity</SelectItem>
-                      <SelectItem value="critical">Critical</SelectItem>
-                      <SelectItem value="high">High</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="low">Low</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+        <div className="lg:col-span-2 space-y-0">
+          <div className="bg-white border border-[#E0E0E0] rounded-lg overflow-hidden">
+            {/* Panel Header */}
+            <div className="px-5 py-3 border-b border-[#E0E0E0] bg-[#FAFAFA] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <h3 className="text-sm font-semibold text-[#2C2C2C] flex items-center gap-2 uppercase tracking-wider">
+                <ShieldAlert className="h-4 w-4 text-[#6B6B6B]" />
+                Security Alerts
+              </h3>
+              <div className="flex items-center gap-2">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-[140px] h-8 text-xs border-[#E0E0E0]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="acknowledged">Acknowledged</SelectItem>
+                    <SelectItem value="investigating">Investigating</SelectItem>
+                    <SelectItem value="resolved">Resolved</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={severityFilter} onValueChange={setSeverityFilter}>
+                  <SelectTrigger className="w-[130px] h-8 text-xs border-[#E0E0E0]">
+                    <SelectValue placeholder="Severity" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Severity</SelectItem>
+                    <SelectItem value="critical">Critical</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            </CardHeader>
-            <CardContent className="pt-0">
+            </div>
+
+            {/* Alert List */}
+            <div className="p-4">
               {alertsLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-24 w-full" />)}
+                  {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-24 w-full" />)}
                 </div>
               ) : alertsData?.alerts.length === 0 ? (
                 <div className="h-[300px] flex flex-col items-center justify-center text-[#6B6B6B]">
@@ -302,7 +205,7 @@ export default function GlobalOverwatch() {
               ) : (
                 <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
                   {alertsData?.alerts.map((alert: any) => (
-                    <div 
+                    <div
                       key={alert.id}
                       className={cn(
                         "p-4 rounded-lg border transition-all",
@@ -318,7 +221,7 @@ export default function GlobalOverwatch() {
                               {alert.severity.toUpperCase()}
                             </Badge>
                             <Badge className={cn("text-[10px]", statusColors[alert.status]?.bg, statusColors[alert.status]?.text)}>
-                              {alert.status.replace('_', ' ').toUpperCase()}
+                              {alert.status.replace("_", " ").toUpperCase()}
                             </Badge>
                           </div>
                           <h4 className="font-medium text-sm text-[#2C2C2C] mb-1">{alert.title}</h4>
@@ -341,49 +244,23 @@ export default function GlobalOverwatch() {
                           </div>
                         </div>
                         <div className="flex flex-col gap-1">
-                          {alert.status === 'active' && (
+                          {alert.status === "active" && (
                             <>
-                              <Button 
-                                size="sm" 
-                                variant="outline" 
-                                className="h-7 text-xs"
-                                onClick={() => handleAcknowledge(alert.id)}
-                                disabled={acknowledgeMutation.isPending}
-                              >
+                              <Button size="sm" variant="outline" className="h-7 text-xs border-[#E0E0E0]" onClick={() => handleAcknowledge(alert.id)} disabled={acknowledgeMutation.isPending}>
                                 Acknowledge
                               </Button>
-                              <Button 
-                                size="sm" 
-                                variant="outline" 
-                                className="h-7 text-xs"
-                                onClick={() => handleInvestigate(alert.id)}
-                                disabled={investigateMutation.isPending}
-                              >
+                              <Button size="sm" variant="outline" className="h-7 text-xs border-[#E0E0E0]" onClick={() => handleInvestigate(alert.id)} disabled={investigateMutation.isPending}>
                                 Investigate
                               </Button>
                             </>
                           )}
-                          {alert.status === 'acknowledged' && (
-                            <Button 
-                              size="sm" 
-                              variant="outline" 
-                              className="h-7 text-xs"
-                              onClick={() => handleInvestigate(alert.id)}
-                              disabled={investigateMutation.isPending}
-                            >
+                          {alert.status === "acknowledged" && (
+                            <Button size="sm" variant="outline" className="h-7 text-xs border-[#E0E0E0]" onClick={() => handleInvestigate(alert.id)} disabled={investigateMutation.isPending}>
                               Investigate
                             </Button>
                           )}
-                          {(alert.status === 'active' || alert.status === 'acknowledged' || alert.status === 'investigating') && (
-                            <Button 
-                              size="sm" 
-                              variant="default" 
-                              className="h-7 text-xs bg-[#059669] hover:bg-[#047857]"
-                              onClick={() => {
-                                setSelectedAlert(alert);
-                                setResolveDialogOpen(true);
-                              }}
-                            >
+                          {(alert.status === "active" || alert.status === "acknowledged" || alert.status === "investigating") && (
+                            <Button size="sm" className="h-7 text-xs bg-[#059669] hover:bg-[#047857]" onClick={() => { setSelectedAlert(alert); setResolveDialogOpen(true); }}>
                               Resolve
                             </Button>
                           )}
@@ -393,142 +270,114 @@ export default function GlobalOverwatch() {
                   ))}
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
-        {/* Site Status Panel */}
-        <div className="space-y-4">
-          <Card className="border border-[#E0E0E0]/50 shadow-sm">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-medium flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-[#6B6B6B]" />
-                  Site Status
-                </CardTitle>
-                <Button variant="ghost" size="sm" onClick={() => navigate("/sites")} className="h-8 px-3">
-                  View All <ChevronRight className="h-3 w-3 ml-1" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
+        {/* Right Panel */}
+        <div className="space-y-5">
+          {/* Site Status Panel */}
+          <div className="bg-white border border-[#E0E0E0] rounded-lg overflow-hidden">
+            <div className="px-5 py-3 border-b border-[#E0E0E0] bg-[#FAFAFA] flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-[#2C2C2C] flex items-center gap-2 uppercase tracking-wider">
+                <Building2 className="h-4 w-4 text-[#6B6B6B]" />
+                Site Status
+              </h3>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/sites")} className="h-7 px-2 text-xs text-[#5B2C93]">
+                View All <ChevronRight className="h-3 w-3 ml-1" />
+              </Button>
+            </div>
+            <div className="p-4">
               {siteLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-20 w-full" />)}
+                  {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-20 w-full" />)}
                 </div>
               ) : (
                 <div className="space-y-3">
                   {siteOverview?.map((site: any) => (
-                    <div 
+                    <div
                       key={site.id}
-                      className="p-3 rounded-lg bg-[#F5F5F5] border border-[#E0E0E0] hover:bg-[#F5F5F5] transition-colors cursor-pointer"
+                      className="p-3 rounded-lg bg-[#FAFAFA] border border-[#E0E0E0] hover:border-[#5B2C93] transition-colors cursor-pointer"
                       onClick={() => navigate("/sites")}
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
                             <p className="font-medium text-sm truncate text-[#2C2C2C]">{site.name}</p>
-                            <div className={cn(
-                              "w-2 h-2 rounded-full flex-shrink-0",
-                              site.status === "active" ? "bg-[#D1FAE5]" : "bg-[#FEF3C7]"
-                            )} />
+                            <div className={cn("w-2 h-2 rounded-full flex-shrink-0", site.status === "active" ? "bg-[#059669]" : "bg-[#D97706]")} />
                           </div>
-                          <p className="text-xs text-[#6B6B6B]">{site.code}</p>
+                          <p className="text-xs text-[#6B6B6B] font-mono">{site.code}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-4 text-xs text-[#6B6B6B]">
-                        <span className="flex items-center gap-1">
-                          <Layers className="h-3 w-3" /> {site.zoneCount} zones
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Users className="h-3 w-3" /> {site.activeVisitors} visitors
-                        </span>
+                        <span className="flex items-center gap-1"><Layers className="h-3 w-3" /> {site.zoneCount} zones</span>
+                        <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {site.activeVisitors} visitors</span>
                         {site.alertCount > 0 && (
-                          <span className="flex items-center gap-1 text-[#FF6B6B]">
-                            <AlertCircle className="h-3 w-3" /> {site.alertCount}
-                          </span>
+                          <span className="flex items-center gap-1 text-[#DC2626]"><AlertCircle className="h-3 w-3" /> {site.alertCount}</span>
                         )}
                       </div>
                     </div>
                   ))}
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Quick Stats */}
-          <Card className="border border-[#E0E0E0]/50 shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-medium flex items-center gap-2">
+          {/* Quick Stats Panel */}
+          <div className="bg-white border border-[#E0E0E0] rounded-lg overflow-hidden">
+            <div className="px-5 py-3 border-b border-[#E0E0E0] bg-[#FAFAFA]">
+              <h3 className="text-sm font-semibold text-[#2C2C2C] flex items-center gap-2 uppercase tracking-wider">
                 <Zap className="h-4 w-4 text-[#6B6B6B]" />
                 Quick Stats
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] rounded-lg">
-                  <span className="text-sm text-[#6B6B6B]">Active Visitors</span>
-                  <span className="font-medium text-[#2C2C2C]">{stats?.activeVisitors || 0}</span>
+              </h3>
+            </div>
+            <div className="p-4 space-y-2">
+              {[
+                { label: "Active Visitors", value: stats?.activeVisitors || 0, color: "#2C2C2C" },
+                { label: "Pending L1", value: stats?.pendingL1 || 0, color: "#D97706" },
+                { label: "Pending L2", value: stats?.pendingManual || 0, color: "#5B2C93" },
+                { label: "Total Sites", value: stats?.sites || 0, color: "#2C2C2C" },
+                { label: "Total Zones", value: stats?.zones || 0, color: "#2C2C2C" },
+              ].map((stat) => (
+                <div key={stat.label} className="flex items-center justify-between p-3 bg-[#FAFAFA] rounded-lg border border-[#F0F0F0]">
+                  <span className="text-sm text-[#6B6B6B]">{stat.label}</span>
+                  <span className="font-semibold" style={{ color: stat.color }}>{stat.value}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] rounded-lg">
-                  <span className="text-sm text-[#6B6B6B]">Pending L1</span>
-                  <span className="font-medium text-[#D97706]">{stats?.pendingL1 || 0}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] rounded-lg">
-                  <span className="text-sm text-[#6B6B6B]">Pending L2</span>
-                  <span className="font-medium text-[#5B2C93]">{stats?.pendingManual || 0}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] rounded-lg">
-                  <span className="text-sm text-[#6B6B6B]">Total Sites</span>
-                  <span className="font-medium text-[#2C2C2C]">{stats?.sites || 0}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] rounded-lg">
-                  <span className="text-sm text-[#6B6B6B]">Total Zones</span>
-                  <span className="font-medium text-[#2C2C2C]">{stats?.zones || 0}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Resolve Alert Dialog */}
       <Dialog open={resolveDialogOpen} onOpenChange={setResolveDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className="p-0">
+          <div className="px-6 pt-5 pb-4 border-b border-[#E0E0E0]">
             <DialogTitle>Resolve Alert</DialogTitle>
-            <DialogDescription>
-              {selectedAlert?.alert_number} - {selectedAlert?.title}
+            <DialogDescription className="mt-1">
+              {selectedAlert?.alert_number} \u2014 {selectedAlert?.title}
             </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
+          </div>
+          <div className="px-6 py-4 space-y-4">
             <div>
-              <label className="text-sm font-medium">Resolution Notes</label>
+              <label className="text-xs text-[#6B6B6B] uppercase tracking-wider font-medium">Resolution Notes</label>
               <Textarea
                 placeholder="Describe how the alert was resolved..."
                 value={resolutionNotes}
                 onChange={(e) => setResolutionNotes(e.target.value)}
-                className="mt-2"
+                className="mt-2 border-[#E0E0E0]"
                 rows={4}
               />
             </div>
           </div>
-          <DialogFooter className="gap-2">
-            <Button
-              variant="outline"
-              onClick={() => handleResolve(true)}
-              disabled={resolveMutation.isPending}
-            >
+          <div className="px-6 py-4 border-t border-[#E0E0E0] bg-[#FAFAFA] flex justify-end gap-2">
+            <Button variant="outline" onClick={() => handleResolve(true)} disabled={resolveMutation.isPending} className="border-[#E0E0E0]">
               Mark as False Alarm
             </Button>
-            <Button
-              onClick={() => handleResolve(false)}
-              disabled={resolveMutation.isPending}
-              className="bg-[#059669] hover:bg-[#047857]"
-            >
+            <Button onClick={() => handleResolve(false)} disabled={resolveMutation.isPending} className="bg-[#059669] hover:bg-[#047857]">
               Resolve Alert
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

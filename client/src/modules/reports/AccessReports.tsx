@@ -32,6 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { trpc } from "@/utils/trpc";
+import { FioriPageHeader } from "@/components/fiori";
 
 export default function AccessReports() {
   const [dateRange, setDateRange] = useState("last30");
@@ -98,14 +99,13 @@ export default function AccessReports() {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Access Reports</h1>
-          <p className="text-[#6B6B6B] mt-1">Analyze access request patterns and trends</p>
-        </div>
-        <div className="flex gap-3">
+    <div className="space-y-0">
+      <FioriPageHeader
+        title="Access Reports"
+        subtitle="Analyze access request patterns and trends"
+        icon={<BarChart3 className="h-5 w-5" />}
+        actions={
+          <div className="flex gap-2">
           <Select value={dateRange} onValueChange={setDateRange}>
             <SelectTrigger className="w-[180px]">
               <Calendar className="h-4 w-4 mr-2" />
@@ -126,8 +126,9 @@ export default function AccessReports() {
             <Download className="h-4 w-4 mr-2" />
             Export Report
           </Button>
-        </div>
-      </div>
+          </div>
+        }
+      />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

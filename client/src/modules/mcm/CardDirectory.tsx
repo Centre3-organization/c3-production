@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -13,26 +11,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import { 
-  Search, 
-  Filter, 
-  Eye, 
-  Edit, 
-  Ban, 
+import {
+  Eye,
+  Ban,
   RefreshCw,
   AlertTriangle,
   ChevronLeft,
@@ -40,9 +27,16 @@ import {
   CreditCard,
   FileText,
   Clock,
-  Plus
+  Plus,
 } from "lucide-react";
 import { Link } from "wouter";
+import {
+  FioriPageHeader,
+  FioriFilterBar,
+  FioriTable,
+  FioriStatusBadge,
+} from "@/components/fiori";
+import type { FioriColumn } from "@/components/fiori";
 
 export default function CardDirectory() {
   const { t } = useTranslation();
@@ -61,347 +55,268 @@ export default function CardDirectory() {
   // Fetch cards
   const { data: cardsData, isLoading, refetch } = trpc.mcm.cards.list.useQuery({
     search: search || undefined,
-    status: statusFilter !== "all" ? statusFilter as any : undefined,
-    companyType: companyTypeFilter !== "all" ? companyTypeFilter as any : undefined,
+    status: statusFilter !== "all" ? (statusFilter as any) : undefined,
+    companyType: companyTypeFilter !== "all" ? (companyTypeFilter as any) : undefined,
     page,
     limit: 20,
   });
 
-  // Block card mutation
+  // Mutations
   const blockMutation = trpc.mcm.admin.blockCard.useMutation({
-    onSuccess: () => {
-      refetch();
-      setShowBlockDialog(false);
-      setSelectedCard(null);
-    },
+    onSuccess: () => { refetch(); setShowBlockDialog(false); setSelectedCard(null); },
   });
-
-  // Unblock card mutation
   const unblockMutation = trpc.mcm.admin.unblockCard.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
+    onSuccess: () => refetch(),
   });
-
-  const statCards = [
-    {
-      title: t("mcm.stats.activeCards", "Active Cards"),
-      value: stats?.activeCards || 0,
-      icon: CreditCard,
-      color: "text-[#059669]",
-      bgColor: "bg-[#D1FAE5]/10",
-    },
-    {
-      title: t("mcm.stats.pendingRequests", "Pending Requests"),
-      value: stats?.pendingRequests || 0,
-      icon: FileText,
-      color: "text-[#5B2C93]",
-      bgColor: "bg-[#E8DCF5]/10",
-    },
-    {
-      title: t("mcm.stats.expiringSoon", "Expiring Soon"),
-      value: stats?.expiringSoon || 0,
-      icon: Clock,
-      color: "text-[#D97706]",
-      bgColor: "bg-[#FEF3C7]/10",
-    },
-    {
-      title: t("mcm.stats.blockedCards", "Blocked Cards"),
-      value: stats?.blockedCards || 0,
-      icon: AlertTriangle,
-      color: "text-[#FF6B6B]",
-      bgColor: "bg-[#FF6B6B]/10",
-    },
-  ];
-
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-      active: "default",
-      pending: "secondary",
-      inactive: "outline",
-      blocked: "destructive",
-      expired: "outline",
-    };
-    return <Badge variant={variants[status] || "secondary"}>{status}</Badge>;
-  };
-
-  const getCompanyTypeBadge = (type: string) => {
-    const colors: Record<string, string> = {
-      centre3: "bg-[#E8DCF5]/10 text-[#5B2C93]",
-      contractor: "bg-[#FEF3C7]/10 text-[#D97706]",
-      subcontractor: "bg-[#E8DCF5]/10 text-[#5B2C93]",
-      client: "bg-[#D1FAE5]/10 text-[#059669]",
-    };
-    return (
-      <span className={`px-2 py-1 rounded text-xs font-medium ${colors[type] || ""}`}>
-        {type}
-      </span>
-    );
-  };
 
   const handleBlock = () => {
     if (!selectedCard || !blockReason) return;
-    blockMutation.mutate({
-      cardId: selectedCard.id,
-      blockReason: blockReason as any,
-      blockType: blockType as any,
-    });
+    blockMutation.mutate({ cardId: selectedCard.id, blockReason: blockReason as any, blockType: blockType as any });
+  };
+  const handleUnblock = (cardId: number) => {
+    unblockMutation.mutate({ cardId, reason: "Unblocked by admin" });
   };
 
-  const handleUnblock = (cardId: number) => {
-    unblockMutation.mutate({
-      cardId,
-      reason: "Unblocked by admin",
-    });
-  };
+  const activeFilterChips = useMemo(() => {
+    const chips: { key: string; label: string; onRemove: () => void }[] = [];
+    if (statusFilter !== "all") chips.push({ key: "status", label: `Status: ${statusFilter}`, onRemove: () => setStatusFilter("all") });
+    if (companyTypeFilter !== "all") chips.push({ key: "company", label: `Type: ${companyTypeFilter}`, onRemove: () => setCompanyTypeFilter("all") });
+    return chips;
+  }, [statusFilter, companyTypeFilter]);
+
+  const columns: FioriColumn<any>[] = useMemo(() => [
+    {
+      key: "cardNumber",
+      header: "Card Number",
+      width: "140px",
+      render: (c: any) => <span className="font-mono text-sm font-medium text-[#5B2C93]">{c.cardNumber}</span>,
+    },
+    {
+      key: "fullName",
+      header: "Full Name",
+      render: (c: any) => <span className="font-medium text-[#2C2C2C]">{c.fullName}</span>,
+    },
+    {
+      key: "idNumber",
+      header: "ID Number",
+      render: (c: any) => <span className="text-sm text-[#6B6B6B] font-mono">{c.idNumber}</span>,
+    },
+    {
+      key: "companyType",
+      header: "Company Type",
+      render: (c: any) => {
+        const colors: Record<string, { bg: string; text: string }> = {
+          centre3: { bg: "#E8DCF5", text: "#5B2C93" },
+          contractor: { bg: "#FEF3C7", text: "#D97706" },
+          subcontractor: { bg: "#E8DCF5", text: "#5B2C93" },
+          client: { bg: "#D1FAE5", text: "#059669" },
+        };
+        const style = colors[c.companyType!] || { bg: "#F5F5F5", text: "#6B6B6B" };
+        return (
+          <span className="px-2 py-0.5 rounded text-xs font-medium" style={{ backgroundColor: style.bg, color: style.text }}>
+            {c.companyType}
+          </span>
+        );
+      },
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (c: any) => (
+        <FioriStatusBadge
+          status={c.status === "active" ? "success" : c.status === "blocked" ? "error" : c.status === "expired" ? "inactive" : "pending"}
+          label={c.status || "unknown"}
+        />
+      ),
+    },
+    {
+      key: "expiryDate",
+      header: "Expiry Date",
+      render: (c: any) => <span className="text-sm text-[#6B6B6B]">{c.expiryDate ? new Date(c.expiryDate).toLocaleDateString() : "\u2014"}</span>,
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right" as const,
+      width: "120px",
+      render: (c: any) => (
+        <div className="flex justify-end gap-1">
+          <Link href={`/mcm/cards/${c.id}`}>
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-[#5B2C93]">
+              <Eye className="h-4 w-4" />
+            </Button>
+          </Link>
+          {c.status === "active" && (
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-[#DC2626]" onClick={(e) => { e.stopPropagation(); setSelectedCard(c); setShowBlockDialog(true); }}>
+              <Ban className="h-4 w-4" />
+            </Button>
+          )}
+          {c.status === "blocked" && (
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-[#059669]" onClick={(e) => { e.stopPropagation(); handleUnblock(c.id); }}>
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      ),
+    },
+  ], []);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{t("mcm.title", "Magnetic Card Management")}</h1>
-          <p className="text-[#6B6B6B]">
-            {t("mcm.subtitle", "Manage access cards for employees and contractors")}
-          </p>
-        </div>
-        <Link href="/mcm/request/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            {t("mcm.newRequest", "New Card Request")}
-          </Button>
-        </Link>
-      </div>
+    <div className="space-y-0">
+      {/* SAP Fiori Page Header */}
+      <FioriPageHeader
+        title={t("mcm.title", "Card Directory")}
+        subtitle={t("mcm.subtitle", "Manage access cards for employees and contractors")}
+        icon={<CreditCard className="h-5 w-5" />}
+        count={cardsData?.total}
+        onRefresh={() => refetch()}
+        actions={
+          <Link href="/mcm/request/new">
+            <Button className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2" size="sm">
+              <Plus className="h-4 w-4" /> {t("mcm.newRequest", "New Card Request")}
+            </Button>
+          </Link>
+        }
+      />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map((stat) => (
-          <Card key={stat.title}>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-[#6B6B6B]">{stat.title}</p>
-                  <p className="text-3xl font-medium mt-1">
-                    {statsLoading ? "..." : stat.value}
-                  </p>
-                </div>
-                <div className={`p-3 rounded-full ${stat.bgColor}`}>
-                  <stat.icon className={`h-6 w-6 ${stat.color}`} />
-                </div>
+      {/* KPI Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        {[
+          { label: t("mcm.stats.activeCards", "Active Cards"), value: stats?.activeCards || 0, icon: CreditCard, color: "#059669", bg: "#D1FAE5" },
+          { label: t("mcm.stats.pendingRequests", "Pending Requests"), value: stats?.pendingRequests || 0, icon: FileText, color: "#5B2C93", bg: "#E8DCF5" },
+          { label: t("mcm.stats.expiringSoon", "Expiring Soon"), value: stats?.expiringSoon || 0, icon: Clock, color: "#D97706", bg: "#FEF3C7" },
+          { label: t("mcm.stats.blockedCards", "Blocked Cards"), value: stats?.blockedCards || 0, icon: AlertTriangle, color: "#DC2626", bg: "#FFE5E5" },
+        ].map((kpi) => (
+          <div key={kpi.label} className="bg-white border border-[#E0E0E0] rounded-lg px-4 py-3">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: kpi.bg }}>
+                <kpi.icon className="h-4 w-4" style={{ color: kpi.color }} />
               </div>
-            </CardContent>
-          </Card>
+              <div>
+                <p className="text-xs text-[#6B6B6B] font-medium">{kpi.label}</p>
+                <p className="text-xl font-semibold text-[#2C2C2C]">{statsLoading ? "..." : kpi.value}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
-      {/* Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
-              <Input
-                placeholder={t("mcm.searchCards", "Search by name, ID, or card number...")}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+      {/* SAP Fiori Filter Bar */}
+      <FioriFilterBar
+        searchValue={search}
+        onSearchChange={setSearch}
+        searchPlaceholder={t("mcm.searchCards", "Search by name, ID, or card number...")}
+        activeFilters={activeFilterChips}
+        onClearAll={() => { setStatusFilter("all"); setCompanyTypeFilter("all"); }}
+        filters={
+          <div className="flex gap-2">
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder={t("mcm.status", "Status")} />
+              <SelectTrigger className="w-[140px] h-8 text-xs border-[#E0E0E0]">
+                <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("common.all", "All")}</SelectItem>
-                <SelectItem value="active">{t("mcm.active", "Active")}</SelectItem>
-                <SelectItem value="pending">{t("mcm.pending", "Pending")}</SelectItem>
-                <SelectItem value="inactive">{t("mcm.inactive", "Inactive")}</SelectItem>
-                <SelectItem value="blocked">{t("mcm.blocked", "Blocked")}</SelectItem>
-                <SelectItem value="expired">{t("mcm.expired", "Expired")}</SelectItem>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="inactive">Inactive</SelectItem>
+                <SelectItem value="blocked">Blocked</SelectItem>
+                <SelectItem value="expired">Expired</SelectItem>
               </SelectContent>
             </Select>
             <Select value={companyTypeFilter} onValueChange={setCompanyTypeFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t("mcm.companyType", "Company Type")} />
+              <SelectTrigger className="w-[160px] h-8 text-xs border-[#E0E0E0]">
+                <SelectValue placeholder="Company Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("common.all", "All")}</SelectItem>
-                <SelectItem value="centre3">{t("mcm.centre3", "Centre3")}</SelectItem>
-                <SelectItem value="contractor">{t("mcm.contractor", "Contractor")}</SelectItem>
-                <SelectItem value="subcontractor">{t("mcm.subcontractor", "Sub-Contractor")}</SelectItem>
-                <SelectItem value="client">{t("mcm.client", "Client")}</SelectItem>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="centre3">Centre3</SelectItem>
+                <SelectItem value="contractor">Contractor</SelectItem>
+                <SelectItem value="subcontractor">Sub-Contractor</SelectItem>
+                <SelectItem value="client">Client</SelectItem>
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
-      </Card>
+        }
+      />
 
-      {/* Cards Table */}
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t("mcm.cardNumber", "Card Number")}</TableHead>
-                <TableHead>{t("mcm.fullName", "Full Name")}</TableHead>
-                <TableHead>{t("mcm.idNumber", "ID Number")}</TableHead>
-                <TableHead>{t("mcm.companyType", "Company Type")}</TableHead>
-                <TableHead>{t("mcm.status", "Status")}</TableHead>
-                <TableHead>{t("mcm.expiryDate", "Expiry Date")}</TableHead>
-                <TableHead className="text-right">{t("common.actions", "Actions")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
-                    {t("common.loading", "Loading...")}
-                  </TableCell>
-                </TableRow>
-              ) : cardsData?.cards && cardsData.cards.length > 0 ? (
-                cardsData.cards.map((card) => (
-                  <TableRow key={card.id}>
-                    <TableCell className="font-mono">{card.cardNumber}</TableCell>
-                    <TableCell className="font-medium">{card.fullName}</TableCell>
-                    <TableCell>{card.idNumber}</TableCell>
-                    <TableCell>{getCompanyTypeBadge(card.companyType!)}</TableCell>
-                    <TableCell>{getStatusBadge(card.status!)}</TableCell>
-                    <TableCell>
-                      {card.expiryDate
-                        ? new Date(card.expiryDate).toLocaleDateString()
-                        : "-"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Link href={`/mcm/cards/${card.id}`}>
-                          <Button variant="ghost" size="icon">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </Link>
-                        {card.status === "active" && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              setSelectedCard(card);
-                              setShowBlockDialog(true);
-                            }}
-                          >
-                            <Ban className="h-4 w-4 text-[#FF6B6B]" />
-                          </Button>
-                        )}
-                        {card.status === "blocked" && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleUnblock(card.id)}
-                          >
-                            <RefreshCw className="h-4 w-4 text-[#059669]" />
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-[#6B6B6B]">
-                    {t("mcm.noCardsFound", "No cards found")}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      {/* SAP Fiori Table */}
+      <FioriTable
+        columns={columns}
+        data={cardsData?.cards || []}
+        isLoading={isLoading}
+        rowKey={(c: any) => c.id}
+        emptyIcon={<CreditCard className="h-10 w-10" />}
+        emptyTitle={t("mcm.noCardsFound", "No cards found")}
+        emptyDescription="Try adjusting your search or filter criteria."
+        footerInfo={cardsData ? `Showing ${((page - 1) * 20) + 1}\u2013${Math.min(page * 20, cardsData.total)} of ${cardsData.total} cards` : undefined}
+      />
 
       {/* Pagination */}
       {cardsData && cardsData.totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-[#6B6B6B]">
-            {t("common.showing", "Showing")} {((page - 1) * 20) + 1} -{" "}
-            {Math.min(page * 20, cardsData.total)} {t("common.of", "of")} {cardsData.total}
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={page >= cardsData.totalPages}
-              onClick={() => setPage(page + 1)}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="flex items-center justify-end gap-2 mt-3">
+          <Button variant="outline" size="sm" className="h-8 border-[#E0E0E0]" disabled={page === 1} onClick={() => setPage(page - 1)}>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="text-xs text-[#6B6B6B] px-2">Page {page} of {cardsData.totalPages}</span>
+          <Button variant="outline" size="sm" className="h-8 border-[#E0E0E0]" disabled={page >= cardsData.totalPages} onClick={() => setPage(page + 1)}>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
       )}
 
       {/* Block Card Dialog */}
       <Dialog open={showBlockDialog} onOpenChange={setShowBlockDialog}>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className="p-0">
+          <div className="px-6 pt-5 pb-4 border-b border-[#E0E0E0]">
             <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-[#FF6B6B]" />
+              <AlertTriangle className="h-5 w-5 text-[#DC2626]" />
               {t("mcm.blockCard", "Block Card")}
             </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-[#6B6B6B]">
+          </div>
+          <div className="px-6 py-4 space-y-4">
+            <p className="text-sm text-[#6B6B6B]">
               {t("mcm.blockCardConfirm", "Are you sure you want to block this card? This will immediately revoke all access.")}
             </p>
             {selectedCard && (
-              <div className="p-3 rounded-lg bg-[#E8DCF5]/50">
-                <p className="font-medium">{selectedCard.fullName}</p>
-                <p className="text-sm text-[#6B6B6B]">{selectedCard.cardNumber}</p>
+              <div className="p-3 rounded-lg bg-[#FAFAFA] border border-[#E0E0E0]">
+                <p className="font-medium text-sm text-[#2C2C2C]">{selectedCard.fullName}</p>
+                <p className="text-xs text-[#6B6B6B] font-mono">{selectedCard.cardNumber}</p>
               </div>
             )}
             <div className="space-y-2">
-              <label className="text-sm font-medium">{t("mcm.blockReason", "Block Reason")}</label>
+              <label className="text-xs text-[#6B6B6B] uppercase tracking-wider font-medium">{t("mcm.blockReason", "Block Reason")}</label>
               <Select value={blockReason} onValueChange={setBlockReason}>
-                <SelectTrigger>
+                <SelectTrigger className="border-[#E0E0E0]">
                   <SelectValue placeholder={t("mcm.selectReason", "Select reason")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="security_violation">{t("mcm.securityViolation", "Security Violation")}</SelectItem>
-                  <SelectItem value="contract_ended">{t("mcm.contractEnded", "Contract Ended")}</SelectItem>
-                  <SelectItem value="lost_card">{t("mcm.lostCard", "Lost Card")}</SelectItem>
-                  <SelectItem value="damaged_card">{t("mcm.damagedCard", "Damaged Card")}</SelectItem>
-                  <SelectItem value="other">{t("mcm.other", "Other")}</SelectItem>
+                  <SelectItem value="security_violation">Security Violation</SelectItem>
+                  <SelectItem value="contract_ended">Contract Ended</SelectItem>
+                  <SelectItem value="lost_card">Lost Card</SelectItem>
+                  <SelectItem value="damaged_card">Damaged Card</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">{t("mcm.blockType", "Block Type")}</label>
+              <label className="text-xs text-[#6B6B6B] uppercase tracking-wider font-medium">{t("mcm.blockType", "Block Type")}</label>
               <Select value={blockType} onValueChange={setBlockType}>
-                <SelectTrigger>
+                <SelectTrigger className="border-[#E0E0E0]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="temporary">{t("mcm.temporary", "Temporary")}</SelectItem>
-                  <SelectItem value="permanent">{t("mcm.permanent", "Permanent")}</SelectItem>
+                  <SelectItem value="temporary">Temporary</SelectItem>
+                  <SelectItem value="permanent">Permanent</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowBlockDialog(false)}>
-              {t("common.cancel", "Cancel")}
-            </Button>
-            <Button 
-              variant="destructive" 
-              onClick={handleBlock}
-              disabled={!blockReason || blockMutation.isPending}
-            >
+          <div className="px-6 py-4 border-t border-[#E0E0E0] bg-[#FAFAFA] flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setShowBlockDialog(false)} className="border-[#E0E0E0]">Cancel</Button>
+            <Button variant="destructive" onClick={handleBlock} disabled={!blockReason || blockMutation.isPending}>
               {t("mcm.blockCard", "Block Card")}
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

@@ -15,6 +15,7 @@ import {
   AlertTriangle, CheckCircle2, Clock, XCircle, Loader2, ExternalLink,
 } from "lucide-react";
 import { format } from "date-fns";
+import { FioriPageHeader } from "@/components/fiori";
 
 const statusColors: Record<string, string> = {
   active: "bg-[#D1FAE5] text-[#059669] border-[#059669]",
@@ -81,20 +82,17 @@ export default function CompanyDetail() {
     new Date(company.contractEndDate) <= new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
+    <div className="space-y-0">
+      <FioriPageHeader
+        title={company.name}
+        subtitle={company.nameAr || `Company Details - ${typeLabels[company.type] || company.type}`}
+        icon={<Building2 className="h-5 w-5" />}
+        onBack={() => setLocation("/companies")}
+      />
+      {/* Header Meta */}
+      <div className="flex items-start justify-between mb-5">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/companies")}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{company.name}</h1>
-              {company.nameAr && (
-                <span className="text-lg text-[#6B6B6B] font-arabic">{company.nameAr}</span>
-              )}
-            </div>
             <div className="flex items-center gap-2 mt-1">
               {company.code && (
                 <Badge variant="outline" className="font-mono text-xs">

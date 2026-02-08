@@ -1959,3 +1959,25 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix migration journal (seeded 36 migrations into __drizzle_migrations)
 - [x] Rename "Workflow Management" sidebar section to "Process Configuration"
 - [x] Audit unused imports (removed GripVertical, ArrowUpDown from WorkflowBuilder.tsx)
+
+## SAP Fiori Design Pattern Application to All Pages (Feb 9, 2026)
+- [x] Establish SAP Fiori design reference patterns (table, filter bar, form, page header)
+- [x] Redesign Sites listing page with SAP Fiori table, filter bar, status badges
+- [x] Redesign Zones listing page with SAP Fiori table, filter bar, status badges
+- [x] Redesign Areas listing page with SAP Fiori table, filter bar, status badges
+- [x] Redesign All Requests listing page with SAP Fiori table, filter bar, status badges
+- [x] Redesign My Approvals page with SAP Fiori patterns
+- [x] Redesign Approval History page with SAP Fiori patterns
+- [x] Redesign Users & Roles page with SAP Fiori table and filters
+- [x] Redesign Groups page with SAP Fiori patterns
+- [x] Redesign Companies page with SAP Fiori patterns
+- [x] Redesign Settings page with SAP Fiori form patterns
+- [x] Redesign Reports page with SAP Fiori patterns
+- [x] Redesign Security Alerts page with SAP Fiori patterns
+- [x] Redesign Global Overwatch page with SAP Fiori patterns
+- [x] Redesign Card Control page with SAP Fiori patterns
+- [x] Redesign Workflow Builder page with SAP Fiori patterns
+- [x] Redesign Request Types page with SAP Fiori patterns
+- [x] Redesign Delegations page with SAP Fiori patterns
+- [x] Standardize all detail/edit forms and dialogs with SAP Fiori form patterns
+- [x] Visual verification walkthrough of all pages

@@ -3,8 +3,6 @@ import {
   Users as UsersIcon, 
   UserPlus, 
   Shield, 
-  Search, 
-  Filter, 
   MoreHorizontal, 
   Mail, 
   Building2,
@@ -16,25 +14,14 @@ import {
   Loader2,
   AlertCircle,
   Eye,
-  Phone,
   Key,
-  UserCheck,
-  UserX,
   X,
-  ChevronDown
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,18 +42,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { trpc } from "@/utils/trpc";
 import NewUserForm from "./NewUserForm";
 import ViewUserDialog from "./ViewUserDialog";
 import EditUserDialog from "./EditUserDialog";
+import {
+  FioriPageHeader,
+  FioriFilterBar,
+  FioriTable,
+  FioriStatusBadge,
+} from "@/components/fiori";
+import type { FioriColumn } from "@/components/fiori";
 
 // Permission definitions for the UI
 const permissionModules = [
@@ -251,20 +239,19 @@ export default function Users() {
   const [editUserRoleUser, setEditUserRoleUser] = useState<any>(null);
   const [selectedRoleValue, setSelectedRoleValue] = useState<string>("");
   
-  // New state for filters
-  const [filterOpen, setFilterOpen] = useState(false);
+  // Filter state
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
   const [roleFilter, setRoleFilter] = useState<"all" | "user" | "admin">("all");
   const [departmentFilter, setDepartmentFilter] = useState<number | null>(null);
   const [groupFilter, setGroupFilter] = useState<number | null>(null);
   
-  // New state for dialogs
+  // Change password dialog state
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [changePasswordUser, setChangePasswordUser] = useState<any>(null);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Fetch users from backend with filters
+  // Queries
   const { data: usersData, isLoading: usersLoading, error: usersError, refetch: refetchUsers } = trpc.users.list.useQuery({
     search: searchTerm || undefined,
     status: statusFilter !== "all" ? statusFilter : undefined,
@@ -273,30 +260,12 @@ export default function Users() {
     groupId: groupFilter || undefined,
   });
 
-  // Fetch roles from backend
   const { data: rolesData, isLoading: rolesLoading, error: rolesError, refetch: refetchRoles } = trpc.roles.list.useQuery({});
-
-  // Fetch system roles for role assignment
   const { data: systemRolesData } = trpc.users.getSystemRoles.useQuery();
-
-  // Fetch departments from backend
   const { data: departmentsData } = trpc.departments.list.useQuery({});
-
-  // Fetch groups from backend
   const { data: groupsData } = trpc.groups.list.useQuery({});
 
-  // Update user mutation
-  const updateUserMutation = trpc.users.update.useMutation({
-    onSuccess: () => {
-      toast.success("User updated successfully");
-      refetchUsers();
-    },
-    onError: (error: any) => {
-      toast.error("Failed to update user", { description: error.message });
-    },
-  });
-
-  // Assign role mutation
+  // Mutations
   const assignRoleMutation = trpc.users.assignRole.useMutation({
     onSuccess: () => {
       toast.success("Role assigned successfully");
@@ -308,7 +277,6 @@ export default function Users() {
     },
   });
 
-  // Change password mutation
   const changePasswordMutation = trpc.users.changePassword.useMutation({
     onSuccess: () => {
       toast.success("Password changed successfully");
@@ -322,7 +290,6 @@ export default function Users() {
     },
   });
 
-  // Activate user mutation
   const activateMutation = trpc.users.activate.useMutation({
     onSuccess: () => {
       toast.success("User activated successfully");
@@ -333,7 +300,6 @@ export default function Users() {
     },
   });
 
-  // Deactivate user mutation
   const deactivateMutation = trpc.users.deactivate.useMutation({
     onSuccess: () => {
       toast.success("User deactivated successfully");
@@ -344,7 +310,6 @@ export default function Users() {
     },
   });
 
-  // Create role mutation
   const createRoleMutation = trpc.roles.create.useMutation({
     onSuccess: () => {
       toast.success("Role created successfully");
@@ -356,10 +321,8 @@ export default function Users() {
     },
   });
 
-  // Update role mutation
   const updateRoleMutation = trpc.roles.update.useMutation({
     onSuccess: () => {
-      // After updating role name/description, also update permissions
       if (selectedRole && selectedRole.id) {
         const permissionCodes = convertPermissionsToArray(selectedRole.permissions);
         updatePermissionsMutation.mutate({
@@ -377,7 +340,6 @@ export default function Users() {
     },
   });
 
-  // Update permissions mutation
   const updatePermissionsMutation = trpc.roles.updatePermissions.useMutation({
     onSuccess: () => {
       toast.success("Role and permissions updated successfully");
@@ -385,50 +347,27 @@ export default function Users() {
       setEditRoleOpen(false);
     },
     onError: (error: any) => {
-      // Show clear error message - permissions update failed
       toast.error("Failed to update permissions", { 
         description: error.message.includes("permission") 
           ? "You need Admin or Super Admin access to modify role permissions." 
           : error.message,
         duration: 5000
       });
-      // Still close dialog and refetch to show current state
       refetchRoles();
       setEditRoleOpen(false);
     },
   });
 
-  // Helper function to convert permissions object to array of permission codes
-  const convertPermissionsToArray = (permissions: Record<string, Record<string, boolean>> | undefined): string[] => {
-    if (!permissions) return [];
-    const codes: string[] = [];
-    for (const [module, actions] of Object.entries(permissions)) {
-      for (const [action, enabled] of Object.entries(actions || {})) {
-        if (enabled) {
-          codes.push(`${module}:${action}`);
-        }
-      }
-    }
-    return codes;
-  };
-
-  // Create user mutation
   const createUserMutation = trpc.users.create.useMutation({
     onSuccess: () => {
       toast.success("User created successfully", {
-        description: "The new user account has been created. They will receive an email to set their password."
+        description: "The new user account has been created."
       });
       refetchUsers();
       setNewUserOpen(false);
-      // Reset form
       setNewUserForm({ 
-        firstName: "", 
-        lastName: "", 
-        email: "", 
-        phone: "",
-        temporaryPassword: "",
-        role: "user",
-        departmentId: null
+        firstName: "", lastName: "", email: "", phone: "",
+        temporaryPassword: "", role: "user", departmentId: null
       });
     },
     onError: (error: any) => {
@@ -436,17 +375,13 @@ export default function Users() {
     },
   });
 
-  // New user form state - matching the design screenshot
   const [newUserForm, setNewUserForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    temporaryPassword: "",
-    role: "user" as "user" | "admin",
+    firstName: "", lastName: "", email: "", phone: "",
+    temporaryPassword: "", role: "user" as "user" | "admin",
     departmentId: null as number | null,
   });
 
+  // Derived data
   const users = usersData?.users || [];
   const roles = rolesData || [];
   const departments = departmentsData || [];
@@ -463,25 +398,16 @@ export default function Users() {
     );
   }, [users, searchTerm]);
 
-  const handleAddUser = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!newUserForm.temporaryPassword || newUserForm.temporaryPassword.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
+  // Helper functions
+  const convertPermissionsToArray = (permissions: Record<string, Record<string, boolean>> | undefined): string[] => {
+    if (!permissions) return [];
+    const codes: string[] = [];
+    for (const [module, actions] of Object.entries(permissions)) {
+      for (const [action, enabled] of Object.entries(actions || {})) {
+        if (enabled) codes.push(`${module}:${action}`);
+      }
     }
-    
-    createUserMutation.mutate({
-      userType: "centre3_employee",
-      firstName: newUserForm.firstName,
-      lastName: newUserForm.lastName,
-      email: newUserForm.email,
-      phone: newUserForm.phone || "+966",
-      jobTitle: "Staff",
-      temporaryPassword: newUserForm.temporaryPassword,
-      role: newUserForm.role,
-      departmentId: newUserForm.departmentId,
-    });
+    return codes;
   };
 
   const handleViewUser = (user: any) => {
@@ -495,45 +421,32 @@ export default function Users() {
   };
 
   const handleCreateRole = () => {
-    const newRole = {
-      id: null,
-      name: "New Role",
-      description: "Description of the new role",
-      isNew: true,
-      permissions: {}
-    };
-    setSelectedRole(newRole);
+    setSelectedRole({
+      id: null, name: "New Role", description: "Description of the new role",
+      isNew: true, permissions: {}
+    });
     setEditRoleOpen(true);
   };
 
   const handleSaveRole = () => {
     if (!selectedRole) return;
-
     if (selectedRole.isNew) {
-      // Generate a code from the name
       const code = selectedRole.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
       createRoleMutation.mutate({
-        name: selectedRole.name,
-        code: code,
-        description: selectedRole.description,
-        level: 50, // Default level for custom roles
-        permissions: [], // Permissions will be set separately
+        name: selectedRole.name, code,
+        description: selectedRole.description, level: 50, permissions: [],
       });
     } else {
       updateRoleMutation.mutate({
-        id: selectedRole.id,
-        name: selectedRole.name,
+        id: selectedRole.id, name: selectedRole.name,
         description: selectedRole.description,
       });
     }
   };
 
   const handleEmailUser = (user: any) => {
-    if (user.email) {
-      window.location.href = `mailto:${user.email}`;
-    } else {
-      toast.error("User does not have an email address");
-    }
+    if (user.email) window.location.href = `mailto:${user.email}`;
+    else toast.error("User does not have an email address");
   };
 
   const handleChangePassword = (user: any) => {
@@ -545,30 +458,13 @@ export default function Users() {
 
   const handleSubmitPasswordChange = () => {
     if (!changePasswordUser) return;
-    
-    if (newPassword.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
-    }
-    
-    if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-    
-    changePasswordMutation.mutate({
-      userId: changePasswordUser.id,
-      newPassword: newPassword,
-    });
+    if (newPassword.length < 6) { toast.error("Password must be at least 6 characters"); return; }
+    if (newPassword !== confirmPassword) { toast.error("Passwords do not match"); return; }
+    changePasswordMutation.mutate({ userId: changePasswordUser.id, newPassword });
   };
 
-  const handleActivateUser = (user: any) => {
-    activateMutation.mutate({ id: user.id });
-  };
-
-  const handleDeactivateUser = (user: any) => {
-    deactivateMutation.mutate({ id: user.id });
-  };
+  const handleActivateUser = (user: any) => activateMutation.mutate({ id: user.id });
+  const handleDeactivateUser = (user: any) => deactivateMutation.mutate({ id: user.id });
 
   const clearFilters = () => {
     setStatusFilter("all");
@@ -579,22 +475,6 @@ export default function Users() {
 
   const hasActiveFilters = statusFilter !== "all" || roleFilter !== "all" || departmentFilter !== null || groupFilter !== null;
 
-  const getRoleColor = (role: string) => {
-    switch (role) {
-      case "admin": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
-      case "user": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
-      default: return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active": return "bg-[#D1FAE5] text-[#059669] border-[#059669]";
-      case "inactive": return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
-      default: return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
-    }
-  };
-
   const formatDate = (date: Date | string | null) => {
     if (!date) return "Never";
     const d = new Date(date);
@@ -602,66 +482,173 @@ export default function Users() {
     const diffMs = now.getTime() - d.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
     if (diffMs < 60000) return "Just now";
     if (diffHours < 1) return `${Math.floor(diffMs / 60000)}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
-    
-    return d.toLocaleDateString("en-US", { 
-      year: "numeric", 
-      month: "numeric", 
-      day: "numeric",
-    });
+    return d.toLocaleDateString("en-US", { year: "numeric", month: "numeric", day: "numeric" });
   };
 
   const getUserDisplayName = (user: any) => {
-    if (user.firstName && user.lastName) {
-      return `${user.firstName} ${user.lastName}`;
-    }
+    if (user.firstName && user.lastName) return `${user.firstName} ${user.lastName}`;
     return user.name || "Unknown";
   };
 
   const getUserInitials = (user: any) => {
-    if (user.firstName && user.lastName) {
-      return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
-    }
+    if (user.firstName && user.lastName) return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
     if (user.name) {
       const parts = user.name.split(" ");
-      if (parts.length >= 2) {
-        return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-      }
+      if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
       return user.name[0]?.toUpperCase() || "U";
     }
     return "U";
   };
 
   const getDepartmentName = (departmentId: number | null) => {
-    if (!departmentId) return "—";
+    if (!departmentId) return "\u2014";
     const dept = departments.find((d: any) => d.id === departmentId);
-    return dept?.name || "—";
+    return dept?.name || "\u2014";
   };
 
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">User Management</h1>
-          <p className="text-sm text-[#6B6B6B]">Manage system access, roles, and permissions</p>
-        </div>
-        <Button onClick={() => setNewUserOpen(true)} className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
-          <UserPlus className="h-4 w-4" /> Add User
-        </Button>
-      </div>
+  // Build active filter chips
+  const activeFilterChips = useMemo(() => {
+    const chips: { key: string; label: string; onRemove: () => void }[] = [];
+    if (statusFilter !== "all") chips.push({ key: "status", label: `Status: ${statusFilter}`, onRemove: () => setStatusFilter("all") });
+    if (roleFilter !== "all") chips.push({ key: "role", label: `Role: ${roleFilter}`, onRemove: () => setRoleFilter("all") });
+    if (departmentFilter) chips.push({ key: "dept", label: `Dept: ${getDepartmentName(departmentFilter)}`, onRemove: () => setDepartmentFilter(null) });
+    if (groupFilter) chips.push({ key: "group", label: `Group: ${groups.find((g: any) => g.id === groupFilter)?.name || groupFilter}`, onRemove: () => setGroupFilter(null) });
+    return chips;
+  }, [statusFilter, roleFilter, departmentFilter, groupFilter, departments, groups]);
 
-      {/* Add User Dialog - Multi-step wizard */}
+  // Table columns definition
+  const userColumns: FioriColumn<any>[] = useMemo(() => [
+    {
+      key: "user",
+      header: "User",
+      render: (user: any) => (
+        <div className="flex items-center gap-3">
+          <Avatar className="h-9 w-9">
+            <AvatarFallback className="bg-[#E8DCF5] text-[#5B2C93] text-xs font-medium">
+              {getUserInitials(user)}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="font-medium text-[#2C2C2C]">{getUserDisplayName(user)}</p>
+            <p className="text-xs text-[#6B6B6B]">{user.email || "No email"}</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "role",
+      header: "System Role",
+      render: (user: any) => (
+        <FioriStatusBadge
+          status="info"
+          label={(user as any).systemRole?.name || (user.role === "admin" ? "Administrator" : "Requestor")}
+          showDot={false}
+        />
+      ),
+    },
+    {
+      key: "department",
+      header: "Department",
+      render: (user: any) => (
+        <div className="flex items-center gap-1.5 text-sm text-[#6B6B6B]">
+          <Building2 className="h-3.5 w-3.5" />
+          {getDepartmentName(user.departmentId)}
+        </div>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (user: any) => (
+        <FioriStatusBadge status={(user as any).status || "active"} />
+      ),
+    },
+    {
+      key: "lastActive",
+      header: "Last Active",
+      render: (user: any) => (
+        <span className="text-sm text-[#6B6B6B]">{formatDate(user.lastSignedIn)}</span>
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right" as const,
+      width: "80px",
+      render: (user: any) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel className="text-xs text-[#6B6B6B]">Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleViewUser(user); }}>
+              <Eye className="h-4 w-4 mr-2" /> View Details
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => { 
+              e.stopPropagation(); 
+              setEditUserRoleUser(user);
+              setSelectedRoleValue((user as any).systemRole?.code || "");
+              setEditUserRoleOpen(true);
+            }}>
+              <Edit2 className="h-4 w-4 mr-2" /> Change Role
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleEmailUser(user); }}>
+              <Mail className="h-4 w-4 mr-2" /> Email User
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleChangePassword(user); }}>
+              <Key className="h-4 w-4 mr-2" /> Change Password
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="text-xs text-[#6B6B6B] font-normal">Change Status</DropdownMenuLabel>
+            <DropdownMenuItem 
+              onClick={(e) => { e.stopPropagation(); handleActivateUser(user); }}
+              className="text-[#059669]"
+              disabled={(user as any).status === "active"}
+            >
+              <CheckCircle2 className="h-4 w-4 mr-2" /> Activate
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={(e) => { e.stopPropagation(); handleDeactivateUser(user); }}
+              className="text-[#FF6B6B]"
+              disabled={(user as any).status === "inactive"}
+            >
+              <XCircle className="h-4 w-4 mr-2" /> Deactivate
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ], [departments, groups]);
+
+  return (
+    <div className="space-y-0">
+      {/* SAP Fiori Page Header */}
+      <FioriPageHeader
+        title="User Management"
+        subtitle="Manage system access, roles, and permissions"
+        icon={<UsersIcon className="h-5 w-5" />}
+        count={filteredUsers.length}
+        onRefresh={() => { refetchUsers(); refetchRoles(); }}
+        actions={
+          <Button onClick={() => setNewUserOpen(true)} className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2" size="sm">
+            <UserPlus className="h-4 w-4" /> Add User
+          </Button>
+        }
+      />
+
+      {/* Add User Dialog */}
       <Dialog open={newUserOpen} onOpenChange={setNewUserOpen}>
         <DialogContent className="sm:max-w-[900px] h-[80vh] p-0 overflow-hidden" showCloseButton={false}>
           <NewUserForm
-            onSuccess={() => {
-              setNewUserOpen(false);
-              refetchUsers();
-            }}
+            onSuccess={() => { setNewUserOpen(false); refetchUsers(); }}
             onCancel={() => setNewUserOpen(false)}
           />
         </DialogContent>
@@ -679,34 +666,19 @@ export default function Users() {
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="newPassword">New Password</Label>
-              <Input 
-                id="newPassword" 
-                type="password" 
-                placeholder="••••••" 
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                minLength={6}
-              />
+              <Input id="newPassword" type="password" placeholder="••••••" value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)} minLength={6} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input 
-                id="confirmPassword" 
-                type="password" 
-                placeholder="••••••" 
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                minLength={6}
-              />
+              <Input id="confirmPassword" type="password" placeholder="••••••" value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)} minLength={6} />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setChangePasswordOpen(false)}>Cancel</Button>
-            <Button 
-              className="bg-[#5B2C93] hover:bg-[#5B2C93]"
-              disabled={changePasswordMutation.isPending}
-              onClick={handleSubmitPasswordChange}
-            >
+            <Button className="bg-[#5B2C93] hover:bg-[#3D1C5E]" disabled={changePasswordMutation.isPending}
+              onClick={handleSubmitPasswordChange}>
               {changePasswordMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               Change Password
             </Button>
@@ -714,281 +686,99 @@ export default function Users() {
         </DialogContent>
       </Dialog>
 
+      {/* Tabbed Content */}
       <Tabs defaultValue="users" className="w-full">
-        <TabsList className="bg-[#F5F5F5]/50">
-          <TabsTrigger value="users" className="gap-2">
-            Users Directory
-          </TabsTrigger>
-          <TabsTrigger value="roles" className="gap-2">
-            Roles & Permissions
-          </TabsTrigger>
-        </TabsList>
+        <div className="bg-white border-b border-[#E0E0E0] -mx-6 px-6">
+          <TabsList className="bg-transparent h-auto p-0 gap-0">
+            <TabsTrigger value="users" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#5B2C93] data-[state=active]:bg-transparent data-[state=active]:text-[#5B2C93] data-[state=active]:shadow-none px-4 py-3 text-sm font-medium text-[#6B6B6B]">
+              Users Directory
+            </TabsTrigger>
+            <TabsTrigger value="roles" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#5B2C93] data-[state=active]:bg-transparent data-[state=active]:text-[#5B2C93] data-[state=active]:shadow-none px-4 py-3 text-sm font-medium text-[#6B6B6B]">
+              Roles & Permissions
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
-        <TabsContent value="users" className="mt-4 space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
-              <Input 
-                placeholder="Search users..." 
-                className="pl-9 bg-white" 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            
-            {/* Filter Popover */}
-            <Popover open={filterOpen} onOpenChange={setFilterOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="icon" className={hasActiveFilters ? "border-[#5B2C93] text-[#5B2C93]" : ""}>
-                  <Filter className="h-4 w-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80" align="end">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">Filters</h4>
-                    {hasActiveFilters && (
-                      <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 text-xs">
-                        Clear all
-                      </Button>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-sm">Status</Label>
-                    <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="All statuses" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Statuses</SelectItem>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-sm">Role</Label>
-                    <Select value={roleFilter} onValueChange={(v: any) => setRoleFilter(v)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="All roles" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Roles</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
-                        <SelectItem value="user">User</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-sm">Department</Label>
-                    <Select 
-                      value={departmentFilter?.toString() || "all"} 
-                      onValueChange={(v) => setDepartmentFilter(v === "all" ? null : parseInt(v))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="All departments" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Departments</SelectItem>
-                        {departments.map((dept: any) => (
-                          <SelectItem key={dept.id} value={dept.id.toString()}>
-                            {dept.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-sm">Group</Label>
-                    <Select 
-                      value={groupFilter?.toString() || "all"} 
-                      onValueChange={(v) => setGroupFilter(v === "all" ? null : parseInt(v))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="All groups" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Groups</SelectItem>
-                        {groups.map((group: any) => (
-                          <SelectItem key={group.id} value={group.id.toString()}>
-                            {group.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-          </div>
+        {/* Users Directory Tab */}
+        <TabsContent value="users" className="mt-5 space-y-4">
+          {/* SAP Fiori Filter Bar */}
+          <FioriFilterBar
+            searchValue={searchTerm}
+            onSearchChange={setSearchTerm}
+            searchPlaceholder="Search by name, email..."
+            activeFilters={activeFilterChips}
+            onClearAll={clearFilters}
+            filters={
+              <>
+                <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+                  <SelectTrigger className="w-[140px] h-9 text-sm bg-[#F5F5F5] border-[#E0E0E0]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={roleFilter} onValueChange={(v: any) => setRoleFilter(v)}>
+                  <SelectTrigger className="w-[140px] h-9 text-sm bg-[#F5F5F5] border-[#E0E0E0]">
+                    <SelectValue placeholder="Role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Roles</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="user">User</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={departmentFilter?.toString() || "all"} onValueChange={(v) => setDepartmentFilter(v === "all" ? null : parseInt(v))}>
+                  <SelectTrigger className="w-[160px] h-9 text-sm bg-[#F5F5F5] border-[#E0E0E0]">
+                    <SelectValue placeholder="Department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Departments</SelectItem>
+                    {departments.map((dept: any) => (
+                      <SelectItem key={dept.id} value={dept.id.toString()}>{dept.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </>
+            }
+            trailing={
+              <Button variant="outline" size="sm" className="gap-1.5 text-[#6B6B6B] border-[#E0E0E0]" onClick={() => toast.info("Export feature coming soon")}>
+                <Download className="h-3.5 w-3.5" /> Export
+              </Button>
+            }
+          />
 
-          {/* Active Filters Display */}
-          {hasActiveFilters && (
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-[#6B6B6B]">Active filters:</span>
-              {statusFilter !== "all" && (
-                <Badge variant="secondary" className="gap-1">
-                  Status: {statusFilter}
-                  <X className="h-3 w-3 cursor-pointer" onClick={() => setStatusFilter("all")} />
-                </Badge>
-              )}
-              {roleFilter !== "all" && (
-                <Badge variant="secondary" className="gap-1">
-                  Role: {roleFilter}
-                  <X className="h-3 w-3 cursor-pointer" onClick={() => setRoleFilter("all")} />
-                </Badge>
-              )}
-              {departmentFilter && (
-                <Badge variant="secondary" className="gap-1">
-                  Department: {getDepartmentName(departmentFilter)}
-                  <X className="h-3 w-3 cursor-pointer" onClick={() => setDepartmentFilter(null)} />
-                </Badge>
-              )}
-              {groupFilter && (
-                <Badge variant="secondary" className="gap-1">
-                  Group: {groups.find((g: any) => g.id === groupFilter)?.name || groupFilter}
-                  <X className="h-3 w-3 cursor-pointer" onClick={() => setGroupFilter(null)} />
-                </Badge>
-              )}
-            </div>
-          )}
-
-          <Card>
-            {usersLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
-                <span className="ml-2 text-[#6B6B6B]">Loading users...</span>
-              </div>
-            ) : usersError ? (
-              <div className="flex items-center justify-center py-12 text-[#FF6B6B]">
-                <AlertCircle className="h-6 w-6 mr-2" />
-                <span>Error loading users: {usersError.message}</span>
-              </div>
-            ) : filteredUsers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-[#6B6B6B]">
-                <UsersIcon className="h-12 w-12 mb-4 opacity-50" />
-                <p className="text-lg font-medium">No users found</p>
-                <p className="text-sm">Click "Add User" to create a new user account.</p>
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Department</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Last Active</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.map((user) => (
-                    <TableRow key={user.id} className="cursor-pointer hover:bg-[#F5F5F5]/50" onClick={() => handleViewUser(user)}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-10 w-10">
-                            <AvatarFallback className="bg-[#E8DCF5] text-[#5B2C93]">
-                              {getUserInitials(user)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium">{getUserDisplayName(user)}</p>
-                            <p className="text-sm text-[#6B6B6B]">{user.email || "No email"}</p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]">
-                          {(user as any).systemRole?.name || (user.role === "admin" ? "Administrator" : "Requestor")}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1.5 text-sm text-[#6B6B6B]">
-                          <Building2 className="h-3.5 w-3.5" />
-                          {getDepartmentName(user.departmentId)}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={getStatusColor((user as any).status || "active")}>
-                          {(user as any).status || "active"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-[#6B6B6B]">
-                        {formatDate(user.lastSignedIn)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleViewUser(user); }}>
-                              <Eye className="h-4 w-4 mr-2" /> View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={(e) => { 
-                              e.stopPropagation(); 
-                              setEditUserRoleUser(user);
-                              setSelectedRoleValue((user as any).systemRole?.code || "");
-                              setEditUserRoleOpen(true);
-                            }}>
-                              <Edit2 className="h-4 w-4 mr-2" /> Change Role
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleEmailUser(user); }}>
-                              <Mail className="h-4 w-4 mr-2" /> Email User
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleChangePassword(user); }}>
-                              <Key className="h-4 w-4 mr-2" /> Change Password
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuLabel className="text-xs text-[#6B6B6B] font-normal">Change Status</DropdownMenuLabel>
-                            <DropdownMenuItem 
-                              onClick={(e) => { e.stopPropagation(); handleActivateUser(user); }}
-                              className="text-[#059669]"
-                              disabled={(user as any).status === "active"}
-                            >
-                              <CheckCircle2 className="h-4 w-4 mr-2" /> Activate
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={(e) => { e.stopPropagation(); handleDeactivateUser(user); }}
-                              className="text-[#FF6B6B]"
-                              disabled={(user as any).status === "inactive"}
-                            >
-                              <XCircle className="h-4 w-4 mr-2" /> Deactivate
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </Card>
+          {/* SAP Fiori Table */}
+          <FioriTable
+            columns={userColumns}
+            data={filteredUsers}
+            isLoading={usersLoading}
+            rowKey={(user: any) => user.id}
+            onRowClick={handleViewUser}
+            emptyIcon={<UsersIcon className="h-10 w-10" />}
+            emptyTitle="No users found"
+            emptyDescription="Click 'Add User' to create a new user account."
+            footerInfo={`Showing ${filteredUsers.length} of ${users.length} users`}
+          />
         </TabsContent>
 
-        <TabsContent value="roles" className="mt-4 space-y-4">
+        {/* Roles & Permissions Tab */}
+        <TabsContent value="roles" className="mt-5 space-y-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#6B6B6B]">
               Define roles and their associated permissions
             </p>
-            <Button onClick={handleCreateRole} className="gap-2 bg-[#5B2C93] hover:bg-[#5B2C93]">
+            <Button onClick={handleCreateRole} className="gap-2 bg-[#5B2C93] hover:bg-[#3D1C5E]" size="sm">
               <Plus className="h-4 w-4" /> Create Role
             </Button>
           </div>
 
           {rolesLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
-              <span className="ml-2 text-[#6B6B6B]">Loading roles...</span>
+              <Loader2 className="h-7 w-7 animate-spin text-[#5B2C93]" />
+              <span className="ml-3 text-sm text-[#6B6B6B]">Loading roles...</span>
             </div>
           ) : rolesError ? (
             <div className="flex items-center justify-center py-12 text-[#FF6B6B]">
@@ -996,44 +786,42 @@ export default function Users() {
               <span>Error loading roles: {rolesError.message}</span>
             </div>
           ) : roles.length === 0 ? (
-            <Card className="p-8 text-center">
-              <Shield className="h-12 w-12 mx-auto mb-4 text-[#6B6B6B] opacity-50" />
-              <p className="text-lg font-medium text-[#6B6B6B]">No custom roles defined</p>
+            <div className="bg-white border border-[#E0E0E0] rounded-lg p-8 text-center">
+              <Shield className="h-12 w-12 mx-auto mb-4 text-[#B0B0B0]" />
+              <p className="text-base font-medium text-[#2C2C2C]">No custom roles defined</p>
               <p className="text-sm text-[#6B6B6B] mb-4">Create roles to define specific permissions for users</p>
-              <Button onClick={handleCreateRole} className="gap-2 bg-[#5B2C93] hover:bg-[#5B2C93]">
+              <Button onClick={handleCreateRole} className="gap-2 bg-[#5B2C93] hover:bg-[#3D1C5E]" size="sm">
                 <Plus className="h-4 w-4" /> Create First Role
               </Button>
-            </Card>
+            </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {roles.map((role: any) => (
-                <Card key={role.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => handleEditRole(role)}>
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{role.name}</CardTitle>
-                      <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]">
-                        {role.userCount || 0} users
-                      </Badge>
-                    </div>
-                    <CardDescription>{role.description || "No description"}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-1">
-                      {Object.entries(role.permissions || {} as Record<string, unknown>).slice(0, 3).map(([key, value]) => (
-                        value ? (
-                          <Badge key={key} variant="secondary" className="text-xs">
-                            {key}
-                          </Badge>
-                        ) : null
-                      ))}
-                      {Object.keys(role.permissions || {}).length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{Object.keys(role.permissions || {}).length - 3} more
+                <div
+                  key={role.id}
+                  className="bg-white border border-[#E0E0E0] rounded-lg p-5 hover:border-[#5B2C93] transition-colors cursor-pointer"
+                  onClick={() => handleEditRole(role)}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-base font-medium text-[#2C2C2C]">{role.name}</h3>
+                    <FioriStatusBadge status="info" label={`${role.userCount || 0} users`} showDot={false} />
+                  </div>
+                  <p className="text-sm text-[#6B6B6B] mb-3">{role.description || "No description"}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {Object.entries(role.permissions || {} as Record<string, unknown>).slice(0, 3).map(([key, value]) => (
+                      value ? (
+                        <Badge key={key} variant="secondary" className="text-xs bg-[#F5F5F5] text-[#6B6B6B]">
+                          {key}
                         </Badge>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                      ) : null
+                    ))}
+                    {Object.keys(role.permissions || {}).length > 3 && (
+                      <Badge variant="secondary" className="text-xs bg-[#F5F5F5] text-[#6B6B6B]">
+                        +{Object.keys(role.permissions || {}).length - 3} more
+                      </Badge>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
           )}
@@ -1045,10 +833,7 @@ export default function Users() {
         user={selectedUser}
         open={viewUserOpen}
         onOpenChange={setViewUserOpen}
-        onEdit={() => {
-          setViewUserOpen(false);
-          setEditUserOpen(true);
-        }}
+        onEdit={() => { setViewUserOpen(false); setEditUserOpen(true); }}
       />
 
       {/* Edit User Dialog */}
@@ -1056,9 +841,7 @@ export default function Users() {
         user={selectedUser}
         open={editUserOpen}
         onOpenChange={setEditUserOpen}
-        onSuccess={() => {
-          refetchUsers();
-        }}
+        onSuccess={() => refetchUsers()}
       />
 
       {/* Edit User Role Dialog */}
@@ -1070,16 +853,16 @@ export default function Users() {
               Assign System Role
             </DialogTitle>
             <DialogDescription>
-              Change the system role for <span className="font-medium">{editUserRoleUser?.name || editUserRoleUser?.firstName + ' ' + editUserRoleUser?.lastName || editUserRoleUser?.email}</span>
+              Change the system role for <span className="font-medium">{editUserRoleUser?.name || (editUserRoleUser?.firstName ? editUserRoleUser.firstName + ' ' + editUserRoleUser.lastName : editUserRoleUser?.email)}</span>
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-4">
             <div className="space-y-2">
               <Label>Current Role</Label>
-              <div className="p-3 bg-[#F5F5F5] rounded-lg">
-                <span className="font-medium">{editUserRoleUser?.systemRole?.name || 'No role assigned'}</span>
+              <div className="p-3 bg-[#FAFAFA] border border-[#E0E0E0] rounded-lg">
+                <span className="font-medium text-sm">{editUserRoleUser?.systemRole?.name || 'No role assigned'}</span>
                 {editUserRoleUser?.systemRole?.description && (
-                  <p className="text-sm text-[#6B6B6B] mt-1">{editUserRoleUser?.systemRole?.description}</p>
+                  <p className="text-xs text-[#6B6B6B] mt-1">{editUserRoleUser?.systemRole?.description}</p>
                 )}
               </div>
             </div>
@@ -1112,14 +895,11 @@ export default function Users() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditUserRoleOpen(false)}>Cancel</Button>
             <Button 
-              className="bg-[#5B2C93] hover:bg-[#5B2C93]"
+              className="bg-[#5B2C93] hover:bg-[#3D1C5E]"
               disabled={assignRoleMutation.isPending || !selectedRoleValue}
               onClick={() => {
                 if (editUserRoleUser && selectedRoleValue) {
-                  assignRoleMutation.mutate({
-                    userId: editUserRoleUser.id,
-                    roleCode: selectedRoleValue,
-                  });
+                  assignRoleMutation.mutate({ userId: editUserRoleUser.id, roleCode: selectedRoleValue });
                 }
               }}
             >
@@ -1133,70 +913,56 @@ export default function Users() {
       {/* Edit Role Dialog - SAP-style Authorization Management */}
       <Dialog open={editRoleOpen} onOpenChange={setEditRoleOpen}>
         <DialogContent className="sm:max-w-[900px] max-h-[85vh] overflow-hidden flex flex-col p-0">
-          {/* Header Section */}
-          <div className="px-6 pt-6 pb-4 border-b bg-white">
+          {/* Header */}
+          <div className="px-6 pt-5 pb-4 border-b border-[#E0E0E0] bg-white">
             <div className="flex items-center justify-between">
               <div>
-                <DialogTitle className="text-xl font-medium text-[#2C2C2C]">
+                <DialogTitle className="text-lg font-medium text-[#2C2C2C]">
                   {selectedRole?.isNew ? "Create New Role" : "Edit Role"}
                 </DialogTitle>
-                <DialogDescription className="mt-1">
+                <DialogDescription className="mt-0.5 text-sm">
                   Configure role properties and authorization objects
                 </DialogDescription>
               </div>
-              <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]">
-                {selectedRole?.isNew ? "New" : "Editing"}
-              </Badge>
+              <FioriStatusBadge status="info" label={selectedRole?.isNew ? "New" : "Editing"} showDot={false} />
             </div>
           </div>
           
           {selectedRole && (
             <div className="flex-1 overflow-y-auto px-6 py-4">
-              {/* Role Properties Section */}
-              <div className="bg-[#F5F5F5] rounded-lg p-4 mb-6">
-                <h3 className="text-sm font-medium text-[#2C2C2C] uppercase tracking-wide mb-4 flex items-center gap-2">
-                  <Shield className="h-4 w-4" />
+              {/* Role Properties */}
+              <div className="bg-[#FAFAFA] border border-[#E0E0E0] rounded-lg p-4 mb-6">
+                <h3 className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-[#5B2C93]" />
                   Role Properties
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <Label htmlFor="roleName" className="text-sm font-medium text-[#2C2C2C]">
-                      Role Name <span className="text-[#FF6B6B]">*</span>
+                      Role Name <span className="text-[#DC2626]">*</span>
                     </Label>
-                    <Input 
-                      id="roleName" 
-                      value={selectedRole.name}
+                    <Input id="roleName" value={selectedRole.name}
                       onChange={(e) => setSelectedRole({...selectedRole, name: e.target.value})}
-                      className="h-9 bg-white"
-                      placeholder="Enter role name"
-                    />
+                      className="h-9 bg-white" placeholder="Enter role name" />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="roleDescription" className="text-sm font-medium text-[#2C2C2C]">
-                      Description
-                    </Label>
-                    <Input 
-                      id="roleDescription" 
-                      value={selectedRole.description || ""}
+                    <Label htmlFor="roleDescription" className="text-sm font-medium text-[#2C2C2C]">Description</Label>
+                    <Input id="roleDescription" value={selectedRole.description || ""}
                       onChange={(e) => setSelectedRole({...selectedRole, description: e.target.value})}
-                      className="h-9 bg-white"
-                      placeholder="Role description"
-                    />
+                      className="h-9 bg-white" placeholder="Role description" />
                   </div>
                 </div>
               </div>
 
-              {/* Authorization Objects Section - SAP Style Table */}
-              <div className="border rounded-lg overflow-hidden">
+              {/* Authorization Objects */}
+              <div className="border border-[#E0E0E0] rounded-lg overflow-hidden">
                 <div className="bg-[#5B2C93] text-white px-4 py-3 flex items-center justify-between">
-                  <h3 className="text-sm font-medium uppercase tracking-wide flex items-center gap-2">
+                  <h3 className="text-xs font-medium uppercase tracking-wider flex items-center gap-2">
                     <Key className="h-4 w-4" />
                     Authorization Objects
                   </h3>
                   <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
-                      variant="secondary" 
+                    <Button size="sm" variant="secondary"
                       className="h-7 text-xs bg-white/20 hover:bg-white/30 text-white border-0"
                       onClick={() => {
                         const allPerms: Record<string, Record<string, boolean>> = {};
@@ -1205,82 +971,57 @@ export default function Users() {
                           m.actions.forEach(a => { allPerms[m.id][a.id] = true; });
                         });
                         setSelectedRole({...selectedRole, permissions: allPerms});
-                      }}
-                    >
-                      Select All
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="secondary" 
+                      }}>Select All</Button>
+                    <Button size="sm" variant="secondary"
                       className="h-7 text-xs bg-white/20 hover:bg-white/30 text-white border-0"
-                      onClick={() => setSelectedRole({...selectedRole, permissions: {}})}
-                    >
-                      Clear All
-                    </Button>
+                      onClick={() => setSelectedRole({...selectedRole, permissions: {}})}>Clear All</Button>
                   </div>
                 </div>
                 
-                {/* Permission Table */}
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-[#F0F0F0]">
                   {permissionModules.map((module, idx) => {
                     const modulePerms = selectedRole.permissions?.[module.id] || {};
                     const allChecked = module.actions.every(a => modulePerms[a.id]);
                     const someChecked = module.actions.some(a => modulePerms[a.id]);
                     
                     return (
-                      <div key={module.id} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-[#F5F5F5]/50'}`}>
-                        {/* Module Header Row */}
-                        <div className="flex items-center px-4 py-2.5 border-b border-[#E0E0E0]">
+                      <div key={module.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-[#FAFAFA]'}>
+                        <div className="flex items-center px-4 py-2.5 border-b border-[#F0F0F0]">
                           <div className="flex items-center gap-3 flex-1">
-                            <Checkbox 
-                              id={`module-${module.id}`}
-                              checked={allChecked}
+                            <Checkbox id={`module-${module.id}`} checked={allChecked}
                               className={someChecked && !allChecked ? 'data-[state=checked]:bg-[#E8DCF5]' : ''}
                               onCheckedChange={(checked) => {
                                 const newModulePerms: Record<string, boolean> = {};
                                 module.actions.forEach(a => { newModulePerms[a.id] = !!checked; });
                                 setSelectedRole({
                                   ...selectedRole,
-                                  permissions: {
-                                    ...selectedRole.permissions,
-                                    [module.id]: newModulePerms
-                                  }
+                                  permissions: { ...selectedRole.permissions, [module.id]: newModulePerms }
                                 });
-                              }}
-                            />
+                              }} />
                             <span className="font-medium text-sm text-[#2C2C2C]">{module.label}</span>
-                            <Badge variant="outline" className="text-[10px] h-5 bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#F5F5F5] text-[#6B6B6B]">
                               {module.actions.filter(a => modulePerms[a.id]).length}/{module.actions.length}
-                            </Badge>
+                            </span>
                           </div>
                         </div>
-                        
-                        {/* Actions Grid */}
                         <div className="px-4 py-3 pl-10">
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2">
                             {module.actions.map((action) => (
                               <div key={action.id} className="flex items-center gap-2">
-                                <Checkbox 
-                                  id={`${module.id}-${action.id}`}
+                                <Checkbox id={`${module.id}-${action.id}`}
                                   checked={modulePerms[action.id] || false}
                                   onCheckedChange={(checked) => {
                                     setSelectedRole({
                                       ...selectedRole,
                                       permissions: {
                                         ...selectedRole.permissions,
-                                        [module.id]: {
-                                          ...selectedRole.permissions?.[module.id],
-                                          [action.id]: checked
-                                        }
+                                        [module.id]: { ...selectedRole.permissions?.[module.id], [action.id]: checked }
                                       }
                                     });
                                   }}
-                                  className="h-4 w-4"
-                                />
-                                <Label 
-                                  htmlFor={`${module.id}-${action.id}`} 
-                                  className="text-sm text-[#2C2C2C] cursor-pointer hover:text-[#5B2C93] transition-colors"
-                                >
+                                  className="h-4 w-4" />
+                                <Label htmlFor={`${module.id}-${action.id}`}
+                                  className="text-sm text-[#2C2C2C] cursor-pointer hover:text-[#5B2C93] transition-colors">
                                   {action.label}
                                 </Label>
                               </div>
@@ -1296,7 +1037,7 @@ export default function Users() {
           )}
           
           {/* Footer */}
-          <div className="px-6 py-4 border-t bg-[#F5F5F5] flex items-center justify-between">
+          <div className="px-6 py-4 border-t border-[#E0E0E0] bg-[#FAFAFA] flex items-center justify-between">
             <div className="text-xs text-[#6B6B6B]">
               {selectedRole && (
                 <span>
@@ -1307,14 +1048,10 @@ export default function Users() {
               )}
             </div>
             <div className="flex gap-3">
-              <Button variant="outline" onClick={() => setEditRoleOpen(false)}>
-                Cancel
-              </Button>
-              <Button 
-                className="bg-[#5B2C93] hover:bg-[#5B2C93] min-w-[140px]"
+              <Button variant="outline" onClick={() => setEditRoleOpen(false)}>Cancel</Button>
+              <Button className="bg-[#5B2C93] hover:bg-[#3D1C5E] min-w-[140px]"
                 onClick={handleSaveRole}
-                disabled={createRoleMutation.isPending || updateRoleMutation.isPending}
-              >
+                disabled={createRoleMutation.isPending || updateRoleMutation.isPending}>
                 {(createRoleMutation.isPending || updateRoleMutation.isPending) && (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 )}

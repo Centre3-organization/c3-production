@@ -23,6 +23,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FioriPageHeader } from "@/components/fiori";
+import { BarChart3 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const accessData = [
@@ -47,30 +49,31 @@ const COLORS = ['#5B2C93', '#5B2C93', '#059669', '#D97706'];
 export default function Reports() {
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-medium tracking-tight text-[#2C2C2C]">Analytics & Reports</h1>
-          <p className="text-[#6B6B6B] mt-1">Deep insights into facility usage and security trends.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Select defaultValue="7d">
-            <SelectTrigger className="w-[180px]">
-              <Calendar className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Select range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="24h">Last 24 Hours</SelectItem>
-              <SelectItem value="7d">Last 7 Days</SelectItem>
-              <SelectItem value="30d">Last 30 Days</SelectItem>
-              <SelectItem value="90d">Last Quarter</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline" className="gap-2">
-            <Download className="h-4 w-4" />
-            Export PDF
-          </Button>
-        </div>
-      </div>
+      <FioriPageHeader
+        title="Analytics & Reports"
+        subtitle="Deep insights into facility usage and security trends"
+        icon={<BarChart3 className="h-5 w-5" />}
+        actions={
+          <div className="flex items-center gap-2">
+            <Select defaultValue="7d">
+              <SelectTrigger className="w-[180px] h-8 text-xs border-[#E0E0E0]">
+                <Calendar className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Select range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="24h">Last 24 Hours</SelectItem>
+                <SelectItem value="7d">Last 7 Days</SelectItem>
+                <SelectItem value="30d">Last 30 Days</SelectItem>
+                <SelectItem value="90d">Last Quarter</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button variant="outline" className="gap-2" size="sm">
+              <Download className="h-4 w-4" />
+              Export PDF
+            </Button>
+          </div>
+        }
+      />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { FioriPageHeader } from "@/components/fiori";
 import {
   Select,
   SelectContent,
@@ -96,32 +97,32 @@ export default function AuditLogs() {
   });
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Audit Logs</h1>
-          <p className="text-[#6B6B6B] mt-1">Track all system activities and changes</p>
-        </div>
-        <div className="flex gap-3">
-          <Select value={dateRange} onValueChange={setDateRange}>
-            <SelectTrigger className="w-[180px]">
-              <Calendar className="h-4 w-4 mr-2" />
-              <SelectValue placeholder="Select period" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="last7">Last 7 days</SelectItem>
-              <SelectItem value="last30">Last 30 days</SelectItem>
-              <SelectItem value="last90">Last 90 days</SelectItem>
-              <SelectItem value="thisYear">This Year</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button className="bg-[#5B2C93] hover:bg-[#5B2C93]">
-            <Download className="h-4 w-4 mr-2" />
-            Export Logs
-          </Button>
-        </div>
-      </div>
+    <div className="space-y-0">
+      <FioriPageHeader
+        title="Audit Logs"
+        subtitle="Track all system activities and changes"
+        icon={<ClipboardList className="h-5 w-5" />}
+        actions={
+          <div className="flex gap-2">
+            <Select value={dateRange} onValueChange={setDateRange}>
+              <SelectTrigger className="w-[180px] h-8 text-xs border-[#E0E0E0]">
+                <Calendar className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Select period" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="last7">Last 7 days</SelectItem>
+                <SelectItem value="last30">Last 30 days</SelectItem>
+                <SelectItem value="last90">Last 90 days</SelectItem>
+                <SelectItem value="thisYear">This Year</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2" size="sm">
+              <Download className="h-4 w-4" />
+              Export Logs
+            </Button>
+          </div>
+        }
+      />
 
       {/* Filters */}
       <Card className="border-0 shadow-sm">

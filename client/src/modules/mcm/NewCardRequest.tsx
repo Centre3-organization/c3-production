@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { FioriPageHeader } from "@/components/fiori";
 import { 
   Building2, 
   User, 
@@ -628,22 +629,13 @@ export default function NewCardRequest() {
   return (
     <div className="flex flex-col h-[calc(100vh-6rem)]">
       {/* Header Toolbar */}
-      <div className="bg-white border-b px-6 py-4 flex items-center gap-4 shadow-sm">
-        <Link href="/mcm">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-xl font-medium text-[#2C2C2C] leading-7">
-            {t("mcm.createNewCardRequest", "Create New Card Request")}
-          </h1>
-          <p className="text-sm text-[#6B6B6B]">{t("mcm.fillDetails", "Fill in the card request details")}</p>
-        </div>
+      <FioriPageHeader
+        title={t("mcm.createNewCardRequest", "Create New Card Request")}
+        subtitle={t("mcm.fillDetails", "Fill in the card request details")}
+        icon={<CreditCard className="h-5 w-5" />}
+        onBack={() => {}}
+      />
+      <div className="bg-white border-b px-6 py-3 flex items-center gap-4">
         <div className="h-6 w-px bg-[#E0E0E0] ml-2" />
 
         <div className="ml-auto flex items-center gap-6 text-[#6B6B6B]">

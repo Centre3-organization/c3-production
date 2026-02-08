@@ -28,6 +28,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { FioriPageHeader } from "@/components/fiori";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { Badge } from "@/components/ui/badge";
@@ -151,29 +152,25 @@ export default function MaterialTypes() {
   const totalCount = (materialTypes || []).length;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
-            <Package className="h-7 w-7 text-[#5B2C93]" />
-            Material Types
-          </h1>
-          <p className="text-sm text-[#6B6B6B] mt-1">
-            Manage material types for MHV and inventory tracking
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExport} disabled={!materialTypes?.length}>
-            <Download className="h-4 w-4 mr-1" />
-            Export
-          </Button>
-          <Button onClick={() => { resetForm(); setNewDialogOpen(true); }} className="bg-[#5B2C93] hover:bg-[#5B2C93]">
-            <Plus className="h-4 w-4 mr-1" />
-            Add Material Type
-          </Button>
-        </div>
-      </div>
+    <div className="space-y-0">
+      <FioriPageHeader
+        title="Material Types"
+        subtitle="Manage material types for MHV and inventory tracking"
+        icon={<Package className="h-5 w-5" />}
+        count={totalCount}
+        actions={
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="border-[#E0E0E0]" onClick={handleExport} disabled={!materialTypes?.length}>
+              <Download className="h-4 w-4 mr-1" />
+              Export
+            </Button>
+            <Button onClick={() => { resetForm(); setNewDialogOpen(true); }} className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2" size="sm">
+              <Plus className="h-4 w-4" />
+              Add Material Type
+            </Button>
+          </div>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
