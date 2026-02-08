@@ -866,44 +866,44 @@ export default function Approvals() {
         </DialogContent>
       </Dialog>
 
-      {/* QR Code Result Dialog */}
+      {/* Access Granted Confirmation Dialog */}
       <Dialog open={qrResultDialogOpen} onOpenChange={setQrResultDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-green-600">
-              <QrCode className="h-5 w-5" />
-              {t("approvals.qrCodeGenerated", "QR Code Generated")}
+              <CheckCircle2 className="h-5 w-5" />
+              {t("approvals.accessGranted", "Access Granted")}
             </DialogTitle>
             <DialogDescription>
-              {t("approvals.qrCodeGeneratedDesc", "The access QR code has been generated. Share this with the visitor for check-in.")}
+              {t("approvals.accessGrantedDesc", "The request has been fully approved and access credentials have been generated.")}
             </DialogDescription>
           </DialogHeader>
           
           <div className="flex flex-col items-center space-y-4">
-            {generatedQrCode && (
-              <div className="p-4 bg-white border rounded-lg shadow-sm">
-                <img src={generatedQrCode} alt="Access QR Code" className="w-64 h-64" />
+            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+              <CheckCircle2 className="h-10 w-10 text-green-600" />
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-900">{t("approvals.accessCredentialsReady", "Access credentials have been generated successfully.")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("approvals.downloadPdfToShare", "Download the form PDF to share with the visitor.")}</p>
+            </div>
+            
+            {generatedQrData && (
+              <div className="w-full p-3 bg-gray-50 rounded-lg">
+                <Label className="text-xs text-muted-foreground">{t("approvals.accessCode", "Access Code")}</Label>
+                <div className="flex items-center gap-2 mt-1">
+                  <code className="flex-1 text-sm font-mono bg-white px-2 py-1 rounded border truncate">
+                    {generatedQrData}
+                  </code>
+                  <Button variant="ghost" size="sm" onClick={handleCopyQrData}>
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             )}
-            
-            <div className="w-full p-3 bg-gray-50 rounded-lg">
-              <Label className="text-xs text-muted-foreground">{t("approvals.qrCodeData", "QR Code Data")}</Label>
-              <div className="flex items-center gap-2 mt-1">
-                <code className="flex-1 text-sm font-mono bg-white px-2 py-1 rounded border truncate">
-                  {generatedQrData}
-                </code>
-                <Button variant="ghost" size="sm" onClick={handleCopyQrData}>
-                  <Copy className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
           </div>
           
           <DialogFooter className="flex gap-2">
-            <Button variant="outline" onClick={handleDownloadQr} className="gap-2">
-              <Download className="h-4 w-4" />
-              {t("approvals.downloadQr", "Download QR")}
-            </Button>
             {(qrRequestId || selectedRequest?.request?.id) && (
               <Button 
                 variant="outline" 

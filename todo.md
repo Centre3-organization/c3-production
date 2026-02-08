@@ -1664,3 +1664,10 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Company detail page has Overview, Cardholders, Requests, and Sub-Companies tabs
 - [x] Stats cards showing active cards, sub-companies, active/total requests, contract end date
 - [x] Contract expiry warning badge for contracts expiring within 30 days
+
+## Dialog Enhancement (Feb 8, 2026)
+- [x] QR Code Generated dialog: replaced QR code with clean "Access Granted" confirmation, removed Download QR, kept Download Form PDF and Done
+- [x] Decision Details dialog: removed QR image, added full 3-column request details (Visitor Info, Visit Details, Location & Workflow)
+- [x] Decision Details dialog: added complete approval timeline with stage progress indicator, color-coded entries, comments
+- [x] Both dialogs now have consistent layout matching the Request Details form
+- [x] Compact access method bar (no QR image) with code text, copy button, and resend dropdown

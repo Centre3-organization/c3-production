@@ -369,12 +369,16 @@ export const requestsRouter = router({
           visitorCompany: requests.visitorCompany,
           visitorPhone: requests.visitorPhone,
           visitorEmail: requests.visitorEmail,
+          visitorIdType: requests.visitorIdType,
+          visitorIdNumber: requests.visitorIdNumber,
           purpose: requests.purpose,
           siteId: requests.siteId,
           siteName: sites.name,
           createdAt: requests.createdAt,
           startDate: requests.startDate,
           endDate: requests.endDate,
+          startTime: requests.startTime,
+          endTime: requests.endTime,
         })
         .from(requests)
         .leftJoin(sites, eq(requests.siteId, sites.id))
@@ -410,12 +414,38 @@ export const requestsRouter = router({
         grantedByMap = new Map(grantedByUsers.map(u => [u.id, u.name]));
       }
       
+      // Get approval history for each instance
+      const historyData = await db
+        .select({
+          id: approvalHistory.id,
+          instanceId: approvalHistory.instanceId,
+          actionType: approvalHistory.actionType,
+          actionAt: approvalHistory.actionAt,
+          actionBy: approvalHistory.actionBy,
+          details: approvalHistory.details,
+          userName: users.name,
+          userEmail: users.email,
+        })
+        .from(approvalHistory)
+        .leftJoin(users, eq(approvalHistory.actionBy, users.id))
+        .where(inArray(approvalHistory.instanceId, instanceIds))
+        .orderBy(approvalHistory.actionAt);
+      
+      // Group history by instanceId
+      const historyMap = new Map<number, typeof historyData>();
+      for (const h of historyData) {
+        const list = historyMap.get(h.instanceId) || [];
+        list.push(h);
+        historyMap.set(h.instanceId, list);
+      }
+      
       return tasks.map(task => {
         const instance = instancesMap.get(task.instanceId);
         return {
           ...task,
           totalStages: stageCountMap.get(task.workflowId) || 1,
           request: requestsMap.get(task.requestId),
+          approvalHistory: historyMap.get(task.instanceId) || [],
           accessMethod: instance ? {
             entryMethod: instance.entryMethod,
             qrCodeData: instance.qrCodeData,
