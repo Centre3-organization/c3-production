@@ -437,7 +437,7 @@ export default function DynamicRequestForm() {
             {selectedTypes.length > 0 && (
               <div className="flex items-center gap-2">
                 <span className="text-xs uppercase font-bold text-gray-400">
-                  {t("requests.types", "Types")}
+                  {t("requests.typesLabel", "Types")}
                 </span>
                 <div className="flex gap-1">
                   {selectedTypes.map((type: any) => (

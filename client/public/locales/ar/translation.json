@@ -232,6 +232,7 @@
     "afterHoursAccess": "الوصول بعد ساعات العمل",
     "weekendAccess": "الوصول في عطلة نهاية الأسبوع",
     "recurringAccess": "الوصول المتكرر",
+    "typesLabel": "الأنواع",
     "types": {
       "admin": "زيارة إدارية",
       "tep": "تصريح دخول مؤقت",

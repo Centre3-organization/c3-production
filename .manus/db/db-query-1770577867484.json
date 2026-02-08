@@ -1,0 +1,22 @@
+{
+  "query": "UPDATE formFields SET optionsSource = 'countries' WHERE id IN (110, 70006) AND code = 'driver_nationality'; SELECT id, code, name, optionsSource FROM formFields WHERE id IN (110, 70006);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute UPDATE formFields SET optionsSource = 'countries' WHERE id IN (110, 70006) AND code = 'driver_nationality'; SELECT id, code, name, optionsSource FROM formFields WHERE id IN (110, 70006);",
+  "rows": [
+    {
+      "id": "110",
+      "code": "driver_nationality",
+      "name": "Driver Nationality",
+      "optionsSource": "countries"
+    },
+    {
+      "id": "70006",
+      "code": "driver_nationality",
+      "name": "Nationality",
+      "optionsSource": "countries"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\toptionsSource\n110\tdriver_nationality\tDriver Nationality\tcountries\n70006\tdriver_nationality\tNationality\tcountries\n",
+  "stderr": "",
+  "execution_time_ms": 1800
+}

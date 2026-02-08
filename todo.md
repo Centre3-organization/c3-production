@@ -1751,3 +1751,8 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Removed extra Direction field from Material Entry
 - [ ] Disable Qty field in form when selected material type has qtyEnabled=false
 - [x] Auto-generated row numbers already shown via #1, #2 badges in RepeatableSection
+
+## MHV Form Dropdown Bugs (Feb 8, 2026)
+- [x] Fix Material Entry/Exit Type dropdown not loading material_types options (added material_types to optionsSource type in RepeatableSection, DynamicForm, RepeatableSectionWithYakeen)
+- [x] Fix Vehicle Entry/Exit Driver Nationality dropdown not loading countries options (changed optionsSource from 'api' to 'countries' in DB for field ids 110 and 70006)
+- [x] Fix 'KEY REQUESTS.TYPES (EN) RETURNED AN OBJECT INSTEAD OF STRING' error in header (changed i18n key from 'requests.types' to 'requests.typesLabel' and added translation keys)

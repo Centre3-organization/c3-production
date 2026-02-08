@@ -1,0 +1,82 @@
+{
+  "query": "SELECT rt.id, rt.code, rt.name, rt.categoryId, rc.name as categoryName, rt.isActive, rt.displayOrder FROM requestTypes rt LEFT JOIN requestCategories rc ON rt.categoryId = rc.id ORDER BY rt.displayOrder",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT rt.id, rt.code, rt.name, rt.categoryId, rc.name as categoryName, rt.isActive, rt.displayOrder FROM requestTypes rt LEFT JOIN requestCategories rc ON rt.categoryId = rc.id ORDER BY rt.displayOrder",
+  "rows": [
+    {
+      "id": "6",
+      "code": "VR01",
+      "name": "Visitor Registration",
+      "categoryId": "3",
+      "categoryName": "Visitor Managment ",
+      "isActive": "1",
+      "displayOrder": "0"
+    },
+    {
+      "id": "7",
+      "code": "TEPq",
+      "name": "BAsic",
+      "categoryId": "4",
+      "categoryName": "BH Visit",
+      "isActive": "1",
+      "displayOrder": "0"
+    },
+    {
+      "id": "8",
+      "code": "Lo139",
+      "name": "Location",
+      "categoryId": "4",
+      "categoryName": "BH Visit",
+      "isActive": "1",
+      "displayOrder": "0"
+    },
+    {
+      "id": "1",
+      "code": "admin_visit",
+      "name": "Admin Visit",
+      "categoryId": "1",
+      "categoryName": "Admin Visit",
+      "isActive": "1",
+      "displayOrder": "1"
+    },
+    {
+      "id": "2",
+      "code": "tep",
+      "name": "Temporary Entry Permission",
+      "categoryId": "2",
+      "categoryName": "Technical & Delivery",
+      "isActive": "1",
+      "displayOrder": "1"
+    },
+    {
+      "id": "3",
+      "code": "wp",
+      "name": "Work Permission",
+      "categoryId": "2",
+      "categoryName": "Technical & Delivery",
+      "isActive": "1",
+      "displayOrder": "2"
+    },
+    {
+      "id": "4",
+      "code": "mop",
+      "name": "Method of Procedure",
+      "categoryId": "2",
+      "categoryName": "Technical & Delivery",
+      "isActive": "1",
+      "displayOrder": "3"
+    },
+    {
+      "id": "5",
+      "code": "mhv",
+      "name": "Material/Vehicle Permit",
+      "categoryId": "2",
+      "categoryName": "Technical & Delivery",
+      "isActive": "1",
+      "displayOrder": "4"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tcategoryId\tcategoryName\tisActive\tdisplayOrder\n6\tVR01\tVisitor Registration\t3\tVisitor Managment \t1\t0\n7\tTEPq\tBAsic\t4\tBH Visit\t1\t0\n8\tLo139\tLocation\t4\tBH Visit\t1\t0\n1\tadmin_visit\tAdmin Visit\t1\tAdmin Visit\t1\t1\n2\ttep\tTemporary Entry Permission\t2\tTechnical & Delivery\t1\t1\n3\twp\tWork Permission\t2\tTechnical & Delivery\t1\t2\n4\tmop\tMethod of Procedure\t2\tTechnical & Delivery\t1\t3\n5\tmhv\tMaterial/Vehicle Permit\t2\tTechnical & Delivery\t1\t4\n",
+  "stderr": "",
+  "execution_time_ms": 1606
+}

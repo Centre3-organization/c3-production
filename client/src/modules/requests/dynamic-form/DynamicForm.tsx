@@ -69,7 +69,7 @@ interface FormField {
     "sites" | "zones" | "areas" | 
     "departments" | "groups" | "users" | "contractors" | 
     "request_types" | "approval_roles" | 
-    "user_sites" | "user_groups" | "user_departments";
+    "user_sites" | "user_groups" | "user_departments" | "user_profile" | "material_types";
   optionsApi?: string;
   dependsOnField?: string;
   filterByField?: string; // Field code to filter options by

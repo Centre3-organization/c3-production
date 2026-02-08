@@ -232,6 +232,7 @@
     "afterHoursAccess": "After Hours Access",
     "weekendAccess": "Weekend Access",
     "recurringAccess": "Recurring Access",
+    "typesLabel": "Types",
     "types": {
       "admin": "Admin Visit",
       "tep": "TEP (Temporary Entry Permit)",
