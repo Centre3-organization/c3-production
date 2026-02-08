@@ -24,8 +24,7 @@ import DynamicRequestForm from "./modules/requests/DynamicRequestForm";
 // Approvals Module
 import Approvals from "./modules/approvals/Approvals";
 import ApprovalHistory from "./modules/approvals/ApprovalHistory";
-import L1Approval from "./modules/approvals/L1Approval";
-import L2Approval from "./modules/approvals/L2Approval";
+
 
 // Facilities Module
 import Sites from "./modules/facilities/Sites";
@@ -114,16 +113,7 @@ function Router() {
           <Approvals />
         </Layout>
       </Route>
-      <Route path="/approvals/l1">
-        <Layout>
-          <L1Approval />
-        </Layout>
-      </Route>
-      <Route path="/approvals/l2">
-        <Layout>
-          <L2Approval />
-        </Layout>
-      </Route>
+
       <Route path="/approvals/history">
         <Layout>
           <ApprovalHistory />

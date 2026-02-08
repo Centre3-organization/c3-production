@@ -157,10 +157,10 @@ export default function Layout({ children }: LayoutProps) {
     {
       titleKey: "nav.approvals",
       title: "Approvals",
-      requiredPermission: "approvals.l1",
+      requiredPermission: "approvals.view",
       items: [
-        { icon: FileCheck, labelKey: "nav.myApprovals", label: "My Approvals", href: "/approvals", requiredPermission: "approvals.l1" },
-        { icon: Clock, labelKey: "nav.approvalHistory", label: "Approval History", href: "/approvals/history", requiredPermission: "approvals.l1" },
+        { icon: FileCheck, labelKey: "nav.myApprovals", label: "My Approvals", href: "/approvals", requiredPermission: "approvals.view" },
+        { icon: Clock, labelKey: "nav.approvalHistory", label: "Approval History", href: "/approvals/history", requiredPermission: "approvals.view" },
       ]
     },
     {
@@ -183,8 +183,8 @@ export default function Layout({ children }: LayoutProps) {
       ]
     },
     {
-      titleKey: "nav.workflowManagement",
-      title: "Workflow Management",
+      titleKey: "nav.processConfiguration",
+      title: "Process Configuration",
       requiredPermission: "workflows.view",
       items: [
         { icon: Workflow, labelKey: "nav.workflows", label: "Workflow Builder", href: "/workflows", requiredPermission: "workflows.view" },

@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../../_core/trpc";
 import { getDb } from "../../infra/db/connection";
-import { requests, sites, zones, areas } from "../../../drizzle/schema";
-import { eq, and, gte, lte, count, desc } from "drizzle-orm";
+import { requests, sites, zones, areas, approvals, users } from "../../../drizzle/schema";
+import { eq, and, gte, lte, count, desc, sql, ne, isNotNull } from "drizzle-orm";
 
 export const dashboardRouter = router({
-  // Get overall statistics
-  getStats: protectedProcedure.query(async () => {
+  // Get overall statistics - role-aware
+  getStats: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     
@@ -27,12 +27,20 @@ export const dashboardRouter = router({
       .from(requests)
       .where(gte(requests.createdAt, startOfMonth));
     
+    // Get last month's total for comparison
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+    const totalLastMonth = await db
+      .select({ count: count() })
+      .from(requests)
+      .where(and(gte(requests.createdAt, startOfLastMonth), lte(requests.createdAt, endOfLastMonth)));
+    
     // Get pending approvals count
     const pendingL1 = requestStats.find(r => r.status === "pending_l1")?.count || 0;
     const pendingManual = requestStats.find(r => r.status === "pending_manual")?.count || 0;
     const pendingApprovals = pendingL1 + pendingManual;
     
-    // Get approved requests (active visitors simulation)
+    // Get approved requests (active visitors)
     const approvedCount = requestStats.find(r => r.status === "approved")?.count || 0;
     
     // Get site count
@@ -44,27 +52,46 @@ export const dashboardRouter = router({
     // Get area count
     const areaCount = await db.select({ count: count() }).from(areas);
     
-    // Calculate some derived metrics
+    // Get active users count
+    const activeUsers = await db
+      .select({ count: count() })
+      .from(users)
+      .where(eq(users.status, "active"));
+    
+    // Calculate derived metrics
     const totalRequests = requestStats.reduce((sum, r) => sum + r.count, 0);
     const rejectedCount = requestStats.find(r => r.status === "rejected")?.count || 0;
-    const approvalRate = totalRequests > 0 ? Math.round(((totalRequests - rejectedCount) / totalRequests) * 100) : 0;
+    const draftCount = requestStats.find(r => r.status === "draft")?.count || 0;
+    const expiredCount = requestStats.find(r => r.status === "expired")?.count || 0;
+    const cancelledCount = requestStats.find(r => r.status === "cancelled")?.count || 0;
+    const approvalRate = totalRequests > 0 ? Math.round(((approvedCount) / (totalRequests - draftCount)) * 100) : 0;
+    
+    // Month-over-month change
+    const thisMonthCount = totalThisMonth[0]?.count || 0;
+    const lastMonthCount = totalLastMonth[0]?.count || 0;
+    const monthOverMonthChange = lastMonthCount > 0 
+      ? Math.round(((thisMonthCount - lastMonthCount) / lastMonthCount) * 100) 
+      : 0;
     
     return {
       activeVisitors: approvedCount,
       pendingApprovals,
       pendingL1,
       pendingManual,
-      totalRequestsThisMonth: totalThisMonth[0]?.count || 0,
+      totalRequestsThisMonth: thisMonthCount,
+      totalRequestsLastMonth: lastMonthCount,
+      monthOverMonthChange,
       totalRequests,
       approvedCount,
       rejectedCount,
-      approvalRate,
-      avgStayTime: "2h 15m",
-      securityAlerts: 3,
-      occupancyPercent: 85,
+      draftCount,
+      expiredCount,
+      cancelledCount,
+      approvalRate: isNaN(approvalRate) ? 0 : Math.min(approvalRate, 100),
       sites: siteCount[0]?.count || 0,
       zones: zoneCount[0]?.count || 0,
       areas: areaCount[0]?.count || 0,
+      activeUsers: activeUsers[0]?.count || 0,
     };
   }),
 
@@ -90,10 +117,20 @@ export const dashboardRouter = router({
       escort: "Escort",
     };
     
+    const typeColors: Record<string, string> = {
+      admin_visit: "#5B2C93",
+      tep: "#2563EB",
+      work_permit: "#D97706",
+      mop: "#059669",
+      material_entry: "#DC2626",
+      escort: "#6366F1",
+    };
+    
     return result.map(r => ({
       type: r.type,
       label: typeLabels[r.type] || r.type,
       count: r.count,
+      color: typeColors[r.type] || "#6B6B6B",
     }));
   }),
 
@@ -112,8 +149,8 @@ export const dashboardRouter = router({
     
     const statusLabels: Record<string, string> = {
       draft: "Draft",
-      pending_l1: "Pending L1",
-      pending_manual: "Pending L2",
+      pending_l1: "Pending Review",
+      pending_manual: "Pending Approval",
       approved: "Approved",
       rejected: "Rejected",
       expired: "Expired",
@@ -138,31 +175,54 @@ export const dashboardRouter = router({
     }));
   }),
 
-  // Get visitor traffic by hour
-  getVisitorTraffic: protectedProcedure.query(async () => {
+  // Get daily request trend for last 14 days
+  getDailyTrend: protectedProcedure.query(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const days = [];
+    const today = new Date();
     
-    const recentRequests = await db
-      .select({ createdAt: requests.createdAt })
-      .from(requests)
-      .where(gte(requests.createdAt, sevenDaysAgo));
-    
-    const hours = [];
-    for (let h = 6; h <= 20; h += 2) {
-      const hourLabel = `${h.toString().padStart(2, '0')}:00`;
-      const baseTraffic = Math.floor(Math.random() * 20) + 10;
-      const peakMultiplier = h >= 10 && h <= 16 ? 1.5 : 1;
-      hours.push({
-        hour: hourLabel,
-        visitors: Math.floor(baseTraffic * peakMultiplier * (1 + recentRequests.length / 50)),
+    for (let i = 13; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+      const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+      
+      const dayRequests = await db
+        .select({ 
+          count: count(),
+          status: requests.status 
+        })
+        .from(requests)
+        .where(
+          and(
+            gte(requests.createdAt, startOfDay),
+            lte(requests.createdAt, endOfDay)
+          )
+        )
+        .groupBy(requests.status);
+      
+      const total = dayRequests.reduce((sum, r) => sum + r.count, 0);
+      const approved = dayRequests.find(r => r.status === "approved")?.count || 0;
+      const rejected = dayRequests.find(r => r.status === "rejected")?.count || 0;
+      const pending = dayRequests.filter(r => r.status === "pending_l1" || r.status === "pending_manual")
+        .reduce((sum, r) => sum + r.count, 0);
+      
+      const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      
+      days.push({
+        date: `${monthNames[startOfDay.getMonth()]} ${startOfDay.getDate()}`,
+        dayName: dayNames[startOfDay.getDay()],
+        total,
+        approved,
+        rejected,
+        pending,
       });
     }
     
-    return hours;
+    return days;
   }),
 
   // Get zone occupancy
@@ -178,11 +238,11 @@ export const dashboardRouter = router({
         currentOccupancy: zones.currentOccupancy,
       })
       .from(zones)
-      .limit(6);
+      .limit(8);
     
     return zoneList.map(z => {
-      const capacity = 100; // Default capacity
-      const occupancy = z.currentOccupancy || Math.floor(Math.random() * 80) + 20;
+      const capacity = 100;
+      const occupancy = z.currentOccupancy || 0;
       return {
         id: z.id,
         name: z.name,
@@ -206,6 +266,7 @@ export const dashboardRouter = router({
         type: requests.type,
         status: requests.status,
         visitorName: requests.visitorName,
+        siteId: requests.siteId,
         createdAt: requests.createdAt,
         updatedAt: requests.updatedAt,
       })
@@ -228,11 +289,12 @@ export const dashboardRouter = router({
       type: typeLabels[r.type] || r.type,
       status: r.status,
       visitorName: r.visitorName,
+      siteId: r.siteId,
       timestamp: r.updatedAt || r.createdAt,
       action: r.status === "approved" ? "Approved" : 
               r.status === "rejected" ? "Rejected" :
               r.status === "pending_l1" ? "Submitted" :
-              r.status === "pending_manual" ? "L1 Approved" : "Updated",
+              r.status === "pending_manual" ? "Under Review" : "Updated",
     }));
   }),
 
@@ -288,7 +350,7 @@ export const dashboardRouter = router({
     };
   }),
 
-  // Get site overview
+  // Get site overview with real zone/area counts
   getSiteOverview: protectedProcedure.query(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
@@ -317,12 +379,27 @@ export const dashboardRouter = router({
           .innerJoin(zones, eq(areas.zoneId, zones.id))
           .where(eq(zones.siteId, site.id));
         
+        // Count requests for this site
+        const requestCount = await db
+          .select({ count: count() })
+          .from(requests)
+          .where(eq(requests.siteId, site.id));
+        
+        // Count pending requests for this site
+        const pendingCount = await db
+          .select({ count: count() })
+          .from(requests)
+          .where(and(
+            eq(requests.siteId, site.id),
+            sql`${requests.status} IN ('pending_l1', 'pending_manual')`
+          ));
+        
         return {
           ...site,
           zoneCount: zoneCount[0]?.count || 0,
           areaCount: areaCount[0]?.count || 0,
-          activeVisitors: Math.floor(Math.random() * 50) + 10,
-          alertCount: Math.floor(Math.random() * 3),
+          totalRequests: requestCount[0]?.count || 0,
+          pendingRequests: pendingCount[0]?.count || 0,
         };
       })
     );
@@ -330,40 +407,31 @@ export const dashboardRouter = router({
     return sitesWithZones;
   }),
 
-  // Get weekly trend data
-  getWeeklyTrend: protectedProcedure.query(async () => {
+  // Get approval performance metrics
+  getApprovalMetrics: protectedProcedure.query(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const today = new Date();
-    const weekData = [];
+    // Get approval counts by status
+    const approvalStats = await db
+      .select({
+        status: approvals.status,
+        count: count(),
+      })
+      .from(approvals)
+      .groupBy(approvals.status);
     
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      const startOfDay = new Date(date.setHours(0, 0, 0, 0));
-      const endOfDay = new Date(date.setHours(23, 59, 59, 999));
-      
-      const dayRequests = await db
-        .select({ count: count() })
-        .from(requests)
-        .where(
-          and(
-            gte(requests.createdAt, startOfDay),
-            lte(requests.createdAt, endOfDay)
-          )
-        );
-      
-      weekData.push({
-        day: days[startOfDay.getDay()],
-        date: startOfDay.toISOString().split('T')[0],
-        requests: dayRequests[0]?.count || Math.floor(Math.random() * 15) + 5,
-        approved: Math.floor(Math.random() * 10) + 3,
-        rejected: Math.floor(Math.random() * 3),
-      });
-    }
+    const totalApprovals = approvalStats.reduce((sum, r) => sum + r.count, 0);
+    const approvedCount = approvalStats.find(r => r.status === "approved")?.count || 0;
+    const rejectedCount = approvalStats.find(r => r.status === "rejected")?.count || 0;
+    const pendingCount = approvalStats.find(r => r.status === "pending")?.count || 0;
     
-    return weekData;
+    return {
+      total: totalApprovals,
+      approved: approvedCount,
+      rejected: rejectedCount,
+      pending: pendingCount,
+      approvalRate: totalApprovals > 0 ? Math.round((approvedCount / totalApprovals) * 100) : 0,
+    };
   }),
 });

@@ -1947,3 +1947,15 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Remove shift_assignment from workflow builder UI dropdown
 - [x] Remove shift_based from workflow builder UI stage type options
 - [x] Remove shift from approvalInstances resolvedVia enum in schema (assignedVia)
+
+## Enterprise Command Centre Dashboard Redesign (Feb 9, 2026)
+- [x] Redesign dashboard to enterprise-grade Command Centre (SAP/IBM Maximo style)
+- [x] Add role-based tabbed views with enterprise naming
+- [x] Dashboard must be 100% role-customized (admin sees everything, users see their scope)
+- [x] Add KPI summary cards at top (Active Requests, Pending Approvals, On-Site Visitors, Alerts)
+- [x] Add charts with real data (request trends, approval distribution, site activity)
+- [x] Fix Refresh Data button to work on dashboard AND all listing pages
+- [x] Remove L1/L2 Queue pages and references
+- [x] Fix migration journal (seeded 36 migrations into __drizzle_migrations)
+- [x] Rename "Workflow Management" sidebar section to "Process Configuration"
+- [x] Audit unused imports (removed GripVertical, ArrowUpDown from WorkflowBuilder.tsx)
