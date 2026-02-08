@@ -1275,9 +1275,9 @@ export function FieldRenderer({
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
           </Label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="border rounded-md p-3 space-y-2.5">
             {getOptions().map((opt) => (
-              <div key={opt.value} className="flex items-center gap-2">
+              <div key={opt.value} className="flex items-start gap-2">
                 <Checkbox
                   id={`${field.code}-${opt.value}`}
                   checked={checkedValues.includes(opt.value)}
@@ -1289,10 +1289,11 @@ export function FieldRenderer({
                     }
                   }}
                   disabled={disabled}
+                  className="mt-0.5"
                 />
                 <Label
                   htmlFor={`${field.code}-${opt.value}`}
-                  className="text-sm font-normal cursor-pointer"
+                  className="text-sm font-normal cursor-pointer leading-tight"
                 >
                   {getOptionLabel(opt)}
                 </Label>

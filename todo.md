@@ -1719,3 +1719,6 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add Required Permissions checkboxes: Work Permit, EPT, MHV
 - [x] Add Activity High-Level Description textarea
 - [x] Align all fields with reference screenshot layout (section renamed to E. Planned Activity and Impact)
+
+## Fix Checkbox Group Layout (Feb 8, 2026)
+- [x] Fix checkbox_group items overlapping — display in clean vertical list with proper spacing
