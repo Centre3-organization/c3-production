@@ -444,7 +444,7 @@ export default function Approvals() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("approvals.allStages", "All Stages")}</SelectItem>
-            {uniqueStages.map((stage) => (
+            {uniqueStages.filter((stage) => stage.name).map((stage) => (
               <SelectItem key={stage.name} value={stage.name}>
                 {stage.name} ({stage.count})
               </SelectItem>
@@ -458,7 +458,7 @@ export default function Approvals() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("approvals.allTypes", "All Types")}</SelectItem>
-            {uniqueTypes.map((type) => (
+            {uniqueTypes.filter((type) => type).map((type) => (
               <SelectItem key={type} value={type}>
                 {typeLabels[type] || type}
               </SelectItem>
@@ -472,7 +472,7 @@ export default function Approvals() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("approvals.allSites", "All Sites")}</SelectItem>
-            {uniqueSites.map((site) => (
+            {uniqueSites.filter((site) => site).map((site) => (
               <SelectItem key={site} value={site}>
                 {site}
               </SelectItem>

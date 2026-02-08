@@ -349,7 +349,7 @@ export default function Zones() {
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
                   {zoneTypes.map((type) => (
-                    <SelectItem key={type.id} value={type.code}>{type.name}</SelectItem>
+                                <SelectItem key={type.id} value={type.code || type.id.toString()}>{type.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

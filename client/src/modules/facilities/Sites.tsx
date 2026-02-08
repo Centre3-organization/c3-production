@@ -294,7 +294,7 @@ export default function Sites() {
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
                   {siteTypes.map((type) => (
-                    <SelectItem key={type.id} value={type.code}>{type.name}</SelectItem>
+                    <SelectItem key={type.id} value={type.code || type.id.toString()}>{type.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

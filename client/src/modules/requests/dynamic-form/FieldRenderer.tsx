@@ -947,8 +947,8 @@ export function FieldRenderer({
                   <Loader2 className="h-4 w-4 animate-spin" />
                 </div>
               ) : (
-                getOptions().map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
+                getOptions().filter((opt) => opt.value !== "" && opt.value != null).map((opt) => (
+                  <SelectItem key={opt.value} value={String(opt.value)}>
                     {getOptionLabel(opt)}
                   </SelectItem>
                 ))

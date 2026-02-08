@@ -260,7 +260,7 @@ export default function ViewSite() {
                 </SelectTrigger>
                 <SelectContent>
                   {sites.map(site => (
-                    <SelectItem key={site.id} value={site.id}>
+                    <SelectItem key={site.id} value={String(site.id)}>
                       <div className="flex items-center gap-2">
                         <Building2 className="h-4 w-4 text-muted-foreground" />
                         <span>{site.name}</span>

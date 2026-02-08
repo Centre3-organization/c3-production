@@ -1671,3 +1671,6 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Decision Details dialog: added complete approval timeline with stage progress indicator, color-coded entries, comments
 - [x] Both dialogs now have consistent layout matching the Request Details form
 - [x] Compact access method bar (no QR image) with code text, copy button, and resend dropdown
+
+## Bug Fix: Select.Item empty string error (Feb 8, 2026)
+- [x] Fix Select.Item empty string error - added safety filters across FieldRenderer, RequestForm, Approvals, Sites, Zones, Areas, and ViewSite

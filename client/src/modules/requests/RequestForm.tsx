@@ -607,7 +607,7 @@ export default function NewRequest() {
                         <Select value={siteId} onValueChange={(v) => { setSiteId(v); setSelectedZoneId(""); setSelectedAreaId(""); }}>
                           <SelectTrigger><SelectValue placeholder="Select Site" /></SelectTrigger>
                           <SelectContent>
-                            {sitesData?.map((site: any) => (
+                            {sitesData?.filter((site: any) => site.id != null).map((site: any) => (
                               <SelectItem key={site.id} value={site.id.toString()}>
                                 {site.name} ({site.code})
                               </SelectItem>
@@ -664,7 +664,7 @@ export default function NewRequest() {
                             >
                               <SelectTrigger><SelectValue placeholder="Select Zone (Optional)" /></SelectTrigger>
                               <SelectContent>
-                                {zonesData?.map((zone: any) => (
+                                {zonesData?.filter((zone: any) => zone.id != null).map((zone: any) => (
                                   <SelectItem key={zone.id} value={zone.id.toString()}>
                                     {zone.name} ({zone.code}) - {zone.securityLevel}
                                   </SelectItem>
@@ -711,7 +711,7 @@ export default function NewRequest() {
                             >
                               <SelectTrigger><SelectValue placeholder="Select Area (Optional)" /></SelectTrigger>
                               <SelectContent>
-                                {areasData?.map((area: any) => (
+                                {areasData?.filter((area: any) => area.id != null).map((area: any) => (
                                   <SelectItem key={area.id} value={area.id.toString()}>
                                     {area.name} ({area.code}) {area.floor ? `- Floor ${area.floor}` : ''}
                                   </SelectItem>

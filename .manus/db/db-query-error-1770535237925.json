@@ -1,0 +1,8 @@
+{
+  "query": "SELECT fo.id, fo.fieldId, fo.value, fo.label, ff.fieldKey, ff.fieldType FROM fieldOptions fo JOIN formFields ff ON fo.fieldId = ff.id WHERE ff.fieldKey LIKE '%site%' OR ff.fieldKey LIKE '%location%' LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT fo.id, fo.fieldId, fo.value, fo.label, ff.fieldKey, ff.fieldType FROM fieldOptions fo JOIN formFields ff ON fo.fieldId = ff.id WHERE ff.fieldKey LIKE '%site%' OR ff.fieldKey LIKE '%location%' LIMIT 20;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'ff.fieldkey' in 'where clause'"
+  ]
+}
