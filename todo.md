@@ -1674,3 +1674,6 @@ Create a unified data source system that can pull options from anywhere in the p
 
 ## Bug Fix: Select.Item empty string error (Feb 8, 2026)
 - [x] Fix Select.Item empty string error - added safety filters across FieldRenderer, RequestForm, Approvals, Sites, Zones, Areas, and ViewSite
+
+## Bug Fix: Persistent Select.Item empty string error (Feb 8, 2026)
+- [x] Fix Select.Item empty string error - added global safety guard in SelectItem component (select.tsx) that silently returns null for empty/falsy values. This is a universal fix protecting ALL Select components app-wide.
