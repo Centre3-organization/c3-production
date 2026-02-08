@@ -384,7 +384,7 @@ export function DynamicForm({
                       maxItems={currentSectionData.maxItems}
                       disabled={disabled}
                       itemLabel={
-                        currentSectionData.code === "materials"
+                        currentSectionData.code === "materials" || currentSectionData.code === "material_entry" || currentSectionData.code === "material_exit"
                           ? t("requests.material", "Material")
                           : currentSectionData.code === "method_statement"
                           ? t("requests.step", "Step")

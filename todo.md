@@ -1728,3 +1728,14 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add tRPC procedures for CRUD operations in masterData router
 - [x] Create Material Types UI page under Master Data navigation section
 - [x] Seed 21 sample material types: Cabinet/Rack, Chassis, Power Strip, PDU, PSU, Power Module, Server, Blade Server, Switch, Switch Module, Router, Patch Panel, KVM Switch, KVM, Storage Device, Receptacle, Cables, Tools, PC/Laptop, Screen, Others
+
+## MHV Form Rebuild (Feb 8, 2026)
+- [x] Add Decision section: Material Gate Pass (Yes/No), With Vehicle (Yes/No)
+- [x] Add Material Entry Details table (dynamic rows): #, Type (dropdown from master materialTypes), Model, Serial #, Quantity
+- [x] Add Material Entry person details: Name, Nationality, ID, Company, Phone #, Email, ID Attachment
+- [x] Add Material Exit Details table (dynamic rows): #, Type (dropdown), Model, Serial #, Quantity
+- [x] Add Vehicle Entry Details: Driver Name, Nationality, ID, Company, Phone #, Vehicle Plate #
+- [x] Add Vehicle Exit Details: Driver Name, Nationality, ID, Company, Phone #, Vehicle Plate #
+- [x] Conditional visibility: Decision 1 (Material=Yes) shows Material tables, Decision 2 (Vehicle=Yes) shows Vehicle sections
+- [x] Integrate materialTypes master data as dropdown options in Type field
+- [x] Added material_types to dynamicDataSources, optionsSource type, and getDataSourceOptions procedure

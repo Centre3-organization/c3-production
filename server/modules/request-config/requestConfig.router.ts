@@ -1000,7 +1000,8 @@ export const formFieldsRouter = router({
           "sites", "zones", "areas",
           "departments", "groups", "users", "contractors",
           "request_types", "approval_roles",
-          "user_sites", "user_groups", "user_departments"
+          "user_sites", "user_groups", "user_departments",
+          "user_profile", "material_types"
         ]),
         filterValue: z.string().optional(), // For cascading (e.g., countryId for regions)
         search: z.string().optional(), // For search/autocomplete
@@ -1254,6 +1255,20 @@ export const formFieldsRouter = router({
             break;
           }
           
+          // ============ MATERIAL TYPES ============
+          case "material_types": {
+            const [rows] = await connection.execute(`
+              SELECT id as value, name as label, nameAr as labelAr 
+              FROM materialTypes 
+              WHERE isActive = 1
+              ORDER BY displayOrder ASC, name ASC
+              LIMIT ${limit}
+            `);
+            options = rows as any;
+            break;
+          }
+          
+          case "user_profile":
           default:
             options = [];
         }

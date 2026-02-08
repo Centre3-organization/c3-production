@@ -1331,7 +1331,9 @@ export const formFields = mysqlTable("formFields", {
     // Profile Sources
     "user_sites",       // Current user's assigned sites
     "user_groups",      // Current user's groups
-    "user_departments"  // Current user's department
+    "user_departments", // Current user's department
+    "user_profile",      // User profile data (readonly)
+    "material_types"     // Material types from master data
   ]).default("static"),
   optionsApi: varchar("optionsApi", { length: 500 }),
   dependsOnField: varchar("dependsOnField", { length: 100 }),
