@@ -33,7 +33,9 @@ import {
   BarChart3,
   ClipboardList,
   Shield,
-  History
+  History,
+  PenLine,
+  Plus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -294,53 +296,54 @@ export default function Layout({ children }: LayoutProps) {
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - SAP Fiori Shell Navigation Style */}
       <aside className={cn(
-        "fixed top-0 h-full z-50 flex flex-col transition-all duration-300 bg-gradient-to-b from-[#5B2C93] to-[#3D1C5E] text-white",
-        isRTL ? "right-0" : "left-0",
+        "fixed top-0 h-full z-50 flex flex-col transition-all duration-300 bg-white border-r border-[#E0E0E0]",
+        isRTL ? "right-0 border-r-0 border-l border-[#E0E0E0]" : "left-0",
         isMobile 
           ? (sidebarOpen 
-              ? "w-64 translate-x-0" 
-              : (isRTL ? "translate-x-full w-64" : "-translate-x-full w-64"))
-          : (sidebarOpen ? "w-64" : "w-20")
+              ? "w-72 translate-x-0" 
+              : (isRTL ? "translate-x-full w-72" : "-translate-x-full w-72"))
+          : (sidebarOpen ? "w-72" : "w-20")
       )}>
         {/* Logo */}
         <div className={cn(
-          "h-16 flex items-center border-b border-white/15 px-4",
+          "h-16 flex items-center border-b border-[#E0E0E0] px-4",
           !sidebarOpen && !isMobile && "justify-center px-0"
         )}>
           {(sidebarOpen || isMobile) ? (
             <div className="flex items-center gap-3 w-full">
               <img 
-                src="/center3-sidebar-logo.png?v=3" 
+                src="/center3-logo-purple.png" 
                 alt="center3" 
-                className="h-[40px] max-w-full object-contain"
+                className="h-[36px] max-w-full object-contain"
               />
             </div>
           ) : (
-            <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center overflow-hidden">
+            <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
               <img 
-                src="https://files.manuscdn.com/user_upload_by_module/session_file/116552453/AAcNeDDTxabwbvdd.png" 
+                src="/center3-logo-purple.png" 
                 alt="center3" 
-                className="h-6 w-6 object-contain"
+                className="h-8 object-contain"
+                style={{ maxWidth: '120px', objectPosition: 'left center', clipPath: 'inset(0 68% 0 0)', transform: 'scale(2.8)', transformOrigin: 'left center' }}
               />
             </div>
           )}
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto py-4 px-2 space-y-0.5">
+        <div className="flex-1 overflow-y-auto py-3 px-3 space-y-0.5">
           {navSections.map((section, sectionIndex) => (
-            <div key={sectionIndex} className={section.title ? "mt-5 first:mt-0" : ""}>
+            <div key={sectionIndex} className={section.title ? "mt-4 first:mt-0" : ""}>
               {section.title && (sidebarOpen || isMobile) && (
-                <div className="px-3 mb-2">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-white/40">
+                <div className="px-3 mb-1.5 mt-2">
+                  <span className="text-[11px] font-medium uppercase tracking-wider text-[#6B6B6B]">
                     {section.titleKey ? getLabel(section.titleKey, section.title) : section.title}
                   </span>
                 </div>
               )}
               {!section.title && sectionIndex > 0 && (
-                <div className="mx-3 my-2 border-t border-white/10" />
+                <div className="mx-3 my-2 border-t border-[#E0E0E0]" />
               )}
               {section.items.map((item) => {
                 // Handle items with children (collapsible)
@@ -353,17 +356,17 @@ export default function Layout({ children }: LayoutProps) {
                       <CollapsibleTrigger asChild>
                         <div 
                           className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors duration-150 cursor-pointer group mx-1",
+                            "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 cursor-pointer group",
                             hasActiveChild 
-                              ? "bg-white/15 text-white" 
-                              : "text-white/75 hover:bg-white/10 hover:text-white"
+                              ? "bg-[#EBF5FF] text-[#0070F2]" 
+                              : "text-[#32363A] hover:bg-[#F5F5F5]"
                           )}
                         >
-                          <item.icon className="h-[18px] w-[18px] shrink-0" />
+                          <item.icon className={cn("h-[18px] w-[18px] shrink-0", hasActiveChild ? "text-[#0070F2]" : "text-[#6B6B6B]")} />
                           {(sidebarOpen || isMobile) && (
                             <>
                               <span className="flex-1">{getLabel(item.labelKey, item.label)}</span>
-                              {isOpen ? <ChevronDown className="h-4 w-4 opacity-60" /> : (isRTL ? <ChevronLeft className="h-4 w-4 opacity-60" /> : <ChevronRight className="h-4 w-4 opacity-60" />)}
+                              {isOpen ? <ChevronDown className="h-4 w-4 text-[#6B6B6B]" /> : (isRTL ? <ChevronLeft className="h-4 w-4 text-[#6B6B6B]" /> : <ChevronRight className="h-4 w-4 text-[#6B6B6B]" />)}
                             </>
                           )}
                         </div>
@@ -375,16 +378,16 @@ export default function Layout({ children }: LayoutProps) {
                             <Link key={child.href} href={child.href}>
                               <div 
                                 className={cn(
-                                  "flex items-center px-3 py-2 rounded-md text-sm transition-colors cursor-pointer mx-1 relative",
+                                  "flex items-center px-3 py-1.5 rounded-md text-sm transition-colors cursor-pointer relative",
                                   isChildActive 
-                                    ? "bg-white/20 text-white font-medium" 
-                                    : "text-white/65 hover:bg-white/10 hover:text-white"
+                                    ? "bg-[#EBF5FF] text-[#0070F2] font-medium" 
+                                    : "text-[#515559] hover:bg-[#F5F5F5] hover:text-[#32363A]"
                                 )}
                                 onClick={() => isMobile && setSidebarOpen(false)}
                               >
                                 {isChildActive && (
                                   <div className={cn(
-                                    "absolute top-1 bottom-1 w-[3px] rounded-full bg-white",
+                                    "absolute top-0.5 bottom-0.5 w-[3px] rounded-full bg-[#0070F2]",
                                     isRTL ? "right-0" : "left-0"
                                   )} />
                                 )}
@@ -405,20 +408,20 @@ export default function Layout({ children }: LayoutProps) {
                   <Link key={item.label} href={item.href || "#"}>
                     <div 
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors duration-150 group relative cursor-pointer mx-1",
+                        "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 group relative cursor-pointer",
                         isActive 
-                          ? "bg-white/20 text-white" 
-                          : "text-white/75 hover:bg-white/10 hover:text-white"
+                          ? "bg-[#EBF5FF] text-[#0070F2]" 
+                          : "text-[#32363A] hover:bg-[#F5F5F5]"
                       )}
                       onClick={() => isMobile && setSidebarOpen(false)}
                     >
                       {isActive && (
                         <div className={cn(
-                          "absolute top-1 bottom-1 w-[3px] rounded-full bg-white",
+                          "absolute top-0.5 bottom-0.5 w-[3px] rounded-full bg-[#0070F2]",
                           isRTL ? "right-0" : "left-0"
                         )} />
                       )}
-                      <item.icon className={cn("h-[18px] w-[18px] shrink-0", isActive ? "text-white" : "opacity-75 group-hover:opacity-100")} />
+                      <item.icon className={cn("h-[18px] w-[18px] shrink-0", isActive ? "text-[#0070F2]" : "text-[#6B6B6B] group-hover:text-[#32363A]")} />
                       {(sidebarOpen || isMobile) && (
                         <div className="flex items-center justify-between flex-1">
                           <span>{getLabel(item.labelKey, item.label)}</span>
@@ -432,7 +435,7 @@ export default function Layout({ children }: LayoutProps) {
                       
                       {!sidebarOpen && !isMobile && (
                         <div className={cn(
-                          "absolute px-2 py-1 bg-popover text-popover-foreground text-xs rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 border",
+                          "absolute px-2 py-1 bg-[#32363A] text-white text-xs rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50",
                           isRTL ? "right-full mr-2" : "left-full ml-2"
                         )}>
                           {getLabel(item.labelKey, item.label)}
@@ -446,14 +449,27 @@ export default function Layout({ children }: LayoutProps) {
           ))}
         </div>
 
-        <div className="p-4 mt-auto mb-4">
+        {/* Quick Create Button */}
+        {(sidebarOpen || isMobile) && (
+          <div className="px-3 py-2 border-t border-[#E0E0E0]">
+            <Link href="/requests/new">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-[#0070F2] hover:bg-[#EBF5FF] transition-colors cursor-pointer">
+                <PenLine className="h-[18px] w-[18px]" />
+                <span>{t('nav.quickCreate', 'Quick Create')}</span>
+              </div>
+            </Link>
+          </div>
+        )}
+
+        {/* Logout */}
+        <div className="px-3 py-3 border-t border-[#E0E0E0]">
           <div 
             onClick={handleLogout}
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 text-white/80 hover:bg-white/10 hover:text-white cursor-pointer",
+              "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 text-[#515559] hover:bg-[#F5F5F5] hover:text-[#32363A] cursor-pointer",
               !sidebarOpen && !isMobile && "justify-center px-0"
             )}>
-            <LogOut className="h-5 w-5 shrink-0 opacity-80" />
+            <LogOut className="h-[18px] w-[18px] shrink-0 text-[#6B6B6B]" />
             {(sidebarOpen || isMobile) && <span>{t('auth.logout', 'Logout')}</span>}
           </div>
         </div>
@@ -463,7 +479,7 @@ export default function Layout({ children }: LayoutProps) {
       <div className={cn(
         "flex-1 flex flex-col min-h-screen transition-all duration-300 w-full", 
         !isMobile && (sidebarOpen 
-          ? (isRTL ? "mr-64" : "ml-64") 
+          ? (isRTL ? "mr-72" : "ml-72") 
           : (isRTL ? "mr-20" : "ml-20"))
       )}>
         {/* Header */}

@@ -1914,3 +1914,16 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix ALL dialogs, modals, and action buttons
 - [x] Fix ALL status badges, switches, and micro-components
 - [x] Final comprehensive audit pass
+
+## SAP Fiori Sidebar & Design Components (Feb 9, 2026)
+- [x] Redesign sidebar from purple gradient to SAP Fiori white/light style
+- [x] Add blue left border active indicator on sidebar items
+- [x] Add light blue highlight background for active sidebar items
+- [x] Use dark text with subtle icons in sidebar
+- [x] Add section group headers in gray text (already implemented)
+- [x] Add Quick Create button at bottom of sidebar (already existed)
+- [x] Fix extra spacing on Sites/Zones/Areas pages
+- [x] Fix extra spacing on All Requests and listing pages
+- [x] Implement design components from user's shared screenshots (already consistent)
+- [x] Remove old components replaced by new design components (sidebar redesigned)
+- [x] Update sidebar logo to new center3 purple logo (with diamond icon)

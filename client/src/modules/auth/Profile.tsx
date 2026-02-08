@@ -119,7 +119,7 @@ export default function Profile() {
   const lastName = user.name?.split(" ").slice(1).join(" ") || "";
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Profile</h1>

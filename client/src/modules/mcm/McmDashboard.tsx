@@ -73,9 +73,6 @@ export default function McmDashboard() {
         <div>
           <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{t("mcm.title", "Magnetic Card Management")}</h1>
           <p className="text-sm text-[#6B6B6B]">{t("mcm.subtitle", "Manage and track magnetic access cards")}</p>
-          <p className="text-[#6B6B6B]">
-            {t("mcm.subtitle", "Manage access cards for employees and contractors")}
-          </p>
         </div>
         <div className="flex gap-2">
           <Link href="/mcm/request/new">

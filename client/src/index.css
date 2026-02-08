@@ -172,15 +172,15 @@
   --chart-4: oklch(0.8305 0.1453 74.18);   /* Warning */
   --chart-5: oklch(0.3106 0.1132 303.37);  /* Dark Purple */
 
-  /* Sidebar: Purple #5B2C93 background */
-  --sidebar: oklch(0.4131 0.1607 300.33);
-  --sidebar-foreground: oklch(1 0 0);
-  --sidebar-primary: oklch(0.3106 0.1132 303.37); /* Dark Purple active */
+  /* Sidebar: White background with SAP Fiori style */
+  --sidebar: oklch(1 0 0); /* White */
+  --sidebar-foreground: oklch(0.2931 0 0); /* Dark text */
+  --sidebar-primary: oklch(0.4131 0.1607 300.33); /* Purple active */
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(1 0 0 / 0.1);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(1 0 0 / 0.15);
-  --sidebar-ring: oklch(1 0 0);
+  --sidebar-accent: oklch(0.95 0.01 250); /* Light blue hover */
+  --sidebar-accent-foreground: oklch(0.4131 0.1607 300.33);
+  --sidebar-border: oklch(0.9067 0 0); /* #E0E0E0 */
+  --sidebar-ring: oklch(0.4131 0.1607 300.33);
 }
 
 .dark {
@@ -219,13 +219,13 @@
   --chart-4: oklch(0.8305 0.1453 74.18);
   --chart-5: oklch(0.4131 0.1607 300.33);
 
-  --sidebar: oklch(0.3106 0.1132 303.37);
+  --sidebar: oklch(0.22 0.05 303); /* Dark sidebar */
   --sidebar-foreground: oklch(0.9702 0 0);
   --sidebar-primary: oklch(0.9115 0.0359 307.19);
   --sidebar-primary-foreground: oklch(0.2931 0 0);
-  --sidebar-accent: oklch(1 0 0 / 0.1);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(0.45 0.08 303);
+  --sidebar-accent: oklch(0.3 0.06 303);
+  --sidebar-accent-foreground: oklch(0.9702 0 0);
+  --sidebar-border: oklch(0.35 0.06 303);
   --sidebar-ring: oklch(0.9115 0.0359 307.19);
 }
 

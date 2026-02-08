@@ -162,13 +162,12 @@ export function ShiftManagement() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Shift Management</h1>
           <p className="text-sm text-[#6B6B6B]">Manage security officer shifts and schedules</p>
-          <p className="text-[#6B6B6B]">Configure shift schedules for time-based approval routing</p>
         </div>
         <Button onClick={() => setIsCreateScheduleOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />

@@ -643,12 +643,11 @@ export default function Users() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">User Management</h1>
           <p className="text-sm text-[#6B6B6B]">Manage system access, roles, and permissions</p>
-          <p className="text-[#6B6B6B]">Manage system access, roles, and permissions.</p>
         </div>
         <Button onClick={() => setNewUserOpen(true)} className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
           <UserPlus className="h-4 w-4" /> Add User
