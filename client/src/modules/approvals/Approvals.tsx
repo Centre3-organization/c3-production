@@ -122,6 +122,7 @@ export default function Approvals() {
   const [qrResultDialogOpen, setQrResultDialogOpen] = useState(false);
   const [generatedQrCode, setGeneratedQrCode] = useState<string>("");
   const [generatedQrData, setGeneratedQrData] = useState<string>("");
+  const [qrRequestId, setQrRequestId] = useState<number | null>(null);
   
   // Use the workflow-based pending tasks query
   const { data: pendingTasks, isLoading, refetch } = trpc.requests.getMyPendingApprovals.useQuery();
@@ -132,6 +133,12 @@ export default function Approvals() {
     onSuccess: async (result: any) => {
       // Check if this was a final approval with QR code
       if (result.isFinalApproval && result.entryMethod === "qr_code" && result.qrCodeData) {
+        // Save the request ID before resetAllDialogs clears selectedRequest
+        if (result.requestId) {
+          setQrRequestId(result.requestId);
+        } else if (selectedRequest?.request?.id) {
+          setQrRequestId(selectedRequest.request.id);
+        }
         // Generate QR code image
         try {
           const qrDataUrl = await QRCode.toDataURL(result.qrCodeData, {
@@ -896,17 +903,17 @@ export default function Approvals() {
               <Download className="h-4 w-4" />
               {t("approvals.downloadQr", "Download QR")}
             </Button>
-            {selectedRequest?.request?.id && (
+            {(qrRequestId || selectedRequest?.request?.id) && (
               <Button 
                 variant="outline" 
-                onClick={() => handleDownloadPdf(selectedRequest.request.id)} 
+                onClick={() => handleDownloadPdf(qrRequestId || selectedRequest?.request?.id)} 
                 className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
               >
                 <FileText className="h-4 w-4" />
                 {t("approvals.downloadPdf", "Download Form PDF")}
               </Button>
             )}
-            <Button onClick={() => setQrResultDialogOpen(false)}>
+            <Button onClick={() => { setQrResultDialogOpen(false); setQrRequestId(null); }}>
               {t("common.done", "Done")}
             </Button>
           </DialogFooter>

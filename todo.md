@@ -1640,3 +1640,9 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Improve history display with more action types (workflow_started, stage_completed, task_assigned, clarification_provided, task_reassigned)
 - [x] Better fallback logic for stageName in existing history records without stageName
 - [x] Write and pass unit tests for deduplication logic and stageName resolution
+
+## PDF Download Button Missing (Feb 8, 2026)
+- [x] Add "Download Form PDF" button to QR Code Generated dialog - fixed: saved requestId in state before resetAllDialogs clears selectedRequest
+- [x] Add "Download Form PDF" button to Decision Details dialog (ApprovalHistory.tsx) - added with handleDownloadPdf function
+- [x] Investigate admin approval visibility - confirmed working: 59 unique combos + 1 legacy = 60 shown correctly. 2 orphaned requests explained (1 no workflow instance, 1 in need_clarification status)
+- [x] Server now returns requestId in final approval response for PDF button to work in QR dialog

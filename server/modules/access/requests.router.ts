@@ -1395,6 +1395,7 @@ export const requestsRouter = router({
             entryMethod: input.entryMethod,
             qrCodeData: qrCodeData,
             isFinalApproval: true,
+            requestId: instance.requestId,
           };
         }
       }

@@ -1,0 +1,90 @@
+{
+  "query": "SELECT u.id, u.name, u.email, u.role, sr.code as role_code, sr.name as role_name \nFROM users u \nLEFT JOIN userSystemRoles ur ON u.id = ur.userId AND ur.isActive = 1\nLEFT JOIN systemRoles sr ON ur.roleId = sr.id \nORDER BY u.id \nLIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT u.id, u.name, u.email, u.role, sr.code as role_code, sr.name as role_name \nFROM users u \nLEFT JOIN userSystemRoles ur ON u.id = ur.userId AND ur.isActive = 1\nLEFT JOIN systemRoles sr ON ur.roleId = sr.id \nORDER BY u.id \nLIMIT 10;",
+  "rows": [
+    {
+      "id": "3",
+      "name": "Mohsin Qureshi",
+      "email": "mohsiin@gmail.com",
+      "role": "admin",
+      "role_code": "super_admin",
+      "role_name": "Super Admin"
+    },
+    {
+      "id": "90182",
+      "name": "Riz A",
+      "email": "rizwan@techbanq.net",
+      "role": "user",
+      "role_code": "site_manager",
+      "role_name": "Site Manager"
+    },
+    {
+      "id": "90183",
+      "name": "Ali Aarish",
+      "email": "ali@techbanq.net",
+      "role": "admin",
+      "role_code": "admin",
+      "role_name": "Administrator"
+    },
+    {
+      "id": "150003",
+      "name": "Ali Test",
+      "email": "ali-test-1769869315536@centre3.com",
+      "role": "user",
+      "role_code": "NULL",
+      "role_name": "NULL"
+    },
+    {
+      "id": "150004",
+      "name": "Full User",
+      "email": "full-user-1769869316102@centre3.com",
+      "role": "user",
+      "role_code": "requestor",
+      "role_name": "Requestor"
+    },
+    {
+      "id": "150005",
+      "name": "Dev Dev",
+      "email": "dev@techbanq.org",
+      "role": "user",
+      "role_code": "super_admin",
+      "role_name": "Super Admin"
+    },
+    {
+      "id": "150006",
+      "name": "Abdullah Alzakari",
+      "email": "Aalzakari@center3.com",
+      "role": "user",
+      "role_code": "admin",
+      "role_name": "Administrator"
+    },
+    {
+      "id": "150007",
+      "name": "Rand A.  Almaymuni",
+      "email": "Salshamrani@center3.com",
+      "role": "user",
+      "role_code": "admin",
+      "role_name": "Administrator"
+    },
+    {
+      "id": "150008",
+      "name": "Diwan Mohideen",
+      "email": "dmohideen@center3.com",
+      "role": "user",
+      "role_code": "admin",
+      "role_name": "Administrator"
+    },
+    {
+      "id": "150009",
+      "name": "Talha Burney",
+      "email": "talhaburney@gmail.com",
+      "role": "user",
+      "role_code": "admin",
+      "role_name": "Administrator"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\trole\trole_code\trole_name\n3\tMohsin Qureshi\tmohsiin@gmail.com\tadmin\tsuper_admin\tSuper Admin\n90182\tRiz A\trizwan@techbanq.net\tuser\tsite_manager\tSite Manager\n90183\tAli Aarish\tali@techbanq.net\tadmin\tadmin\tAdministrator\n150003\tAli Test\tali-test-1769869315536@centre3.com\tuser\tNULL\tNULL\n150004\tFull User\tfull-user-1769869316102@centre3.com\tuser\trequestor\tRequestor\n150005\tDev Dev\tdev@techbanq.org\tuser\tsuper_admin\tSuper Admin\n150006\tAbdullah Alzakari\tAalzakari@center3.com\tuser\tadmin\tAdministrator\n150007\tRand A.  Almaymuni\tSalshamrani@center3.com\tuser\tadmin\tAdministrator\n150008\tDiwan Mohideen\tdmohideen@center3.com\tuser\tadmin\tAdministrator\n150009\tTalha Burney\ttalhaburney@gmail.com\tuser\tadmin\tAdministrator\n",
+  "stderr": "",
+  "execution_time_ms": 1593
+}

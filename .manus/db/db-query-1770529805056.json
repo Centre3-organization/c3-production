@@ -1,0 +1,18 @@
+{
+  "query": "SELECT u.id, u.name, u.email, sr.code as role_code, sr.name as role_name, usr.isActive\nFROM users u \nLEFT JOIN userSystemRoles usr ON u.id = usr.userId \nLEFT JOIN systemRoles sr ON usr.roleId = sr.id \nWHERE u.email LIKE '%mohsin%' OR u.email LIKE '%qureshi%' OR u.name LIKE '%Mohsin%'\nLIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT u.id, u.name, u.email, sr.code as role_code, sr.name as role_name, usr.isActive\nFROM users u \nLEFT JOIN userSystemRoles usr ON u.id = usr.userId \nLEFT JOIN systemRoles sr ON usr.roleId = sr.id \nWHERE u.email LIKE '%mohsin%' OR u.email LIKE '%qureshi%' OR u.name LIKE '%Mohsin%'\nLIMIT 5;",
+  "rows": [
+    {
+      "id": "3",
+      "name": "Mohsin Qureshi",
+      "email": "mohsiin@gmail.com",
+      "role_code": "super_admin",
+      "role_name": "Super Admin",
+      "isActive": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\trole_code\trole_name\tisActive\n3\tMohsin Qureshi\tmohsiin@gmail.com\tsuper_admin\tSuper Admin\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1592
+}

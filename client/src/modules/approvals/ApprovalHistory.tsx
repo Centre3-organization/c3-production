@@ -25,7 +25,8 @@ import {
   Mail,
   MessageSquare,
   Phone as PhoneIcon,
-  ChevronDown
+  ChevronDown,
+  Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -158,6 +159,13 @@ export default function ApprovalHistory() {
       navigator.clipboard.writeText(selectedTask.accessMethod.qrCodeData);
       toast.success("QR code data copied to clipboard");
     }
+  };
+  
+  const handleDownloadPdf = (requestId: number) => {
+    // Open the PDF in a new tab for print/download
+    const token = localStorage.getItem("centre3_token");
+    const url = `/api/forms/pdf/${requestId}${token ? `?token=${encodeURIComponent(token)}` : ''}`;
+    window.open(url, '_blank');
   };
   
   const handleResendCredentials = async (channel: "email" | "sms" | "whatsapp") => {
@@ -590,10 +598,20 @@ export default function ApprovalHistory() {
             </div>
           )}
           
-          <DialogFooter>
+          <DialogFooter className="flex gap-2">
             <Button variant="outline" onClick={() => setDetailsDialogOpen(false)}>
               {t("common.close", "Close")}
             </Button>
+            {selectedTask?.request?.id && (
+              <Button 
+                variant="outline" 
+                onClick={() => handleDownloadPdf(selectedTask.request.id)} 
+                className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+              >
+                <Download className="h-4 w-4" />
+                {t("approvals.downloadPdf", "Download Form PDF")}
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
