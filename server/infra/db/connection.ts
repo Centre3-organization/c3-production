@@ -718,12 +718,6 @@ export async function seedPermissions(): Promise<void> {
     { code: "requestTypes:update", module: "requestTypes", action: "update", name: "Update Request Types", category: "Request Types" },
     { code: "requestTypes:delete", module: "requestTypes", action: "delete", name: "Delete Request Types", category: "Request Types" },
     
-    // Shift Management
-    { code: "shifts:view", module: "shifts", action: "view", name: "View Shifts", category: "Shifts" },
-    { code: "shifts:create", module: "shifts", action: "create", name: "Create Shifts", category: "Shifts" },
-    { code: "shifts:update", module: "shifts", action: "update", name: "Update Shifts", category: "Shifts" },
-    { code: "shifts:delete", module: "shifts", action: "delete", name: "Delete Shifts", category: "Shifts" },
-    
     // Delegations
     { code: "delegations:view", module: "delegations", action: "view", name: "View Delegations", category: "Delegations" },
     { code: "delegations:create", module: "delegations", action: "create", name: "Create Delegations", category: "Delegations" },

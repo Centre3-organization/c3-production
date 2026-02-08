@@ -430,8 +430,6 @@ export const usersRouter = router({
       workflows: { view: false, create: false, update: false, delete: false },
       // Request Types
       requestTypes: { view: false, create: false, update: false, delete: false },
-      // Shift Management
-      shifts: { view: false, create: false, update: false, delete: false },
       // Delegations
       delegations: { view: false, create: false, update: false, delete: false },
       // Card Management

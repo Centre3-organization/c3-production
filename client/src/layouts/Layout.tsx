@@ -34,7 +34,6 @@ import {
   ClipboardList,
   Shield,
   History,
-  PenLine,
   Plus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -190,7 +189,6 @@ export default function Layout({ children }: LayoutProps) {
       items: [
         { icon: Workflow, labelKey: "nav.workflows", label: "Workflow Builder", href: "/workflows", requiredPermission: "workflows.view" },
         { icon: FileText, labelKey: "nav.requestTypes", label: "Request Types", href: "/settings/request-types", requiredPermission: "requestTypes.view" },
-        { icon: Clock, labelKey: "nav.shiftManagement", label: "Shift Management", href: "/shifts", requiredPermission: "shifts.view" },
         { icon: UserCheck, labelKey: "nav.delegations", label: "Delegations", href: "/delegations", requiredPermission: "delegations.view" },
       ]
     },
@@ -449,17 +447,7 @@ export default function Layout({ children }: LayoutProps) {
           ))}
         </div>
 
-        {/* Quick Create Button */}
-        {(sidebarOpen || isMobile) && (
-          <div className="px-3 py-2 border-t border-[#E0E0E0]">
-            <Link href="/requests/new">
-              <div className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-[#0070F2] hover:bg-[#EBF5FF] transition-colors cursor-pointer">
-                <PenLine className="h-[18px] w-[18px]" />
-                <span>{t('nav.quickCreate', 'Quick Create')}</span>
-              </div>
-            </Link>
-          </div>
-        )}
+
 
         {/* Logout */}
         <div className="px-3 py-3 border-t border-[#E0E0E0]">

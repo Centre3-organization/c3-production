@@ -1927,3 +1927,12 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Implement design components from user's shared screenshots (already consistent)
 - [x] Remove old components replaced by new design components (sidebar redesigned)
 - [x] Update sidebar logo to new center3 purple logo (with diamond icon)
+
+## Remove Shift Management & Quick Create (Feb 9, 2026)
+- [x] Remove Shift Management from sidebar navigation
+- [x] Remove Shift Management route from App.tsx
+- [x] Remove Shift Management page file
+- [x] Remove Shift Management tRPC router/procedures
+- [x] Remove Shift Management DB schema/tables (kept schema tables to avoid migration issues, removed router)
+- [x] Remove Shift Management DB helpers (removed resolveShiftApprover function)
+- [x] Remove Quick Create button from sidebar

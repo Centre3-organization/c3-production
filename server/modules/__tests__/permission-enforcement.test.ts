@@ -63,10 +63,6 @@ describe('Permission Enforcement System', () => {
         'requestTypes:read',
         'requestTypes:update',
         'requestTypes:delete',
-        'shifts:create',
-        'shifts:read',
-        'shifts:update',
-        'shifts:delete',
         'settings:view',
         'settings:edit',
         'integrations:view',
@@ -92,7 +88,6 @@ describe('Permission Enforcement System', () => {
       { id: 'groups', label: 'Groups', actions: ['read', 'create', 'update', 'delete'] },
       { id: 'workflows', label: 'Workflow Management', actions: ['read', 'create', 'update', 'delete'] },
       { id: 'requestTypes', label: 'Request Types', actions: ['read', 'create', 'update', 'delete'] },
-      { id: 'shifts', label: 'Shift Management', actions: ['read', 'create', 'update', 'delete'] },
       { id: 'settings', label: 'Settings', actions: ['view', 'edit'] },
       { id: 'integrations', label: 'Integrations', actions: ['view', 'manage'] },
       { id: 'reports', label: 'Reports', actions: ['view', 'export'] },
@@ -111,7 +106,6 @@ describe('Permission Enforcement System', () => {
         'groups',
         'workflows',
         'requestTypes',
-        'shifts',
         'settings',
         'integrations',
         'reports',
@@ -124,7 +118,7 @@ describe('Permission Enforcement System', () => {
     });
 
     it('should have CRUD actions for data modules', () => {
-      const dataModules = ['sites', 'zones', 'areas', 'groups', 'users', 'workflows', 'requestTypes', 'shifts'];
+      const dataModules = ['sites', 'zones', 'areas', 'groups', 'users', 'workflows', 'requestTypes'];
       
       dataModules.forEach(moduleId => {
         const module = permissionModules.find(m => m.id === moduleId);

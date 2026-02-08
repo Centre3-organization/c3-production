@@ -2,7 +2,7 @@
  * Workflows Router
  * 
  * Main router for the Dynamic Approval Workflow Module
- * Combines workflow management, shifts, and delegations
+ * Combines workflow management and delegations
  */
 
 import { z } from "zod";
@@ -22,7 +22,6 @@ import {
   approvalHistory,
   users,
 } from "../../../drizzle/schema";
-import { shiftsRouter } from "./shifts.router";
 import { delegationsRouter } from "./delegations.router";
 import {
   startWorkflow,
@@ -40,7 +39,6 @@ import {
 
 export const workflowsRouter = router({
   // Sub-routers
-  shifts: shiftsRouter,
   delegations: delegationsRouter,
 
   // ============================================

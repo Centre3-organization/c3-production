@@ -21,9 +21,6 @@ import {
   approvalHistory,
   approvalRoles,
   userApprovalRoles,
-  shiftSchedules,
-  shiftDefinitions,
-  shiftAssignments,
   approvalDelegations,
   users,
   groups,
@@ -430,8 +427,8 @@ async function resolveSingleApprover(
       return [];
 
     case "shift_assignment":
-      // Find current shift assignee
-      return await resolveShiftApprover(context.siteId, approverConfig?.roleInShift);
+      // Shift management removed - return empty
+      return [];
 
     case "manager_chain":
       // Find requester's manager
@@ -473,123 +470,6 @@ async function resolveSingleApprover(
   }
 }
 
-/**
- * Resolve shift-based approver
- */
-async function resolveShiftApprover(
-  siteId: number | undefined,
-  roleInShift: string | undefined
-): Promise<number[]> {
-  if (!roleInShift) return [];
-
-  const db = await getDb();
-  if (!db) return [];
-
-  const now = new Date();
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
-  const currentTime = `${currentHour.toString().padStart(2, "0")}:${currentMinute.toString().padStart(2, "0")}`;
-  const dayOfWeek = now.getDay();
-
-  // Find applicable schedule
-  let schedules;
-  if (siteId) {
-    schedules = await db
-      .select()
-      .from(shiftSchedules)
-      .where(
-        and(
-          eq(shiftSchedules.isActive, true),
-          eq(shiftSchedules.siteId, siteId)
-        )
-      );
-  } else {
-    schedules = await db
-      .select()
-      .from(shiftSchedules)
-      .where(eq(shiftSchedules.isActive, true));
-  }
-
-  let schedule = schedules[0];
-
-  if (!schedule) {
-    // Try default schedule
-    const defaultSchedules = await db
-      .select()
-      .from(shiftSchedules)
-      .where(
-        and(
-          eq(shiftSchedules.isActive, true),
-          eq(shiftSchedules.isDefault, true)
-        )
-      );
-    schedule = defaultSchedules[0];
-    if (!schedule) return [];
-  }
-
-  // Find current shift
-  const shifts = await db
-    .select()
-    .from(shiftDefinitions)
-    .where(
-      and(
-        eq(shiftDefinitions.scheduleId, schedule.id),
-        eq(shiftDefinitions.isActive, true)
-      )
-    );
-
-  for (const shift of shifts) {
-    const daysOfWeek = shift.daysOfWeek as number[];
-    if (!daysOfWeek.includes(dayOfWeek)) continue;
-
-    // Check if current time is within shift
-    const startTime = shift.startTime;
-    const endTime = shift.endTime;
-
-    let isInShift = false;
-    if (startTime < endTime) {
-      isInShift = currentTime >= startTime && currentTime < endTime;
-    } else {
-      // Shift crosses midnight
-      isInShift = currentTime >= startTime || currentTime < endTime;
-    }
-
-    if (isInShift) {
-      // Find assignments for this shift with the specified role
-      const assignments = await db
-        .select({ userId: shiftAssignments.userId })
-        .from(shiftAssignments)
-        .where(
-          and(
-            eq(shiftAssignments.shiftId, shift.id),
-            eq(shiftAssignments.roleInShift, roleInShift),
-            eq(shiftAssignments.isActive, true),
-            eq(shiftAssignments.isPrimary, true)
-          )
-        );
-
-      if (assignments.length > 0) {
-        return assignments.map((a: { userId: number }) => a.userId);
-      }
-
-      // Try backup assignments
-      const backupAssignments = await db
-        .select({ userId: shiftAssignments.userId })
-        .from(shiftAssignments)
-        .where(
-          and(
-            eq(shiftAssignments.shiftId, shift.id),
-            eq(shiftAssignments.roleInShift, roleInShift),
-            eq(shiftAssignments.isActive, true)
-          )
-        );
-
-      return backupAssignments.map((a: { userId: number }) => a.userId);
-    }
-  }
-
-  return [];
-}
 
 /**
  * Resolve hierarchy-based approver

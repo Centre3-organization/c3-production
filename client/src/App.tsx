@@ -50,7 +50,6 @@ import CompanyDetail from "./modules/administration/CompanyDetail";
 
 // Workflows Module
 import { WorkflowBuilder } from "./modules/workflows/WorkflowBuilder";
-import { ShiftManagement } from "./modules/workflows/ShiftManagement";
 import { DelegationManagement } from "./modules/workflows/DelegationManagement";
 
 // Settings Module
@@ -216,11 +215,6 @@ function Router() {
       <Route path="/workflows">
         <Layout>
           <WorkflowBuilder />
-        </Layout>
-      </Route>
-      <Route path="/shifts">
-        <Layout>
-          <ShiftManagement />
         </Layout>
       </Route>
       <Route path="/delegations">
