@@ -288,7 +288,7 @@ export const mcmRouter = router({
     list: protectedProcedure
       .input(z.object({
         status: z.enum(["pending", "active", "inactive", "blocked", "expired"]).optional(),
-        companyType: z.enum(["centre3", "contractor", "subcontractor", "client"]).optional(),
+        companyType: z.enum(["centre3", "contractor", "subcontractor", "client", "internal"]).optional(),
         companyId: z.number().optional(),
         search: z.string().optional(),
         page: z.number().default(1),
@@ -589,7 +589,7 @@ export const mcmRouter = router({
     createCardRequest: protectedProcedure
       .input(z.object({
         // Company info
-        companyType: z.enum(["centre3", "contractor", "subcontractor", "client"]),
+        companyType: z.enum(["centre3", "contractor", "subcontractor", "client", "internal"]),
         companyId: z.number().optional(),
         
         // Personal info

@@ -891,11 +891,11 @@ export function WorkflowBuilder() {
           </Tabs>
         </div>
       ) : (
-        <div className="flex items-center justify-center h-full text-[#6B6B6B]">
+        <div className="flex-1 flex items-center justify-center text-[#6B6B6B]">
           <div className="text-center">
-            <Workflow className="h-16 w-16 mx-auto mb-4 opacity-50" />
-            <p className="text-lg">Select a workflow to view details</p>
-            <p className="text-sm">or create a new one to get started</p>
+            <Workflow className="h-16 w-16 mx-auto mb-4 opacity-30" />
+            <p className="text-lg font-medium text-[#2C2C2C]">Select a workflow to view details</p>
+            <p className="text-sm mt-1">or create a new one to get started</p>
           </div>
         </div>
       )}

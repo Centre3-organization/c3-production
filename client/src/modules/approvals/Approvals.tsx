@@ -260,20 +260,54 @@ export default function Approvals() {
         onRefresh={() => refetch()}
       />
 
-      {/* KPI Summary Strip */}
-      <div className="flex items-center gap-6 px-5 py-3 bg-[#FAFAFA] border-b border-[#E0E0E0]">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#5B2C93]" />
-          <span className="text-xs text-[#6B6B6B]">Total Pending</span>
-          <span className="text-sm font-semibold text-[#2C2C2C]">{pendingTasks?.length || 0}</span>
-        </div>
-        {uniqueStages.slice(0, 4).map((stage, index) => (
-          <div key={stage.name} className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${index === 0 ? "bg-[#D97706]" : index === 1 ? "bg-[#5B2C93]" : "bg-[#059669]"}`} />
-            <span className="text-xs text-[#6B6B6B]">{stage.name}</span>
-            <span className="text-sm font-semibold text-[#2C2C2C]">{stage.count}</span>
+      {/* KPI Summary Boxes */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 px-0 py-4">
+        <div
+          className={`bg-white border rounded-lg px-4 py-3 cursor-pointer transition-all ${
+            stageFilter === "all" ? "border-[#5B2C93] ring-1 ring-[#5B2C93]/20 shadow-sm" : "border-[#E0E0E0] hover:border-[#5B2C93]/40"
+          }`}
+          onClick={() => setStageFilter("all")}
+        >
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-[#E8DCF5] flex items-center justify-center">
+              <ClipboardCheck className="h-4 w-4 text-[#5B2C93]" />
+            </div>
+            <div>
+              <p className="text-xs text-[#6B6B6B] font-medium">Total Pending</p>
+              <p className="text-xl font-semibold text-[#2C2C2C]">{pendingTasks?.length || 0}</p>
+            </div>
           </div>
-        ))}
+        </div>
+        {uniqueStages.map((stage, index) => {
+          const colors = [
+            { bg: "bg-[#FEF3C7]", icon: "text-[#D97706]" },
+            { bg: "bg-[#E8DCF5]", icon: "text-[#5B2C93]" },
+            { bg: "bg-[#D1FAE5]", icon: "text-[#059669]" },
+            { bg: "bg-[#FFE5E5]", icon: "text-[#FF6B6B]" },
+          ];
+          const color = colors[index % colors.length];
+          const icons = [Clock, Shield, UserCheck, AlertTriangle];
+          const StageIcon = icons[index % icons.length];
+          return (
+            <div
+              key={stage.name}
+              className={`bg-white border rounded-lg px-4 py-3 cursor-pointer transition-all ${
+                stageFilter === stage.name ? "border-[#5B2C93] ring-1 ring-[#5B2C93]/20 shadow-sm" : "border-[#E0E0E0] hover:border-[#5B2C93]/40"
+              }`}
+              onClick={() => setStageFilter(stageFilter === stage.name ? "all" : stage.name)}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`h-9 w-9 rounded-lg ${color.bg} flex items-center justify-center`}>
+                  <StageIcon className={`h-4 w-4 ${color.icon}`} />
+                </div>
+                <div>
+                  <p className="text-xs text-[#6B6B6B] font-medium truncate max-w-[120px]">{stage.name}</p>
+                  <p className="text-xl font-semibold text-[#2C2C2C]">{stage.count}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <FioriFilterBar

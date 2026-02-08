@@ -56,7 +56,7 @@ export default function NewCardRequest() {
   // Form state
   const [formData, setFormData] = useState({
     // Company info
-    companyType: "" as "contractor" | "subcontractor" | "client" | "centre3" | "",
+    companyType: "" as "contractor" | "subcontractor" | "client" | "centre3" | "internal" | "",
     companyId: undefined as number | undefined,
     
     // Personal info
@@ -129,7 +129,7 @@ export default function NewCardRequest() {
     
     createMutation.mutate({
       ...formData,
-      companyType: formData.companyType as "contractor" | "subcontractor" | "client" | "centre3",
+      companyType: formData.companyType as "contractor" | "subcontractor" | "client" | "centre3" | "internal",
       companyId: formData.companyId || undefined,
     });
   };
@@ -194,6 +194,7 @@ export default function NewCardRequest() {
                     <SelectValue placeholder={t("mcm.selectCompanyType", "Select company type")} />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="internal">{t("mcm.internalUser", "Internal User")}</SelectItem>
                     <SelectItem value="contractor">{t("mcm.contractor", "Contractor")}</SelectItem>
                     <SelectItem value="subcontractor">{t("mcm.subcontractor", "Subcontractor")}</SelectItem>
                     <SelectItem value="client">{t("mcm.client", "Client")}</SelectItem>

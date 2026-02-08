@@ -1,0 +1,1 @@
+ALTER TABLE `magneticCards` MODIFY COLUMN `companyType` enum('centre3','contractor','subcontractor','client','internal') NOT NULL;

@@ -1453,7 +1453,7 @@ export const magneticCards = mysqlTable("magneticCards", {
   blockedAt: timestamp("blockedAt"),
   
   // Company Type
-  companyType: mysqlEnum("companyType", ["centre3", "contractor", "subcontractor", "client"]).notNull(),
+  companyType: mysqlEnum("companyType", ["centre3", "contractor", "subcontractor", "client", "internal"]).notNull(),
   companyId: int("companyId"), // References cardCompanies for non-Centre3
   
   // Cardholder Information

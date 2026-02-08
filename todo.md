@@ -1981,3 +1981,9 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Redesign Delegations page with SAP Fiori patterns
 - [x] Standardize all detail/edit forms and dialogs with SAP Fiori form patterns
 - [x] Visual verification walkthrough of all pages
+
+## UI Fixes (Feb 9, 2026 - Batch 2)
+- [x] Approvals page: Replace cluttered text tab counts with KPI boxes (like Global Overwatch)
+- [x] Approvals page: Clean up overall layout - reduce clutter
+- [x] Workflow Builder: Fix "Select a workflow" empty state positioning (should be centered, not overlapping left panel)
+- [x] Card Control: Add "Internal User" as company type for card issuance

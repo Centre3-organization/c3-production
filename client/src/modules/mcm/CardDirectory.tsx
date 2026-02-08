@@ -107,6 +107,7 @@ export default function CardDirectory() {
       render: (c: any) => {
         const colors: Record<string, { bg: string; text: string }> = {
           centre3: { bg: "#E8DCF5", text: "#5B2C93" },
+          internal: { bg: "#DBEAFE", text: "#2563EB" },
           contractor: { bg: "#FEF3C7", text: "#D97706" },
           subcontractor: { bg: "#E8DCF5", text: "#5B2C93" },
           client: { bg: "#D1FAE5", text: "#059669" },
@@ -230,6 +231,7 @@ export default function CardDirectory() {
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="centre3">Centre3</SelectItem>
+                <SelectItem value="internal">Internal User</SelectItem>
                 <SelectItem value="contractor">Contractor</SelectItem>
                 <SelectItem value="subcontractor">Sub-Contractor</SelectItem>
                 <SelectItem value="client">Client</SelectItem>
