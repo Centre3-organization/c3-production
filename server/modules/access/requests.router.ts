@@ -165,9 +165,10 @@ export const requestsRouter = router({
     
     if (isAdminOrSuperAdmin) {
       // Super Admin and Admin can see ALL pending tasks across all workflows
+      // Use MIN(taskId) to deduplicate - show one task per request+stage combination
       tasks = await db
         .select({
-          taskId: approvalTasks.id,
+          taskId: sql<number>`MIN(${approvalTasks.id})`.as('taskId'),
           instanceId: approvalTasks.instanceId,
           stageId: approvalTasks.stageId,
           stageName: approvalStages.stageName,
@@ -175,15 +176,24 @@ export const requestsRouter = router({
           requestId: approvalInstances.requestId,
           workflowId: approvalInstances.workflowId,
           workflowName: approvalWorkflows.name,
-          taskCreatedAt: approvalTasks.createdAt,
-          assignedToId: approvalTasks.assignedTo,
+          taskCreatedAt: sql<Date>`MIN(${approvalTasks.createdAt})`.as('taskCreatedAt'),
+          assignedToId: sql<number>`MIN(${approvalTasks.assignedTo})`.as('assignedToId'),
         })
         .from(approvalTasks)
         .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
         .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
         .innerJoin(approvalWorkflows, eq(approvalInstances.workflowId, approvalWorkflows.id))
         .where(eq(approvalTasks.status, "pending"))
-        .orderBy(desc(approvalTasks.createdAt));
+        .groupBy(
+          approvalTasks.instanceId,
+          approvalTasks.stageId,
+          approvalStages.stageName,
+          approvalStages.stageOrder,
+          approvalInstances.requestId,
+          approvalInstances.workflowId,
+          approvalWorkflows.name
+        )
+        .orderBy(desc(sql`MIN(${approvalTasks.createdAt})`));
     } else {
       // Regular users only see tasks assigned to them
       tasks = await db

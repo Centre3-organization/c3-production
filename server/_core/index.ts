@@ -16,6 +16,7 @@ import {
   authLimiter,
   csrfTokenSetter,
 } from "../middleware";
+import formPdfRouter from "../modules/forms/formPdf.route";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -82,6 +83,9 @@ async function startServer() {
   
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+  
+  // Form PDF generation route
+  app.use("/api/forms", formPdfRouter);
   
   // tRPC API
   app.use(

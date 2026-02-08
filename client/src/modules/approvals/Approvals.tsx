@@ -342,6 +342,15 @@ export default function Approvals() {
     link.href = generatedQrCode;
     link.click();
   };
+  
+  const handleDownloadPdf = (requestId: number) => {
+    // Open the PDF in a new tab for print/download
+    const token = localStorage.getItem("centre3_token");
+    const url = `/api/forms/pdf/${requestId}${token ? `?token=${encodeURIComponent(token)}` : ''}`;
+    window.open(url, '_blank');
+  };
+  
+  const [pdfLoading, setPdfLoading] = useState<number | null>(null);
 
   // Stage progress component
   const StageProgress = ({ currentStage, totalStages, stageName }: { currentStage: number; totalStages: number; stageName: string }) => (
@@ -885,8 +894,18 @@ export default function Approvals() {
           <DialogFooter className="flex gap-2">
             <Button variant="outline" onClick={handleDownloadQr} className="gap-2">
               <Download className="h-4 w-4" />
-              {t("approvals.downloadQr", "Download")}
+              {t("approvals.downloadQr", "Download QR")}
             </Button>
+            {selectedRequest?.request?.id && (
+              <Button 
+                variant="outline" 
+                onClick={() => handleDownloadPdf(selectedRequest.request.id)} 
+                className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+              >
+                <FileText className="h-4 w-4" />
+                {t("approvals.downloadPdf", "Download Form PDF")}
+              </Button>
+            )}
             <Button onClick={() => setQrResultDialogOpen(false)}>
               {t("common.done", "Done")}
             </Button>
@@ -1079,28 +1098,60 @@ export default function Approvals() {
                       const actionColors: Record<string, string> = {
                         approved: "bg-green-50 border-green-200 text-green-800",
                         rejected: "bg-red-50 border-red-200 text-red-800",
+                        decision_made: "bg-blue-50 border-blue-200 text-blue-800",
                         info_requested: "bg-amber-50 border-amber-200 text-amber-800",
                         submitted: "bg-blue-50 border-blue-200 text-blue-800",
                         escalated: "bg-purple-50 border-purple-200 text-purple-800",
+                        workflow_started: "bg-gray-50 border-gray-200 text-gray-800",
+                        workflow_completed: "bg-green-50 border-green-200 text-green-800",
+                        stage_completed: "bg-green-50 border-green-200 text-green-800",
+                        task_assigned: "bg-blue-50 border-blue-200 text-blue-800",
+                        sent_back: "bg-amber-50 border-amber-200 text-amber-800",
+                        clarification_requested: "bg-amber-50 border-amber-200 text-amber-800",
+                        clarification_provided: "bg-cyan-50 border-cyan-200 text-cyan-800",
+                        task_reassigned: "bg-purple-50 border-purple-200 text-purple-800",
                       };
                       const actionIcons: Record<string, React.ReactNode> = {
                         approved: <CheckCircle2 className="h-4 w-4 text-green-600" />,
                         rejected: <XCircle className="h-4 w-4 text-red-600" />,
+                        decision_made: <CheckCircle2 className="h-4 w-4 text-blue-600" />,
                         info_requested: <HelpCircle className="h-4 w-4 text-amber-600" />,
                         submitted: <Send className="h-4 w-4 text-blue-600" />,
                         escalated: <ArrowUpRight className="h-4 w-4 text-purple-600" />,
+                        workflow_started: <Zap className="h-4 w-4 text-gray-600" />,
+                        workflow_completed: <CheckCheck className="h-4 w-4 text-green-600" />,
+                        stage_completed: <CheckCircle2 className="h-4 w-4 text-green-600" />,
+                        task_assigned: <User className="h-4 w-4 text-blue-600" />,
+                        sent_back: <ArrowLeft className="h-4 w-4 text-amber-600" />,
+                        clarification_requested: <HelpCircle className="h-4 w-4 text-amber-600" />,
+                        clarification_provided: <MessageSquare className="h-4 w-4 text-cyan-600" />,
+                        task_reassigned: <RefreshCw className="h-4 w-4 text-purple-600" />,
                       };
                       const actionLabels: Record<string, string> = {
                         approved: "Approved",
                         rejected: "Rejected",
+                        decision_made: "Decision Made",
                         info_requested: "Clarification Requested",
                         submitted: "Submitted",
                         escalated: "Escalated",
+                        workflow_started: "Workflow Started",
+                        workflow_completed: "Workflow Completed",
+                        stage_completed: "Stage Completed",
+                        task_assigned: "Task Assigned",
+                        sent_back: "Sent Back",
+                        clarification_requested: "Clarification Requested",
+                        clarification_provided: "Clarification Provided",
+                        task_reassigned: "Task Reassigned",
                       };
                       
                       const details = history.details as any || {};
-                      const stageName = details.stageName || "Unknown Stage";
-                      const comments = details.comments || details.reason || "";
+                      // Better fallback: use details.stageName, then workflowName, then derive from actionType
+                      const stageName = details.stageName || details.workflowName || 
+                        (history.actionType === "workflow_started" ? "Started" :
+                         history.actionType === "workflow_completed" ? "Completed" :
+                         history.actionType === "task_assigned" ? "Assignment" : 
+                         `Stage`);
+                      const comments = details.comments || details.reason || details.response || "";
                       
                       return (
                         <div key={idx} className={`p-3 rounded-lg border ${actionColors[history.actionType] || "bg-gray-50 border-gray-200"}`}>
@@ -1143,6 +1194,16 @@ export default function Approvals() {
             <Button variant="outline" onClick={() => setDetailsDialogOpen(false)}>
               {t("common.close", "Close")}
             </Button>
+            {selectedRequest?.request?.id && (
+              <Button
+                variant="outline"
+                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                onClick={() => handleDownloadPdf(selectedRequest.request.id)}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                {t("approvals.downloadPdf", "Download Form PDF")}
+              </Button>
+            )}
             <Button
               variant="outline"
               className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"

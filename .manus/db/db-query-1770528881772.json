@@ -1,0 +1,14 @@
+{
+  "query": "SELECT \n  COUNT(*) as total_pending_tasks,\n  COUNT(DISTINCT CONCAT(ai.requestId, '-', at2.stageId)) as unique_request_stages\nFROM approvalTasks at2\nJOIN approvalInstances ai ON at2.instanceId = ai.id\nWHERE at2.status = 'pending'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT \n  COUNT(*) as total_pending_tasks,\n  COUNT(DISTINCT CONCAT(ai.requestId, '-', at2.stageId)) as unique_request_stages\nFROM approvalTasks at2\nJOIN approvalInstances ai ON at2.instanceId = ai.id\nWHERE at2.status = 'pending'",
+  "rows": [
+    {
+      "total_pending_tasks": "197",
+      "unique_request_stages": "60"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_pending_tasks\tunique_request_stages\n197\t60\n",
+  "stderr": "",
+  "execution_time_ms": 1528
+}

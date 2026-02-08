@@ -1,0 +1,80 @@
+{
+  "query": "SELECT at2.instanceId, ai.requestId, at2.stageId, at2.status, COUNT(*) as task_count\nFROM approvalTasks at2\nJOIN approvalInstances ai ON at2.instanceId = ai.id\nWHERE at2.status = 'pending'\nGROUP BY at2.instanceId, ai.requestId, at2.stageId, at2.status\nHAVING COUNT(*) > 1\nLIMIT 10",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT at2.instanceId, ai.requestId, at2.stageId, at2.status, COUNT(*) as task_count\nFROM approvalTasks at2\nJOIN approvalInstances ai ON at2.instanceId = ai.id\nWHERE at2.status = 'pending'\nGROUP BY at2.instanceId, ai.requestId, at2.stageId, at2.status\nHAVING COUNT(*) > 1\nLIMIT 10",
+  "rows": [
+    {
+      "instanceId": "30048",
+      "requestId": "90043",
+      "stageId": "30001",
+      "status": "pending",
+      "task_count": "8"
+    },
+    {
+      "instanceId": "30056",
+      "requestId": "90051",
+      "stageId": "30001",
+      "status": "pending",
+      "task_count": "8"
+    },
+    {
+      "instanceId": "30043",
+      "requestId": "90038",
+      "stageId": "30001",
+      "status": "pending",
+      "task_count": "8"
+    },
+    {
+      "instanceId": "30039",
+      "requestId": "90032",
+      "stageId": "30004",
+      "status": "pending",
+      "task_count": "2"
+    },
+    {
+      "instanceId": "30051",
+      "requestId": "90046",
+      "stageId": "30001",
+      "status": "pending",
+      "task_count": "8"
+    },
+    {
+      "instanceId": "30042",
+      "requestId": "90037",
+      "stageId": "30001",
+      "status": "pending",
+      "task_count": "8"
+    },
+    {
+      "instanceId": "30040",
+      "requestId": "90035",
+      "stageId": "30001",
+      "status": "pending",
+      "task_count": "8"
+    },
+    {
+      "instanceId": "30041",
+      "requestId": "90036",
+      "stageId": "30001",
+      "status": "pending",
+      "task_count": "8"
+    },
+    {
+      "instanceId": "30047",
+      "requestId": "90042",
+      "stageId": "30001",
+      "status": "pending",
+      "task_count": "8"
+    },
+    {
+      "instanceId": "30050",
+      "requestId": "90045",
+      "stageId": "30001",
+      "status": "pending",
+      "task_count": "8"
+    }
+  ],
+  "messages": [],
+  "stdout": "instanceId\trequestId\tstageId\tstatus\ttask_count\n30048\t90043\t30001\tpending\t8\n30056\t90051\t30001\tpending\t8\n30043\t90038\t30001\tpending\t8\n30039\t90032\t30004\tpending\t2\n30051\t90046\t30001\tpending\t8\n30042\t90037\t30001\tpending\t8\n30040\t90035\t30001\tpending\t8\n30041\t90036\t30001\tpending\t8\n30047\t90042\t30001\tpending\t8\n30050\t90045\t30001\tpending\t8\n",
+  "stderr": "",
+  "execution_time_ms": 1559
+}

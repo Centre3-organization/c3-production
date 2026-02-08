@@ -299,6 +299,7 @@ export async function startWorkflow(context: RequestContext): Promise<WorkflowRe
       actionByType: "system",
       details: {
         workflowName: workflow.name,
+        stageName: firstStage.stageName,
       },
     });
 
@@ -733,6 +734,17 @@ export async function processApprovalDecision(
       })
       .where(eq(approvalTasks.id, taskId));
 
+    // Get instance and stage info (needed for history details)
+    const [instance] = await db
+      .select()
+      .from(approvalInstances)
+      .where(eq(approvalInstances.id, task.instanceId));
+
+    const [stage] = await db
+      .select()
+      .from(approvalStages)
+      .where(eq(approvalStages.id, task.stageId));
+
     // Record decision in history
     await db.insert(approvalHistory).values({
       instanceId: task.instanceId,
@@ -744,19 +756,9 @@ export async function processApprovalDecision(
       details: {
         decision,
         comments,
+        stageName: stage?.stageName || "Unknown",
       },
     });
-
-    // Get instance and stage info
-    const [instance] = await db
-      .select()
-      .from(approvalInstances)
-      .where(eq(approvalInstances.id, task.instanceId));
-
-    const [stage] = await db
-      .select()
-      .from(approvalStages)
-      .where(eq(approvalStages.id, task.stageId));
 
     if (!instance || !stage) {
       return { success: false, error: "Instance or stage not found" };
@@ -780,6 +782,7 @@ export async function processApprovalDecision(
         actionByType: "user",
         details: {
           newStatus: "rejected",
+          stageName: stage?.stageName || "Unknown",
         },
       });
 
@@ -807,6 +810,7 @@ export async function processApprovalDecision(
         details: {
           questions: infoRequest?.questions,
           requiredDocuments: infoRequest?.requiredDocuments,
+          stageName: stage?.stageName || "Unknown",
         },
       });
 
@@ -919,6 +923,7 @@ export async function processApprovalDecision(
           actionByType: "system",
           details: {
             newStatus: "approved",
+            stageName: stage.stageName,
           },
         });
 
@@ -1160,6 +1165,7 @@ export async function processSendBack(
         targetGroupId: options.targetGroupId,
         reason: options.reason,
         requiredActions: options.requiredActions,
+        stageName: currentStage?.stageName || "Unknown",
       },
     });
 
@@ -1315,6 +1321,7 @@ export async function processSendBack(
         assignee: sendBackToUserId,
         reason: options.reason,
         requiredActions: options.requiredActions,
+        stageName: currentStage?.stageName || "Unknown",
       },
     });
 
@@ -1398,6 +1405,7 @@ export async function processClarificationResponse(
       details: {
         response,
         attachments,
+        stageName: "Clarification",
       },
     });
 
@@ -1429,6 +1437,7 @@ export async function processClarificationResponse(
         details: {
           assignee: sentBackBy,
           reason: "Clarification provided, ready for review",
+          stageName: "Review",
         },
       });
     }

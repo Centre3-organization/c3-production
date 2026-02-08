@@ -1624,3 +1624,19 @@ Create a unified data source system that can pull options from anywhere in the p
 - [ ] Add company branding configuration (logo, colors, footer)
 - [ ] Add bilingual support (Arabic/English) for form content
 - [ ] Link generated forms to approved requests
+
+
+## PDF Download/Print for Forms (Feb 8, 2026)
+- [x] Build server-side PDF generation with QR code for approved requests
+- [x] Add Download PDF button to approval screen and request details
+- [x] Test PDF generation and download flow end-to-end
+
+
+## Approval Fixes (Feb 8, 2026)
+- [x] Fix duplicate requests showing in approvals list (admin users seeing 197 tasks instead of 60 unique requests)
+- [x] Deduplicate by grouping tasks per request+stage combination using SQL GROUP BY
+- [x] Fix "Unknown Stage" names in approval history timeline
+- [x] Add stageName to all approval history records (decision_made, workflow_completed, info_requested, sent_back, clarification_requested, etc.)
+- [x] Improve history display with more action types (workflow_started, stage_completed, task_assigned, clarification_provided, task_reassigned)
+- [x] Better fallback logic for stageName in existing history records without stageName
+- [x] Write and pass unit tests for deduplication logic and stageName resolution
