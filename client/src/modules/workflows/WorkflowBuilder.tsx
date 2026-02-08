@@ -582,7 +582,7 @@ export function WorkflowBuilder() {
                   key={workflow.id}
                   className={`cursor-pointer transition-colors ${
                     selectedWorkflow === workflow.id
-                      ? "border-primary bg-primary/5"
+                      ? "border-primary bg-[#5B2C93]/5"
                       : "hover:bg-[#F5F5F5]/50"
                   }`}
                   onClick={() => setSelectedWorkflow(workflow.id)}
@@ -591,7 +591,7 @@ export function WorkflowBuilder() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <Workflow className="h-4 w-4 text-primary shrink-0" />
+                          <Workflow className="h-4 w-4 text-[#5B2C93] shrink-0" />
                           <span className="font-medium truncate">{workflow.name}</span>
                         </div>
                         <div className="flex items-center gap-2 mt-1">
@@ -661,7 +661,7 @@ export function WorkflowBuilder() {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    className="text-destructive"
+                    className="text-[#FF6B6B]"
                     onClick={() => handleDeleteWorkflow(selectedWorkflow, workflowDetails.workflow.name)}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
@@ -713,7 +713,7 @@ export function WorkflowBuilder() {
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-4">
-                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-medium">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#5B2C93] text-white font-medium">
                               {index + 1}
                             </div>
                             <div>

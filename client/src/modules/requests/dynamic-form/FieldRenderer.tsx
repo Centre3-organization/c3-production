@@ -106,7 +106,7 @@ function SiteTypeField({
   if (isLoading) {
     return (
       <div className="space-y-1.5">
-        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+        <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
           {getLabel()}
           {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
         </Label>
@@ -171,7 +171,7 @@ function ZoneTypeField({
   if (isLoading) {
     return (
       <div className="space-y-1.5">
-        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+        <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
           {getLabel()}
           {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
         </Label>
@@ -236,7 +236,7 @@ function AreaTypeField({
   if (isLoading) {
     return (
       <div className="space-y-1.5">
-        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+        <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
           {getLabel()}
           {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
         </Label>
@@ -361,7 +361,7 @@ function UserLookupField({
 
   return (
     <div className="space-y-1.5">
-      <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+      <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
         {getLabel()}
         {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
       </Label>
@@ -540,7 +540,7 @@ function MultiUserLookupField({
 
   return (
     <div className="space-y-1.5">
-      <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+      <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
         {getLabel()}
         {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
       </Label>
@@ -711,7 +711,7 @@ function ActivitySelectorField({
   if (loadingMain) {
     return (
       <div className="space-y-1.5">
-        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+        <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
           {getLabel()}
           {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
         </Label>
@@ -726,7 +726,7 @@ function ActivitySelectorField({
     <div className="space-y-4">
       {/* Main Activity Selector */}
       <div className="space-y-1.5">
-        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+        <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
           <Activity className="h-3.5 w-3.5" />
           {isRTL ? "النشاط الرئيسي" : "Main Activity"}
           {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
@@ -752,7 +752,7 @@ function ActivitySelectorField({
       {/* Sub-Activity Selector */}
       {selectedMainActivityId && (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             <ClipboardList className="h-3.5 w-3.5" />
             {isRTL ? "النشاط الفرعي" : "Sub-Activity"}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
@@ -1009,7 +1009,7 @@ export function FieldRenderer({
     case "phone":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1032,7 +1032,7 @@ export function FieldRenderer({
     case "number":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1056,7 +1056,7 @@ export function FieldRenderer({
     case "textarea":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1078,7 +1078,7 @@ export function FieldRenderer({
     case "date":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1099,7 +1099,7 @@ export function FieldRenderer({
     case "datetime":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1120,7 +1120,7 @@ export function FieldRenderer({
     case "dropdown":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1157,7 +1157,7 @@ export function FieldRenderer({
       const selectedValues = Array.isArray(value) ? value : [];
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1214,7 +1214,7 @@ export function FieldRenderer({
     case "radio":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1272,7 +1272,7 @@ export function FieldRenderer({
       const checkedValues = Array.isArray(value) ? value : [];
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1316,7 +1316,7 @@ export function FieldRenderer({
 
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
@@ -1424,7 +1424,7 @@ export function FieldRenderer({
       }
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+          <Label className="text-sm font-medium text-[#2C2C2C]">
             {getLabel()}
           </Label>
           <Input
@@ -1514,7 +1514,7 @@ export function FieldRenderer({
     default:
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+          <Label className="text-sm font-medium text-[#2C2C2C]">
             {getLabel()} (Unsupported: {field.fieldType})
           </Label>
           <Input

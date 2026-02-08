@@ -99,7 +99,7 @@ export function DelegationManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium">Delegation Management</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Delegation Management</h1>
           <p className="text-[#6B6B6B]">Delegate your approval authority to other users</p>
         </div>
         <Button onClick={() => setIsCreateDialogOpen(true)}>

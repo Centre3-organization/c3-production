@@ -256,7 +256,8 @@ export default function Areas() {
               <Button variant="ghost" size="icon" className="h-8 w-8 -ml-2">
                 <ArrowLeft className="h-5 w-5 text-[#6B6B6B]" />
               </Button>
-              <h1 className="text-xl font-medium text-[#2C2C2C]">Area Management</h1>
+              <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Area Management</h1>
+              <p className="text-sm text-[#6B6B6B]">Manage areas within security zones</p>
               <ChevronDown className="h-5 w-5 text-[#5B2C93]" />
             </div>
             <div className="flex items-center gap-2">
@@ -503,7 +504,7 @@ export default function Areas() {
                 
                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Parent Zone <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Parent Zone <span className="text-[#FF6B6B]">*</span></Label>
                     <Select 
                       value={formData.zoneId}
                       onValueChange={(value) => setFormData({ ...formData, zoneId: value })}
@@ -517,7 +518,7 @@ export default function Areas() {
                     </Select>
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Area Type</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Area Type</Label>
                     <Select 
                       value={formData.areaTypeId}
                       onValueChange={(value) => setFormData({ ...formData, areaTypeId: value })}
@@ -532,7 +533,7 @@ export default function Areas() {
                   </div>
                   
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Area Code <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Area Code <span className="text-[#FF6B6B]">*</span></Label>
                     <Input 
                       value={formData.code}
                       onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -540,7 +541,7 @@ export default function Areas() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Area Name <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Area Name <span className="text-[#FF6B6B]">*</span></Label>
                     <Input 
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -549,7 +550,7 @@ export default function Areas() {
                   </div>
                   
                   <div className="space-y-1 md:col-span-2">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Description</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Description</Label>
                     <Textarea 
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -559,7 +560,7 @@ export default function Areas() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Floor</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Floor</Label>
                     <Input 
                       value={formData.floor}
                       onChange={(e) => setFormData({ ...formData, floor: e.target.value })}
@@ -567,7 +568,7 @@ export default function Areas() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Max Capacity</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Max Capacity</Label>
                     <Input 
                       type="number"
                       value={formData.maxCapacity}
@@ -577,7 +578,7 @@ export default function Areas() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Rack Count</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Rack Count</Label>
                     <Input 
                       type="number"
                       value={formData.rackCount}
@@ -586,7 +587,7 @@ export default function Areas() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Status</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Status</Label>
                     <Select 
                       value={formData.status}
                       onValueChange={(value: "active" | "inactive" | "maintenance") => setFormData({ ...formData, status: value })}
@@ -612,7 +613,7 @@ export default function Areas() {
                 
                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Power Type</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Power Type</Label>
                     <Select 
                       value={formData.infrastructureSpecs.powerType}
                       onValueChange={(value: "AC" | "DC" | "Both") => setFormData({ 
@@ -629,7 +630,7 @@ export default function Areas() {
                     </Select>
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Cooling Type</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Cooling Type</Label>
                     <Select 
                       value={formData.infrastructureSpecs.coolingType}
                       onValueChange={(value: "Air" | "Liquid" | "Immersion") => setFormData({ 

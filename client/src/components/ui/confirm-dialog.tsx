@@ -36,8 +36,8 @@ const variantConfig = {
   warning: {
     bg: "bg-[#FFF4E5]",
     icon: AlertTriangle,
-    iconColor: "text-amber-500",
-    confirmButton: "bg-amber-600 hover:bg-amber-700 text-white",
+    iconColor: "text-[#FFB84D]",
+    confirmButton: "bg-[#FFB84D] hover:bg-[#E5A544] text-white",
   },
   success: {
     bg: "bg-[#E8F9F8]",

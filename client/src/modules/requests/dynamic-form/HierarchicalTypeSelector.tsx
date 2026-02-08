@@ -258,7 +258,7 @@ export function HierarchicalTypeSelector({
             return (
               <span key={id} className="flex items-center">
                 {index > 0 && <ChevronRight className="h-3 w-3 mx-1" />}
-                <span className={cn(index === selectionPath.length - 1 && "font-medium text-foreground")}>
+                <span className={cn(index === selectionPath.length - 1 && "font-medium text-[#2C2C2C]")}>
                   {getDisplayName(item)}
                 </span>
               </span>

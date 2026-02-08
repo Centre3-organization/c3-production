@@ -302,7 +302,7 @@ export default function MaterialTypes() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Name *</Label>
+                <Label className="text-sm font-medium text-[#2C2C2C]">Name *</Label>
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -310,7 +310,7 @@ export default function MaterialTypes() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Code *</Label>
+                <Label className="text-sm font-medium text-[#2C2C2C]">Code *</Label>
                 <Input
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -319,7 +319,7 @@ export default function MaterialTypes() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Name (Arabic)</Label>
+              <Label className="text-sm font-medium text-[#2C2C2C]">Name (Arabic)</Label>
               <Input
                 value={formData.nameAr}
                 onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
@@ -328,7 +328,7 @@ export default function MaterialTypes() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Description</Label>
+              <Label className="text-sm font-medium text-[#2C2C2C]">Description</Label>
               <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -337,7 +337,7 @@ export default function MaterialTypes() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Display Order</Label>
+              <Label className="text-sm font-medium text-[#2C2C2C]">Display Order</Label>
               <Input
                 type="number"
                 value={formData.displayOrder}
@@ -364,14 +364,14 @@ export default function MaterialTypes() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Name *</Label>
+                <Label className="text-sm font-medium text-[#2C2C2C]">Name *</Label>
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Code *</Label>
+                <Label className="text-sm font-medium text-[#2C2C2C]">Code *</Label>
                 <Input
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -379,7 +379,7 @@ export default function MaterialTypes() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Name (Arabic)</Label>
+              <Label className="text-sm font-medium text-[#2C2C2C]">Name (Arabic)</Label>
               <Input
                 value={formData.nameAr}
                 onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
@@ -387,7 +387,7 @@ export default function MaterialTypes() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Description</Label>
+              <Label className="text-sm font-medium text-[#2C2C2C]">Description</Label>
               <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -395,7 +395,7 @@ export default function MaterialTypes() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Display Order</Label>
+              <Label className="text-sm font-medium text-[#2C2C2C]">Display Order</Label>
               <Input
                 type="number"
                 value={formData.displayOrder}

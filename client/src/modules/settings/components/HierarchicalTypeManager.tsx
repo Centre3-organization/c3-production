@@ -447,7 +447,7 @@ export function HierarchicalTypeManager({
       </div>
 
       {/* Tree View */}
-      <div className="border rounded-lg p-2 bg-card">
+      <div className="border rounded-lg p-2 bg-white">
         {treeData.length === 0 ? (
           <div className="text-center py-8 text-[#6B6B6B]">
             No {title.toLowerCase()} found. Click "Add {title.replace(/s$/, "")}" to create one.

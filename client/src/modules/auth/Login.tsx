@@ -173,9 +173,9 @@ export default function Login() {
             <div className="flex items-center justify-center gap-2 text-sm text-[#6B6B6B]">
               <span>© 2026 Centre3</span>
               <span>•</span>
-              <a href="#" className="hover:text-primary">Privacy Policy</a>
+              <a href="#" className="hover:text-[#5B2C93]">Privacy Policy</a>
               <span>•</span>
-              <a href="#" className="hover:text-primary">Terms of Service</a>
+              <a href="#" className="hover:text-[#5B2C93]">Terms of Service</a>
             </div>
           </div>
         </div>

@@ -88,7 +88,7 @@ export function FormPreview({ open, onOpenChange, requestTypeId, typeName }: For
         <div className="space-y-2">
           <Label className="flex items-center gap-1">
             {label}
-            {field.isRequired && <span className="text-destructive">*</span>}
+            {field.isRequired && <span className="text-[#FF6B6B]">*</span>}
           </Label>
 
           {field.fieldType === "text" && (
@@ -253,7 +253,7 @@ export function FormPreview({ open, onOpenChange, requestTypeId, typeName }: For
                 <TabsTrigger
                   key={section.code}
                   value={section.code}
-                  className="flex-1 min-w-[120px] data-[state=active]:bg-background"
+                  className="flex-1 min-w-[120px] data-[state=active]:bg-[#F5F5F5]"
                 >
                   {isRTL ? section.nameAr : section.name}
                   {section.isRepeatable && (

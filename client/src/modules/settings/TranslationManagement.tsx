@@ -289,8 +289,8 @@ export default function TranslationManagement() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight flex items-center gap-2">
-            <Languages className="h-6 w-6 text-primary" />
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
+            <Languages className="h-6 w-6 text-[#5B2C93]" />
             {isRTL ? 'إدارة الترجمات' : 'Translation Management'}
           </h1>
           <p className="text-sm text-[#6B6B6B] mt-1">
@@ -316,7 +316,7 @@ export default function TranslationManagement() {
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-medium flex items-center gap-2">
-              <Globe className="h-5 w-5 text-primary" />
+              <Globe className="h-5 w-5 text-[#5B2C93]" />
               {isRTL ? 'اكتمال الترجمة' : 'Translation Completeness'}
             </CardTitle>
             <Badge variant={completionPercentage === 100 ? 'default' : completionPercentage >= 80 ? 'secondary' : 'destructive'}>

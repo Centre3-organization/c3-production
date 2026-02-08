@@ -38,9 +38,9 @@ const colorMap = {
   },
   warning: {
     bg: "bg-[#FFF4E5]",
-    icon: "text-amber-500",
+    icon: "text-[#FFB84D]",
     border: "border-[#FFB84D]",
-    button: "bg-amber-600 hover:bg-amber-700 text-white",
+    button: "bg-[#FFB84D] hover:bg-[#E5A544] text-white",
   },
   info: {
     bg: "bg-[#E8DCF5]",

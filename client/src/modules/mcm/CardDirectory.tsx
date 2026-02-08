@@ -128,8 +128,8 @@ export default function CardDirectory() {
   const getCompanyTypeBadge = (type: string) => {
     const colors: Record<string, string> = {
       centre3: "bg-[#E8DCF5]/10 text-[#5B2C93]",
-      contractor: "bg-[#FFF4E5]0/10 text-[#FFB84D]",
-      subcontractor: "bg-[#E8DCF5]0/10 text-[#5B2C93]",
+      contractor: "bg-[#FFF4E5]/10 text-[#FFB84D]",
+      subcontractor: "bg-[#E8DCF5]/10 text-[#5B2C93]",
       client: "bg-[#E8F9F8]/10 text-[#4ECDC4]",
     };
     return (
@@ -160,7 +160,7 @@ export default function CardDirectory() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-medium">{t("mcm.title", "Magnetic Card Management")}</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{t("mcm.title", "Magnetic Card Management")}</h1>
           <p className="text-[#6B6B6B]">
             {t("mcm.subtitle", "Manage access cards for employees and contractors")}
           </p>
@@ -357,7 +357,7 @@ export default function CardDirectory() {
               {t("mcm.blockCardConfirm", "Are you sure you want to block this card? This will immediately revoke all access.")}
             </p>
             {selectedCard && (
-              <div className="p-3 rounded-lg bg-accent/50">
+              <div className="p-3 rounded-lg bg-[#E8DCF5]/50">
                 <p className="font-medium">{selectedCard.fullName}</p>
                 <p className="text-sm text-[#6B6B6B]">{selectedCard.cardNumber}</p>
               </div>

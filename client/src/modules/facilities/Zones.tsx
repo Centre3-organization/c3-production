@@ -300,7 +300,8 @@ export default function Zones() {
               <Button variant="ghost" size="icon" className="h-8 w-8 -ml-2">
                 <ArrowLeft className="h-5 w-5 text-[#6B6B6B]" />
               </Button>
-              <h1 className="text-xl font-medium text-[#2C2C2C]">Security Zones</h1>
+              <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Security Zones</h1>
+              <p className="text-sm text-[#6B6B6B]">Manage security zones and access levels</p>
               <ChevronDown className="h-5 w-5 text-[#5B2C93]" />
             </div>
             <div className="flex items-center gap-2">
@@ -559,7 +560,7 @@ export default function Zones() {
                 
                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Parent Site <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Parent Site <span className="text-[#FF6B6B]">*</span></Label>
                     <Select 
                       value={formData.siteId}
                       onValueChange={(value) => setFormData({ ...formData, siteId: value })}
@@ -573,7 +574,7 @@ export default function Zones() {
                     </Select>
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Zone Type</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Zone Type</Label>
                     <Select 
                       value={formData.zoneTypeId}
                       onValueChange={(value) => setFormData({ ...formData, zoneTypeId: value })}
@@ -588,7 +589,7 @@ export default function Zones() {
                   </div>
                   
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Zone Code <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Zone Code <span className="text-[#FF6B6B]">*</span></Label>
                     <Input 
                       value={formData.code}
                       onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -596,7 +597,7 @@ export default function Zones() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Zone Name <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Zone Name <span className="text-[#FF6B6B]">*</span></Label>
                     <Input 
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -605,7 +606,7 @@ export default function Zones() {
                   </div>
                   
                   <div className="space-y-1 md:col-span-2">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Description</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Description</Label>
                     <Textarea 
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -615,7 +616,7 @@ export default function Zones() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Security Level</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Security Level</Label>
                     <Select 
                       value={formData.securityLevel}
                       onValueChange={(value: "low" | "medium" | "high" | "critical") => setFormData({ ...formData, securityLevel: value })}
@@ -630,7 +631,7 @@ export default function Zones() {
                     </Select>
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Access Policy</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Access Policy</Label>
                     <Select 
                       value={formData.accessPolicy}
                       onValueChange={(value: "open" | "supervised" | "restricted" | "prohibited") => setFormData({ ...formData, accessPolicy: value })}
@@ -646,7 +647,7 @@ export default function Zones() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Max Capacity</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Max Capacity</Label>
                     <Input 
                       type="number"
                       value={formData.maxCapacity}
@@ -655,7 +656,7 @@ export default function Zones() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Status</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Status</Label>
                     <Select 
                       value={formData.status}
                       onValueChange={(value: "active" | "inactive" | "maintenance") => setFormData({ ...formData, status: value })}

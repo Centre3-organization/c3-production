@@ -81,10 +81,10 @@ export default function Home() {
     draft: "bg-[#B0B0B0]",
     pending_l1: "bg-[#FFB84D]",
     pending_manual: "bg-[#5B2C93]",
-    approved: "bg-[#E8F9F8]0",
+    approved: "bg-[#E8F9F8]",
     rejected: "bg-[#FF6B6B]",
     expired: "bg-[#B0B0B0]",
-    cancelled: "bg-[#F5F5F5]0",
+    cancelled: "bg-[#F5F5F5]",
   };
 
   return (
@@ -92,7 +92,7 @@ export default function Home() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight text-foreground">{t('dashboard.title')}</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{t('dashboard.title')}</h1>
           <p className="text-sm text-[#6B6B6B]">{t('dashboard.subtitle')}</p>
         </div>
         <Button 
@@ -110,11 +110,11 @@ export default function Home() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {/* Active Visitors - Only show to users with analytics permission */}
         {canViewAnalytics && (
-          <Card className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow">
+          <Card className="border border-[#E0E0E0]/50 bg-white shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">{t('dashboard.activeVisitors')}</CardTitle>
-              <div className="p-2 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-lg">
-                <Users className="h-4 w-4 text-[#6B6B6B] dark:text-[#B0B0B0]" />
+              <CardTitle className="text-sm font-medium text-[#2C2C2C] tracking-wider">{t('dashboard.activeVisitors')}</CardTitle>
+              <div className="p-2 bg-[#F5F5F5] rounded-lg">
+                <Users className="h-4 w-4 text-[#6B6B6B]" />
               </div>
             </CardHeader>
             <CardContent>
@@ -122,7 +122,7 @@ export default function Home() {
                 <Skeleton className="h-8 w-16" />
               ) : (
                 <>
-                  <div className="text-2xl font-medium text-foreground">{stats?.activeVisitors || 0}</div>
+                  <div className="text-2xl font-medium text-[#2C2C2C]">{stats?.activeVisitors || 0}</div>
                   <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
                     <ArrowUpRight className="h-3 w-3 text-[#4ECDC4] mr-1" /> 
                     <span className="text-[#4ECDC4]">+12%</span>
@@ -137,13 +137,13 @@ export default function Home() {
         {/* Pending Approvals - Only show to users with approval permission */}
         {canViewApprovals && (
           <Card 
-            className="border border-[#FFB84D] dark:border-[#FFB84D]/50 bg-[#FFF4E5]/50 dark:bg-[#FFB84D]/10 shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            className="border border-[#FFB84D] bg-[#FFF4E5]/50 shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
             onClick={() => navigate("/approvals/l1")}
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-medium text-[#FFB84D] dark:text-[#FFB84D] uppercase tracking-wider">{t('dashboard.pendingApprovals')}</CardTitle>
-              <div className="p-2 bg-[#FFF4E5] dark:bg-[#FFB84D]/10 rounded-lg">
-                <Clock className="h-4 w-4 text-[#FFB84D] dark:text-[#FFB84D]" />
+              <CardTitle className="text-xs font-medium text-[#FFB84D] uppercase tracking-wider">{t('dashboard.pendingApprovals')}</CardTitle>
+              <div className="p-2 bg-[#FFF4E5] rounded-lg">
+                <Clock className="h-4 w-4 text-[#FFB84D]" />
               </div>
             </CardHeader>
             <CardContent>
@@ -151,8 +151,8 @@ export default function Home() {
                 <Skeleton className="h-8 w-16" />
               ) : (
                 <>
-                  <div className="text-2xl font-medium text-[#FFB84D] dark:text-[#FFB84D]">{stats?.pendingApprovals || 0}</div>
-                  <p className="text-xs text-[#FFB84D] dark:text-[#FFB84D] mt-1 flex items-center">
+                  <div className="text-2xl font-medium text-[#FFB84D]">{stats?.pendingApprovals || 0}</div>
+                  <p className="text-xs text-[#FFB84D] mt-1 flex items-center">
                     <AlertTriangle className="h-3 w-3 mr-1" /> 
                     {t('common.actionRequired')}
                   </p>
@@ -163,13 +163,13 @@ export default function Home() {
         )}
 
         <Card 
-          className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+          className="border border-[#E0E0E0]/50 bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
           onClick={() => navigate("/requests")}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">{t('dashboard.totalRequests')}</CardTitle>
-            <div className="p-2 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-lg">
-              <FileText className="h-4 w-4 text-[#6B6B6B] dark:text-[#B0B0B0]" />
+            <CardTitle className="text-sm font-medium text-[#2C2C2C] tracking-wider">{t('dashboard.totalRequests')}</CardTitle>
+            <div className="p-2 bg-[#F5F5F5] rounded-lg">
+              <FileText className="h-4 w-4 text-[#6B6B6B]" />
             </div>
           </CardHeader>
           <CardContent>
@@ -177,18 +177,18 @@ export default function Home() {
               <Skeleton className="h-8 w-16" />
             ) : (
               <>
-                <div className="text-2xl font-medium text-foreground">{stats?.totalRequestsThisMonth || 0}</div>
+                <div className="text-2xl font-medium text-[#2C2C2C]">{stats?.totalRequestsThisMonth || 0}</div>
                 <p className="text-xs text-[#6B6B6B] mt-1">{t('common.thisMonth')}</p>
               </>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow">
+        <Card className="border border-[#E0E0E0]/50 bg-white shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">{t('dashboard.approvalRate')}</CardTitle>
-            <div className="p-2 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-lg">
-              <Target className="h-4 w-4 text-[#6B6B6B] dark:text-[#B0B0B0]" />
+            <CardTitle className="text-sm font-medium text-[#2C2C2C] tracking-wider">{t('dashboard.approvalRate')}</CardTitle>
+            <div className="p-2 bg-[#F5F5F5] rounded-lg">
+              <Target className="h-4 w-4 text-[#6B6B6B]" />
             </div>
           </CardHeader>
           <CardContent>
@@ -196,7 +196,7 @@ export default function Home() {
               <Skeleton className="h-8 w-16" />
             ) : (
               <>
-                <div className="text-2xl font-medium text-foreground">{stats?.approvalRate || 0}%</div>
+                <div className="text-2xl font-medium text-[#2C2C2C]">{stats?.approvalRate || 0}%</div>
                 <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
                   <TrendingUp className="h-3 w-3 text-[#4ECDC4] mr-1" />
                   {t('common.vsLastMonth')}
@@ -208,11 +208,11 @@ export default function Home() {
 
         {/* Security Alerts - Only show to users with alerts permission */}
         {canViewAlerts && (
-          <Card className="border border-[#FF6B6B] dark:border-[#FF6B6B]/50 bg-[#FFE5E5]/50 dark:bg-[#FF6B6B]/10/20 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="border border-[#FF6B6B] bg-[#FFE5E5]/50 shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-medium text-[#FF6B6B] dark:text-[#FF6B6B] uppercase tracking-wider">{t('dashboard.securityAlerts')}</CardTitle>
-              <div className="p-2 bg-[#FFE5E5] dark:bg-[#FF6B6B]/10/50 rounded-lg">
-                <ShieldAlert className="h-4 w-4 text-[#FF6B6B] dark:text-[#FF6B6B]" />
+              <CardTitle className="text-xs font-medium text-[#FF6B6B] uppercase tracking-wider">{t('dashboard.securityAlerts')}</CardTitle>
+              <div className="p-2 bg-[#FFE5E5] rounded-lg">
+                <ShieldAlert className="h-4 w-4 text-[#FF6B6B]" />
               </div>
             </CardHeader>
             <CardContent>
@@ -220,8 +220,8 @@ export default function Home() {
                 <Skeleton className="h-8 w-16" />
               ) : (
                 <>
-                  <div className="text-2xl font-medium text-[#FF6B6B] dark:text-[#FF6B6B]">{stats?.securityAlerts || 0}</div>
-                  <p className="text-xs text-[#FF6B6B] dark:text-[#FF6B6B] mt-1">{t('common.critical')}</p>
+                  <div className="text-2xl font-medium text-[#FF6B6B]">{stats?.securityAlerts || 0}</div>
+                  <p className="text-xs text-[#FF6B6B] mt-1">{t('common.critical')}</p>
                 </>
               )}
             </CardContent>
@@ -231,13 +231,13 @@ export default function Home() {
         {/* Facilities - Only show to users with sites permission */}
         {canViewSites && (
           <Card 
-            className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            className="border border-[#E0E0E0]/50 bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
             onClick={() => navigate("/sites")}
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">{t('dashboard.facilities')}</CardTitle>
-              <div className="p-2 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-lg">
-                <Building2 className="h-4 w-4 text-[#6B6B6B] dark:text-[#B0B0B0]" />
+              <CardTitle className="text-sm font-medium text-[#2C2C2C] tracking-wider">{t('dashboard.facilities')}</CardTitle>
+              <div className="p-2 bg-[#F5F5F5] rounded-lg">
+                <Building2 className="h-4 w-4 text-[#6B6B6B]" />
               </div>
             </CardHeader>
             <CardContent>
@@ -245,7 +245,7 @@ export default function Home() {
                 <Skeleton className="h-8 w-16" />
               ) : (
                 <>
-                  <div className="text-2xl font-medium text-foreground">{stats?.sites || 0}</div>
+                  <div className="text-2xl font-medium text-[#2C2C2C]">{stats?.sites || 0}</div>
                   <p className="text-xs text-[#6B6B6B] mt-1">{stats?.zones || 0} {t('nav.zones')} · {stats?.areas || 0} {t('nav.areas')}</p>
                 </>
               )}
@@ -256,7 +256,7 @@ export default function Home() {
 
       {/* Quick Actions Bar - Only show to users with approval or alerts permission */}
       {(canViewApprovals || canViewAlerts) && (
-        <Card className="border-0 bg-[#5B2C93] dark:bg-[#3D1C5E] text-white shadow-lg">
+        <Card className="border-0 bg-[#5B2C93] text-white shadow-lg">
           <CardContent className="py-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -303,7 +303,7 @@ export default function Home() {
       {/* Charts Row - Visitor Traffic & Zone Occupancy - Only show to users with analytics permission */}
       {canViewAnalytics && (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4 border border-border/50 shadow-sm">
+        <Card className="col-span-4 border border-[#E0E0E0]/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
@@ -324,7 +324,7 @@ export default function Home() {
                   {visitorTraffic?.map((t, i) => (
                     <div 
                       key={i} 
-                      className="flex-1 bg-[#6B6B6B] dark:bg-[#F5F5F5]0 hover:bg-[#F5F5F5]0 dark:hover:bg-[#B0B0B0] transition-all rounded-t relative group cursor-pointer" 
+                      className="flex-1 bg-[#6B6B6B] hover:bg-[#F5F5F5] transition-all rounded-t relative group cursor-pointer" 
                       style={{ height: `${Math.max((t.visitors / maxTraffic) * 100, 5)}%` }}
                     >
                       <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#2C2C2C] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 whitespace-nowrap">
@@ -343,7 +343,7 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3 border border-border/50 shadow-sm">
+        <Card className="col-span-3 border border-[#E0E0E0]/50 shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
               <Layers className="h-4 w-4 text-[#6B6B6B]" />
@@ -361,15 +361,15 @@ export default function Home() {
                 <div className="h-[160px] w-full flex items-end justify-around gap-2 px-2">
                   {zoneOccupancy?.slice(0, 5).map((z, i) => {
                     const colors = [
-                      "bg-[#6B6B6B] dark:bg-[#F5F5F5]0",
-                      "bg-[#F5F5F5]0 dark:bg-[#B0B0B0]",
-                      "bg-[#4ECDC4] dark:bg-[#E8F9F8]0",
-                      "bg-[#FFF4E5] dark:bg-[#FFB84D]",
-                      "bg-[#E8DCF5]0 dark:bg-[#5B2C93]",
+                      "bg-[#6B6B6B]",
+                      "bg-[#F5F5F5]",
+                      "bg-[#4ECDC4]",
+                      "bg-[#FFF4E5]",
+                      "bg-[#E8DCF5]",
                     ];
                     return (
                       <div key={z.id} className="flex flex-col items-center flex-1">
-                        <span className="text-xs font-medium mb-1 text-foreground">{z.occupancy}</span>
+                        <span className="text-xs font-medium mb-1 text-[#2C2C2C]">{z.occupancy}</span>
                         <div 
                           className={cn(
                             "w-full rounded-t transition-all hover:opacity-80 cursor-pointer",
@@ -394,7 +394,7 @@ export default function Home() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {/* Request Status Distribution - Only show to users with analytics permission */}
         {canViewAnalytics && (
-        <Card className="border border-border/50 shadow-sm">
+        <Card className="border border-[#E0E0E0]/50 shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
               <BarChart3 className="h-4 w-4 text-[#6B6B6B]" />
@@ -414,10 +414,10 @@ export default function Home() {
                     <div className={cn("w-2.5 h-2.5 rounded-full", statusColors[s.status])} />
                     <div className="flex-1">
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm text-foreground">{s.label}</span>
-                        <span className="text-sm font-medium text-foreground">{s.count}</span>
+                        <span className="text-sm text-[#2C2C2C]">{s.label}</span>
+                        <span className="text-sm font-medium text-[#2C2C2C]">{s.count}</span>
                       </div>
-                      <div className="h-1.5 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-[#F5F5F5] rounded-full overflow-hidden">
                         <div 
                           className={cn("h-full rounded-full transition-all", statusColors[s.status])}
                           style={{ width: `${totalByStatus > 0 ? (s.count / totalByStatus) * 100 : 0}%` }}
@@ -434,7 +434,7 @@ export default function Home() {
 
         {/* Pending L1 Approvals - Only show to users with approvals permission */}
         {canViewApprovals && (
-        <Card className="border border-border/50 shadow-sm">
+        <Card className="border border-[#E0E0E0]/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
@@ -462,15 +462,15 @@ export default function Home() {
                 {pendingItems?.pendingL1.slice(0, 3).map((item) => (
                   <div 
                     key={item.id} 
-                    className="p-3 bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 rounded-lg border border-[#E0E0E0] dark:border-[#6B6B6B] hover:bg-[#F5F5F5] dark:hover:bg-[#2C2C2C] cursor-pointer transition-colors"
+                    className="p-3 bg-[#F5F5F5] rounded-lg border border-[#E0E0E0] hover:bg-[#F5F5F5] cursor-pointer transition-colors"
                     onClick={() => navigate("/approvals/l1")}
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-mono text-xs text-[#6B6B6B] dark:text-[#B0B0B0]">{item.requestNumber}</p>
-                        <p className="text-sm font-medium truncate text-foreground">{item.visitorName}</p>
+                        <p className="font-mono text-xs text-[#6B6B6B]">{item.requestNumber}</p>
+                        <p className="text-sm font-medium truncate text-[#2C2C2C]">{item.visitorName}</p>
                       </div>
-                      <Badge variant="outline" className="text-xs bg-[#F5F5F5] dark:bg-[#2C2C2C] border-[#E0E0E0] dark:border-[#6B6B6B]">
+                      <Badge variant="outline" className="text-xs bg-[#F5F5F5] border-[#E0E0E0]">
                         {item.typeLabel}
                       </Badge>
                     </div>
@@ -484,7 +484,7 @@ export default function Home() {
 
         {/* Pending L2 Approvals - Only show to users with approvals permission */}
         {canViewApprovals && (
-        <Card className="border border-border/50 shadow-sm">
+        <Card className="border border-[#E0E0E0]/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
@@ -512,15 +512,15 @@ export default function Home() {
                 {pendingItems?.pendingManual.slice(0, 3).map((item) => (
                   <div 
                     key={item.id} 
-                    className="p-3 bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 rounded-lg border border-[#E0E0E0] dark:border-[#6B6B6B] hover:bg-[#F5F5F5] dark:hover:bg-[#2C2C2C] cursor-pointer transition-colors"
+                    className="p-3 bg-[#F5F5F5] rounded-lg border border-[#E0E0E0] hover:bg-[#F5F5F5] cursor-pointer transition-colors"
                     onClick={() => navigate("/approvals/l2")}
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-mono text-xs text-[#6B6B6B] dark:text-[#B0B0B0]">{item.requestNumber}</p>
-                        <p className="text-sm font-medium truncate text-foreground">{item.visitorName}</p>
+                        <p className="font-mono text-xs text-[#6B6B6B]">{item.requestNumber}</p>
+                        <p className="text-sm font-medium truncate text-[#2C2C2C]">{item.visitorName}</p>
                       </div>
-                      <Badge variant="outline" className="text-xs bg-[#F5F5F5] dark:bg-[#2C2C2C] border-[#E0E0E0] dark:border-[#6B6B6B]">
+                      <Badge variant="outline" className="text-xs bg-[#F5F5F5] border-[#E0E0E0]">
                         {item.typeLabel}
                       </Badge>
                     </div>
@@ -538,7 +538,7 @@ export default function Home() {
       <div className="grid gap-4 md:grid-cols-2">
         {/* Site Overview - Only show to users with sites permission */}
         {canViewSites && (
-        <Card className="border border-border/50 shadow-sm">
+        <Card className="border border-[#E0E0E0]/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
@@ -561,17 +561,17 @@ export default function Home() {
                 {siteOverview?.slice(0, 4).map((site) => (
                   <div 
                     key={site.id}
-                    className="p-3 rounded-lg bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 border border-[#E0E0E0] dark:border-[#6B6B6B] hover:bg-[#F5F5F5] dark:hover:bg-[#2C2C2C] transition-colors cursor-pointer"
+                    className="p-3 rounded-lg bg-[#F5F5F5] border border-[#E0E0E0] hover:bg-[#F5F5F5] transition-colors cursor-pointer"
                     onClick={() => navigate("/sites")}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium text-sm truncate text-foreground">{site.name}</p>
+                        <p className="font-medium text-sm truncate text-[#2C2C2C]">{site.name}</p>
                         <p className="text-xs text-[#6B6B6B]">{site.code}</p>
                       </div>
                       <div className={cn(
                         "w-2 h-2 rounded-full mt-1.5 flex-shrink-0",
-                        site.status === "active" ? "bg-[#E8F9F8]0" : "bg-[#FFF4E5]"
+                        site.status === "active" ? "bg-[#E8F9F8]" : "bg-[#FFF4E5]"
                       )} />
                     </div>
                     <div className="flex items-center gap-3 text-xs text-[#6B6B6B]">
@@ -596,7 +596,7 @@ export default function Home() {
         )}
 
         {/* Recent Activity - Visible to all users with dashboard access */}
-        <Card className="border border-border/50 shadow-sm">
+        <Card className="border border-[#E0E0E0]/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
@@ -620,11 +620,11 @@ export default function Home() {
                   <div key={activity.id} className="flex items-start gap-3">
                     <div className={cn(
                       "p-1.5 rounded",
-                      activity.status === "approved" ? "bg-[#E8F9F8] dark:bg-[#4ECDC4]/10/30" :
-                      activity.status === "rejected" ? "bg-[#FFE5E5] dark:bg-[#FF6B6B]/10/30" :
-                      activity.status === "pending_l1" ? "bg-[#FFF4E5] dark:bg-[#FFB84D]/10" :
-                      activity.status === "pending_manual" ? "bg-[#E8DCF5] dark:bg-[#5B2C93]/10/30" :
-                      "bg-[#F5F5F5] dark:bg-[#2C2C2C]"
+                      activity.status === "approved" ? "bg-[#E8F9F8]" :
+                      activity.status === "rejected" ? "bg-[#FFE5E5]" :
+                      activity.status === "pending_l1" ? "bg-[#FFF4E5]" :
+                      activity.status === "pending_manual" ? "bg-[#E8DCF5]" :
+                      "bg-[#F5F5F5]"
                     )}>
                       {activity.status === "approved" ? <CheckCircle2 className="h-3.5 w-3.5 text-[#4ECDC4]" /> :
                        activity.status === "rejected" ? <AlertTriangle className="h-3.5 w-3.5 text-[#FF6B6B]" /> :
@@ -633,7 +633,7 @@ export default function Home() {
                        <FileText className="h-3.5 w-3.5 text-[#6B6B6B]" />}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-foreground truncate">
+                      <p className="text-sm text-[#2C2C2C] truncate">
                         <span className="font-mono text-xs text-[#6B6B6B]">{activity.requestNumber}</span>
                         <span className="mx-1">·</span>
                         {activity.action}
@@ -654,7 +654,7 @@ export default function Home() {
       </div>
 
       {/* Recent Requests Table */}
-      <Card className="border border-border/50 shadow-sm">
+      <Card className="border border-[#E0E0E0]/50 shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
             <CardTitle className="text-base font-medium flex items-center gap-2">
@@ -686,7 +686,7 @@ export default function Home() {
               <TableBody>
                 {recentActivity?.slice(0, 5).map((row) => (
                   <TableRow key={row.id} className="cursor-pointer" onClick={() => navigate("/requests")}>
-                    <TableCell className="font-mono text-xs text-[#6B6B6B] dark:text-[#B0B0B0]">{row.requestNumber}</TableCell>
+                    <TableCell className="font-mono text-xs text-[#6B6B6B]">{row.requestNumber}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className="text-xs font-normal">
                         {row.type}
@@ -698,11 +698,11 @@ export default function Home() {
                         variant="outline" 
                         className={cn(
                           "text-xs",
-                          row.status === "approved" ? "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4] dark:bg-[#4ECDC4]/10/30 dark:text-[#4ECDC4] dark:border-[#4ECDC4]" :
-                          row.status === "rejected" ? "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B] dark:bg-[#FF6B6B]/10/30 dark:text-[#FF6B6B] dark:border-[#FF6B6B]" :
-                          row.status === "pending_l1" ? "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D] dark:bg-[#FFB84D]/10 dark:text-[#FFB84D] dark:border-[#FFB84D]" :
-                          row.status === "pending_manual" ? "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] dark:bg-[#5B2C93]/10/30 dark:text-[#E8DCF5] dark:border-[#5B2C93]" :
-                          "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0] dark:bg-[#2C2C2C] dark:text-[#B0B0B0] dark:border-[#6B6B6B]"
+                          row.status === "approved" ? "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]" :
+                          row.status === "rejected" ? "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]" :
+                          row.status === "pending_l1" ? "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]" :
+                          row.status === "pending_manual" ? "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]" :
+                          "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0]"
                         )}
                       >
                         {row.status === "pending_l1" ? t('status.pendingL1') :

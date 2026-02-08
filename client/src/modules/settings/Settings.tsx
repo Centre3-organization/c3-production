@@ -612,7 +612,7 @@ export default function Settings() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-medium tracking-tight text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
             <SettingsIcon className="h-8 w-8 text-[#5B2C93]" />
             System Settings
           </h1>

@@ -293,7 +293,7 @@ export function DynamicForm({
                 className={cn(
                   "w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-colors",
                   isActive
-                    ? "bg-[#E8F9F8] text-[#3D1C5E] border-l-4 border-[#5B2C93]"
+                    ? "bg-[#E8DCF5] text-[#5B2C93] border-l-4 border-[#5B2C93]"
                     : "text-[#6B6B6B] hover:bg-[#F5F5F5] border-l-4 border-transparent"
                 )}
               >

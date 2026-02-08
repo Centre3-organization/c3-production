@@ -166,7 +166,8 @@ export function ShiftManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium">Shift Management</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Shift Management</h1>
+          <p className="text-sm text-[#6B6B6B]">Manage security officer shifts and schedules</p>
           <p className="text-[#6B6B6B]">Configure shift schedules for time-based approval routing</p>
         </div>
         <Button onClick={() => setIsCreateScheduleOpen(true)}>
@@ -177,14 +178,14 @@ export function ShiftManagement() {
 
       {/* Current Shift Info */}
       {currentShift && (
-        <Card className="bg-primary/5 border-primary/20">
+        <Card className="bg-[#5B2C93]/5 border-primary/20">
           <CardContent className="py-4">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-full bg-primary/10">
+              <div className="p-3 rounded-full bg-[#5B2C93]/10">
                 {new Date().getHours() >= 6 && new Date().getHours() < 18 ? (
-                  <Sun className="h-6 w-6 text-primary" />
+                  <Sun className="h-6 w-6 text-[#5B2C93]" />
                 ) : (
-                  <Moon className="h-6 w-6 text-primary" />
+                  <Moon className="h-6 w-6 text-[#5B2C93]" />
                 )}
               </div>
               <div>
@@ -222,8 +223,8 @@ export function ShiftManagement() {
               {schedules?.map((schedule) => (
                 <Card
                   key={schedule.id}
-                  className={`cursor-pointer transition-colors hover:bg-accent ${
-                    selectedSchedule === schedule.id ? "border-primary bg-accent" : ""
+                  className={`cursor-pointer transition-colors hover:bg-[#E8DCF5] ${
+                    selectedSchedule === schedule.id ? "border-primary bg-[#E8DCF5]" : ""
                   }`}
                   onClick={() => setSelectedSchedule(schedule.id)}
                 >
@@ -469,8 +470,8 @@ export function ShiftManagement() {
                     key={day.value}
                     className={`flex items-center justify-center w-10 h-10 rounded-md cursor-pointer border transition-colors ${
                       newShift.daysOfWeek.includes(day.value)
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "hover:bg-accent"
+                        ? "bg-[#5B2C93] text-white border-primary"
+                        : "hover:bg-[#E8DCF5]"
                     }`}
                     onClick={() => toggleDay(day.value)}
                   >

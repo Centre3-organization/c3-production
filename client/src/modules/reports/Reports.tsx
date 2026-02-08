@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BarChart3, Star } from "lucide-react";
+import { BarChart3, Star, Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 // Sample reports data
 const reportsData = [
@@ -82,101 +91,104 @@ const reportsData = [
 export default function Reports() {
   const { t } = useTranslation();
   const [selectedReport, setSelectedReport] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredReports = reportsData.filter((report) =>
+    report.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    report.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    report.folder.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleReportClick = (reportId: number) => {
     setSelectedReport(reportId);
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F5F5F5]">
-      {/* Header */}
-      <div className="bg-white border-b border-[#E0E0E0] px-6 py-4">
+    <div className="space-y-6">
+      {/* Page Header - same pattern as all other pages */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <p className="text-sm text-[#6B6B6B]">Reports</p>
-          <h1 className="text-xl font-medium text-[#2C2C2C]">All Reports</h1>
-          <p className="text-sm text-[#6B6B6B] mt-1">{reportsData.length} items</p>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Reports</h1>
+          <p className="text-sm text-[#6B6B6B] mt-1">
+            View and manage system reports and analytics.
+          </p>
         </div>
       </div>
 
-      {/* Reports Table */}
-      <div className="flex-1 overflow-auto p-6">
-        <div className="bg-white rounded-lg border border-[#E0E0E0] overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-[#F5F5F5] border-b border-[#E0E0E0]">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
-                  Report Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
-                  Folder
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
-                  Created By
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
-                  Created On
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
-                  Subscribed
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {reportsData.map((report) => (
-                <tr 
-                  key={report.id} 
-                  className="hover:bg-[#F5F5F5] cursor-pointer transition-colors"
-                  onClick={() => handleReportClick(report.id)}
-                >
-                  <td className="px-6 py-4">
-                    <span className="text-primary hover:underline font-medium">
-                      {report.name}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-[#6B6B6B]">
-                    {report.description}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-primary hover:underline text-sm">
-                      {report.folder}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-primary hover:underline text-sm">
-                      {report.createdBy}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-[#6B6B6B]">
-                    {new Date(report.createdOn).toLocaleDateString('en-US', {
-                      month: 'numeric',
-                      day: 'numeric',
-                      year: 'numeric',
-                      hour: 'numeric',
-                      minute: '2-digit',
-                      hour12: true
-                    })}
-                  </td>
-                  <td className="px-6 py-4">
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <Star className="h-4 w-4 text-[#B0B0B0]" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Search Bar - same pattern as Approvals/Requests */}
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
+          <Input
+            placeholder="Search reports..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
         </div>
+        <p className="text-sm text-[#6B6B6B]">{filteredReports.length} items</p>
+      </div>
+
+      {/* Reports Table - using shadcn Table component for consistency */}
+      <div className="bg-white rounded-lg border border-[#E0E0E0] overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Report Name</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead>Folder</TableHead>
+              <TableHead>Created By</TableHead>
+              <TableHead>Created On</TableHead>
+              <TableHead className="w-[60px]">Subscribed</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredReports.map((report) => (
+              <TableRow
+                key={report.id}
+                className="cursor-pointer"
+                onClick={() => handleReportClick(report.id)}
+              >
+                <TableCell>
+                  <span className="text-[#5B2C93] hover:underline font-medium">
+                    {report.name}
+                  </span>
+                </TableCell>
+                <TableCell className="text-[#6B6B6B]">
+                  {report.description}
+                </TableCell>
+                <TableCell>
+                  <span className="text-[#5B2C93] text-sm">
+                    {report.folder}
+                  </span>
+                </TableCell>
+                <TableCell className="text-[#6B6B6B] text-sm">
+                  {report.createdBy}
+                </TableCell>
+                <TableCell className="text-[#6B6B6B] text-sm">
+                  {new Date(report.createdOn).toLocaleDateString('en-US', {
+                    month: 'numeric',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </TableCell>
+                <TableCell>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <Star className="h-4 w-4 text-[#B0B0B0]" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
 
       {/* Coming Soon Dialog */}
       {selectedReport && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 text-center">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <BarChart3 className="h-8 w-8 text-primary" />
+            <div className="w-16 h-16 bg-[#E8DCF5] rounded-full flex items-center justify-center mx-auto mb-4">
+              <BarChart3 className="h-8 w-8 text-[#5B2C93]" />
             </div>
             <h2 className="text-xl font-medium text-[#2C2C2C] mb-2">Coming Soon</h2>
             <p className="text-[#6B6B6B] mb-6">

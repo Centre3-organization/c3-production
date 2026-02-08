@@ -150,7 +150,7 @@ export default function L1Approval() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-medium tracking-tight text-[#2C2C2C] flex items-center gap-2">
             <Zap className="h-6 w-6 text-[#FFB84D]" />
             L1 Approval Queue
           </h1>
@@ -172,7 +172,7 @@ export default function L1Approval() {
 
       {/* Stats Bar */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-[#FFB84D]">
+        <Card className="bg-[#FFF4E5] border-[#FFB84D]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
@@ -186,7 +186,7 @@ export default function L1Approval() {
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-[#5B2C93]">
+        <Card className="bg-[#E8DCF5] border-[#5B2C93]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
@@ -200,7 +200,7 @@ export default function L1Approval() {
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-[#4ECDC4]">
+        <Card className="bg-[#E8F9F8] border-[#4ECDC4]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
@@ -214,7 +214,7 @@ export default function L1Approval() {
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-red-50 to-rose-50 border-[#FF6B6B]">
+        <Card className="bg-[#FFE5E5] border-[#FF6B6B]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
@@ -248,7 +248,7 @@ export default function L1Approval() {
       {/* Request Cards */}
       {isLoading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
         </div>
       ) : filteredTasks.length === 0 ? (
         <Card className="border-dashed">
@@ -256,7 +256,7 @@ export default function L1Approval() {
             <div className="h-16 w-16 rounded-full bg-[#E8F9F8] flex items-center justify-center mb-4">
               <CheckCircle2 className="h-8 w-8 text-[#4ECDC4]" />
             </div>
-            <h3 className="text-lg font-medium text-foreground">All caught up!</h3>
+            <h3 className="text-lg font-medium text-[#2C2C2C]">All caught up!</h3>
             <p className="text-[#6B6B6B] mt-1">No pending L1 approvals at the moment</p>
           </CardContent>
         </Card>
@@ -265,7 +265,7 @@ export default function L1Approval() {
           {filteredTasks.map((task: any) => (
             <Card 
               key={task.taskId} 
-              className="hover:shadow-md transition-shadow border-l-4 border-l-amber-400"
+              className="hover:shadow-md transition-shadow border-l-4 border-l-[#FFB84D]"
             >
               <CardContent className="p-0">
                 <div className="flex items-stretch">
@@ -297,11 +297,11 @@ export default function L1Approval() {
                     <div className="grid grid-cols-4 gap-6">
                       {/* Visitor */}
                       <div className="flex items-start gap-3">
-                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          <User className="h-5 w-5 text-primary" />
+                        <div className="h-10 w-10 rounded-full bg-[#5B2C93]/10 flex items-center justify-center shrink-0">
+                          <User className="h-5 w-5 text-[#5B2C93]" />
                         </div>
                         <div>
-                          <p className="font-medium text-foreground">{task.visitorName}</p>
+                          <p className="font-medium text-[#2C2C2C]">{task.visitorName}</p>
                           <p className="text-sm text-[#6B6B6B]">{task.visitorCompany || "Individual"}</p>
                         </div>
                       </div>
@@ -312,7 +312,7 @@ export default function L1Approval() {
                           <Building2 className="h-5 w-5 text-[#5B2C93]" />
                         </div>
                         <div>
-                          <p className="font-medium text-foreground">{task.siteName || "N/A"}</p>
+                          <p className="font-medium text-[#2C2C2C]">{task.siteName || "N/A"}</p>
                           <p className="text-sm text-[#6B6B6B]">Destination</p>
                         </div>
                       </div>
@@ -323,7 +323,7 @@ export default function L1Approval() {
                           <Calendar className="h-5 w-5 text-[#4ECDC4]" />
                         </div>
                         <div>
-                          <p className="font-medium text-foreground">
+                          <p className="font-medium text-[#2C2C2C]">
                             {task.startDate ? format(new Date(task.startDate), "MMM dd") : "N/A"}
                           </p>
                           <p className="text-sm text-[#6B6B6B]">
@@ -338,7 +338,7 @@ export default function L1Approval() {
                           <FileText className="h-5 w-5 text-[#5B2C93]" />
                         </div>
                         <div>
-                          <p className="font-medium text-foreground line-clamp-1">{task.purpose || "General Visit"}</p>
+                          <p className="font-medium text-[#2C2C2C] line-clamp-1">{task.purpose || "General Visit"}</p>
                           <p className="text-sm text-[#6B6B6B]">Purpose</p>
                         </div>
                       </div>
@@ -430,7 +430,7 @@ export default function L1Approval() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-primary" />
+              <FileText className="h-5 w-5 text-[#5B2C93]" />
               Request Details
             </DialogTitle>
             <DialogDescription>
@@ -438,54 +438,61 @@ export default function L1Approval() {
             </DialogDescription>
           </DialogHeader>
           {selectedRequest && (
-            <div className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-[#6B6B6B]">Visitor</label>
-                  <p className="font-medium">{selectedRequest.visitorName}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-[#6B6B6B]">Company</label>
-                  <p className="font-medium">{selectedRequest.visitorCompany || "Individual"}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-[#6B6B6B]">Site</label>
-                  <p className="font-medium">{selectedRequest.siteName || "N/A"}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-[#6B6B6B]">Request Type</label>
-                  <p className="font-medium">{typeLabels[selectedRequest.type] || selectedRequest.type}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-[#6B6B6B]">Visit Date</label>
-                  <p className="font-medium">
-                    {selectedRequest.startDate ? format(new Date(selectedRequest.startDate), "MMM dd, yyyy") : "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-[#6B6B6B]">Time</label>
-                  <p className="font-medium">{selectedRequest.startTime} - {selectedRequest.endTime}</p>
-                </div>
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium text-[#6B6B6B]">Purpose</label>
-                <p className="font-medium">{selectedRequest.purpose || "General Visit"}</p>
-              </div>
-              
-              <div className="border-t pt-4">
-                <label className="text-sm font-medium text-[#6B6B6B] flex items-center gap-2">
-                  <GitBranch className="h-4 w-4" />
-                  Workflow Information
-                </label>
-                <div className="mt-2 p-3 bg-[#F5F5F5]/50 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Workflow:</span>
-                    <Badge variant="outline">{selectedRequest.workflowName || "Standard Workflow"}</Badge>
+            <div className="space-y-6 py-4">
+              {/* Visitor & Visit Details */}
+              <div className="border-l-4 border-[#5B2C93] bg-[#F5F5F5] rounded-r-lg p-4 space-y-3">
+                <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
+                  <User className="h-4 w-4 text-[#5B2C93]" />
+                  Visitor & Visit Details
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-[#2C2C2C]">Visitor</label>
+                    <p className="text-sm font-medium">{selectedRequest.visitorName}</p>
                   </div>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-sm">Current Stage:</span>
-                    <Badge variant="outline" className="bg-[#FFF4E5] text-[#FFB84D]">
+                  <div>
+                    <label className="text-sm font-medium text-[#2C2C2C]">Company</label>
+                    <p className="text-sm font-medium">{selectedRequest.visitorCompany || "Individual"}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-[#2C2C2C]">Site</label>
+                    <p className="text-sm font-medium">{selectedRequest.siteName || "N/A"}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-[#2C2C2C]">Request Type</label>
+                    <p className="text-sm font-medium">{typeLabels[selectedRequest.type] || selectedRequest.type}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-[#2C2C2C]">Visit Date</label>
+                    <p className="text-sm font-medium">
+                      {selectedRequest.startDate ? format(new Date(selectedRequest.startDate), "MMM dd, yyyy") : "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-[#2C2C2C]">Time</label>
+                    <p className="text-sm font-medium">{selectedRequest.startTime} - {selectedRequest.endTime}</p>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-[#2C2C2C]">Purpose</label>
+                  <p className="text-sm font-medium">{selectedRequest.purpose || "General Visit"}</p>
+                </div>
+              </div>
+              
+              {/* Workflow Information */}
+              <div className="border-l-4 border-[#4ECDC4] bg-[#F5F5F5] rounded-r-lg p-4 space-y-3">
+                <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
+                  <GitBranch className="h-4 w-4 text-[#4ECDC4]" />
+                  Workflow Information
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-[#2C2C2C]">Workflow</label>
+                    <p className="text-sm font-medium">{selectedRequest.workflowName || "Standard Workflow"}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-[#2C2C2C]">Current Stage</label>
+                    <Badge variant="outline" className="bg-[#FFF4E5] text-[#FFB84D] mt-1">
                       Stage {selectedRequest.stageOrder}: {selectedRequest.stageName}
                     </Badge>
                   </div>

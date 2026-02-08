@@ -224,7 +224,7 @@ export default function ApprovalHistory() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-medium tracking-tight text-[#2C2C2C] flex items-center gap-2">
             <History className="h-6 w-6 text-[#5B2C93]" />
             {t("approvals.history", "Approval History")}
           </h1>
@@ -288,7 +288,7 @@ export default function ApprovalHistory() {
             <Card 
               key={task.taskId} 
               className={`hover:shadow-md transition-shadow cursor-pointer border-l-4 ${
-                task.taskStatus === 'approved' ? 'border-l-green-500' : 'border-l-red-500'
+                task.taskStatus === 'approved' ? 'border-l-[#4ECDC4]' : 'border-l-[#FF6B6B]'
               }`}
               onClick={() => handleViewDetails(task)}
             >
@@ -508,70 +508,70 @@ export default function ApprovalHistory() {
               {/* 3-Column Details Grid */}
               <div className="grid grid-cols-3 gap-6">
                 {/* Column 1: Visitor Information */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-[#2C2C2C] border-b pb-2 flex items-center gap-2">
+                <div className="border-l-4 border-[#5B2C93] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
+                  <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
                     <User className="h-4 w-4 text-[#5B2C93]" />
                     Visitor Information
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Full Name</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Full Name</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorName || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Company</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Company</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorCompany || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">ID Type</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">ID Type</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorIdType?.toUpperCase().replace(/_/g, ' ') || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">ID Number</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">ID Number</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorIdNumber || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Phone</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Phone</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorPhone || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Email</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Email</label>
                       <p className="text-sm font-medium truncate">{selectedTask.request?.visitorEmail || "N/A"}</p>
                     </div>
                   </div>
                 </div>
                 
                 {/* Column 2: Visit Details */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-[#2C2C2C] border-b pb-2 flex items-center gap-2">
+                <div className="border-l-4 border-[#5B2C93] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
+                  <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-[#5B2C93]" />
                     Visit Details
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Purpose</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Purpose</label>
                       <p className="text-sm font-medium">{selectedTask.request?.purpose || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Start Date</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Start Date</label>
                       <p className="text-sm font-medium">
                         {selectedTask.request?.startDate ? format(new Date(selectedTask.request.startDate), "EEEE, MMM d, yyyy") : "N/A"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">End Date</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">End Date</label>
                       <p className="text-sm font-medium">
                         {selectedTask.request?.endDate ? format(new Date(selectedTask.request.endDate), "EEEE, MMM d, yyyy") : "N/A"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Visit Time</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Visit Time</label>
                       <p className="text-sm font-medium">
                         {selectedTask.request?.startTime || "00:00"} - {selectedTask.request?.endTime || "23:59"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Submitted On</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Submitted On</label>
                       <p className="text-sm font-medium">
                         {selectedTask.request?.createdAt ? format(new Date(selectedTask.request.createdAt), "MMM d, yyyy 'at' HH:mm") : "N/A"}
                       </p>
@@ -580,32 +580,32 @@ export default function ApprovalHistory() {
                 </div>
                 
                 {/* Column 3: Location & Workflow */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-[#2C2C2C] border-b pb-2 flex items-center gap-2">
+                <div className="border-l-4 border-[#4ECDC4] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
+                  <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-[#4ECDC4]" />
                     Location & Workflow
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Site</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Site</label>
                       <p className="text-sm font-medium">{selectedTask.request?.siteName || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Workflow</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Workflow</label>
                       <p className="text-sm font-medium">{selectedTask.workflowName || "Default"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Your Stage</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Your Stage</label>
                       <p className="text-sm font-medium">{selectedTask.stageName || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Assigned At</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Assigned At</label>
                       <p className="text-sm font-medium">
                         {selectedTask.taskCreatedAt ? format(new Date(selectedTask.taskCreatedAt), "MMM d, yyyy HH:mm") : "N/A"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Decided At</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">Decided At</label>
                       <p className="text-sm font-medium">
                         {selectedTask.taskCompletedAt ? format(new Date(selectedTask.taskCompletedAt), "MMM d, yyyy HH:mm") : "N/A"}
                       </p>
@@ -615,7 +615,7 @@ export default function ApprovalHistory() {
               </div>
               
               {/* Approval Timeline */}
-              <div className="border-t pt-4">
+              <div className="border-l-4 border-[#FFB84D] bg-[#F5F5F5] rounded-r-lg p-4">
                 <h4 className="text-sm font-medium text-[#2C2C2C] mb-3 flex items-center gap-2">
                   <History className="h-4 w-4 text-[#FFB84D]" />
                   Approval Timeline
@@ -657,11 +657,11 @@ export default function ApprovalHistory() {
                     {selectedTask.approvalHistory.map((history: any, idx: number) => {
                       const actionBgColors: Record<string, string> = {
                         approved: "bg-[#E8F9F8]", rejected: "bg-[#FF6B6B]", decision_made: "bg-[#E8DCF5]",
-                        info_requested: "bg-[#FFF4E5]", submitted: "bg-[#E8DCF5]", escalated: "bg-[#E8DCF5]0",
-                        workflow_started: "bg-[#F5F5F5]0", workflow_completed: "bg-[#4ECDC4]",
+                        info_requested: "bg-[#FFF4E5]", submitted: "bg-[#E8DCF5]", escalated: "bg-[#E8DCF5]",
+                        workflow_started: "bg-[#F5F5F5]", workflow_completed: "bg-[#4ECDC4]",
                         stage_completed: "bg-[#E8F9F8]", task_assigned: "bg-[#5B2C93]",
                         sent_back: "bg-[#FFF4E5]", clarification_requested: "bg-[#FFF4E5]",
-                        clarification_provided: "bg-[#5B2C93]", task_reassigned: "bg-[#E8DCF5]0",
+                        clarification_provided: "bg-[#5B2C93]", task_reassigned: "bg-[#E8DCF5]",
                       };
                       const actionColors: Record<string, string> = {
                         approved: "border-[#4ECDC4]", rejected: "border-[#FF6B6B]", decision_made: "border-[#5B2C93]",

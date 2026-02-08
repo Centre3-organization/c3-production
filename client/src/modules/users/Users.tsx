@@ -646,7 +646,8 @@ export default function Users() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight">User Management</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">User Management</h1>
+          <p className="text-sm text-[#6B6B6B]">Manage system access, roles, and permissions</p>
           <p className="text-[#6B6B6B]">Manage system access, roles, and permissions.</p>
         </div>
         <Button onClick={() => setNewUserOpen(true)} className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
@@ -1134,7 +1135,7 @@ export default function Users() {
       <Dialog open={editRoleOpen} onOpenChange={setEditRoleOpen}>
         <DialogContent className="sm:max-w-[900px] max-h-[85vh] overflow-hidden flex flex-col p-0">
           {/* Header Section */}
-          <div className="px-6 pt-6 pb-4 border-b bg-gradient-to-r from-purple-50 to-white">
+          <div className="px-6 pt-6 pb-4 border-b bg-white">
             <div className="flex items-center justify-between">
               <div>
                 <DialogTitle className="text-xl font-medium text-[#2C2C2C]">
@@ -1160,7 +1161,7 @@ export default function Users() {
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="roleName" className="text-xs font-medium text-[#6B6B6B] uppercase">
+                    <Label htmlFor="roleName" className="text-sm font-medium text-[#2C2C2C]">
                       Role Name <span className="text-[#FF6B6B]">*</span>
                     </Label>
                     <Input 
@@ -1172,7 +1173,7 @@ export default function Users() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="roleDescription" className="text-xs font-medium text-[#6B6B6B] uppercase">
+                    <Label htmlFor="roleDescription" className="text-sm font-medium text-[#2C2C2C]">
                       Description
                     </Label>
                     <Input 

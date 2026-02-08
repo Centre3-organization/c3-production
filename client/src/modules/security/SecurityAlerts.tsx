@@ -157,11 +157,11 @@ export default function SecurityAlerts() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-medium tracking-tight text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
             <ShieldAlert className="h-8 w-8 text-[#FF6B6B]" />
             Security Alerts
           </h1>
-          <p className="text-[#6B6B6B]">Real-time incident monitoring and response log.</p>
+          <p className="text-sm text-[#6B6B6B]">Real-time incident monitoring and response log</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="relative w-64">
@@ -180,7 +180,7 @@ export default function SecurityAlerts() {
             <CardTitle className="text-sm font-medium text-[#FF6B6B]">Active Critical</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-medium text-[#FF6B6B]">
+            <div className="text-2xl font-medium text-[#FF6B6B]">
               {alerts.filter(a => a.severity === "Critical" && a.status !== "Resolved").length}
             </div>
             <p className="text-xs text-[#FF6B6B] mt-1">Requires immediate response</p>
@@ -191,7 +191,7 @@ export default function SecurityAlerts() {
             <CardTitle className="text-sm font-medium text-[#5B2C93]">New Alerts</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-medium text-[#5B2C93]">
+            <div className="text-2xl font-medium text-[#5B2C93]">
               {alerts.filter(a => a.status === "New").length}
             </div>
             <p className="text-xs text-[#5B2C93] mt-1">Unacknowledged incidents</p>
@@ -202,7 +202,7 @@ export default function SecurityAlerts() {
             <CardTitle className="text-sm font-medium text-[#5B2C93]">Under Investigation</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-medium text-[#5B2C93]">
+            <div className="text-2xl font-medium text-[#5B2C93]">
               {alerts.filter(a => a.status === "Viewed").length}
             </div>
             <p className="text-xs text-[#5B2C93] mt-1">Being processed</p>

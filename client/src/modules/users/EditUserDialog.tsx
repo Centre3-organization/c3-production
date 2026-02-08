@@ -43,8 +43,8 @@ function FormField({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm text-[#6B6B6B] font-normal">
-        {label}{required && <span className="text-destructive ml-0.5">*</span>}:
+      <Label className="text-sm font-medium text-[#2C2C2C]">
+        {label}{required && <span className="text-[#FF6B6B] ml-0.5">*</span>}:
       </Label>
       {children}
       {hint && <p className="text-xs text-[#6B6B6B]">{hint}</p>}
@@ -52,11 +52,11 @@ function FormField({
   );
 }
 
-// SAP Fiori-style Section Header
+// Brand-compliant Section Header with purple left border
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="pb-2 mb-4 border-b border-[#5B2C93]/20">
-      <h3 className="text-sm font-medium text-[#5B2C93]">{title}</h3>
+    <div className="border-l-4 border-[#5B2C93] pl-3 mb-4">
+      <h3 className="text-base font-medium text-[#5B2C93]">{title}</h3>
     </div>
   );
 }
@@ -259,9 +259,9 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
       <DialogContent className="sm:max-w-[900px] max-h-[90vh] p-0 overflow-hidden" showCloseButton={false}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b bg-card">
+          <div className="flex items-center justify-between px-6 py-4 border-b bg-white">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#5B2C93] flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-[#5B2C93] flex items-center justify-center">
                 <UserCog className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -277,9 +277,9 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
           {/* Main Content with Left Sidebar Tabs */}
           <div className="flex flex-1 overflow-hidden">
             {/* Left Sidebar - Vertical Tabs */}
-            <div className="w-56 border-r bg-card flex flex-col">
+            <div className="w-56 border-r bg-white flex flex-col">
               <div className="p-4 border-b">
-                <p className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">Sections</p>
+                <p className="text-sm font-medium text-[#2C2C2C] tracking-wider">Sections</p>
               </div>
               <nav className="flex-1 p-2">
                 {tabs.map((tab, index) => {
@@ -292,15 +292,15 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                       onClick={() => setActiveTab(tab.id)}
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
                         isActive 
-                          ? "bg-gradient-to-r from-[#FF6B6B]/10 to-[#5B2C93]/10 text-[#5B2C93] border-l-4 border-[#5B2C93]" 
+                          ? "bg-[#E8DCF5] text-[#5B2C93] border-l-4 border-[#5B2C93]" 
                           : isCompleted
-                            ? "text-foreground hover:bg-[#F5F5F5]"
-                            : "text-[#6B6B6B] hover:bg-[#F5F5F5] hover:text-foreground"
+                            ? "text-[#2C2C2C] hover:bg-[#F5F5F5]"
+                            : "text-[#6B6B6B] hover:bg-[#F5F5F5] hover:text-[#2C2C2C]"
                       }`}
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                         isActive 
-                          ? "bg-gradient-to-br from-[#FF6B6B] to-[#5B2C93] text-white"
+                          ? "bg-[#5B2C93] text-white"
                           : isCompleted
                             ? "bg-[#E8F9F8] text-white"
                             : "bg-[#F5F5F5] text-[#6B6B6B]"
@@ -325,7 +325,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                   {activeTab === "general" && (
                     <div className="space-y-6">
                       {/* Personal Data Section */}
-                      <div className="bg-card rounded-lg border p-6">
+                      <div className="bg-white rounded-lg border p-6">
                         <SectionHeader title="Personal Data" />
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                           <FormField label="First Name (English)" required>
@@ -333,7 +333,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               value={formData.firstName}
                               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                               placeholder="Enter first name"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                           
@@ -342,7 +342,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               value={formData.lastName}
                               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                               placeholder="Enter last name"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                           
@@ -352,7 +352,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               onChange={(e) => setFormData({ ...formData, firstNameAr: e.target.value })}
                               placeholder="أدخل الاسم الأول"
                               dir="rtl"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                           
@@ -362,14 +362,14 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               onChange={(e) => setFormData({ ...formData, lastNameAr: e.target.value })}
                               placeholder="أدخل اسم العائلة"
                               dir="rtl"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                         </div>
                       </div>
 
                       {/* Communication Data Section */}
-                      <div className="bg-card rounded-lg border p-6">
+                      <div className="bg-white rounded-lg border p-6">
                         <SectionHeader title="Communication Data" />
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                           <FormField label="Email Address" required>
@@ -378,7 +378,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               value={formData.email}
                               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                               placeholder="user@example.com"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                           
@@ -387,7 +387,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               value={formData.phone}
                               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                               placeholder="+966 5XX XXX XXXX"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                         </div>
@@ -399,7 +399,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                   {activeTab === "organization" && (
                     <div className="space-y-6">
                       {/* Employment Data Section */}
-                      <div className="bg-card rounded-lg border p-6">
+                      <div className="bg-white rounded-lg border p-6">
                         <SectionHeader title="Employment Data" />
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                           <FormField label="Job Title">
@@ -407,7 +407,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               value={formData.jobTitle}
                               onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
                               placeholder="Enter job title"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                           
@@ -416,7 +416,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               value={formData.departmentId?.toString() || ""}
                               onValueChange={(value) => setFormData({ ...formData, departmentId: value ? parseInt(value) : null })}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue placeholder="Select department" />
                               </SelectTrigger>
                               <SelectContent>
@@ -436,7 +436,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                   value={formData.employeeId}
                                   onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
                                   placeholder="Enter employee ID"
-                                  className="bg-background"
+                                  className="bg-[#F5F5F5]"
                                 />
                               </FormField>
                               
@@ -445,7 +445,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                   value={formData.managerId?.toString() || ""}
                                   onValueChange={(value) => setFormData({ ...formData, managerId: value ? parseInt(value) : null })}
                                 >
-                                  <SelectTrigger className="bg-background">
+                                  <SelectTrigger className="bg-[#F5F5F5]">
                                     <SelectValue placeholder="Select manager" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -464,7 +464,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
 
                       {/* Contractor Company Section */}
                       {(user.userType === "contractor" || user.userType === "sub_contractor") && (
-                        <div className="bg-card rounded-lg border p-6">
+                        <div className="bg-white rounded-lg border p-6">
                           <SectionHeader title="Contractor Assignment" />
                           <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                             <FormField 
@@ -474,7 +474,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                 value={formData.contractorCompanyId?.toString() || ""}
                                 onValueChange={(value) => setFormData({ ...formData, contractorCompanyId: value ? parseInt(value) : null })}
                               >
-                                <SelectTrigger className="bg-background">
+                                <SelectTrigger className="bg-[#F5F5F5]">
                                   <SelectValue placeholder="Select company" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -493,7 +493,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                   value={formData.subContractorCompanyId?.toString() || ""}
                                   onValueChange={(value) => setFormData({ ...formData, subContractorCompanyId: value ? parseInt(value) : null })}
                                 >
-                                  <SelectTrigger className="bg-background">
+                                  <SelectTrigger className="bg-[#F5F5F5]">
                                     <SelectValue placeholder="Select sub-contractor" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -512,7 +512,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                 value={formData.contractReference}
                                 onChange={(e) => setFormData({ ...formData, contractReference: e.target.value })}
                                 placeholder="Enter contract reference"
-                                className="bg-background"
+                                className="bg-[#F5F5F5]"
                               />
                             </FormField>
                             
@@ -521,7 +521,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                 type="date"
                                 value={formData.contractExpiry}
                                 onChange={(e) => setFormData({ ...formData, contractExpiry: e.target.value })}
-                                className="bg-background"
+                                className="bg-[#F5F5F5]"
                               />
                             </FormField>
                             
@@ -530,7 +530,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                 value={formData.reportingToId?.toString() || ""}
                                 onValueChange={(value) => setFormData({ ...formData, reportingToId: value ? parseInt(value) : null })}
                               >
-                                <SelectTrigger className="bg-background">
+                                <SelectTrigger className="bg-[#F5F5F5]">
                                   <SelectValue placeholder="Select contact" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -548,7 +548,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
 
                       {/* Client Company Section */}
                       {user.userType === "client" && (
-                        <div className="bg-card rounded-lg border p-6">
+                        <div className="bg-white rounded-lg border p-6">
                           <SectionHeader title="Client Assignment" />
                           <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                             <FormField label="Client Company">
@@ -556,7 +556,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                 value={formData.clientCompanyId?.toString() || ""}
                                 onValueChange={(value) => setFormData({ ...formData, clientCompanyId: value ? parseInt(value) : null })}
                               >
-                                <SelectTrigger className="bg-background">
+                                <SelectTrigger className="bg-[#F5F5F5]">
                                   <SelectValue placeholder="Select client company" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -574,7 +574,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                 value={formData.accountManagerId?.toString() || ""}
                                 onValueChange={(value) => setFormData({ ...formData, accountManagerId: value ? parseInt(value) : null })}
                               >
-                                <SelectTrigger className="bg-background">
+                                <SelectTrigger className="bg-[#F5F5F5]">
                                   <SelectValue placeholder="Select account manager" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -596,7 +596,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                   {activeTab === "access" && (
                     <div className="space-y-6">
                       {/* User Role Section */}
-                      <div className="bg-card rounded-lg border p-6">
+                      <div className="bg-white rounded-lg border p-6">
                         <SectionHeader title="User Role & Status" />
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                           <FormField label="System Role" required>
@@ -604,7 +604,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               value={formData.roleId?.toString() || ""}
                               onValueChange={(value) => setFormData({ ...formData, roleId: value ? parseInt(value) : null })}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue placeholder="Select role" />
                               </SelectTrigger>
                               <SelectContent>
@@ -622,7 +622,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                               value={formData.status}
                               onValueChange={(value: "active" | "inactive" | "suspended") => setFormData({ ...formData, status: value })}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue placeholder="Select status" />
                               </SelectTrigger>
                               <SelectContent>
@@ -636,7 +636,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                       </div>
 
                       {/* Site Access Section */}
-                      <div className="bg-card rounded-lg border p-6">
+                      <div className="bg-white rounded-lg border p-6">
                         <SectionHeader title="Site Access" />
                         <div className="space-y-4">
                           <div className="flex items-center gap-3">
@@ -663,7 +663,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                   value={formData.selectedSiteId?.toString() || ""}
                                   onValueChange={(value) => setFormData({ ...formData, selectedSiteId: value ? parseInt(value) : null })}
                                 >
-                                  <SelectTrigger className="bg-background">
+                                  <SelectTrigger className="bg-[#F5F5F5]">
                                     <SelectValue placeholder="Select site" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -682,7 +682,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                   onValueChange={(value) => setFormData({ ...formData, selectedZoneId: value ? parseInt(value) : null })}
                                   disabled={!formData.selectedSiteId}
                                 >
-                                  <SelectTrigger className="bg-background">
+                                  <SelectTrigger className="bg-[#F5F5F5]">
                                     <SelectValue placeholder={formData.selectedSiteId ? "Select zone" : "Select site first"} />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -701,7 +701,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                                   onValueChange={(value) => setFormData({ ...formData, selectedAreaId: value ? parseInt(value) : null })}
                                   disabled={!formData.selectedZoneId}
                                 >
-                                  <SelectTrigger className="bg-background">
+                                  <SelectTrigger className="bg-[#F5F5F5]">
                                     <SelectValue placeholder={formData.selectedZoneId ? "Select area" : "Select zone first"} />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -720,7 +720,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
 
                       {/* Account Options */}
                       {(user.userType === "contractor" || user.userType === "sub_contractor") && (
-                        <div className="bg-card rounded-lg border p-6">
+                        <div className="bg-white rounded-lg border p-6">
                           <SectionHeader title="Account Options" />
                           <div className="flex items-center gap-3">
                             <Checkbox
@@ -740,7 +740,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
               </ScrollArea>
 
               {/* Bottom Navigation Bar */}
-              <div className="border-t bg-card px-6 py-4 flex items-center justify-between">
+              <div className="border-t bg-white px-6 py-4 flex items-center justify-between">
                 <div>
                   {!isFirstTab && (
                     <Button

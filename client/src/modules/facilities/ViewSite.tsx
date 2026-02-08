@@ -223,7 +223,7 @@ export default function ViewSite() {
   const getOccupancyColor = (current: number, max: number) => {
     const percentage = (current / max) * 100;
     if (percentage >= 90) return "bg-[#FF6B6B]";
-    if (percentage >= 75) return "bg-[#FFF4E5]0";
+    if (percentage >= 75) return "bg-[#FFF4E5]";
     return "bg-[#E8F9F8]";
   };
 
@@ -231,7 +231,7 @@ export default function ViewSite() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-medium tracking-tight text-foreground flex items-center gap-2">
+          <h1 className="text-3xl font-medium tracking-tight text-[#2C2C2C] flex items-center gap-2">
             <Globe className="h-8 w-8 text-[#5B2C93]" />
             Global Overwatch
           </h1>
@@ -248,7 +248,7 @@ export default function ViewSite() {
       {/* Site Selector & Overview */}
       <div className="grid gap-6 md:grid-cols-12">
         <div className="md:col-span-4 space-y-4">
-          <Card className="h-full border-none shadow-lg bg-gradient-to-b from-slate-900 to-slate-800 text-white overflow-hidden relative">
+          <Card className="h-full border-none shadow-lg bg-[#2C2C2C] text-white overflow-hidden relative">
             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
             <CardHeader>
               <CardTitle className="text-lg font-medium text-[#B0B0B0]">Select Facility</CardTitle>
@@ -281,7 +281,7 @@ export default function ViewSite() {
                       <p className="font-medium">{selectedSite.status}</p>
                     </div>
                   </div>
-                  <div className={`h-2 w-2 rounded-full ${selectedSite.status === 'Normal' ? 'bg-[#E8F9F8]' : 'bg-[#FFF4E5]0'} animate-pulse`}></div>
+                  <div className={`h-2 w-2 rounded-full ${selectedSite.status === 'Normal' ? 'bg-[#E8F9F8]' : 'bg-[#FFF4E5]'} animate-pulse`}></div>
                 </div>
 
                 <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/10">
@@ -298,7 +298,7 @@ export default function ViewSite() {
 
                 <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/10">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-[#E8DCF5]0/20 text-[#5B2C93]">
+                    <div className="p-2 rounded-full bg-[#E8DCF5]/20 text-[#5B2C93]">
                       <ShieldCheck className="h-5 w-5" />
                     </div>
                     <div>
@@ -363,7 +363,7 @@ export default function ViewSite() {
           <Card key={zone.id} className={`overflow-hidden transition-all ${zone.locked ? 'border-[#FF6B6B] bg-[#FFE5E5]/30' : 'hover:border-[#5B2C93] shadow-sm hover:shadow-md'}`}>
             <CardHeader className="pb-3 bg-[#F5F5F5]/20">
               <div className="flex items-center justify-between">
-                <Badge variant="outline" className="bg-background font-mono">{zone.id}</Badge>
+                <Badge variant="outline" className="bg-[#F5F5F5] font-mono">{zone.id}</Badge>
                 {zone.locked && (
                   <Badge variant="destructive" className="gap-1 animate-pulse">
                     <Lock className="h-3 w-3" /> LOCKED
@@ -413,7 +413,7 @@ export default function ViewSite() {
             
             {/* Expanded Areas List */}
             {selectedZone?.id === zone.id && (
-              <div className="border-t bg-background p-3 space-y-3 animate-in slide-in-from-top-2">
+              <div className="border-t bg-[#F5F5F5] p-3 space-y-3 animate-in slide-in-from-top-2">
                 {zone.areas.map((area) => (
                   <div key={area.id} className="flex items-center justify-between p-2 rounded-md border bg-[#F5F5F5]/10 hover:bg-[#F5F5F5]/20 transition-colors">
                     <div className="space-y-1">

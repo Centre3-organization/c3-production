@@ -41,8 +41,8 @@ function FormField({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm text-[#2C2C2C] font-normal">
-        {label}{required && <span className="text-destructive ml-0.5">*</span>}:
+      <Label className="text-sm font-medium text-[#2C2C2C]">
+        {label}{required && <span className="text-[#FF6B6B] ml-0.5">*</span>}:
       </Label>
       {children}
       {hint && <p className="text-xs text-[#6B6B6B]">{hint}</p>}
@@ -50,11 +50,11 @@ function FormField({
   );
 }
 
-// SAP Fiori-style Section Header
+// Brand-compliant Section Header with purple left border
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="pb-2 mb-4 border-b border-[#5B2C93]/20">
-      <h3 className="text-sm font-medium text-[#5B2C93]">{title}</h3>
+    <div className="border-l-4 border-[#5B2C93] pl-3 mb-4">
+      <h3 className="text-base font-medium text-[#5B2C93]">{title}</h3>
     </div>
   );
 }
@@ -343,9 +343,9 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
   };
 
   return (
-    <div className="flex flex-col h-[80vh] max-h-[800px] bg-background">
+    <div className="flex flex-col h-[80vh] max-h-[800px] bg-[#F5F5F5]">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b bg-card shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 border-b bg-white shrink-0">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-[#5B2C93] flex items-center justify-center">
             <UserPlus className="h-6 w-6 text-white" />
@@ -363,9 +363,9 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
       {/* Main Content with Left Sidebar Tabs */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar - Vertical Tabs */}
-        <div className="w-64 border-r bg-card flex flex-col">
+        <div className="w-64 border-r bg-white flex flex-col">
           <div className="p-4 border-b">
-            <p className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">Steps</p>
+            <p className="text-sm font-medium text-[#2C2C2C] tracking-wider">Steps</p>
           </div>
           <nav className="flex-1 p-2">
             {tabs.map((tab, index) => {
@@ -380,7 +380,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   disabled={isDisabled}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
                     isActive 
-                      ? "bg-gradient-to-r from-[#FF6B6B]/15 to-[#5B2C93]/15 text-[#2C2C2C] border-l-4 border-[#5B2C93]" 
+                      ? "bg-[#E8DCF5] text-[#2C2C2C] border-l-4 border-[#5B2C93]" 
                       : isCompleted
                         ? "text-[#2C2C2C] hover:bg-[#F5F5F5]"
                         : isDisabled
@@ -415,7 +415,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
               {activeTab === "general" && (
                 <div className="space-y-6">
                   {/* User Type Section */}
-                  <div className="bg-card rounded-lg border p-6">
+                  <div className="bg-white rounded-lg border p-6">
                     <SectionHeader title="User Classification" />
                     <div className="grid grid-cols-2 gap-6">
                       <FormField label="User Type" required>
@@ -423,7 +423,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           value={formData.userType}
                           onValueChange={(value) => setFormData({ ...formData, userType: value as UserType, isSubContractor: false })}
                         >
-                          <SelectTrigger className="bg-background">
+                          <SelectTrigger className="bg-[#F5F5F5]">
                             <SelectValue placeholder="Select user type" />
                           </SelectTrigger>
                           <SelectContent>
@@ -439,12 +439,12 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   {formData.userType && (
                     <>
                       {/* Identity Verification Section */}
-                      <div className="bg-card rounded-lg border p-6">
+                      <div className="bg-white rounded-lg border p-6">
                         <SectionHeader title="Identity Verification" />
                         <div className="grid grid-cols-2 gap-6 mb-4">
                           <FormField label="ID Type">
                             <Select value={idType} onValueChange={(value: "national_id" | "iqama") => setIdType(value)}>
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -460,7 +460,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               onChange={(e) => handleIdNumberChange(e.target.value)}
                               placeholder={idType === "national_id" ? "1XXXXXXXXX" : "2XXXXXXXXX"}
                               maxLength={10}
-                              className="bg-background w-full text-lg tracking-wider font-mono"
+                              className="bg-[#F5F5F5] w-full text-lg tracking-wider font-mono"
                             />
                           </FormField>
                         </div>
@@ -471,7 +471,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               type="date"
                               value={dateOfBirth}
                               onChange={(e) => setDateOfBirth(e.target.value)}
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                           
@@ -508,7 +508,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                       </div>
 
                       {/* Personal Data Section */}
-                      <div className="bg-card rounded-lg border p-6">
+                      <div className="bg-white rounded-lg border p-6">
                         <SectionHeader title="Personal Data" />
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                           <FormField label="First Name (English)" required>
@@ -517,7 +517,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                               placeholder="Enter first name"
                               disabled={isVerified}
-                              className={`bg-background ${isVerified ? "bg-[#F5F5F5]" : ""}`}
+                              className={`bg-[#F5F5F5] ${isVerified ? "bg-[#F5F5F5]" : ""}`}
                             />
                           </FormField>
                           
@@ -527,7 +527,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                               placeholder="Enter last name"
                               disabled={isVerified}
-                              className={`bg-background ${isVerified ? "bg-[#F5F5F5]" : ""}`}
+                              className={`bg-[#F5F5F5] ${isVerified ? "bg-[#F5F5F5]" : ""}`}
                             />
                           </FormField>
                           
@@ -538,7 +538,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               placeholder="أدخل الاسم الأول"
                               dir="rtl"
                               disabled={isVerified}
-                              className={`bg-background ${isVerified ? "bg-[#F5F5F5]" : ""}`}
+                              className={`bg-[#F5F5F5] ${isVerified ? "bg-[#F5F5F5]" : ""}`}
                             />
                           </FormField>
                           
@@ -549,14 +549,14 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               placeholder="أدخل اسم العائلة"
                               dir="rtl"
                               disabled={isVerified}
-                              className={`bg-background ${isVerified ? "bg-[#F5F5F5]" : ""}`}
+                              className={`bg-[#F5F5F5] ${isVerified ? "bg-[#F5F5F5]" : ""}`}
                             />
                           </FormField>
                         </div>
                       </div>
 
                       {/* Communication Data Section */}
-                      <div className="bg-card rounded-lg border p-6">
+                      <div className="bg-white rounded-lg border p-6">
                         <SectionHeader title="Communication Data" />
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                           <FormField label="Email Address" required>
@@ -565,7 +565,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               value={formData.email}
                               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                               placeholder="user@example.com"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                           
@@ -574,7 +574,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               value={formData.phone}
                               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                               placeholder="+966 5XX XXX XXXX"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                         </div>
@@ -589,7 +589,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                 <div className="space-y-6">
                   {/* Sub-Contractor Toggle (for Contractor type) */}
                   {formData.userType === "contractor" && (
-                    <div className="bg-card rounded-lg border p-6">
+                    <div className="bg-white rounded-lg border p-6">
                       <SectionHeader title="Contractor Type" />
                       <div className="flex items-center gap-3">
                         <Checkbox
@@ -609,7 +609,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   )}
 
                   {/* Employment Data Section */}
-                  <div className="bg-card rounded-lg border p-6">
+                  <div className="bg-white rounded-lg border p-6">
                     <SectionHeader title="Employment Data" />
                     <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                       <FormField label="Job Title">
@@ -617,7 +617,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           value={formData.jobTitle}
                           onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
                           placeholder="Enter job title"
-                          className="bg-background"
+                          className="bg-[#F5F5F5]"
                         />
                       </FormField>
                       
@@ -626,7 +626,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           value={formData.departmentId?.toString() || ""}
                           onValueChange={(value) => setFormData({ ...formData, departmentId: value ? parseInt(value) : null })}
                         >
-                          <SelectTrigger className="bg-background">
+                          <SelectTrigger className="bg-[#F5F5F5]">
                             <SelectValue placeholder="Select department" />
                           </SelectTrigger>
                           <SelectContent>
@@ -646,7 +646,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               value={formData.employeeId}
                               onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
                               placeholder="Enter employee ID"
-                              className="bg-background"
+                              className="bg-[#F5F5F5]"
                             />
                           </FormField>
                           
@@ -655,7 +655,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               value={formData.managerId?.toString() || ""}
                               onValueChange={(value) => setFormData({ ...formData, managerId: value ? parseInt(value) : null })}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue placeholder="Select manager" />
                               </SelectTrigger>
                               <SelectContent>
@@ -674,7 +674,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
 
                   {/* Contractor Company Section */}
                   {formData.userType === "contractor" && (
-                    <div className="bg-card rounded-lg border p-6">
+                    <div className="bg-white rounded-lg border p-6">
                       <SectionHeader title="Contractor Assignment" />
                       <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                         <FormField 
@@ -685,7 +685,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                             value={formData.contractorCompanyId?.toString() || ""}
                             onValueChange={(value) => setFormData({ ...formData, contractorCompanyId: value ? parseInt(value) : null })}
                           >
-                            <SelectTrigger className="bg-background">
+                            <SelectTrigger className="bg-[#F5F5F5]">
                               <SelectValue placeholder="Select company" />
                             </SelectTrigger>
                             <SelectContent>
@@ -704,7 +704,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               value={formData.subContractorCompanyId?.toString() || ""}
                               onValueChange={(value) => setFormData({ ...formData, subContractorCompanyId: value ? parseInt(value) : null })}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue placeholder="Select sub-contractor" />
                               </SelectTrigger>
                               <SelectContent>
@@ -722,7 +722,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               value={formData.reportingToId?.toString() || ""}
                               onValueChange={(value) => setFormData({ ...formData, reportingToId: value ? parseInt(value) : null })}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue placeholder="Select contact" />
                               </SelectTrigger>
                               <SelectContent>
@@ -759,7 +759,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
 
                   {/* Client Company Section */}
                   {formData.userType === "client" && (
-                    <div className="bg-card rounded-lg border p-6">
+                    <div className="bg-white rounded-lg border p-6">
                       <SectionHeader title="Client Assignment" />
                       <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                         <FormField label="Client Company" required>
@@ -767,7 +767,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                             value={formData.clientCompanyId?.toString() || ""}
                             onValueChange={(value) => setFormData({ ...formData, clientCompanyId: value ? parseInt(value) : null })}
                           >
-                            <SelectTrigger className="bg-background">
+                            <SelectTrigger className="bg-[#F5F5F5]">
                               <SelectValue placeholder="Select client company" />
                             </SelectTrigger>
                             <SelectContent>
@@ -785,7 +785,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                             value={formData.accountManagerId?.toString() || ""}
                             onValueChange={(value) => setFormData({ ...formData, accountManagerId: value ? parseInt(value) : null })}
                           >
-                            <SelectTrigger className="bg-background">
+                            <SelectTrigger className="bg-[#F5F5F5]">
                               <SelectValue placeholder="Select account manager" />
                             </SelectTrigger>
                             <SelectContent>
@@ -807,7 +807,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
               {activeTab === "access" && (
                 <div className="space-y-6">
                   {/* User Role Section */}
-                  <div className="bg-card rounded-lg border p-6">
+                  <div className="bg-white rounded-lg border p-6">
                     <SectionHeader title="User Role" />
                     <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                       <FormField label="System Role" required>
@@ -815,7 +815,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           value={formData.roleId?.toString() || ""}
                           onValueChange={(value) => setFormData({ ...formData, roleId: value ? parseInt(value) : null })}
                         >
-                          <SelectTrigger className="bg-background">
+                          <SelectTrigger className="bg-[#F5F5F5]">
                             <SelectValue placeholder="Select role" />
                           </SelectTrigger>
                           <SelectContent>
@@ -831,7 +831,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   </div>
 
                   {/* Site Access Section */}
-                  <div className="bg-card rounded-lg border p-6">
+                  <div className="bg-white rounded-lg border p-6">
                     <SectionHeader title="Site Access" />
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
@@ -858,7 +858,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               value={formData.selectedSiteId?.toString() || ""}
                               onValueChange={(value) => setFormData({ ...formData, selectedSiteId: value ? parseInt(value) : null })}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue placeholder="Select site" />
                               </SelectTrigger>
                               <SelectContent>
@@ -877,7 +877,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               onValueChange={(value) => setFormData({ ...formData, selectedZoneId: value ? parseInt(value) : null })}
                               disabled={!formData.selectedSiteId}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue placeholder={formData.selectedSiteId ? "Select zone" : "Select site first"} />
                               </SelectTrigger>
                               <SelectContent>
@@ -896,7 +896,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               onValueChange={(value) => setFormData({ ...formData, selectedAreaId: value ? parseInt(value) : null })}
                               disabled={!formData.selectedZoneId}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-[#F5F5F5]">
                                 <SelectValue placeholder={formData.selectedZoneId ? "Select area" : "Select zone first"} />
                               </SelectTrigger>
                               <SelectContent>
@@ -914,7 +914,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   </div>
 
                   {/* Account Settings Section */}
-                  <div className="bg-card rounded-lg border p-6">
+                  <div className="bg-white rounded-lg border p-6">
                     <SectionHeader title="Account Settings" />
                     <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                       <FormField label="Temporary Password" required hint="Minimum 6 characters">
@@ -923,7 +923,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           value={formData.temporaryPassword}
                           onChange={(e) => setFormData({ ...formData, temporaryPassword: e.target.value })}
                           placeholder="Enter temporary password"
-                          className="bg-background"
+                          className="bg-[#F5F5F5]"
                         />
                       </FormField>
                       
@@ -971,7 +971,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
           </ScrollArea>
 
           {/* Bottom Navigation Bar */}
-          <div className="border-t bg-card px-6 py-4 flex items-center justify-between shrink-0">
+          <div className="border-t bg-white px-6 py-4 flex items-center justify-between shrink-0">
             <div>
               {!isFirstTab && (
                 <Button

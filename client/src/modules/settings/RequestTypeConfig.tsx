@@ -146,8 +146,8 @@ function SortableSectionItem({
         >
           <GripVertical className="h-4 w-4 text-[#6B6B6B]" />
         </button>
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-          <LayoutList className="h-5 w-5 text-primary" />
+        <div className="w-10 h-10 rounded-lg bg-[#5B2C93]/10 flex items-center justify-center">
+          <LayoutList className="h-5 w-5 text-[#5B2C93]" />
         </div>
         <div>
           <div className="font-medium">{section.name}</div>
@@ -213,8 +213,8 @@ function SortableFieldItem({
         >
           <GripVertical className="h-4 w-4 text-[#6B6B6B]" />
         </button>
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-          <FormInput className="h-5 w-5 text-primary" />
+        <div className="w-10 h-10 rounded-lg bg-[#5B2C93]/10 flex items-center justify-center">
+          <FormInput className="h-5 w-5 text-[#5B2C93]" />
         </div>
         <div>
           <div className="font-medium">{field.name}</div>
@@ -230,7 +230,7 @@ function SortableFieldItem({
         <Button variant="ghost" size="icon" onClick={onEdit}>
           <Pencil className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon" onClick={onDelete} className="text-destructive hover:text-destructive">
+        <Button variant="ghost" size="icon" onClick={onDelete} className="text-[#FF6B6B] hover:text-[#FF6B6B]">
           <Trash2 className="h-4 w-4" />
         </Button>
       </div>
@@ -722,7 +722,7 @@ export default function RequestTypeConfig() {
         {selectedSection && (
           <>
             <ChevronRight className="h-4 w-4 text-[#6B6B6B]" />
-            <Button variant="default" size="sm" className="bg-primary/10 text-primary">
+            <Button variant="default" size="sm" className="bg-[#5B2C93]/10 text-[#5B2C93]">
               <FormInput className="h-4 w-4 mr-1" />
               {selectedSection.name}
             </Button>
@@ -786,8 +786,8 @@ export default function RequestTypeConfig() {
                       onClick={() => setSelectedCategory(category)}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <FolderTree className="h-5 w-5 text-primary" />
+                        <div className="w-10 h-10 rounded-lg bg-[#5B2C93]/10 flex items-center justify-center">
+                          <FolderTree className="h-5 w-5 text-[#5B2C93]" />
                         </div>
                         <div>
                           <div className="font-medium">{category.name}</div>
@@ -834,7 +834,7 @@ export default function RequestTypeConfig() {
                       onClick={() => setSelectedType(type)}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-lg bg-[#5B2C93]/10 flex items-center justify-center">
                           <Badge variant="outline" className="text-xs">{type.shortCode}</Badge>
                         </div>
                         <div>
@@ -1429,9 +1429,9 @@ export default function RequestTypeConfig() {
             {showDataSourceSelector && (
               <div className="border rounded-lg overflow-hidden bg-[#F5F5F5]">
                 {/* Header */}
-                <div className="px-4 py-3 bg-primary/5 border-b">
+                <div className="px-4 py-3 bg-[#5B2C93]/5 border-b">
                   <h4 className="font-medium text-sm flex items-center gap-2">
-                    <span className="w-5 h-5 rounded bg-primary/10 flex items-center justify-center text-xs">📋</span>
+                    <span className="w-5 h-5 rounded bg-[#5B2C93]/10 flex items-center justify-center text-xs">📋</span>
                     Options Source
                   </h4>
                   <p className="text-xs text-[#6B6B6B] mt-1">
@@ -1459,7 +1459,7 @@ export default function RequestTypeConfig() {
                             }}
                             className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all flex items-center gap-2 ${
                               selectedDataSource === opt.value
-                                ? "bg-primary text-primary-foreground shadow-sm"
+                                ? "bg-[#5B2C93] text-white shadow-sm"
                                 : "bg-white border hover:bg-[#F5F5F5] hover:border-primary/30"
                             }`}
                           >

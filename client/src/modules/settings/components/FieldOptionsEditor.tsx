@@ -61,7 +61,7 @@ function SortableOption({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-2 p-2 border rounded-lg bg-background"
+      className="flex items-center gap-2 p-2 border rounded-lg bg-[#F5F5F5]"
     >
       <button
         type="button"
@@ -95,7 +95,7 @@ function SortableOption({
         variant="ghost"
         size="icon"
         onClick={() => onRemove(option.id)}
-        className="text-destructive hover:text-destructive"
+        className="text-[#FF6B6B] hover:text-[#FF6B6B]"
       >
         <Trash2 className="h-4 w-4" />
       </Button>

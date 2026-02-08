@@ -292,7 +292,7 @@ export default function Requests() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight">Requests</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Requests</h1>
           <p className="text-sm text-[#6B6B6B]">Manage and track all access requests</p>
         </div>
         <div className="flex items-center gap-2">
@@ -345,7 +345,7 @@ export default function Requests() {
       </div>
 
       {/* Table Container */}
-      <div className="border rounded-lg bg-card">
+      <div className="border rounded-lg bg-white">
         {/* Data Table */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
@@ -360,18 +360,18 @@ export default function Requests() {
         ) : (
           <Table>
             <TableHeader>
-              <TableRow className="hover:bg-transparent border-b-2 border-border">
+              <TableRow className="hover:bg-transparent border-b-2 border-[#E0E0E0]">
                 <TableHead className="w-[40px]">
                   <Checkbox />
                 </TableHead>
-                <TableHead className="font-medium text-foreground">Request ID</TableHead>
-                <TableHead className="font-medium text-foreground">Status</TableHead>
-                <TableHead className="font-medium text-foreground">Type</TableHead>
-                <TableHead className="font-medium text-foreground">Visitor</TableHead>
-                <TableHead className="font-medium text-foreground">Company</TableHead>
-                <TableHead className="font-medium text-foreground">Site</TableHead>
-                <TableHead className="font-medium text-foreground">Date Range</TableHead>
-                <TableHead className="font-medium text-foreground">Created</TableHead>
+                <TableHead className="font-medium text-[#2C2C2C]">Request ID</TableHead>
+                <TableHead className="font-medium text-[#2C2C2C]">Status</TableHead>
+                <TableHead className="font-medium text-[#2C2C2C]">Type</TableHead>
+                <TableHead className="font-medium text-[#2C2C2C]">Visitor</TableHead>
+                <TableHead className="font-medium text-[#2C2C2C]">Company</TableHead>
+                <TableHead className="font-medium text-[#2C2C2C]">Site</TableHead>
+                <TableHead className="font-medium text-[#2C2C2C]">Date Range</TableHead>
+                <TableHead className="font-medium text-[#2C2C2C]">Created</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -590,9 +590,9 @@ export default function Requests() {
               )}
               
               {/* Visitor Info */}
-              <div className="bg-[#F5F5F5]/30 rounded-lg p-4 space-y-3">
-                <h4 className="font-medium flex items-center gap-2">
-                  <User className="h-4 w-4" />
+              <div className="border-l-4 border-[#5B2C93] bg-[#F5F5F5] rounded-r-lg p-4 space-y-3">
+                <h4 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                  <User className="h-4 w-4 text-[#5B2C93]" />
                   Visitor Information
                 </h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -624,9 +624,9 @@ export default function Requests() {
               </div>
               
               {/* Visit Details */}
-              <div className="bg-[#F5F5F5]/30 rounded-lg p-4 space-y-3">
-                <h4 className="font-medium flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
+              <div className="border-l-4 border-[#5B2C93] bg-[#F5F5F5] rounded-r-lg p-4 space-y-3">
+                <h4 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                  <Building2 className="h-4 w-4 text-[#5B2C93]" />
                   Visit Details
                 </h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -653,8 +653,8 @@ export default function Requests() {
               
               {/* Zones */}
               {requestDetail.zones && requestDetail.zones.length > 0 && (
-                <div className="bg-[#F5F5F5]/30 rounded-lg p-4 space-y-3">
-                  <h4 className="font-medium">Requested Zones</h4>
+                <div className="border-l-4 border-[#5B2C93] bg-[#F5F5F5] rounded-r-lg p-4 space-y-3">
+                  <h4 className="font-medium text-[#2C2C2C]">Requested Zones</h4>
                   <div className="flex flex-wrap gap-2">
                     {requestDetail.zones.map((zone: any) => (
                       <Badge key={zone.id} variant="outline" className="gap-1">
@@ -668,9 +668,9 @@ export default function Requests() {
               
               {/* Approval History */}
               {requestDetail.approvals && requestDetail.approvals.length > 0 && (
-                <div className="bg-[#F5F5F5]/30 rounded-lg p-4 space-y-3">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <Briefcase className="h-4 w-4" />
+                <div className="border-l-4 border-[#5B2C93] bg-[#F5F5F5] rounded-r-lg p-4 space-y-3">
+                  <h4 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                    <Briefcase className="h-4 w-4 text-[#5B2C93]" />
                     Approval History
                   </h4>
                   <div className="space-y-2">

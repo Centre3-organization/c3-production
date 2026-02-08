@@ -366,7 +366,7 @@ export function RepeatableSectionWithYakeen({
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                        <Label className="text-sm font-medium text-[#2C2C2C]">
                           {t("visitors.idType", "ID Type")} <span className="text-[#FF6B6B]">*</span>
                         </Label>
                         <Select 
@@ -389,7 +389,7 @@ export function RepeatableSectionWithYakeen({
                         </Select>
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                        <Label className="text-sm font-medium text-[#2C2C2C]">
                           {t("visitors.idNumber", "ID Number")} <span className="text-[#FF6B6B]">*</span>
                         </Label>
                         <div className="flex gap-2">
@@ -538,7 +538,7 @@ export function RepeatableSectionWithYakeen({
                         </h4>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                            <Label className="text-sm font-medium text-[#2C2C2C]">
                               {t("visitors.fullName", "Full Name")} <span className="text-[#FF6B6B]">*</span>
                             </Label>
                             <Input
@@ -548,7 +548,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                            <Label className="text-sm font-medium text-[#2C2C2C]">
                               {t("visitors.nationality", "Nationality")}
                             </Label>
                             <Input
@@ -558,7 +558,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                            <Label className="text-sm font-medium text-[#2C2C2C]">
                               {t("visitors.company", "Company")}
                             </Label>
                             <Input
@@ -568,7 +568,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                            <Label className="text-sm font-medium text-[#2C2C2C]">
                               {t("visitors.jobTitle", "Job Title")}
                             </Label>
                             <Input
@@ -578,7 +578,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                            <Label className="text-sm font-medium text-[#2C2C2C]">
                               {t("visitors.mobile", "Mobile")}
                             </Label>
                             <Input
@@ -588,7 +588,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                            <Label className="text-sm font-medium text-[#2C2C2C]">
                               {t("visitors.email", "Email")}
                             </Label>
                             <Input
@@ -678,7 +678,7 @@ export function RepeatableSectionWithYakeen({
                 <Card className={cn(
                   "transition-shadow",
                   isExpanded && "shadow-md border-[#5B2C93]/30",
-                  isVerified && "border-l-4 border-l-green-500"
+                  isVerified && "border-l-4 border-l-[#4ECDC4]"
                 )}>
                   <CollapsibleTrigger asChild>
                     <CardHeader className="py-3 px-4 cursor-pointer hover:bg-[#F5F5F5] transition-colors">

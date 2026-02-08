@@ -71,7 +71,8 @@ export default function McmDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-medium">{t("mcm.title", "Magnetic Card Management")}</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{t("mcm.title", "Magnetic Card Management")}</h1>
+          <p className="text-sm text-[#6B6B6B]">{t("mcm.subtitle", "Manage and track magnetic access cards")}</p>
           <p className="text-[#6B6B6B]">
             {t("mcm.subtitle", "Manage access cards for employees and contractors")}
           </p>
@@ -94,7 +95,7 @@ export default function McmDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-[#6B6B6B]">{stat.title}</p>
-                  <p className="text-3xl font-medium mt-1">
+                  <p className="text-2xl font-medium mt-1">
                     {statsLoading ? "..." : stat.value}
                   </p>
                 </div>
@@ -110,11 +111,11 @@ export default function McmDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Link href="/mcm/cards">
-          <Card className="cursor-pointer hover:bg-accent/50 transition-colors">
+          <Card className="cursor-pointer hover:bg-[#E8DCF5]/50 transition-colors">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-primary/10">
-                  <Users className="h-6 w-6 text-primary" />
+                <div className="p-3 rounded-full bg-[#5B2C93]/10">
+                  <Users className="h-6 w-6 text-[#5B2C93]" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-medium">{t("mcm.cardDirectory", "Card Directory")}</h3>
@@ -129,10 +130,10 @@ export default function McmDashboard() {
         </Link>
 
         <Link href="/mcm/companies">
-          <Card className="cursor-pointer hover:bg-accent/50 transition-colors">
+          <Card className="cursor-pointer hover:bg-[#E8DCF5]/50 transition-colors">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-[#FFF4E5]0/10">
+                <div className="p-3 rounded-full bg-[#FFF4E5]/10">
                   <Building2 className="h-6 w-6 text-[#FFB84D]" />
                 </div>
                 <div className="flex-1">
@@ -148,10 +149,10 @@ export default function McmDashboard() {
         </Link>
 
         <Link href="/mcm/access-levels">
-          <Card className="cursor-pointer hover:bg-accent/50 transition-colors">
+          <Card className="cursor-pointer hover:bg-[#E8DCF5]/50 transition-colors">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-[#E8DCF5]0/10">
+                <div className="p-3 rounded-full bg-[#E8DCF5]/10">
                   <Shield className="h-6 w-6 text-[#5B2C93]" />
                 </div>
                 <div className="flex-1">
@@ -187,7 +188,7 @@ export default function McmDashboard() {
                 {expiringCards.slice(0, 5).map((card) => (
                   <div
                     key={card.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-accent/50"
+                    className="flex items-center justify-between p-3 rounded-lg bg-[#E8DCF5]/50"
                   >
                     <div>
                       <p className="font-medium">{card.fullName}</p>
@@ -227,7 +228,7 @@ export default function McmDashboard() {
                 {blockedCards.slice(0, 5).map((card) => (
                   <div
                     key={card.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-accent/50"
+                    className="flex items-center justify-between p-3 rounded-lg bg-[#E8DCF5]/50"
                   >
                     <div>
                       <p className="font-medium">{card.fullName}</p>
@@ -268,7 +269,7 @@ export default function McmDashboard() {
               {recentRequests.requests.map((request) => (
                 <div
                   key={request.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-accent/50"
+                  className="flex items-center justify-between p-3 rounded-lg bg-[#E8DCF5]/50"
                 >
                   <div className="flex items-center gap-3">
                     <div>

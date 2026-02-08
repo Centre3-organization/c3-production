@@ -32,10 +32,10 @@ export default function IntegrationHub() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col items-center justify-center text-center py-8">
-        <div className="p-4 rounded-full bg-primary/10 mb-4">
-          <Radio className="h-12 w-12 text-primary" />
+        <div className="p-4 rounded-full bg-[#5B2C93]/10 mb-4">
+          <Radio className="h-12 w-12 text-[#5B2C93]" />
         </div>
-        <h1 className="text-3xl font-medium mb-2">
+        <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 mb-2">
           {t("integrationHub.title", "Integration Hub")}
         </h1>
         <p className="text-[#6B6B6B] max-w-md">
@@ -44,17 +44,17 @@ export default function IntegrationHub() {
       </div>
 
       {/* Coming Soon Banner */}
-      <Card className="border-primary/20 bg-primary/5">
+      <Card className="border-primary/20 bg-[#5B2C93]/5">
         <CardContent className="pt-6">
           <div className="flex flex-col items-center text-center py-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#5B2C93]/10 text-[#5B2C93] font-medium mb-4">
               <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5B2C93] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-[#5B2C93]"></span>
               </span>
               {t("common.comingSoon", "Coming Soon")}
             </div>
-            <h2 className="text-2xl font-medium mb-2">
+            <h2 className="text-xl font-medium text-[#2C2C2C] leading-7 mb-2">
               {t("integrationHub.underDevelopment", "Under Development")}
             </h2>
             <p className="text-[#6B6B6B] max-w-lg">

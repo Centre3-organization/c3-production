@@ -186,7 +186,7 @@ export default function ManualApproval() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-medium tracking-tight text-[#2C2C2C] flex items-center gap-2">
             <Shield className="h-6 w-6 text-[#5B2C93]" />
             L2 Security Approval
           </h1>
@@ -208,7 +208,7 @@ export default function ManualApproval() {
 
       {/* Stats Bar */}
       <div className="grid grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-[#5B2C93]">
+        <Card className="bg-[#E8DCF5] border-[#5B2C93]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
@@ -222,7 +222,7 @@ export default function ManualApproval() {
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-[#4ECDC4]">
+        <Card className="bg-[#E8F9F8] border-[#4ECDC4]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
@@ -236,7 +236,7 @@ export default function ManualApproval() {
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-slate-50 to-gray-50 border-[#E0E0E0]">
+        <Card className="bg-[#F5F5F5] border-[#E0E0E0]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
@@ -270,7 +270,7 @@ export default function ManualApproval() {
       {/* Request List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
         </div>
       ) : filteredTasks.length === 0 ? (
         <Card className="border-dashed">
@@ -278,7 +278,7 @@ export default function ManualApproval() {
             <div className="h-16 w-16 rounded-full bg-[#E8DCF5] flex items-center justify-center mb-4">
               <Shield className="h-8 w-8 text-[#5B2C93]" />
             </div>
-            <h3 className="text-lg font-medium text-foreground">No pending L2 reviews</h3>
+            <h3 className="text-lg font-medium text-[#2C2C2C]">No pending L2 reviews</h3>
             <p className="text-[#6B6B6B] mt-1">All security reviews have been processed</p>
           </CardContent>
         </Card>
@@ -287,7 +287,7 @@ export default function ManualApproval() {
           {filteredTasks.map((task: any) => (
             <Card 
               key={task.taskId} 
-              className="overflow-hidden border-l-4 border-l-indigo-500"
+              className="overflow-hidden border-l-4 border-l-[#5B2C93]"
             >
               {/* Header Row */}
               <div 
@@ -301,7 +301,7 @@ export default function ManualApproval() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-foreground">{task.visitorName}</span>
+                        <span className="font-medium text-[#2C2C2C]">{task.visitorName}</span>
                         <Badge variant="outline" className="text-xs">
                           {typeLabels[task.type] || task.type}
                         </Badge>
@@ -323,7 +323,7 @@ export default function ManualApproval() {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-sm font-medium text-foreground">
+                      <p className="text-sm font-medium text-[#2C2C2C]">
                         {task.startDate ? format(new Date(task.startDate), "MMM dd, yyyy") : "N/A"}
                       </p>
                       <p className="text-xs text-[#6B6B6B]">
@@ -465,7 +465,7 @@ export default function ManualApproval() {
                   <RadioGroupItem value="qr_code" id="qr_code" className="peer sr-only" />
                   <Label 
                     htmlFor="qr_code" 
-                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[#5B2C93] cursor-pointer"
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-white p-4 hover:bg-[#E8DCF5] hover:text-[#2C2C2C] peer-data-[state=checked]:border-[#5B2C93] cursor-pointer"
                   >
                     <Scan className="h-6 w-6 mb-2" />
                     <span className="text-xs font-medium">QR Code</span>
@@ -475,7 +475,7 @@ export default function ManualApproval() {
                   <RadioGroupItem value="rfid" id="rfid" className="peer sr-only" />
                   <Label 
                     htmlFor="rfid" 
-                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[#5B2C93] cursor-pointer"
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-white p-4 hover:bg-[#E8DCF5] hover:text-[#2C2C2C] peer-data-[state=checked]:border-[#5B2C93] cursor-pointer"
                   >
                     <Scan className="h-6 w-6 mb-2" />
                     <span className="text-xs font-medium">RFID Tag</span>
@@ -485,7 +485,7 @@ export default function ManualApproval() {
                   <RadioGroupItem value="card" id="card" className="peer sr-only" />
                   <Label 
                     htmlFor="card" 
-                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[#5B2C93] cursor-pointer"
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-white p-4 hover:bg-[#E8DCF5] hover:text-[#2C2C2C] peer-data-[state=checked]:border-[#5B2C93] cursor-pointer"
                   >
                     <CreditCard className="h-6 w-6 mb-2" />
                     <span className="text-xs font-medium">Access Card</span>

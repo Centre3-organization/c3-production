@@ -1841,3 +1841,36 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] WorkflowBuilder
 - [x] Profile
 - [x] AccessDenied, NotFound
+
+## UI/UX Consistency Fixes (Feb 8, 2026 - Round 2)
+
+### Page Header Consistency
+- [x] Create standardized PageHeader component with consistent title position, subtitle, breadcrumb
+- [x] Group Management page header must match User Management page header exactly
+- [x] Reports page must use same layout pattern as Approvals page (redesigned with cards)
+- [x] All listing pages must use identical header structure (text-2xl font-medium + subtitle on all pages)
+
+### Edit User Dialog
+- [x] Remove gradient from Edit User dialog header
+- [x] Standardize Edit User dialog to match brand form guidelines (SAP Fiori style)
+- [x] Section headers in Edit User must use purple left border per brand spec
+
+### Request Details Modals
+- [x] Standardize Request Details dialog (from request list) to match Decision Details dialog (from approvals)
+- [x] Both modals must have identical layout: 3-column info grid, approval timeline, action buttons
+- [x] Fix badge styling in modals - consistent status badge appearance
+
+### Button Contrast Issues
+- [x] Fix grey/outline buttons with white text not visible (fixed broken color values with trailing 0)
+- [x] Ensure all button variants have proper text contrast ratios
+- [x] Close button must have dark text on light background
+
+### Form Section Headers
+- [x] All form section headers must have purple left border (4px)
+- [x] Section titles must be purple text (#5B2C93)
+- [x] Consistent spacing between sections (24px)
+
+### Approval Cards
+- [x] Standardize approval card layout across L1 and L2
+- [x] Action buttons must be consistently positioned
+- [x] Status badges must use exact same styling everywhere

@@ -38,7 +38,7 @@ function FieldDisplay({ label, value, icon }: { label: string; value: React.Reac
       <p className="text-xs text-[#6B6B6B] uppercase tracking-wider">{label}</p>
       <div className="flex items-center gap-2">
         {icon}
-        <p className="text-sm font-medium text-foreground">{value || "—"}</p>
+        <p className="text-sm font-medium text-[#2C2C2C]">{value || "—"}</p>
       </div>
     </div>
   );
@@ -47,7 +47,7 @@ function FieldDisplay({ label, value, icon }: { label: string; value: React.Reac
 // Section Header
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="pb-2 mb-4 border-b border-[#5B2C93]/20">
+    <div className="border-l-4 border-[#5B2C93] pl-3 mb-4">
       <h3 className="text-sm font-medium text-[#5B2C93]">{title}</h3>
     </div>
   );
@@ -142,7 +142,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16 border-2 border-[#5B2C93]/20">
-                <AvatarFallback className="bg-gradient-to-br from-[#FF6B6B]/20 to-[#5B2C93]/20 text-[#5B2C93] text-xl font-medium">
+                <AvatarFallback className="bg-[#E8DCF5] text-[#5B2C93] text-xl font-medium">
                   {getUserInitials()}
                 </AvatarFallback>
               </Avatar>
@@ -191,7 +191,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
             {/* General Tab */}
             <TabsContent value="general" className="m-0 space-y-6">
               {/* Personal Information */}
-              <div className="bg-card rounded-lg border p-5">
+              <div className="bg-white rounded-lg border p-5">
                 <SectionHeader title="Personal Information" />
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                   <FieldDisplay label="First Name (English)" value={user.firstName} />
@@ -202,7 +202,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
               </div>
 
               {/* Identity Information */}
-              <div className="bg-card rounded-lg border p-5">
+              <div className="bg-white rounded-lg border p-5">
                 <SectionHeader title="Identity Information" />
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                   <FieldDisplay label="ID Type" value={user.idType === "national_id" ? "National ID" : user.idType === "iqama" ? "Iqama" : user.idType} />
@@ -211,7 +211,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
               </div>
 
               {/* Contact Information */}
-              <div className="bg-card rounded-lg border p-5">
+              <div className="bg-white rounded-lg border p-5">
                 <SectionHeader title="Contact Information" />
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                   <FieldDisplay 
@@ -231,7 +231,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
             {/* Organization Tab */}
             <TabsContent value="organization" className="m-0 space-y-6">
               {/* Employment Information */}
-              <div className="bg-card rounded-lg border p-5">
+              <div className="bg-white rounded-lg border p-5">
                 <SectionHeader title="Employment Information" />
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                   <FieldDisplay 
@@ -247,7 +247,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
 
               {/* Company Assignment */}
               {(user.userType === "contractor" || user.userType === "sub_contractor") && (
-                <div className="bg-card rounded-lg border p-5">
+                <div className="bg-white rounded-lg border p-5">
                   <SectionHeader title="Contractor Assignment" />
                   <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                     <FieldDisplay 
@@ -277,7 +277,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
               )}
 
               {user.userType === "client" && (
-                <div className="bg-card rounded-lg border p-5">
+                <div className="bg-white rounded-lg border p-5">
                   <SectionHeader title="Client Assignment" />
                   <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                     <FieldDisplay 
@@ -294,7 +294,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
             {/* Access Tab */}
             <TabsContent value="access" className="m-0 space-y-6">
               {/* Role & Permissions */}
-              <div className="bg-card rounded-lg border p-5">
+              <div className="bg-white rounded-lg border p-5">
                 <SectionHeader title="Role & Permissions" />
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                   <FieldDisplay 
@@ -317,7 +317,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
               </div>
 
               {/* Site Access */}
-              <div className="bg-card rounded-lg border p-5">
+              <div className="bg-white rounded-lg border p-5">
                 <SectionHeader title="Site Access" />
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                   <FieldDisplay 
@@ -341,7 +341,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
               </div>
 
               {/* Account Information */}
-              <div className="bg-card rounded-lg border p-5">
+              <div className="bg-white rounded-lg border p-5">
                 <SectionHeader title="Account Information" />
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                   <FieldDisplay 

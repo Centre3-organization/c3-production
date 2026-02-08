@@ -49,7 +49,7 @@ export default function Reports() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-medium tracking-tight text-foreground">Analytics & Reports</h1>
+          <h1 className="text-3xl font-medium tracking-tight text-[#2C2C2C]">Analytics & Reports</h1>
           <p className="text-[#6B6B6B] mt-1">Deep insights into facility usage and security trends.</p>
         </div>
         <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ export default function Reports() {
           <CardContent>
             <div className="text-2xl font-medium">12</div>
             <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
-              <span className="text-destructive flex items-center font-medium">
+              <span className="text-[#FF6B6B] flex items-center font-medium">
                 <ArrowUpRight className="h-3 w-3 mr-1" />
                 +2
               </span>

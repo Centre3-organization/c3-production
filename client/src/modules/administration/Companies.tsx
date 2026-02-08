@@ -150,7 +150,7 @@ export default function Companies() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-medium tracking-tight flex items-center gap-2">
-            <Building2 className="h-6 w-6 text-primary" />
+            <Building2 className="h-6 w-6 text-[#5B2C93]" />
             {t("companies.title", "Companies")}
           </h1>
           <p className="text-[#6B6B6B] mt-1">

@@ -384,7 +384,7 @@ export default function Approvals() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight">{t("approvals.title", "My Approvals")}</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{t("approvals.title", "My Approvals")}</h1>
           <p className="text-sm text-[#6B6B6B]">{t("approvals.subtitle", "Review and process pending approval requests")}</p>
         </div>
         <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
@@ -399,7 +399,7 @@ export default function Approvals() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.totalPending", "Total Pending")}</p>
+                <p className="text-sm font-medium text-[#2C2C2C]">{t("approvals.totalPending", "Total Pending")}</p>
                 <p className="text-2xl font-medium">{pendingTasks?.length || 0}</p>
               </div>
               <div className="p-2 bg-[#E8DCF5] rounded-lg">
@@ -410,11 +410,11 @@ export default function Approvals() {
         </Card>
         
         {uniqueStages.slice(0, 3).map((stage, index) => (
-          <Card key={stage.name} className={`border-l-4 ${index === 0 ? "border-l-amber-500" : index === 1 ? "border-l-purple-500" : "border-l-emerald-500"}`}>
+          <Card key={stage.name} className={`border-l-4 ${index === 0 ? "border-l-[#FFB84D]" : index === 1 ? "border-l-[#5B2C93]" : "border-l-[#4ECDC4]"}`}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-[#6B6B6B] uppercase">{stage.name}</p>
+                  <p className="text-sm font-medium text-[#2C2C2C]">{stage.name}</p>
                   <p className="text-2xl font-medium">{stage.count}</p>
                 </div>
                 <div className={`p-2 rounded-lg ${index === 0 ? "bg-[#FFF4E5]" : index === 1 ? "bg-[#E8DCF5]" : "bg-[#E8F9F8]"}`}>
@@ -934,7 +934,7 @@ export default function Approvals() {
           {selectedRequest && (
             <div className="space-y-6">
               {/* Header info */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-[#5B2C93]/20">
+              <div className="flex items-center justify-between p-4 bg-[#E8DCF5] rounded-lg border border-[#5B2C93]/20">
                 <div>
                   <span className="font-mono text-xl font-medium text-[#2C2C2C]">{selectedRequest.request?.requestNumber}</span>
                   <div className="flex items-center gap-2 mt-2">
@@ -960,70 +960,70 @@ export default function Approvals() {
               {/* Main Details Grid - 3 columns */}
               <div className="grid grid-cols-3 gap-6">
                 {/* Column 1: Visitor Information */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-[#2C2C2C] border-b pb-2 flex items-center gap-2">
+                <div className="border-l-4 border-[#5B2C93] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
+                  <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
                     <User className="h-4 w-4 text-[#5B2C93]" />
                     {t("approvals.visitorInfo", "Visitor Information")}
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.fullName", "Full Name")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.fullName", "Full Name")}</label>
                       <p className="text-sm font-medium">{selectedRequest.request?.visitorName || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.company", "Company")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.company", "Company")}</label>
                       <p className="text-sm font-medium">{selectedRequest.request?.visitorCompany || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.idType", "ID Type")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.idType", "ID Type")}</label>
                       <p className="text-sm font-medium">{selectedRequest.request?.visitorIdType?.replace(/_/g, " ").toUpperCase() || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.idNumber", "ID Number")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.idNumber", "ID Number")}</label>
                       <p className="text-sm font-medium font-mono">{selectedRequest.request?.visitorIdNumber || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.phone", "Phone")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.phone", "Phone")}</label>
                       <p className="text-sm font-medium">{selectedRequest.request?.visitorPhone || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.email", "Email")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.email", "Email")}</label>
                       <p className="text-sm font-medium">{selectedRequest.request?.visitorEmail || "N/A"}</p>
                     </div>
                   </div>
                 </div>
                 
                 {/* Column 2: Visit Details */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-[#2C2C2C] border-b pb-2 flex items-center gap-2">
+                <div className="border-l-4 border-[#5B2C93] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
+                  <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-[#5B2C93]" />
                     {t("approvals.visitDetails", "Visit Details")}
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.purpose", "Purpose")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.purpose", "Purpose")}</label>
                       <p className="text-sm font-medium">{selectedRequest.request?.purpose || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.startDate", "Start Date")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.startDate", "Start Date")}</label>
                       <p className="text-sm font-medium">
                         {selectedRequest.request?.startDate ? format(new Date(selectedRequest.request.startDate), "EEEE, MMM d, yyyy") : "N/A"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.endDate", "End Date")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.endDate", "End Date")}</label>
                       <p className="text-sm font-medium">
                         {selectedRequest.request?.endDate ? format(new Date(selectedRequest.request.endDate), "EEEE, MMM d, yyyy") : "N/A"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.visitTime", "Visit Time")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.visitTime", "Visit Time")}</label>
                       <p className="text-sm font-medium">
                         {selectedRequest.request?.startTime || "00:00"} - {selectedRequest.request?.endTime || "23:59"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.createdAt", "Submitted On")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.createdAt", "Submitted On")}</label>
                       <p className="text-sm font-medium">
                         {selectedRequest.request?.createdAt ? format(new Date(selectedRequest.request.createdAt), "MMM d, yyyy 'at' HH:mm") : "N/A"}
                       </p>
@@ -1032,32 +1032,32 @@ export default function Approvals() {
                 </div>
                 
                 {/* Column 3: Location & Workflow */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-[#2C2C2C] border-b pb-2 flex items-center gap-2">
+                <div className="border-l-4 border-[#4ECDC4] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
+                  <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-[#4ECDC4]" />
                     {t("approvals.locationWorkflow", "Location & Workflow")}
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.site", "Site")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.site", "Site")}</label>
                       <p className="text-sm font-medium">{selectedRequest.request?.siteName || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.workflow", "Workflow")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.workflow", "Workflow")}</label>
                       <p className="text-sm font-medium">{selectedRequest.workflowName || "Default"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.currentStage", "Current Stage")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.currentStage", "Current Stage")}</label>
                       <p className="text-sm font-medium">{selectedRequest.stageName || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.progress", "Progress")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.progress", "Progress")}</label>
                       <p className="text-sm font-medium">
                         Stage {selectedRequest.stageOrder || 1} of {selectedRequest.totalStages || 1}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">{t("approvals.assignedTo", "Assigned To")}</label>
+                      <label className="text-sm font-medium text-[#2C2C2C]">{t("approvals.assignedTo", "Assigned To")}</label>
                       <p className="text-sm font-medium">
                         {selectedRequest.assignedToId ? `User #${selectedRequest.assignedToId}` : "Unassigned"}
                       </p>
@@ -1128,15 +1128,15 @@ export default function Approvals() {
                         decision_made: "bg-[#E8DCF5]",
                         info_requested: "bg-[#FFF4E5]",
                         submitted: "bg-[#E8DCF5]",
-                        escalated: "bg-[#E8DCF5]0",
-                        workflow_started: "bg-[#F5F5F5]0",
+                        escalated: "bg-[#E8DCF5]",
+                        workflow_started: "bg-[#F5F5F5]",
                         workflow_completed: "bg-[#4ECDC4]",
                         stage_completed: "bg-[#E8F9F8]",
                         task_assigned: "bg-[#5B2C93]",
                         sent_back: "bg-[#FFF4E5]",
                         clarification_requested: "bg-[#FFF4E5]",
                         clarification_provided: "bg-[#5B2C93]",
-                        task_reassigned: "bg-[#E8DCF5]0",
+                        task_reassigned: "bg-[#E8DCF5]",
                       };
                       const actionIcons: Record<string, React.ReactNode> = {
                         approved: <CheckCircle2 className="h-3 w-3 text-white" />,

@@ -284,7 +284,7 @@ export function RequestComments({ requestId, instanceId, taskId, context = "gene
                     </div>
                   </div>
                 ) : (
-                  <p className="text-sm text-foreground mt-1 whitespace-pre-wrap">{comment.content}</p>
+                  <p className="text-sm text-[#2C2C2C] mt-1 whitespace-pre-wrap">{comment.content}</p>
                 )}
               </div>
             );

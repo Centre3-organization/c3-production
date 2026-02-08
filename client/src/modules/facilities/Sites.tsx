@@ -245,7 +245,8 @@ export default function Sites() {
               <Button variant="ghost" size="icon" className="h-8 w-8 -ml-2">
                 <ArrowLeft className="h-5 w-5 text-[#6B6B6B]" />
               </Button>
-              <h1 className="text-xl font-medium text-[#2C2C2C]">Sites Management</h1>
+              <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Sites Management</h1>
+              <p className="text-sm text-[#6B6B6B]">Manage data center sites and locations</p>
               <ChevronDown className="h-5 w-5 text-[#5B2C93]" />
             </div>
             <div className="flex items-center gap-2">
@@ -475,7 +476,7 @@ export default function Sites() {
               
               <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Site Code <span className="text-[#FF6B6B]">*</span></Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Site Code <span className="text-[#FF6B6B]">*</span></Label>
                   <Input 
                     value={formData.code}
                     onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -483,7 +484,7 @@ export default function Sites() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Site Name <span className="text-[#FF6B6B]">*</span></Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Site Name <span className="text-[#FF6B6B]">*</span></Label>
                   <Input 
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -492,7 +493,7 @@ export default function Sites() {
                 </div>
                 
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Country</Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Country</Label>
                   <Select 
                     value={formData.countryId}
                     onValueChange={(value) => setFormData({ ...formData, countryId: value, cityId: "" })}
@@ -506,7 +507,7 @@ export default function Sites() {
                   </Select>
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Region</Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Region</Label>
                   <Select 
                     value={formData.regionId}
                     onValueChange={(value) => setFormData({ ...formData, regionId: value })}
@@ -521,7 +522,7 @@ export default function Sites() {
                 </div>
                 
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">City</Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">City</Label>
                   <Select 
                     value={formData.cityId}
                     onValueChange={(value) => setFormData({ ...formData, cityId: value })}
@@ -536,7 +537,7 @@ export default function Sites() {
                   </Select>
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Site Type</Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Site Type</Label>
                   <Select 
                     value={formData.siteTypeId}
                     onValueChange={(value) => setFormData({ ...formData, siteTypeId: value })}
@@ -551,7 +552,7 @@ export default function Sites() {
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Category</Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Category</Label>
                   <Select 
                     value={formData.category}
                     onValueChange={(value: "primary" | "secondary" | "tertiary") => setFormData({ ...formData, category: value })}
@@ -565,7 +566,7 @@ export default function Sites() {
                   </Select>
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Address</Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Address</Label>
                   <Input 
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
@@ -574,7 +575,7 @@ export default function Sites() {
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Latitude</Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Latitude</Label>
                   <Input 
                     value={formData.latitude}
                     onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
@@ -582,7 +583,7 @@ export default function Sites() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Longitude</Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Longitude</Label>
                   <Input 
                     value={formData.longitude}
                     onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
@@ -591,7 +592,7 @@ export default function Sites() {
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Max Capacity</Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Max Capacity</Label>
                   <Input 
                     type="number"
                     value={formData.maxCapacity}
@@ -600,7 +601,7 @@ export default function Sites() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Status <span className="text-[#FF6B6B]">*</span></Label>
+                  <Label className="text-sm font-medium text-[#2C2C2C]">Status <span className="text-[#FF6B6B]">*</span></Label>
                   <Select 
                     value={formData.status}
                     onValueChange={(value: "active" | "inactive" | "maintenance" | "offline") => setFormData({ ...formData, status: value })}

@@ -270,7 +270,7 @@ export default function Groups() {
               <div
                 className={`p-2 rounded-lg ${
                   group.groupType === "internal"
-                    ? "bg-primary/10 text-primary"
+                    ? "bg-[#5B2C93]/10 text-[#5B2C93]"
                     : "bg-[#FFF4E5] text-[#FFB84D]"
                 }`}
               >
@@ -351,7 +351,7 @@ export default function Groups() {
                         setSelectedGroup(group);
                         setIsDeleteDialogOpen(true);
                       }}
-                      className="text-destructive"
+                      className="text-[#FF6B6B]"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
                       Delete Group
@@ -374,7 +374,8 @@ export default function Groups() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-medium">Group Management</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Group Management</h1>
+          <p className="text-sm text-[#6B6B6B]">Manage organizational groups and access hierarchies</p>
           <p className="text-[#6B6B6B]">
             Manage organizational groups and access hierarchies
           </p>
@@ -398,8 +399,8 @@ export default function Groups() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-primary/10 rounded-lg">
-                <FolderTree className="h-6 w-6 text-primary" />
+              <div className="p-3 bg-[#5B2C93]/10 rounded-lg">
+                <FolderTree className="h-6 w-6 text-[#5B2C93]" />
               </div>
               <div>
                 <p className="text-sm text-[#6B6B6B]">Total Groups</p>
@@ -1028,7 +1029,7 @@ function GroupMembersDialog({
                           size="icon"
                           onClick={() => handleRemoveMember(member.userId)}
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                          <Trash2 className="h-4 w-4 text-[#FF6B6B]" />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -1289,7 +1290,7 @@ function GroupAccessPolicyDialog({
                           size="icon"
                           onClick={() => deletePolicy.mutate({ id: policy.id })}
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                          <Trash2 className="h-4 w-4 text-[#FF6B6B]" />
                         </Button>
                       </TableCell>
                     </TableRow>

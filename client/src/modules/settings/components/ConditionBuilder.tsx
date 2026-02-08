@@ -81,7 +81,7 @@ function SingleConditionEditor({
   const needsValue = operatorRequiresValue(condition.operator);
 
   return (
-    <div className="flex items-start gap-2 p-3 border rounded-lg bg-background">
+    <div className="flex items-start gap-2 p-3 border rounded-lg bg-[#F5F5F5]">
       <div className="flex-1 grid grid-cols-12 gap-2">
         {/* Field selector */}
         <div className="col-span-4">
@@ -164,7 +164,7 @@ function SingleConditionEditor({
             type="button"
             variant="ghost"
             size="icon"
-            className="h-9 w-9 text-destructive hover:text-destructive"
+            className="h-9 w-9 text-[#FF6B6B] hover:text-[#FF6B6B]"
             onClick={onRemove}
           >
             <Trash2 className="h-4 w-4" />
@@ -265,7 +265,7 @@ function ConditionGroupEditor({
             type="button"
             variant="ghost"
             size="icon"
-            className="h-7 w-7 text-destructive hover:text-destructive"
+            className="h-7 w-7 text-[#FF6B6B] hover:text-[#FF6B6B]"
             onClick={onRemove}
           >
             <Trash2 className="h-4 w-4" />
@@ -378,7 +378,7 @@ export function ConditionBuilder({
       <div className="flex items-center justify-between p-3 border rounded-lg bg-[#F5F5F5]/20">
         <div className="flex items-center gap-3">
           {enabled ? (
-            <Eye className="h-5 w-5 text-primary" />
+            <Eye className="h-5 w-5 text-[#5B2C93]" />
           ) : (
             <EyeOff className="h-5 w-5 text-[#6B6B6B]" />
           )}
@@ -422,8 +422,8 @@ export function ConditionBuilder({
 
       {/* Condition summary */}
       {enabled && conditionGroup.conditions.length > 0 && (
-        <div className="p-3 border rounded-lg bg-primary/5">
-          <div className="text-xs font-medium text-primary mb-1">Condition Summary</div>
+        <div className="p-3 border rounded-lg bg-[#5B2C93]/5">
+          <div className="text-xs font-medium text-[#5B2C93] mb-1">Condition Summary</div>
           <div className="text-sm text-[#6B6B6B]">
             {formatConditionSummary(conditionGroup, filteredFields)}
           </div>

@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function AccessDenied() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#2C2C2C] flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-white/10 backdrop-blur-lg border-white/20 text-white">
         <CardHeader className="text-center space-y-4">
           <div className="mx-auto w-16 h-16 bg-[#FF6B6B]/20 rounded-full flex items-center justify-center">

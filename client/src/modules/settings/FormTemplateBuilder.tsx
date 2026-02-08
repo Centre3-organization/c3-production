@@ -272,7 +272,7 @@ function FormPreview({ template }: { template: FormTemplateData }) {
       {/* Safety Rules */}
       {template.safetyRules && template.safetyRules.filter(r => r.isActive).length > 0 && (
         <div className="px-6 py-3 border-t">
-          <p className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider mb-2">Safety Rules / قواعد السلامة</p>
+          <p className="text-sm font-medium text-[#2C2C2C] tracking-wider mb-2">Safety Rules / قواعد السلامة</p>
           <div className="grid grid-cols-3 gap-2">
             {template.safetyRules.filter(r => r.isActive).sort((a, b) => a.sortOrder - b.sortOrder).map((rule, idx) => (
               <div key={idx} className="flex items-center gap-2 bg-[#F5F5F5] rounded-lg p-2">

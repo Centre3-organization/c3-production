@@ -527,19 +527,19 @@ export default function NewRequest() {
               {activeTab === "basic" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Requestor Full Name <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Requestor Full Name <span className="text-[#FF6B6B]">*</span></Label>
                     <Input defaultValue={user?.name || "User"} className="bg-[#F5F5F5]" readOnly />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Requestor Company <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Requestor Company <span className="text-[#FF6B6B]">*</span></Label>
                     <Input defaultValue="Centre3" className="bg-[#F5F5F5]" readOnly />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Email Address <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Email Address <span className="text-[#FF6B6B]">*</span></Label>
                     <Input defaultValue={user?.email || "user@centre3.com"} className="bg-[#F5F5F5]" readOnly />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Mobile Number</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Mobile Number</Label>
                     <Input 
                       placeholder="+966 5XX XXX XXXX" 
                       value={mobileNumber}
@@ -547,7 +547,7 @@ export default function NewRequest() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Department <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Department <span className="text-[#FF6B6B]">*</span></Label>
                     <Select value={departmentId} onValueChange={setDepartmentId}>
                       <SelectTrigger><SelectValue placeholder="Select Department" /></SelectTrigger>
                       <SelectContent>
@@ -560,7 +560,7 @@ export default function NewRequest() {
                     </Select>
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Request Sub-Type</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Request Sub-Type</Label>
                     <Select value={subType} onValueChange={setSubType}>
                       <SelectTrigger><SelectValue placeholder="Select Sub-Type" /></SelectTrigger>
                       <SelectContent>
@@ -572,7 +572,7 @@ export default function NewRequest() {
                     </Select>
                   </div>
                   <div className="col-span-2 space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Purpose of Visit <span className="text-[#FF6B6B]">*</span></Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Purpose of Visit <span className="text-[#FF6B6B]">*</span></Label>
                     <Textarea 
                       placeholder="Describe the purpose of this visit..." 
                       className="h-24"
@@ -581,7 +581,7 @@ export default function NewRequest() {
                     />
                   </div>
                   <div className="col-span-2 space-y-1">
-                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Additional Notes</Label>
+                    <Label className="text-sm font-medium text-[#2C2C2C]">Additional Notes</Label>
                     <Textarea 
                       placeholder="Any additional context for this request..." 
                       className="h-24"
@@ -603,7 +603,7 @@ export default function NewRequest() {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-1">
-                        <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Data Center / Site <span className="text-[#FF6B6B]">*</span></Label>
+                        <Label className="text-sm font-medium text-[#2C2C2C]">Data Center / Site <span className="text-[#FF6B6B]">*</span></Label>
                         <Select value={siteId} onValueChange={(v) => { setSiteId(v); setSelectedZoneId(""); setSelectedAreaId(""); }}>
                           <SelectTrigger><SelectValue placeholder="Select Site" /></SelectTrigger>
                           <SelectContent>
@@ -657,7 +657,7 @@ export default function NewRequest() {
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-1">
-                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Zone</Label>
+                            <Label className="text-sm font-medium text-[#2C2C2C]">Zone</Label>
                             <Select 
                               value={selectedZoneId} 
                               onValueChange={(v) => { setSelectedZoneId(v); setSelectedAreaId(""); }}
@@ -704,7 +704,7 @@ export default function NewRequest() {
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-1">
-                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Area</Label>
+                            <Label className="text-sm font-medium text-[#2C2C2C]">Area</Label>
                             <Select 
                               value={selectedAreaId} 
                               onValueChange={setSelectedAreaId}
@@ -750,7 +750,7 @@ export default function NewRequest() {
                     <>
                       <Separator />
                       <div className="space-y-1">
-                        <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Cabinet / Rack Reference</Label>
+                        <Label className="text-sm font-medium text-[#2C2C2C]">Cabinet / Rack Reference</Label>
                         <Input 
                           placeholder="e.g. RACK-04-B" 
                           value={rackReference}
@@ -768,7 +768,7 @@ export default function NewRequest() {
                 <div className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                     <div className="space-y-1">
-                      <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Start Date <span className="text-[#FF6B6B]">*</span></Label>
+                      <Label className="text-sm font-medium text-[#2C2C2C]">Start Date <span className="text-[#FF6B6B]">*</span></Label>
                       <Input 
                         type="date" 
                         value={startDate}
@@ -776,7 +776,7 @@ export default function NewRequest() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Start Time</Label>
+                      <Label className="text-sm font-medium text-[#2C2C2C]">Start Time</Label>
                       <Input 
                         type="time" 
                         value={startTime}
@@ -784,7 +784,7 @@ export default function NewRequest() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs font-medium text-[#6B6B6B] uppercase">End Date <span className="text-[#FF6B6B]">*</span></Label>
+                      <Label className="text-sm font-medium text-[#2C2C2C]">End Date <span className="text-[#FF6B6B]">*</span></Label>
                       <Input 
                         type="date" 
                         value={endDate}
@@ -792,7 +792,7 @@ export default function NewRequest() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs font-medium text-[#6B6B6B] uppercase">End Time</Label>
+                      <Label className="text-sm font-medium text-[#2C2C2C]">End Time</Label>
                       <Input 
                         type="time" 
                         value={endTime}
@@ -1164,7 +1164,7 @@ export default function NewRequest() {
                       </Alert>
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-1">
-                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Work Order Reference</Label>
+                          <Label className="text-sm font-medium text-[#2C2C2C]">Work Order Reference</Label>
                           <Input 
                             placeholder="WO-XXXX" 
                             value={workOrderRef}
@@ -1172,7 +1172,7 @@ export default function NewRequest() {
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Escort Required</Label>
+                          <Label className="text-sm font-medium text-[#2C2C2C]">Escort Required</Label>
                           <Select value={escortRequired} onValueChange={setEscortRequired}>
                             <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
@@ -1196,7 +1196,7 @@ export default function NewRequest() {
                       </Alert>
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-1">
-                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Work Type</Label>
+                          <Label className="text-sm font-medium text-[#2C2C2C]">Work Type</Label>
                           <Select value={workType} onValueChange={setWorkType}>
                             <SelectTrigger><SelectValue placeholder="Select Work Type" /></SelectTrigger>
                             <SelectContent>
@@ -1208,7 +1208,7 @@ export default function NewRequest() {
                           </Select>
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Risk Level</Label>
+                          <Label className="text-sm font-medium text-[#2C2C2C]">Risk Level</Label>
                           <Select value={riskLevel} onValueChange={setRiskLevel}>
                             <SelectTrigger><SelectValue placeholder="Select Risk Level" /></SelectTrigger>
                             <SelectContent>
@@ -1233,7 +1233,7 @@ export default function NewRequest() {
                       </Alert>
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-1">
-                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Change Ticket</Label>
+                          <Label className="text-sm font-medium text-[#2C2C2C]">Change Ticket</Label>
                           <Input 
                             placeholder="CHG-XXXX" 
                             value={changeTicket}
@@ -1241,7 +1241,7 @@ export default function NewRequest() {
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Impact Level</Label>
+                          <Label className="text-sm font-medium text-[#2C2C2C]">Impact Level</Label>
                           <Select value={impactLevel} onValueChange={setImpactLevel}>
                             <SelectTrigger><SelectValue placeholder="Select Impact" /></SelectTrigger>
                             <SelectContent>
