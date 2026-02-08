@@ -43,6 +43,9 @@ import { mcmRouter } from "./modules/mcm/mcm.router";
 // Form Templates Module
 import { formTemplatesRouter } from "./modules/forms/formTemplates.router";
 
+// Comments Module
+import { commentsRouter } from "./modules/comments/comments.router";
+
 import { 
   seedDefaultRoles, 
   seedDefaultDepartments,
@@ -198,6 +201,9 @@ export const appRouter = router({
   
   // Form Templates Module
   formTemplates: formTemplatesRouter,
+  
+  // Comments Module
+  comments: commentsRouter,
 });
 
 export type AppRouter = typeof appRouter;

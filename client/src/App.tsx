@@ -45,6 +45,7 @@ import Groups from "./modules/groups/Groups";
 
 // Administration Module
 import Companies from "./modules/administration/Companies";
+import CompanyDetail from "./modules/administration/CompanyDetail";
 
 // Workflows Module
 import { WorkflowBuilder } from "./modules/workflows/WorkflowBuilder";
@@ -167,6 +168,11 @@ function Router() {
       <Route path="/groups">
         <Layout>
           <Groups />
+        </Layout>
+      </Route>
+      <Route path="/companies/:id">
+        <Layout>
+          <CompanyDetail />
         </Layout>
       </Route>
       <Route path="/companies">

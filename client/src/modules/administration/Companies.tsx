@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "wouter";
 import {
   Building2,
   Plus,
@@ -43,6 +44,7 @@ import { Badge } from "@/components/ui/badge";
 export default function Companies() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
+  const [, setLocation] = useLocation();
 
   // Companies data
   const { data: companiesData, isLoading: companiesLoading, refetch: refetchCompanies } =
@@ -262,7 +264,7 @@ export default function Companies() {
               </TableHeader>
               <TableBody>
                 {filteredCompanies.map((company) => (
-                  <TableRow key={company.id}>
+                  <TableRow key={company.id} className="cursor-pointer hover:bg-muted/50" onClick={() => setLocation(`/companies/${company.id}`)}>
                     <TableCell className="font-mono text-sm">{company.code}</TableCell>
                     <TableCell>
                       <div>

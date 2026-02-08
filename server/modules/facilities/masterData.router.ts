@@ -14,7 +14,10 @@ import {
   approvers,
   users,
   sites,
-  cardCompanies
+  cardCompanies,
+  magneticCards,
+  groups,
+  requests
 } from "../../../drizzle/schema";
 import { adminProcedure, publicProcedure, router } from "../../_core/trpc";
 
@@ -1297,6 +1300,100 @@ export const masterDataRouter = router({
         .where(eq(cardCompanies.id, input.id));
       
       return result || null;
+    }),
+
+  // Get company details with linked groups, cardholders, sub-companies, and access requests
+  getCompanyDetails: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      // Get company
+      const [company] = await db
+        .select()
+        .from(cardCompanies)
+        .where(eq(cardCompanies.id, input.id));
+      if (!company) return null;
+
+      // Get parent company name if applicable
+      let parentCompany = null;
+      if (company.parentCompanyId) {
+        const [parent] = await db
+          .select({ id: cardCompanies.id, name: cardCompanies.name, code: cardCompanies.code })
+          .from(cardCompanies)
+          .where(eq(cardCompanies.id, company.parentCompanyId));
+        parentCompany = parent || null;
+      }
+
+      // Get sub-companies
+      const subCompanies = await db
+        .select({
+          id: cardCompanies.id,
+          name: cardCompanies.name,
+          code: cardCompanies.code,
+          type: cardCompanies.type,
+          status: cardCompanies.status,
+          contactPersonName: cardCompanies.contactPersonName,
+        })
+        .from(cardCompanies)
+        .where(eq(cardCompanies.parentCompanyId, input.id));
+
+      // Get active cardholders (magnetic cards) for this company
+      const cardholders = await db
+        .select({
+          id: magneticCards.id,
+          cardNumber: magneticCards.cardNumber,
+          fullName: magneticCards.fullName,
+          fullNameAr: magneticCards.fullNameAr,
+          idNumber: magneticCards.idNumber,
+          idType: magneticCards.idType,
+          status: magneticCards.status,
+          mobile: magneticCards.mobile,
+          email: magneticCards.email,
+          profession: magneticCards.profession,
+          idExpiryDate: magneticCards.idExpiryDate,
+        })
+        .from(magneticCards)
+        .where(eq(magneticCards.companyId, input.id))
+        .orderBy(desc(magneticCards.id));
+
+      // Get access requests for this company
+      const companyRequests = await db
+        .select({
+          id: requests.id,
+          requestNumber: requests.requestNumber,
+          visitorName: requests.visitorName,
+          type: requests.type,
+          status: requests.status,
+          startDate: requests.startDate,
+          endDate: requests.endDate,
+          createdAt: requests.createdAt,
+        })
+        .from(requests)
+        .where(eq(requests.visitorCompany, company.name))
+        .orderBy(desc(requests.createdAt))
+        .limit(50);
+
+      // Get stats
+      const activeCardholders = cardholders.filter((c: any) => c.status === 'active').length;
+      const totalCardholders = cardholders.length;
+      const activeRequests = companyRequests.filter((r: any) => r.status === 'pending_approval' || r.status === 'approved').length;
+
+      return {
+        ...company,
+        parentCompany,
+        subCompanies,
+        cardholders,
+        requests: companyRequests,
+        stats: {
+          activeCardholders,
+          totalCardholders,
+          subCompanyCount: subCompanies.length,
+          activeRequests,
+          totalRequests: companyRequests.length,
+        },
+      };
     }),
   
   createCompany: adminProcedure

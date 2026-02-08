@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `requestComments` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `requestId` int NOT NULL,\n  `instanceId` int,\n  `authorId` int NOT NULL,\n  `content` text NOT NULL,\n  `visibility` enum('private','group','requestor') NOT NULL DEFAULT 'private',\n  `targetGroupId` int,\n  `context` enum('approval','rejection','clarification','general','internal_note') NOT NULL DEFAULT 'general',\n  `taskId` int,\n  `isEdited` boolean DEFAULT false,\n  `editedAt` timestamp,\n  `isDeleted` boolean DEFAULT false,\n  `deletedAt` timestamp,\n  `createdAt` timestamp NOT NULL DEFAULT (now()),\n  `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n  CONSTRAINT `requestComments_id` PRIMARY KEY(`id`)\n)",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute CREATE TABLE `requestComments` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `requestId` int NOT NULL,\n  `instanceId` int,\n  `authorId` int NOT NULL,\n  `content` text NOT NULL,\n  `visibility` enum('private','group','requestor') NOT NULL DEFAULT 'private',\n  `targetGroupId` int,\n  `context` enum('approval','rejection','clarification','general','internal_note') NOT NULL DEFAULT 'general',\n  `taskId` int,\n  `isEdited` boolean DEFAULT false,\n  `editedAt` timestamp,\n  `isDeleted` boolean DEFAULT false,\n  `deletedAt` timestamp,\n  `createdAt` timestamp NOT NULL DEFAULT (now()),\n  `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n  CONSTRAINT `requestComments_id` PRIMARY KEY(`id`)\n)",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1711
+}

@@ -1,0 +1,9 @@
+{
+  "query": "CREATE INDEX idx_requestComments_requestId ON requestComments(requestId);\nCREATE INDEX idx_requestComments_authorId ON requestComments(authorId);\nCREATE INDEX idx_requestComments_visibility ON requestComments(visibility)",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute CREATE INDEX idx_requestComments_requestId ON requestComments(requestId);\nCREATE INDEX idx_requestComments_authorId ON requestComments(authorId);\nCREATE INDEX idx_requestComments_visibility ON requestComments(visibility)",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 3296
+}

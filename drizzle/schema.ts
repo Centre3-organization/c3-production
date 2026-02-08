@@ -2137,3 +2137,43 @@ export const generatedForms = mysqlTable("generatedForms", {
 
 export type GeneratedForm = typeof generatedForms.$inferSelect;
 export type InsertGeneratedForm = typeof generatedForms.$inferInsert;
+
+
+// ============================================================================
+// REQUEST COMMENTS - Internal notes and comments system
+// Three visibility levels: private (self), group (assigned team), requestor (visible to requestor)
+// ============================================================================
+
+export const requestComments = mysqlTable("requestComments", {
+  id: int("id").autoincrement().primaryKey(),
+  requestId: int("requestId").notNull(),
+  instanceId: int("instanceId"), // Optional: link to workflow instance
+  authorId: int("authorId").notNull(),
+  
+  // Comment content
+  content: text("content").notNull(),
+  
+  // Visibility: 'private' = only author can see, 'group' = assigned group/team can see, 'requestor' = requestor can also see
+  visibility: mysqlEnum("visibility", ["private", "group", "requestor"]).default("private").notNull(),
+  
+  // Optional: link to a specific group for group-visibility comments
+  targetGroupId: int("targetGroupId"),
+  
+  // Context: what action triggered this comment (approval, rejection, clarification, general)
+  context: mysqlEnum("context", ["approval", "rejection", "clarification", "general", "internal_note"]).default("general").notNull(),
+  
+  // Optional: link to a specific approval task
+  taskId: int("taskId"),
+  
+  // Metadata
+  isEdited: boolean("isEdited").default(false),
+  editedAt: timestamp("editedAt"),
+  isDeleted: boolean("isDeleted").default(false),
+  deletedAt: timestamp("deletedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RequestComment = typeof requestComments.$inferSelect;
+export type InsertRequestComment = typeof requestComments.$inferInsert;

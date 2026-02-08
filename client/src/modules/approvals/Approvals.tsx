@@ -58,6 +58,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { RequestComments } from "./RequestComments";
 import { format } from "date-fns";
 import QRCode from "qrcode";
 
@@ -1100,39 +1101,58 @@ export default function Approvals() {
                 
                 {/* Detailed History with Comments */}
                 {selectedRequest.approvalHistory && selectedRequest.approvalHistory.length > 0 ? (
-                  <div className="space-y-3 max-h-48 overflow-y-auto">
+                  <div className="space-y-0 max-h-[400px] overflow-y-auto relative">
+                    {/* Vertical timeline line */}
+                    <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-gray-200" />
+                    
                     {selectedRequest.approvalHistory.map((history: any, idx: number) => {
                       const actionColors: Record<string, string> = {
-                        approved: "bg-green-50 border-green-200 text-green-800",
-                        rejected: "bg-red-50 border-red-200 text-red-800",
-                        decision_made: "bg-blue-50 border-blue-200 text-blue-800",
-                        info_requested: "bg-amber-50 border-amber-200 text-amber-800",
-                        submitted: "bg-blue-50 border-blue-200 text-blue-800",
-                        escalated: "bg-purple-50 border-purple-200 text-purple-800",
-                        workflow_started: "bg-gray-50 border-gray-200 text-gray-800",
-                        workflow_completed: "bg-green-50 border-green-200 text-green-800",
-                        stage_completed: "bg-green-50 border-green-200 text-green-800",
-                        task_assigned: "bg-blue-50 border-blue-200 text-blue-800",
-                        sent_back: "bg-amber-50 border-amber-200 text-amber-800",
-                        clarification_requested: "bg-amber-50 border-amber-200 text-amber-800",
-                        clarification_provided: "bg-cyan-50 border-cyan-200 text-cyan-800",
-                        task_reassigned: "bg-purple-50 border-purple-200 text-purple-800",
+                        approved: "border-green-400",
+                        rejected: "border-red-400",
+                        decision_made: "border-blue-400",
+                        info_requested: "border-amber-400",
+                        submitted: "border-blue-400",
+                        escalated: "border-purple-400",
+                        workflow_started: "border-gray-400",
+                        workflow_completed: "border-green-500",
+                        stage_completed: "border-green-400",
+                        task_assigned: "border-blue-300",
+                        sent_back: "border-amber-400",
+                        clarification_requested: "border-amber-400",
+                        clarification_provided: "border-cyan-400",
+                        task_reassigned: "border-purple-400",
+                      };
+                      const actionBgColors: Record<string, string> = {
+                        approved: "bg-green-500",
+                        rejected: "bg-red-500",
+                        decision_made: "bg-blue-500",
+                        info_requested: "bg-amber-500",
+                        submitted: "bg-blue-500",
+                        escalated: "bg-purple-500",
+                        workflow_started: "bg-gray-500",
+                        workflow_completed: "bg-green-600",
+                        stage_completed: "bg-green-500",
+                        task_assigned: "bg-blue-400",
+                        sent_back: "bg-amber-500",
+                        clarification_requested: "bg-amber-500",
+                        clarification_provided: "bg-cyan-500",
+                        task_reassigned: "bg-purple-500",
                       };
                       const actionIcons: Record<string, React.ReactNode> = {
-                        approved: <CheckCircle2 className="h-4 w-4 text-green-600" />,
-                        rejected: <XCircle className="h-4 w-4 text-red-600" />,
-                        decision_made: <CheckCircle2 className="h-4 w-4 text-blue-600" />,
-                        info_requested: <HelpCircle className="h-4 w-4 text-amber-600" />,
-                        submitted: <Send className="h-4 w-4 text-blue-600" />,
-                        escalated: <ArrowUpRight className="h-4 w-4 text-purple-600" />,
-                        workflow_started: <Zap className="h-4 w-4 text-gray-600" />,
-                        workflow_completed: <CheckCheck className="h-4 w-4 text-green-600" />,
-                        stage_completed: <CheckCircle2 className="h-4 w-4 text-green-600" />,
-                        task_assigned: <User className="h-4 w-4 text-blue-600" />,
-                        sent_back: <ArrowLeft className="h-4 w-4 text-amber-600" />,
-                        clarification_requested: <HelpCircle className="h-4 w-4 text-amber-600" />,
-                        clarification_provided: <MessageSquare className="h-4 w-4 text-cyan-600" />,
-                        task_reassigned: <RefreshCw className="h-4 w-4 text-purple-600" />,
+                        approved: <CheckCircle2 className="h-3 w-3 text-white" />,
+                        rejected: <XCircle className="h-3 w-3 text-white" />,
+                        decision_made: <CheckCircle2 className="h-3 w-3 text-white" />,
+                        info_requested: <HelpCircle className="h-3 w-3 text-white" />,
+                        submitted: <Send className="h-3 w-3 text-white" />,
+                        escalated: <ArrowUpRight className="h-3 w-3 text-white" />,
+                        workflow_started: <Zap className="h-3 w-3 text-white" />,
+                        workflow_completed: <CheckCheck className="h-3 w-3 text-white" />,
+                        stage_completed: <CheckCircle2 className="h-3 w-3 text-white" />,
+                        task_assigned: <User className="h-3 w-3 text-white" />,
+                        sent_back: <ArrowLeft className="h-3 w-3 text-white" />,
+                        clarification_requested: <HelpCircle className="h-3 w-3 text-white" />,
+                        clarification_provided: <MessageSquare className="h-3 w-3 text-white" />,
+                        task_reassigned: <RefreshCw className="h-3 w-3 text-white" />,
                       };
                       const actionLabels: Record<string, string> = {
                         approved: "Approved",
@@ -1152,38 +1172,63 @@ export default function Approvals() {
                       };
                       
                       const details = history.details as any || {};
-                      // Better fallback: use details.stageName, then workflowName, then derive from actionType
                       const stageName = details.stageName || details.workflowName || 
-                        (history.actionType === "workflow_started" ? "Started" :
-                         history.actionType === "workflow_completed" ? "Completed" :
+                        (history.actionType === "workflow_started" ? "Initiated" :
+                         history.actionType === "workflow_completed" ? (details.newStatus === "approved" ? "Final Approval" : details.newStatus === "rejected" ? "Rejected" : "Completed") :
                          history.actionType === "task_assigned" ? "Assignment" : 
-                         `Stage`);
+                         "Stage");
                       const comments = details.comments || details.reason || details.response || "";
+                      const decision = details.decision || details.newStatus || "";
+                      
+                      // Determine decision label for decision_made entries
+                      const decisionLabel = history.actionType === "decision_made" 
+                        ? (decision === "approved" ? "Approved" : decision === "rejected" ? "Rejected" : decision.replace(/_/g, " "))
+                        : "";
                       
                       return (
-                        <div key={idx} className={`p-3 rounded-lg border ${actionColors[history.actionType] || "bg-gray-50 border-gray-200"}`}>
-                          <div className="flex items-center justify-between mb-1">
-                            <div className="flex items-center gap-2">
-                              {actionIcons[history.actionType] || <Clock className="h-4 w-4 text-gray-500" />}
-                              <span className="font-medium text-sm">
-                                {actionLabels[history.actionType] || history.actionType}
+                        <div key={idx} className="relative pl-10 pb-4">
+                          {/* Timeline dot */}
+                          <div className={`absolute left-2 top-1 w-5 h-5 rounded-full flex items-center justify-center z-10 ${actionBgColors[history.actionType] || "bg-gray-400"}`}>
+                            {actionIcons[history.actionType] || <Clock className="h-3 w-3 text-white" />}
+                          </div>
+                          
+                          <div className={`border-l-2 pl-3 py-1 ${actionColors[history.actionType] || "border-gray-300"}`}>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-semibold text-sm">
+                                  {actionLabels[history.actionType] || history.actionType.replace(/_/g, " ")}
+                                </span>
+                                <Badge variant="outline" className="text-xs px-1.5 py-0">
+                                  {stageName}
+                                </Badge>
+                                {decisionLabel && history.actionType === "decision_made" && (
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`text-xs px-1.5 py-0 ${
+                                      decision === "approved" ? "bg-green-100 text-green-700 border-green-300" :
+                                      decision === "rejected" ? "bg-red-100 text-red-700 border-red-300" :
+                                      "bg-gray-100 text-gray-700"
+                                    }`}
+                                  >
+                                    {decisionLabel}
+                                  </Badge>
+                                )}
+                              </div>
+                              <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                                {history.actionAt ? format(new Date(history.actionAt), "MMM d, yyyy HH:mm") : ""}
                               </span>
-                              <Badge variant="outline" className="text-xs">
-                                {stageName}
-                              </Badge>
                             </div>
-                            <span className="text-xs text-muted-foreground">
-                              {history.actionAt ? format(new Date(history.actionAt), "MMM d, yyyy HH:mm") : ""}
-                            </span>
-                          </div>
-                          <div className="text-xs text-muted-foreground mb-1">
-                            By: {history.userName || history.userEmail || "System"}
-                          </div>
-                          {comments && (
-                            <div className="mt-2 p-2 bg-white/50 rounded text-sm italic">
-                              "{comments}"
+                            <div className="text-xs text-muted-foreground mt-0.5">
+                              <span className="font-medium">{history.userName || history.userEmail || "System"}</span>
+                              {details.target && <span> → {details.target}</span>}
                             </div>
-                          )}
+                            {comments && (
+                              <div className="mt-1.5 p-2 bg-gray-50 rounded border border-gray-100 text-sm">
+                                <MessageSquare className="h-3 w-3 inline-block mr-1 text-muted-foreground" />
+                                <span className="italic text-muted-foreground">"{comments}"</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       );
                     })}
@@ -1194,6 +1239,17 @@ export default function Approvals() {
                   </p>
                 )}
               </div>
+              
+              {/* Internal Comments Section */}
+              {selectedRequest?.request?.id && (
+                <div className="mt-4 pt-4 border-t">
+                  <RequestComments 
+                    requestId={selectedRequest.request.id}
+                    instanceId={selectedRequest.instanceId}
+                    taskId={selectedRequest.taskId}
+                  />
+                </div>
+              )}
             </div>
           )}
           
@@ -1201,7 +1257,7 @@ export default function Approvals() {
             <Button variant="outline" onClick={() => setDetailsDialogOpen(false)}>
               {t("common.close", "Close")}
             </Button>
-            {selectedRequest?.request?.id && (
+            {selectedRequest?.request?.id && selectedRequest?.request?.status === 'approved' && (
               <Button
                 variant="outline"
                 className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"

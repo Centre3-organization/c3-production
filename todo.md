@@ -1652,3 +1652,15 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Created standalone Companies page at /companies with stats cards, search, and filter
 - [x] Added Companies nav item under Administration in sidebar
 - [x] Removed Companies tab from Master Data in Settings to avoid duplication
+
+## Approval & Comments Improvements (Feb 8, 2026)
+- [x] Fix PDF button visibility - only show "Download Form PDF" on fully approved/completed requests
+- [x] Enhance Decision Details dialog with complete approval history and comments (vertical timeline, decision badges, expanded comments)
+- [x] Build internal comments system with 3 visibility levels: private (self), group (assigned team), requestor-visible
+- [x] Create comments database schema (requestComments table) with indexes
+- [x] Add comments UI to approval dialog with visibility selector, edit/delete, group picker
+- [x] Company detail view page with linked groups, active visitors, and contract history
+- [x] Clickable company rows in Companies list navigate to detail view
+- [x] Company detail page has Overview, Cardholders, Requests, and Sub-Companies tabs
+- [x] Stats cards showing active cards, sub-companies, active/total requests, contract end date
+- [x] Contract expiry warning badge for contracts expiring within 30 days
