@@ -1,0 +1,22 @@
+{
+  "query": "SELECT id, email, name, role FROM users WHERE email LIKE '%admin%' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, email, name, role FROM users WHERE email LIKE '%admin%' LIMIT 5;",
+  "rows": [
+    {
+      "id": "150026",
+      "email": "admin@aws.com",
+      "name": "David Wilson",
+      "role": "user"
+    },
+    {
+      "id": "150031",
+      "email": "admin@google.com",
+      "name": "William Lee",
+      "role": "user"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\trole\n150026\tadmin@aws.com\tDavid Wilson\tuser\n150031\tadmin@google.com\tWilliam Lee\tuser\n",
+  "stderr": "",
+  "execution_time_ms": 1591
+}

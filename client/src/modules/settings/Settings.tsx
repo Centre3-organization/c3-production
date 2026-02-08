@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import FormTemplateBuilder from "./FormTemplateBuilder";
 import { 
   Settings as SettingsIcon, 
   Building2, 
@@ -618,13 +619,14 @@ export default function Settings() {
       </div>
 
       <Tabs defaultValue="general" className="w-full">
-        <TabsList className="grid w-full grid-cols-6 lg:w-[900px]">
+        <TabsList className="grid w-full grid-cols-7 lg:w-[1050px]">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="departments">Departments</TabsTrigger>
           <TabsTrigger value="masterdata">Master Data</TabsTrigger>
           <TabsTrigger value="translations">Translations</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="forms">Form Templates</TabsTrigger>
         </TabsList>
         
         <TabsContent value="general" className="mt-6 space-y-6">
@@ -2792,6 +2794,10 @@ export default function Settings() {
               </Button>
             </CardFooter>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="forms" className="mt-6">
+          <FormTemplateBuilder />
         </TabsContent>
       </Tabs>
     </div>

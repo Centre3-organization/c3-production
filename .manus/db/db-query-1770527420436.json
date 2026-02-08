@@ -1,0 +1,34 @@
+{
+  "query": "SHOW TABLES LIKE '%form%'; SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_NAME LIKE '%form%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SHOW TABLES LIKE '%form%'; SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_NAME LIKE '%form%';",
+  "rows": [
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%form%)": "formFields"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%form%)": "formSections"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%form%)": "formTemplates"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%form%)": "generatedForms"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%form%)": "TABLE_NAME"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%form%)": "formSections"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%form%)": "formFields"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%form%)": "formTemplates"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%form%)\nformFields\nformSections\nformTemplates\ngeneratedForms\nTABLE_NAME\nformSections\nformFields\nformTemplates\n",
+  "stderr": "",
+  "execution_time_ms": 1830
+}

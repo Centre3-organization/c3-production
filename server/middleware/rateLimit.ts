@@ -49,7 +49,7 @@ function createRateLimiter(options: {
  */
 export const authLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5,
+  max: 20,
   keyPrefix: 'auth',
   message: 'Too many login attempts. Please try again in 15 minutes.',
 });

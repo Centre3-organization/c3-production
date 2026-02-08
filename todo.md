@@ -1608,3 +1608,19 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Implemented localStorage token fallback for cookie issues
 - [x] Added Authorization header support in SDK authentication
 - [ ] Test login works from Pakistan region
+
+
+## Customizable Form Templates (Feb 8, 2026)
+- [ ] Create formTemplates database table (name, requestType, layout config, fields, safety rules, branding)
+- [ ] Create formTemplateFields table for dynamic field mapping
+- [ ] Create tRPC procedures for CRUD on form templates
+- [ ] Build Form Templates management page under Settings
+- [ ] Build form template builder UI with drag-and-drop field configuration
+- [ ] Implement live preview panel showing the form as it will appear
+- [ ] Add QR code generation linked to request data
+- [ ] Implement PDF generation for completed forms
+- [ ] Connect form templates to request types (Admin Visit, TEP, MOP, etc.)
+- [ ] Add safety rules/instructions section (configurable icons and text)
+- [ ] Add company branding configuration (logo, colors, footer)
+- [ ] Add bilingual support (Arabic/English) for form content
+- [ ] Link generated forms to approved requests

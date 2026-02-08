@@ -40,6 +40,9 @@ import { requestConfigRouter } from "./modules/request-config/requestConfig.rout
 // MCM Module (Magnetic Card Management)
 import { mcmRouter } from "./modules/mcm/mcm.router";
 
+// Form Templates Module
+import { formTemplatesRouter } from "./modules/forms/formTemplates.router";
+
 import { 
   seedDefaultRoles, 
   seedDefaultDepartments,
@@ -192,6 +195,9 @@ export const appRouter = router({
   
   // MCM Module (Magnetic Card Management)
   mcm: mcmRouter,
+  
+  // Form Templates Module
+  formTemplates: formTemplatesRouter,
 });
 
 export type AppRouter = typeof appRouter;

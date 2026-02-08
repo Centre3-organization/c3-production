@@ -318,7 +318,7 @@ export default function Layout({ children }: LayoutProps) {
           ) : (
             <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center overflow-hidden">
               <img 
-                src="/center3-icon.png" 
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/116552453/AAcNeDDTxabwbvdd.png" 
                 alt="center3" 
                 className="h-6 w-6 object-contain"
               />

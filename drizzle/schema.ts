@@ -2016,3 +2016,124 @@ export const workflowSendBacks = mysqlTable("workflowSendBacks", {
 
 export type WorkflowSendBack = typeof workflowSendBacks.$inferSelect;
 export type InsertWorkflowSendBack = typeof workflowSendBacks.$inferInsert;
+
+
+// ============================================================================
+// FORM TEMPLATES MODULE
+// ============================================================================
+
+/**
+ * Form Templates - Customizable form layouts for different request types
+ * Each template defines the visual layout, fields, branding, and safety rules
+ * that appear on printed/PDF visit permission forms
+ */
+export const formTemplates = mysqlTable("formTemplates", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  requestType: mysqlEnum("requestType", [
+    "admin_visit",
+    "work_permit",
+    "material_entry",
+    "tep",
+    "mop",
+    "escort"
+  ]).notNull(),
+  isDefault: boolean("isDefault").default(false).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  // Branding
+  companyName: varchar("companyName", { length: 255 }).default("Centre3"),
+  companyNameAr: varchar("companyNameAr", { length: 255 }),
+  logoUrl: varchar("logoUrl", { length: 500 }),
+  headerColor: varchar("headerColor", { length: 20 }).default("#6B21A8"),
+  footerText: text("footerText"),
+  footerTextAr: text("footerTextAr"),
+  footerPhone: varchar("footerPhone", { length: 50 }),
+  footerEmail: varchar("footerEmail", { length: 255 }),
+  footerDepartment: varchar("footerDepartment", { length: 255 }),
+  footerDepartmentAr: varchar("footerDepartmentAr", { length: 255 }),
+  
+  // Form title
+  formTitle: varchar("formTitle", { length: 255 }).default("Visit Permission"),
+  formTitleAr: varchar("formTitleAr", { length: 255 }),
+  formSubtitle: varchar("formSubtitle", { length: 255 }),
+  formSubtitleAr: varchar("formSubtitleAr", { length: 255 }),
+  
+  // Field configuration - ordered list of fields to show
+  fields: json("fields").$type<Array<{
+    key: string;           // Field identifier (e.g., "visitorName", "idNumber")
+    label: string;         // English label
+    labelAr?: string;      // Arabic label
+    source: string;        // Data source: "request.visitorName", "request.visitorIdNumber", etc.
+    type: "text" | "date" | "phone" | "email" | "custom";
+    isRequired: boolean;
+    sortOrder: number;
+  }>>().notNull(),
+  
+  // Information sections (like Internet, Building Site, Parking)
+  infoSections: json("infoSections").$type<Array<{
+    icon: string;          // Icon name (e.g., "wifi", "building", "car")
+    title: string;         // English title
+    titleAr?: string;      // Arabic title
+    content: string;       // English content
+    contentAr?: string;    // Arabic content
+    isActive: boolean;
+    sortOrder: number;
+  }>>(),
+  
+  // Safety rules (icon cards at bottom)
+  safetyRules: json("safetyRules").$type<Array<{
+    icon: string;          // Icon name
+    iconColor: string;     // Icon color
+    title: string;         // English title
+    titleAr?: string;      // Arabic title
+    subtitle?: string;     // English subtitle
+    subtitleAr?: string;   // Arabic subtitle
+    isActive: boolean;
+    sortOrder: number;
+  }>>(),
+  
+  // Disclaimer text
+  disclaimerText: text("disclaimerText"),
+  disclaimerTextAr: text("disclaimerTextAr"),
+  
+  // QR Code settings
+  showQrCode: boolean("showQrCode").default(true).notNull(),
+  qrCodePosition: mysqlEnum("qrCodePosition", ["top-right", "top-left", "bottom-right", "bottom-left"]).default("top-right"),
+  
+  // Additional settings
+  showWatermark: boolean("showWatermark").default(false),
+  watermarkText: varchar("watermarkText", { length: 100 }),
+  pageSize: mysqlEnum("pageSize", ["a4", "letter"]).default("a4"),
+  orientation: mysqlEnum("orientation", ["portrait", "landscape"]).default("portrait"),
+  
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FormTemplate = typeof formTemplates.$inferSelect;
+export type InsertFormTemplate = typeof formTemplates.$inferInsert;
+
+/**
+ * Generated Forms - Stores generated form instances linked to approved requests
+ */
+export const generatedForms = mysqlTable("generatedForms", {
+  id: int("id").autoincrement().primaryKey(),
+  requestId: int("requestId").notNull(),
+  templateId: int("templateId").notNull(),
+  qrCodeData: varchar("qrCodeData", { length: 500 }).notNull(),
+  formData: json("formData").$type<Record<string, string>>().notNull(), // Snapshot of data at generation time
+  pdfUrl: varchar("pdfUrl", { length: 500 }),
+  status: mysqlEnum("status", ["active", "expired", "revoked"]).default("active").notNull(),
+  generatedBy: int("generatedBy"),
+  generatedAt: timestamp("generatedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  revokedAt: timestamp("revokedAt"),
+  revokedBy: int("revokedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GeneratedForm = typeof generatedForms.$inferSelect;
+export type InsertGeneratedForm = typeof generatedForms.$inferInsert;

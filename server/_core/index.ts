@@ -40,6 +40,9 @@ async function startServer() {
   const app = express();
   const server = createServer(app);
   
+  // Trust proxy for correct IP detection behind reverse proxy (nginx, load balancer)
+  app.set('trust proxy', 1);
+  
   // ============================================================================
   // SECURITY MIDDLEWARE (applied first)
   // ============================================================================
