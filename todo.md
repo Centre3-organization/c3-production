@@ -1708,3 +1708,14 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Reuses existing user search API (requestConfig.fields.getDataSourceOptions with source=users)
 - [x] Store selected users as JSON array [{id, name, email}] in form values
 - [x] Updated database fieldType enum and Stakeholders field to multi_user_lookup
+
+## MOP Contractor & Activity/Impact Improvements (Feb 8, 2026)
+- [x] Convert MOP Contractor Line Manager field to user_lookup (select person from system)
+- [x] Add Activity Details checkboxes: HW Install/Replace/Remove, SW Configure/Upgrade, Corrective Maintenance, Preventive Maintenance, Testing & Commissioning, Fit Out/Rehab, Snag Clearance
+- [x] Add Type of Activity checkboxes: Electrical, Civil works, Architectural Fit Out, Racking/Stacking and ICT, Security System, Mechanical/HVAC, Plumbing, Fire System, Structured Cabling, BMS/DCI M
+- [x] Add Service/System Outage radio: Yes/No
+- [x] Add Impact Level dropdown: Data hall(s), Row(s)/Racks(s), No Impact
+- [x] Add Activity Severity dropdown: Low, Medium, High, Emergency
+- [x] Add Required Permissions checkboxes: Work Permit, EPT, MHV
+- [x] Add Activity High-Level Description textarea
+- [x] Align all fields with reference screenshot layout (section renamed to E. Planned Activity and Impact)
