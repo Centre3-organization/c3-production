@@ -251,7 +251,7 @@ export default function Groups() {
       return (
         <div key={group.id}>
           <div
-            className={`flex items-center justify-between p-3 hover:bg-muted/50 rounded-lg transition-colors ${
+            className={`flex items-center justify-between p-3 hover:bg-[#F5F5F5]/50 rounded-lg transition-colors ${
               level > 0 ? "ml-" + (level * 6) : ""
             }`}
             style={{ marginLeft: level * 24 }}
@@ -259,7 +259,7 @@ export default function Groups() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => toggleExpand(group.id)}
-                className={`p-1 rounded hover:bg-muted ${!hasChildren ? "invisible" : ""}`}
+                className={`p-1 rounded hover:bg-[#F5F5F5] ${!hasChildren ? "invisible" : ""}`}
               >
                 {isExpanded ? (
                   <ChevronDown className="h-4 w-4" />
@@ -271,7 +271,7 @@ export default function Groups() {
                 className={`p-2 rounded-lg ${
                   group.groupType === "internal"
                     ? "bg-primary/10 text-primary"
-                    : "bg-orange-100 text-orange-600"
+                    : "bg-[#FFF4E5] text-[#FFB84D]"
                 }`}
               >
                 {group.groupType === "internal" ? (
@@ -283,7 +283,7 @@ export default function Groups() {
               <div>
                 <div className="font-medium">{group.name}</div>
                 {group.description && (
-                  <div className="text-sm text-muted-foreground truncate max-w-md">
+                  <div className="text-sm text-[#6B6B6B] truncate max-w-md">
                     {group.description}
                   </div>
                 )}
@@ -374,8 +374,8 @@ export default function Groups() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Group Management</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-medium">Group Management</h1>
+          <p className="text-[#6B6B6B]">
             Manage organizational groups and access hierarchies
           </p>
         </div>
@@ -402,8 +402,8 @@ export default function Groups() {
                 <FolderTree className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Groups</p>
-                <p className="text-2xl font-bold">{stats?.totalGroups || 0}</p>
+                <p className="text-sm text-[#6B6B6B]">Total Groups</p>
+                <p className="text-2xl font-medium">{stats?.totalGroups || 0}</p>
               </div>
             </div>
           </CardContent>
@@ -411,12 +411,12 @@ export default function Groups() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Building2 className="h-6 w-6 text-blue-600" />
+              <div className="p-3 bg-[#E8DCF5] rounded-lg">
+                <Building2 className="h-6 w-6 text-[#5B2C93]" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Internal Groups</p>
-                <p className="text-2xl font-bold">{stats?.internalGroups || 0}</p>
+                <p className="text-sm text-[#6B6B6B]">Internal Groups</p>
+                <p className="text-2xl font-medium">{stats?.internalGroups || 0}</p>
               </div>
             </div>
           </CardContent>
@@ -424,12 +424,12 @@ export default function Groups() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-orange-100 rounded-lg">
-                <Globe className="h-6 w-6 text-orange-600" />
+              <div className="p-3 bg-[#FFF4E5] rounded-lg">
+                <Globe className="h-6 w-6 text-[#FFB84D]" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Contractor Groups</p>
-                <p className="text-2xl font-bold">{stats?.contractorGroups || 0}</p>
+                <p className="text-sm text-[#6B6B6B]">Contractor Groups</p>
+                <p className="text-2xl font-medium">{stats?.contractorGroups || 0}</p>
               </div>
             </div>
           </CardContent>
@@ -437,12 +437,12 @@ export default function Groups() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <Users className="h-6 w-6 text-green-600" />
+              <div className="p-3 bg-[#E8F9F8] rounded-lg">
+                <Users className="h-6 w-6 text-[#4ECDC4]" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Members</p>
-                <p className="text-2xl font-bold">{stats?.totalMembers || 0}</p>
+                <p className="text-sm text-[#6B6B6B]">Total Members</p>
+                <p className="text-2xl font-medium">{stats?.totalMembers || 0}</p>
               </div>
             </div>
           </CardContent>
@@ -461,7 +461,7 @@ export default function Groups() {
             </div>
             <div className="flex gap-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
                 <Input
                   placeholder="Search groups..."
                   value={searchQuery}
@@ -485,7 +485,7 @@ export default function Groups() {
                 {filteredGroups.length > 0 ? (
                   renderGroupTree(filteredGroups)
                 ) : (
-                  <div className="p-8 text-center text-muted-foreground">
+                  <div className="p-8 text-center text-[#6B6B6B]">
                     No groups found
                   </div>
                 )}
@@ -603,7 +603,7 @@ export default function Groups() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-[#6B6B6B]">
                     Company details will be auto-populated from Master Data
                   </p>
                 </div>
@@ -613,7 +613,7 @@ export default function Groups() {
                     <Input
                       value={formData.metadata.contactEmail}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -621,7 +621,7 @@ export default function Groups() {
                     <Input
                       value={formData.metadata.contactPhone}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -629,7 +629,7 @@ export default function Groups() {
                     <Input
                       value={formData.metadata.contractNumber}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -638,7 +638,7 @@ export default function Groups() {
                       type="date"
                       value={formData.metadata.contractStartDate}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -647,7 +647,7 @@ export default function Groups() {
                       type="date"
                       value={formData.metadata.contractEndDate}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                 </div>
@@ -746,7 +746,7 @@ export default function Groups() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-[#6B6B6B]">
                     Company details will be auto-populated from Master Data
                   </p>
                 </div>
@@ -756,7 +756,7 @@ export default function Groups() {
                     <Input
                       value={formData.metadata.contactEmail}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -764,7 +764,7 @@ export default function Groups() {
                     <Input
                       value={formData.metadata.contactPhone}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -772,7 +772,7 @@ export default function Groups() {
                     <Input
                       value={formData.metadata.contractNumber}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -781,7 +781,7 @@ export default function Groups() {
                       type="date"
                       value={formData.metadata.contractStartDate}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -790,7 +790,7 @@ export default function Groups() {
                       type="date"
                       value={formData.metadata.contractEndDate}
                       readOnly
-                      className="bg-muted"
+                      className="bg-[#F5F5F5]"
                     />
                   </div>
                 </div>
@@ -952,11 +952,11 @@ function GroupMembersDialog({
                     className="inline-flex cursor-help"
                     title="Primary: Main contact for this group. Receives notifications and approval requests first. Secondary: Regular member. May receive notifications if primary is unavailable."
                   >
-                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                    <HelpCircle className="h-4 w-4 text-[#6B6B6B]" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
-                  <p className="font-semibold mb-1">Primary vs Secondary</p>
+                  <p className="font-medium mb-1">Primary vs Secondary</p>
                   <p><strong>Primary:</strong> Main contact for this group. Receives notifications and approval requests first.</p>
                   <p className="mt-1"><strong>Secondary:</strong> Regular member. May receive notifications if primary is unavailable.</p>
                 </TooltipContent>
@@ -985,11 +985,11 @@ function GroupMembersDialog({
                             className="inline-flex cursor-help"
                             title="Primary: Main contact for this group. Receives notifications and approval requests first. Secondary: Regular member. May receive notifications if primary is unavailable."
                           >
-                            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                            <HelpCircle className="h-3.5 w-3.5 text-[#6B6B6B]" />
                           </button>
                         </TooltipTrigger>
                         <TooltipContent className="max-w-xs">
-                          <p className="font-semibold mb-1">Primary vs Secondary</p>
+                          <p className="font-medium mb-1">Primary vs Secondary</p>
                           <p><strong>Primary:</strong> Main contact for this group. Receives notifications and approval requests first.</p>
                           <p className="mt-1"><strong>Secondary:</strong> Regular member. May receive notifications if primary is unavailable.</p>
                         </TooltipContent>
@@ -1035,7 +1035,7 @@ function GroupMembersDialog({
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={5} className="text-center text-[#6B6B6B] py-8">
                       No members in this group
                     </TableCell>
                   </TableRow>
@@ -1296,7 +1296,7 @@ function GroupAccessPolicyDialog({
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={5} className="text-center text-[#6B6B6B] py-8">
                       No access policies defined
                     </TableCell>
                   </TableRow>

@@ -67,27 +67,27 @@ const typeLabels: Record<string, string> = {
 };
 
 const typeColors: Record<string, string> = {
-  admin_visit: "bg-blue-100 text-blue-800 border-blue-200",
-  work_permit: "bg-purple-100 text-purple-800 border-purple-200",
-  material_entry: "bg-amber-100 text-amber-800 border-amber-200",
-  tep: "bg-cyan-100 text-cyan-800 border-cyan-200",
-  mop: "bg-rose-100 text-rose-800 border-rose-200",
-  escort: "bg-green-100 text-green-800 border-green-200",
+  admin_visit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
+  work_permit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
+  material_entry: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  tep: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]/20",
+  mop: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
+  escort: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
 };
 
 // Dynamic stage badge colors
 const stageColors = [
-  "bg-amber-100 text-amber-800 border-amber-300",
-  "bg-blue-100 text-blue-800 border-blue-300",
-  "bg-purple-100 text-purple-800 border-purple-300",
-  "bg-rose-100 text-rose-800 border-rose-300",
-  "bg-emerald-100 text-emerald-800 border-emerald-300",
+  "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
+  "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
+  "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
+  "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
 ];
 
 const entryMethodConfig: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
-  qr_code: { label: "QR Code", icon: <Shield className="h-4 w-4" />, color: "text-green-700 bg-green-100" },
-  rfid: { label: "RFID Tag", icon: <Radio className="h-4 w-4" />, color: "text-blue-700 bg-blue-100" },
-  card: { label: "Access Card", icon: <CreditCard className="h-4 w-4" />, color: "text-purple-700 bg-purple-100" },
+  qr_code: { label: "QR Code", icon: <Shield className="h-4 w-4" />, color: "text-[#4ECDC4] bg-[#E8F9F8]" },
+  rfid: { label: "RFID Tag", icon: <Radio className="h-4 w-4" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
+  card: { label: "Access Card", icon: <CreditCard className="h-4 w-4" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
 };
 
 function getStageColor(stageOrder: number): string {
@@ -209,11 +209,11 @@ export default function ApprovalHistory() {
         <div
           key={i}
           className={`h-2 w-4 rounded-full ${
-            i < currentStage ? 'bg-green-500' : 'bg-gray-200'
+            i < currentStage ? 'bg-[#E8F9F8]' : 'bg-[#E0E0E0]'
           }`}
         />
       ))}
-      <span className="text-xs text-muted-foreground ml-1">
+      <span className="text-xs text-[#6B6B6B] ml-1">
         {currentStage}/{totalStages}
       </span>
     </div>
@@ -224,11 +224,11 @@ export default function ApprovalHistory() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <History className="h-6 w-6 text-[#0f62fe]" />
+          <h1 className="text-2xl font-medium tracking-tight text-foreground flex items-center gap-2">
+            <History className="h-6 w-6 text-[#5B2C93]" />
             {t("approvals.history", "Approval History")}
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-[#6B6B6B] mt-1">
             {t("approvals.historyDescription", "View your past approval decisions and actions")}
           </p>
         </div>
@@ -241,7 +241,7 @@ export default function ApprovalHistory() {
       {/* Search and Filters */}
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
           <Input 
             placeholder={t("approvals.searchPlaceholder", "Search by ID, visitor name, company...")}
             className="pl-10 bg-white"
@@ -252,7 +252,7 @@ export default function ApprovalHistory() {
         
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[180px] bg-white">
-            <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
+            <Filter className="h-4 w-4 mr-2 text-[#6B6B6B]" />
             <SelectValue placeholder={t("approvals.filterByStatus", "Filter by Status")} />
           </SelectTrigger>
           <SelectContent>
@@ -266,18 +266,18 @@ export default function ApprovalHistory() {
       {/* History List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[#0f62fe]" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
         </div>
       ) : filteredTasks.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <div className="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-              <History className="h-8 w-8 text-gray-400" />
+            <div className="h-16 w-16 rounded-full bg-[#F5F5F5] flex items-center justify-center mb-4">
+              <History className="h-8 w-8 text-[#B0B0B0]" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-1">
+            <h3 className="text-lg font-medium text-[#2C2C2C] mb-1">
               {t("approvals.noHistory", "No approval history")}
             </h3>
-            <p className="text-sm text-muted-foreground text-center max-w-sm">
+            <p className="text-sm text-[#6B6B6B] text-center max-w-sm">
               {t("approvals.noHistoryDescription", "Your approval decisions will appear here once you start reviewing requests.")}
             </p>
           </CardContent>
@@ -297,10 +297,10 @@ export default function ApprovalHistory() {
                   <div className="flex-1 min-w-0">
                     {/* Top row: Request number, type, stage, decision */}
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="font-mono text-sm font-medium text-[#0f62fe]">
+                      <span className="font-mono text-sm font-medium text-[#5B2C93]">
                         {task.request?.requestNumber}
                       </span>
-                      <Badge variant="outline" className={typeColors[task.request?.type] || "bg-gray-100"}>
+                      <Badge variant="outline" className={typeColors[task.request?.type] || "bg-[#F5F5F5]"}>
                         {typeLabels[task.request?.type] || task.request?.type}
                       </Badge>
                       <Badge variant="outline" className={getStageColor(task.stageOrder || 1)}>
@@ -309,8 +309,8 @@ export default function ApprovalHistory() {
                       <Badge 
                         variant="outline" 
                         className={task.taskStatus === 'approved' 
-                          ? 'bg-green-100 text-green-800 border-green-300' 
-                          : 'bg-red-100 text-red-800 border-red-300'
+                          ? 'bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]' 
+                          : 'bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]'
                         }
                       >
                         {task.taskStatus === 'approved' ? (
@@ -326,7 +326,7 @@ export default function ApprovalHistory() {
                     </div>
                     
                     {/* Visitor info */}
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+                    <div className="flex items-center gap-4 text-sm text-[#6B6B6B] mb-2">
                       <span className="flex items-center gap-1">
                         <User className="h-4 w-4" />
                         {task.request?.visitorName || "N/A"}
@@ -338,12 +338,12 @@ export default function ApprovalHistory() {
                     </div>
                     
                     {/* Date info */}
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-4 text-xs text-[#6B6B6B]">
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
                         {t("approvals.decidedAt", "Decided")}: {task.taskCompletedAt ? format(new Date(task.taskCompletedAt), "MMM d, yyyy HH:mm") : "N/A"}
                       </span>
-                      <span className="text-gray-400">|</span>
+                      <span className="text-[#B0B0B0]">|</span>
                       <span>
                         {t("approvals.workflow", "Workflow")}: {task.workflowName || "Default"}
                       </span>
@@ -371,7 +371,7 @@ export default function ApprovalHistory() {
       {/* Pagination */}
       {(historyTasks || []).length > 0 && (
         <div className="flex items-center justify-between border-t pt-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#6B6B6B]">
             {t("approvals.showingPage", "Page")} {page + 1}
           </p>
           <div className="flex items-center gap-2">
@@ -402,7 +402,7 @@ export default function ApprovalHistory() {
         <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-[#0f62fe]" />
+              <FileText className="h-5 w-5 text-[#5B2C93]" />
               {t("approvals.decisionDetails", "Decision Details")}
             </DialogTitle>
           </DialogHeader>
@@ -410,11 +410,11 @@ export default function ApprovalHistory() {
           {selectedTask && (
             <div className="space-y-4">
               {/* Header info */}
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-[#F5F5F5] rounded-lg">
                 <div>
                   <span className="font-mono text-lg font-medium">{selectedTask.request?.requestNumber}</span>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="outline" className={typeColors[selectedTask.request?.type] || "bg-gray-100"}>
+                    <Badge variant="outline" className={typeColors[selectedTask.request?.type] || "bg-[#F5F5F5]"}>
                       {typeLabels[selectedTask.request?.type] || selectedTask.request?.type}
                     </Badge>
                     <Badge variant="outline" className={getStageColor(selectedTask.stageOrder || 1)}>
@@ -423,8 +423,8 @@ export default function ApprovalHistory() {
                     <Badge 
                       variant="outline" 
                       className={selectedTask.taskStatus === 'approved' 
-                        ? 'bg-green-100 text-green-800 border-green-300' 
-                        : 'bg-red-100 text-red-800 border-red-300'
+                        ? 'bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]' 
+                        : 'bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]'
                       }
                     >
                       {selectedTask.taskStatus === 'approved' ? (
@@ -436,9 +436,9 @@ export default function ApprovalHistory() {
                     {/* Overall request status */}
                     {selectedTask.request?.status && (
                       <Badge variant="outline" className={`text-xs ${
-                        selectedTask.request.status === 'approved' ? 'bg-green-50 text-green-700 border-green-200' :
-                        selectedTask.request.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
-                        'bg-amber-50 text-amber-700 border-amber-200'
+                        selectedTask.request.status === 'approved' ? 'bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]' :
+                        selectedTask.request.status === 'rejected' ? 'bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]' :
+                        'bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]'
                       }`}>
                         Request: {selectedTask.request.status.replace(/_/g, ' ')}
                       </Badge>
@@ -453,10 +453,10 @@ export default function ApprovalHistory() {
               
               {/* Access Method - Compact, no QR image */}
               {selectedTask.taskStatus === 'approved' && selectedTask.accessMethod?.entryMethod && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                <div className="bg-[#E8F9F8] border border-[#4ECDC4] rounded-lg p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <Shield className="h-4 w-4 text-green-700" />
+                      <Shield className="h-4 w-4 text-[#4ECDC4]" />
                       <Badge variant="secondary" className={`${entryMethodConfig[selectedTask.accessMethod.entryMethod]?.color} gap-2 text-sm px-3 py-1`}>
                         {entryMethodConfig[selectedTask.accessMethod.entryMethod]?.icon}
                         {entryMethodConfig[selectedTask.accessMethod.entryMethod]?.label}
@@ -478,7 +478,7 @@ export default function ApprovalHistory() {
                     </div>
                     <div className="flex items-center gap-2">
                       {selectedTask.accessMethod.accessGrantedByName && (
-                        <span className="text-xs text-muted-foreground">by {selectedTask.accessMethod.accessGrantedByName}</span>
+                        <span className="text-xs text-[#6B6B6B]">by {selectedTask.accessMethod.accessGrantedByName}</span>
                       )}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -509,33 +509,33 @@ export default function ApprovalHistory() {
               <div className="grid grid-cols-3 gap-6">
                 {/* Column 1: Visitor Information */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-semibold text-gray-900 border-b pb-2 flex items-center gap-2">
-                    <User className="h-4 w-4 text-blue-600" />
+                  <h4 className="text-sm font-medium text-[#2C2C2C] border-b pb-2 flex items-center gap-2">
+                    <User className="h-4 w-4 text-[#5B2C93]" />
                     Visitor Information
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Full Name</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Full Name</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorName || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Company</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Company</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorCompany || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">ID Type</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">ID Type</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorIdType?.toUpperCase().replace(/_/g, ' ') || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">ID Number</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">ID Number</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorIdNumber || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Phone</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Phone</label>
                       <p className="text-sm font-medium">{selectedTask.request?.visitorPhone || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Email</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Email</label>
                       <p className="text-sm font-medium truncate">{selectedTask.request?.visitorEmail || "N/A"}</p>
                     </div>
                   </div>
@@ -543,35 +543,35 @@ export default function ApprovalHistory() {
                 
                 {/* Column 2: Visit Details */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-semibold text-gray-900 border-b pb-2 flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-purple-600" />
+                  <h4 className="text-sm font-medium text-[#2C2C2C] border-b pb-2 flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-[#5B2C93]" />
                     Visit Details
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Purpose</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Purpose</label>
                       <p className="text-sm font-medium">{selectedTask.request?.purpose || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Start Date</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Start Date</label>
                       <p className="text-sm font-medium">
                         {selectedTask.request?.startDate ? format(new Date(selectedTask.request.startDate), "EEEE, MMM d, yyyy") : "N/A"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">End Date</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">End Date</label>
                       <p className="text-sm font-medium">
                         {selectedTask.request?.endDate ? format(new Date(selectedTask.request.endDate), "EEEE, MMM d, yyyy") : "N/A"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Visit Time</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Visit Time</label>
                       <p className="text-sm font-medium">
                         {selectedTask.request?.startTime || "00:00"} - {selectedTask.request?.endTime || "23:59"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Submitted On</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Submitted On</label>
                       <p className="text-sm font-medium">
                         {selectedTask.request?.createdAt ? format(new Date(selectedTask.request.createdAt), "MMM d, yyyy 'at' HH:mm") : "N/A"}
                       </p>
@@ -581,31 +581,31 @@ export default function ApprovalHistory() {
                 
                 {/* Column 3: Location & Workflow */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-semibold text-gray-900 border-b pb-2 flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-green-600" />
+                  <h4 className="text-sm font-medium text-[#2C2C2C] border-b pb-2 flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-[#4ECDC4]" />
                     Location & Workflow
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Site</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Site</label>
                       <p className="text-sm font-medium">{selectedTask.request?.siteName || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Workflow</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Workflow</label>
                       <p className="text-sm font-medium">{selectedTask.workflowName || "Default"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Your Stage</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Your Stage</label>
                       <p className="text-sm font-medium">{selectedTask.stageName || "N/A"}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Assigned At</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Assigned At</label>
                       <p className="text-sm font-medium">
                         {selectedTask.taskCreatedAt ? format(new Date(selectedTask.taskCreatedAt), "MMM d, yyyy HH:mm") : "N/A"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground uppercase">Decided At</label>
+                      <label className="text-xs font-medium text-[#6B6B6B] uppercase">Decided At</label>
                       <p className="text-sm font-medium">
                         {selectedTask.taskCompletedAt ? format(new Date(selectedTask.taskCompletedAt), "MMM d, yyyy HH:mm") : "N/A"}
                       </p>
@@ -616,8 +616,8 @@ export default function ApprovalHistory() {
               
               {/* Approval Timeline */}
               <div className="border-t pt-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <History className="h-4 w-4 text-orange-600" />
+                <h4 className="text-sm font-medium text-[#2C2C2C] mb-3 flex items-center gap-2">
+                  <History className="h-4 w-4 text-[#FFB84D]" />
                   Approval Timeline
                 </h4>
                 
@@ -627,10 +627,10 @@ export default function ApprovalHistory() {
                     <div key={idx} className="flex items-center">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
                         idx + 1 < (selectedTask.stageOrder || 1) 
-                          ? "bg-green-100 text-green-700 border-2 border-green-500" 
+                          ? "bg-[#E8F9F8] text-[#4ECDC4] border-2 border-[#4ECDC4]" 
                           : idx + 1 === (selectedTask.stageOrder || 1)
-                            ? selectedTask.taskStatus === 'approved' ? "bg-green-100 text-green-700 border-2 border-green-500" : "bg-red-100 text-red-700 border-2 border-red-500"
-                            : "bg-gray-100 text-gray-500 border-2 border-gray-300"
+                            ? selectedTask.taskStatus === 'approved' ? "bg-[#E8F9F8] text-[#4ECDC4] border-2 border-[#4ECDC4]" : "bg-[#FFE5E5] text-[#FF6B6B] border-2 border-[#FF6B6B]"
+                            : "bg-[#F5F5F5] text-[#6B6B6B] border-2 border-[#E0E0E0]"
                       }`}>
                         {idx + 1 < (selectedTask.stageOrder || 1) || (idx + 1 === (selectedTask.stageOrder || 1) && selectedTask.taskStatus === 'approved') ? (
                           <CheckCircle2 className="h-4 w-4" />
@@ -642,7 +642,7 @@ export default function ApprovalHistory() {
                       </div>
                       {idx < (selectedTask.totalStages || 1) - 1 && (
                         <div className={`w-8 h-0.5 ${
-                          idx + 1 < (selectedTask.stageOrder || 1) ? "bg-green-500" : "bg-gray-300"
+                          idx + 1 < (selectedTask.stageOrder || 1) ? "bg-[#E8F9F8]" : "bg-[#E0E0E0]"
                         }`} />
                       )}
                     </div>
@@ -652,24 +652,24 @@ export default function ApprovalHistory() {
                 {/* Timeline Entries */}
                 {selectedTask.approvalHistory && selectedTask.approvalHistory.length > 0 ? (
                   <div className="space-y-0 max-h-[350px] overflow-y-auto relative">
-                    <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-gray-200" />
+                    <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-[#E0E0E0]" />
                     
                     {selectedTask.approvalHistory.map((history: any, idx: number) => {
                       const actionBgColors: Record<string, string> = {
-                        approved: "bg-green-500", rejected: "bg-red-500", decision_made: "bg-blue-500",
-                        info_requested: "bg-amber-500", submitted: "bg-blue-500", escalated: "bg-purple-500",
-                        workflow_started: "bg-gray-500", workflow_completed: "bg-green-600",
-                        stage_completed: "bg-green-500", task_assigned: "bg-blue-400",
-                        sent_back: "bg-amber-500", clarification_requested: "bg-amber-500",
-                        clarification_provided: "bg-cyan-500", task_reassigned: "bg-purple-500",
+                        approved: "bg-[#E8F9F8]", rejected: "bg-[#FF6B6B]", decision_made: "bg-[#E8DCF5]",
+                        info_requested: "bg-[#FFF4E5]", submitted: "bg-[#E8DCF5]", escalated: "bg-[#E8DCF5]0",
+                        workflow_started: "bg-[#F5F5F5]0", workflow_completed: "bg-[#4ECDC4]",
+                        stage_completed: "bg-[#E8F9F8]", task_assigned: "bg-[#5B2C93]",
+                        sent_back: "bg-[#FFF4E5]", clarification_requested: "bg-[#FFF4E5]",
+                        clarification_provided: "bg-[#5B2C93]", task_reassigned: "bg-[#E8DCF5]0",
                       };
                       const actionColors: Record<string, string> = {
-                        approved: "border-green-400", rejected: "border-red-400", decision_made: "border-blue-400",
-                        info_requested: "border-amber-400", submitted: "border-blue-400", escalated: "border-purple-400",
-                        workflow_started: "border-gray-400", workflow_completed: "border-green-500",
-                        stage_completed: "border-green-400", task_assigned: "border-blue-300",
-                        sent_back: "border-amber-400", clarification_requested: "border-amber-400",
-                        clarification_provided: "border-cyan-400", task_reassigned: "border-purple-400",
+                        approved: "border-[#4ECDC4]", rejected: "border-[#FF6B6B]", decision_made: "border-[#5B2C93]",
+                        info_requested: "border-[#FFB84D]", submitted: "border-[#5B2C93]", escalated: "border-[#5B2C93]",
+                        workflow_started: "border-[#B0B0B0]", workflow_completed: "border-[#4ECDC4]",
+                        stage_completed: "border-[#4ECDC4]", task_assigned: "border-[#5B2C93]",
+                        sent_back: "border-[#FFB84D]", clarification_requested: "border-[#FFB84D]",
+                        clarification_provided: "border-[#5B2C93]", task_reassigned: "border-[#5B2C93]",
                       };
                       const actionLabels: Record<string, string> = {
                         approved: "Approved", rejected: "Rejected", decision_made: "Decision Made",
@@ -693,38 +693,38 @@ export default function ApprovalHistory() {
                       
                       return (
                         <div key={idx} className="relative pl-10 pb-4">
-                          <div className={`absolute left-2 top-1 w-5 h-5 rounded-full flex items-center justify-center z-10 ${actionBgColors[history.actionType] || "bg-gray-400"}`}>
+                          <div className={`absolute left-2 top-1 w-5 h-5 rounded-full flex items-center justify-center z-10 ${actionBgColors[history.actionType] || "bg-[#B0B0B0]"}`}>
                             {history.actionType === 'approved' || history.actionType === 'decision_made' ? <CheckCircle2 className="h-3 w-3 text-white" /> :
                              history.actionType === 'rejected' ? <XCircle className="h-3 w-3 text-white" /> :
                              <Clock className="h-3 w-3 text-white" />}
                           </div>
                           
-                          <div className={`border-l-2 pl-3 py-1 ${actionColors[history.actionType] || "border-gray-300"}`}>
+                          <div className={`border-l-2 pl-3 py-1 ${actionColors[history.actionType] || "border-[#E0E0E0]"}`}>
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-semibold text-sm">
+                                <span className="font-medium text-sm">
                                   {actionLabels[history.actionType] || history.actionType.replace(/_/g, " ")}
                                 </span>
                                 <Badge variant="outline" className="text-xs px-1.5 py-0">{stageName}</Badge>
                                 {decisionLabel && history.actionType === "decision_made" && (
                                   <Badge variant="outline" className={`text-xs px-1.5 py-0 ${
-                                    decision === "approved" ? "bg-green-100 text-green-700 border-green-300" :
-                                    decision === "rejected" ? "bg-red-100 text-red-700 border-red-300" :
-                                    "bg-gray-100 text-gray-700"
+                                    decision === "approved" ? "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]" :
+                                    decision === "rejected" ? "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]" :
+                                    "bg-[#F5F5F5] text-[#2C2C2C]"
                                   }`}>{decisionLabel}</Badge>
                                 )}
                               </div>
-                              <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                              <span className="text-xs text-[#6B6B6B] whitespace-nowrap ml-2">
                                 {history.actionAt ? format(new Date(history.actionAt), "MMM d, yyyy HH:mm") : ""}
                               </span>
                             </div>
-                            <div className="text-xs text-muted-foreground mt-0.5">
+                            <div className="text-xs text-[#6B6B6B] mt-0.5">
                               <span className="font-medium">{history.userName || history.userEmail || "System"}</span>
                             </div>
                             {comments && (
-                              <div className="mt-1.5 p-2 bg-gray-50 rounded border border-gray-100 text-sm">
-                                <MessageSquare className="h-3 w-3 inline-block mr-1 text-muted-foreground" />
-                                <span className="italic text-muted-foreground">"{comments}"</span>
+                              <div className="mt-1.5 p-2 bg-[#F5F5F5] rounded border border-[#E0E0E0] text-sm">
+                                <MessageSquare className="h-3 w-3 inline-block mr-1 text-[#6B6B6B]" />
+                                <span className="italic text-[#6B6B6B]">"{comments}"</span>
                               </div>
                             )}
                           </div>
@@ -733,7 +733,7 @@ export default function ApprovalHistory() {
                     })}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground italic">No approval history available for this request.</p>
+                  <p className="text-sm text-[#6B6B6B] italic">No approval history available for this request.</p>
                 )}
               </div>
             </div>
@@ -747,7 +747,7 @@ export default function ApprovalHistory() {
               <Button 
                 variant="outline" 
                 onClick={() => handleDownloadPdf(selectedTask.request.id)} 
-                className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                className="gap-2 text-[#5B2C93] hover:text-[#5B2C93] hover:bg-[#E8DCF5]"
               >
                 <Download className="h-4 w-4" />
                 {t("approvals.downloadPdf", "Download Form PDF")}

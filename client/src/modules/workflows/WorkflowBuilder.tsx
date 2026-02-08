@@ -530,10 +530,10 @@ export function WorkflowBuilder() {
       <ErrorDialogComponent />
       <div className="flex h-full">
       {/* Workflow List Panel */}
-      <div className="w-80 border-r bg-muted/30 flex flex-col">
+      <div className="w-80 border-r bg-[#F5F5F5]/30 flex flex-col">
         <div className="p-4 border-b">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Workflows</h2>
+            <h2 className="text-lg font-medium">Workflows</h2>
             <Button size="sm" onClick={() => setIsCreateDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-1" />
               New
@@ -542,7 +542,7 @@ export function WorkflowBuilder() {
           
           {/* Search */}
           <div className="relative mb-3">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
             <Input
               placeholder="Search workflows..."
               value={searchQuery}
@@ -569,9 +569,9 @@ export function WorkflowBuilder() {
         {/* Workflow List */}
         <div className="flex-1 overflow-y-auto p-2">
           {isLoading ? (
-            <div className="text-center py-8 text-muted-foreground">Loading...</div>
+            <div className="text-center py-8 text-[#6B6B6B]">Loading...</div>
           ) : filteredWorkflows?.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-[#6B6B6B]">
               <Workflow className="h-12 w-12 mx-auto mb-2 opacity-50" />
               <p>No workflows found</p>
             </div>
@@ -583,7 +583,7 @@ export function WorkflowBuilder() {
                   className={`cursor-pointer transition-colors ${
                     selectedWorkflow === workflow.id
                       ? "border-primary bg-primary/5"
-                      : "hover:bg-muted/50"
+                      : "hover:bg-[#F5F5F5]/50"
                   }`}
                   onClick={() => setSelectedWorkflow(workflow.id)}
                 >
@@ -604,7 +604,7 @@ export function WorkflowBuilder() {
                             <Badge variant="default" className="text-xs">Default</Badge>
                           )}
                           {!workflow.isActive && (
-                            <Badge variant="outline" className="text-xs text-orange-600">Inactive</Badge>
+                            <Badge variant="outline" className="text-xs text-[#FFB84D]">Inactive</Badge>
                           )}
                         </div>
                       </div>
@@ -622,8 +622,8 @@ export function WorkflowBuilder() {
         <div className="flex-1 p-6 overflow-y-auto">
           <div className="flex items-start justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold">{workflowDetails.workflow.name}</h1>
-              <p className="text-muted-foreground mt-1">
+              <h1 className="text-2xl font-medium">{workflowDetails.workflow.name}</h1>
+              <p className="text-[#6B6B6B] mt-1">
                 {workflowDetails.workflow.description || "Default workflow for all access requests with L1 (Initial Review) and L2 (Security Approval) stages"}
               </p>
               <div className="flex items-center gap-2 mt-2">
@@ -691,7 +691,7 @@ export function WorkflowBuilder() {
             {/* Stages Tab */}
             <TabsContent value="stages" className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Approval Stages</h3>
+                <h3 className="text-lg font-medium">Approval Stages</h3>
                 <Button onClick={() => setIsStageDialogOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Stage
@@ -700,7 +700,7 @@ export function WorkflowBuilder() {
 
               {workflowDetails.stages.length === 0 ? (
                 <Card>
-                  <CardContent className="py-12 text-center text-muted-foreground">
+                  <CardContent className="py-12 text-center text-[#6B6B6B]">
                     <GitBranch className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No stages configured.</p>
                     <p className="text-sm">Add stages to define the approval flow.</p>
@@ -713,12 +713,12 @@ export function WorkflowBuilder() {
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-4">
-                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-medium">
                               {index + 1}
                             </div>
                             <div>
-                              <h4 className="font-semibold">{stage.stageName}</h4>
-                              <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                              <h4 className="font-medium">{stage.stageName}</h4>
+                              <div className="flex items-center gap-2 mt-1 text-sm text-[#6B6B6B]">
                                 <Badge variant="outline">
                                   {STAGE_TYPES.find(st => st.value === stage.stageType)?.label || stage.stageType}
                                 </Badge>
@@ -732,7 +732,7 @@ export function WorkflowBuilder() {
                                   </Badge>
                                 )}
                               </div>
-                              <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-4 mt-2 text-sm text-[#6B6B6B]">
                                 {stage.canReject && (
                                   <span className="flex items-center gap-1">
                                     <XCircle className="h-3 w-3" /> Can Reject
@@ -761,7 +761,7 @@ export function WorkflowBuilder() {
                         </div>
                         {index < workflowDetails.stages.length - 1 && (
                           <div className="flex justify-center mt-3">
-                            <ChevronRight className="h-5 w-5 text-muted-foreground rotate-90" />
+                            <ChevronRight className="h-5 w-5 text-[#6B6B6B] rotate-90" />
                           </div>
                         )}
                       </CardContent>
@@ -774,7 +774,7 @@ export function WorkflowBuilder() {
             {/* Conditions Tab */}
             <TabsContent value="conditions" className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Routing Conditions</h3>
+                <h3 className="text-lg font-medium">Routing Conditions</h3>
                 <Button onClick={() => setIsConditionDialogOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Condition
@@ -783,7 +783,7 @@ export function WorkflowBuilder() {
 
               {workflowDetails.conditions.length === 0 ? (
                 <Card>
-                  <CardContent className="py-12 text-center text-muted-foreground">
+                  <CardContent className="py-12 text-center text-[#6B6B6B]">
                     <Filter className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No conditions configured.</p>
                     <p className="text-sm">This workflow will match all requests of its process type.</p>
@@ -809,7 +809,7 @@ export function WorkflowBuilder() {
                               {(() => {
                                 const ct = CONDITION_TYPES.find(c => c.value === condition.conditionType);
                                 const Icon = ct?.icon || Filter;
-                                return <Icon className="h-4 w-4 text-muted-foreground" />;
+                                return <Icon className="h-4 w-4 text-[#6B6B6B]" />;
                               })()}
                               {getConditionTypeLabel(condition.conditionType)}
                             </div>
@@ -838,9 +838,9 @@ export function WorkflowBuilder() {
               )}
 
               {workflowDetails.conditions.length > 0 && (
-                <Card className="bg-muted/50">
+                <Card className="bg-[#F5F5F5]/50">
                   <CardContent className="py-4">
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#6B6B6B]">
                       <strong>Note:</strong> Conditions within the same group are combined with AND logic.
                       Different groups are combined with OR logic.
                     </p>
@@ -868,7 +868,7 @@ export function WorkflowBuilder() {
                           priority: parseInt(e.target.value),
                         })}
                       />
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-[#6B6B6B]">
                         Higher priority workflows are evaluated first
                       </p>
                     </div>
@@ -882,7 +882,7 @@ export function WorkflowBuilder() {
                             isDefault: checked,
                           })}
                         />
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm text-[#6B6B6B]">
                           Use as default for this process type
                         </span>
                       </div>
@@ -894,7 +894,7 @@ export function WorkflowBuilder() {
           </Tabs>
         </div>
       ) : (
-        <div className="flex items-center justify-center h-full text-muted-foreground">
+        <div className="flex items-center justify-center h-full text-[#6B6B6B]">
           <div className="text-center">
             <Workflow className="h-16 w-16 mx-auto mb-4 opacity-50" />
             <p className="text-lg">Select a workflow to view details</p>
@@ -1117,7 +1117,7 @@ export function WorkflowBuilder() {
               <SelectContent>
                 {Object.entries(groupedConditionTypes).map(([category, types]) => (
                   <div key={category}>
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted">
+                    <div className="px-2 py-1.5 text-xs font-medium text-[#6B6B6B] bg-[#F5F5F5]">
                       {category}
                     </div>
                     {types.map((ct) => {
@@ -1208,7 +1208,7 @@ export function WorkflowBuilder() {
                 <SelectItem value="3">Group 3</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-[#6B6B6B]">
               Conditions in the same group are combined with AND. Different groups are combined with OR.
             </p>
           </div>

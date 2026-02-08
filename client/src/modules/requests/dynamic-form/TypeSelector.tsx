@@ -122,7 +122,7 @@ export function TypeSelector({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 text-sm text-gray-600">
+      <div className="flex items-center gap-2 text-sm text-[#6B6B6B]">
         <Info className="h-4 w-4" />
         <span>
           {allowMultiple
@@ -149,16 +149,16 @@ export function TypeSelector({
                       "relative flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200",
                       "min-h-[100px] text-center",
                       isSelected
-                        ? "border-[#0f62fe] bg-[#e5f6ff] shadow-md"
+                        ? "border-[#5B2C93] bg-[#E8F9F8] shadow-md"
                         : isDisabled
-                        ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
-                        : "border-gray-200 bg-white hover:border-[#0f62fe]/50 hover:shadow-sm cursor-pointer"
+                        ? "border-[#E0E0E0] bg-[#F5F5F5] opacity-50 cursor-not-allowed"
+                        : "border-[#E0E0E0] bg-white hover:border-[#5B2C93]/50 hover:shadow-sm cursor-pointer"
                     )}
                   >
                     {/* Selection indicator */}
                     {isSelected && (
                       <div className="absolute top-2 right-2">
-                        <div className="h-5 w-5 rounded-full bg-[#0f62fe] flex items-center justify-center">
+                        <div className="h-5 w-5 rounded-full bg-[#5B2C93] flex items-center justify-center">
                           <Check className="h-3 w-3 text-white" />
                         </div>
                       </div>
@@ -169,10 +169,10 @@ export function TypeSelector({
                       <Badge
                         variant="outline"
                         className={cn(
-                          "mb-2 font-bold text-xs",
+                          "mb-2 font-medium text-xs",
                           isSelected
-                            ? "bg-[#0f62fe] text-white border-[#0f62fe]"
-                            : "bg-gray-100 text-gray-700"
+                            ? "bg-[#5B2C93] text-white border-[#5B2C93]"
+                            : "bg-[#F5F5F5] text-[#2C2C2C]"
                         )}
                       >
                         {type.shortCode}
@@ -183,7 +183,7 @@ export function TypeSelector({
                     <span
                       className={cn(
                         "font-medium text-sm",
-                        isSelected ? "text-[#0043ce]" : "text-gray-800"
+                        isSelected ? "text-[#3D1C5E]" : "text-[#2C2C2C]"
                       )}
                     >
                       {getTypeName(type)}
@@ -191,7 +191,7 @@ export function TypeSelector({
 
                     {/* Exclusive indicator */}
                     {(type.isExclusive || combinationRules?.[type.code]?.exclusive) && (
-                      <span className="text-xs text-orange-600 mt-1 flex items-center gap-1">
+                      <span className="text-xs text-[#FFB84D] mt-1 flex items-center gap-1">
                         <AlertCircle className="h-3 w-3" />
                         {t("requests.exclusiveType", "Exclusive")}
                       </span>
@@ -199,7 +199,7 @@ export function TypeSelector({
 
                     {/* Max duration */}
                     {type.maxDurationDays && (
-                      <span className="text-xs text-gray-500 mt-1">
+                      <span className="text-xs text-[#6B6B6B] mt-1">
                         {t("requests.maxDays", "Max {{days}} days", {
                           days: type.maxDurationDays,
                         })}
@@ -210,10 +210,10 @@ export function TypeSelector({
                 <TooltipContent side="bottom" className="max-w-xs">
                   <p className="font-medium">{getTypeName(type)}</p>
                   {type.description && (
-                    <p className="text-sm text-gray-500 mt-1">{type.description}</p>
+                    <p className="text-sm text-[#6B6B6B] mt-1">{type.description}</p>
                   )}
                   {isDisabled && (
-                    <p className="text-sm text-orange-600 mt-1">
+                    <p className="text-sm text-[#FFB84D] mt-1">
                       {t(
                         "requests.typeDisabledBySelection",
                         "Cannot be combined with current selection"
@@ -230,7 +230,7 @@ export function TypeSelector({
       {/* Selected types summary */}
       {selectedTypeIds.length > 0 && (
         <div className="flex flex-wrap gap-2 pt-2 border-t">
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-[#6B6B6B]">
             {t("requests.selectedTypes", "Selected:")}
           </span>
           {selectedTypeIds.map((typeId) => {
@@ -240,7 +240,7 @@ export function TypeSelector({
               <Badge
                 key={typeId}
                 variant="secondary"
-                className="bg-[#0f62fe] text-white"
+                className="bg-[#5B2C93] text-white"
               >
                 {type.shortCode || getTypeName(type)}
               </Badge>

@@ -92,49 +92,49 @@ export function FormPreview({ open, onOpenChange, requestTypeId, typeName }: For
           </Label>
 
           {field.fieldType === "text" && (
-            <Input placeholder={placeholder} disabled className="bg-muted/50" />
+            <Input placeholder={placeholder} disabled className="bg-[#F5F5F5]/50" />
           )}
 
           {field.fieldType === "textarea" && (
-            <Textarea placeholder={placeholder} disabled className="bg-muted/50" />
+            <Textarea placeholder={placeholder} disabled className="bg-[#F5F5F5]/50" />
           )}
 
           {field.fieldType === "number" && (
-            <Input type="number" placeholder={placeholder} disabled className="bg-muted/50" />
+            <Input type="number" placeholder={placeholder} disabled className="bg-[#F5F5F5]/50" />
           )}
 
           {field.fieldType === "email" && (
-            <Input type="email" placeholder={placeholder} disabled className="bg-muted/50" />
+            <Input type="email" placeholder={placeholder} disabled className="bg-[#F5F5F5]/50" />
           )}
 
           {field.fieldType === "phone" && (
-            <Input type="tel" placeholder={placeholder} disabled className="bg-muted/50" />
+            <Input type="tel" placeholder={placeholder} disabled className="bg-[#F5F5F5]/50" />
           )}
 
           {field.fieldType === "date" && (
             <div className="relative">
-              <Input placeholder="Select date" disabled className="bg-muted/50" />
-              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Select date" disabled className="bg-[#F5F5F5]/50" />
+              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
             </div>
           )}
 
           {field.fieldType === "time" && (
             <div className="relative">
-              <Input placeholder="Select time" disabled className="bg-muted/50" />
-              <Clock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Select time" disabled className="bg-[#F5F5F5]/50" />
+              <Clock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
             </div>
           )}
 
           {field.fieldType === "datetime" && (
             <div className="relative">
-              <Input placeholder="Select date and time" disabled className="bg-muted/50" />
-              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Select date and time" disabled className="bg-[#F5F5F5]/50" />
+              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
             </div>
           )}
 
           {field.fieldType === "select" && (
             <Select disabled>
-              <SelectTrigger className="bg-muted/50">
+              <SelectTrigger className="bg-[#F5F5F5]/50">
                 <SelectValue placeholder={placeholder || "Select an option"} />
               </SelectTrigger>
               <SelectContent>
@@ -168,14 +168,14 @@ export function FormPreview({ open, onOpenChange, requestTypeId, typeName }: For
           )}
 
           {field.fieldType === "file" && (
-            <div className="border-2 border-dashed rounded-lg p-4 text-center bg-muted/50">
-              <Upload className="h-6 w-6 mx-auto text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground">Click to upload or drag and drop</p>
+            <div className="border-2 border-dashed rounded-lg p-4 text-center bg-[#F5F5F5]/50">
+              <Upload className="h-6 w-6 mx-auto text-[#6B6B6B] mb-2" />
+              <p className="text-sm text-[#6B6B6B]">Click to upload or drag and drop</p>
             </div>
           )}
 
           {field.helpText && (
-            <p className="text-xs text-muted-foreground">{field.helpText}</p>
+            <p className="text-xs text-[#6B6B6B]">{field.helpText}</p>
           )}
         </div>
       </div>
@@ -189,7 +189,7 @@ export function FormPreview({ open, onOpenChange, requestTypeId, typeName }: For
       return (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-[#6B6B6B]">
               {section.minItems && section.maxItems
                 ? `${section.minItems} to ${section.maxItems} items allowed`
                 : section.maxItems
@@ -207,7 +207,7 @@ export function FormPreview({ open, onOpenChange, requestTypeId, typeName }: For
             <div className="flex items-center justify-between">
               <Badge variant="secondary">Item 1</Badge>
               <Button variant="ghost" size="icon" disabled>
-                <Trash2 className="h-4 w-4 text-muted-foreground" />
+                <Trash2 className="h-4 w-4 text-[#6B6B6B]" />
               </Button>
             </div>
             <div className="grid grid-cols-12 gap-4">
@@ -243,12 +243,12 @@ export function FormPreview({ open, onOpenChange, requestTypeId, typeName }: For
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         ) : sections.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="text-center py-12 text-[#6B6B6B]">
             No sections defined for this request type.
           </div>
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full flex flex-wrap h-auto gap-1 bg-muted/50 p-1">
+            <TabsList className="w-full flex flex-wrap h-auto gap-1 bg-[#F5F5F5]/50 p-1">
               {sections.map((section) => (
                 <TabsTrigger
                   key={section.code}
@@ -272,7 +272,7 @@ export function FormPreview({ open, onOpenChange, requestTypeId, typeName }: For
                     <h3 className="text-lg font-medium">
                       {isRTL ? section.nameAr : section.name}
                     </h3>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-[#6B6B6B]">
                       {section.fields?.length || 0} fields
                     </span>
                   </div>

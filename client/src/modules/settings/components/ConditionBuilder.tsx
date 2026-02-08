@@ -85,7 +85,7 @@ function SingleConditionEditor({
       <div className="flex-1 grid grid-cols-12 gap-2">
         {/* Field selector */}
         <div className="col-span-4">
-          <Label className="text-xs text-muted-foreground mb-1 block">When field</Label>
+          <Label className="text-xs text-[#6B6B6B] mb-1 block">When field</Label>
           <Select
             value={condition.field}
             onValueChange={(value) => onChange({ ...condition, field: value })}
@@ -105,7 +105,7 @@ function SingleConditionEditor({
 
         {/* Operator selector */}
         <div className="col-span-3">
-          <Label className="text-xs text-muted-foreground mb-1 block">Operator</Label>
+          <Label className="text-xs text-[#6B6B6B] mb-1 block">Operator</Label>
           <Select
             value={condition.operator}
             onValueChange={(value) => onChange({ ...condition, operator: value as ConditionOperator })}
@@ -125,7 +125,7 @@ function SingleConditionEditor({
 
         {/* Value input */}
         <div className="col-span-4">
-          <Label className="text-xs text-muted-foreground mb-1 block">Value</Label>
+          <Label className="text-xs text-[#6B6B6B] mb-1 block">Value</Label>
           {needsValue ? (
             hasOptions ? (
               <Select
@@ -152,7 +152,7 @@ function SingleConditionEditor({
               />
             )
           ) : (
-            <div className="h-9 flex items-center text-sm text-muted-foreground italic">
+            <div className="h-9 flex items-center text-sm text-[#6B6B6B] italic">
               No value needed
             </div>
           )}
@@ -237,13 +237,13 @@ function ConditionGroupEditor({
     <div
       className={cn(
         "border rounded-lg p-3 space-y-3",
-        depth === 0 ? "bg-muted/30" : "bg-muted/50"
+        depth === 0 ? "bg-[#F5F5F5]/30" : "bg-[#F5F5F5]/50"
       )}
     >
       {/* Group header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <GitBranch className="h-4 w-4 text-muted-foreground" />
+          <GitBranch className="h-4 w-4 text-[#6B6B6B]" />
           <span className="text-sm font-medium">
             {depth === 0 ? "Show this field when" : "Nested group"}
           </span>
@@ -375,16 +375,16 @@ export function ConditionBuilder({
   return (
     <div className="space-y-4">
       {/* Enable/Disable toggle */}
-      <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/20">
+      <div className="flex items-center justify-between p-3 border rounded-lg bg-[#F5F5F5]/20">
         <div className="flex items-center gap-3">
           {enabled ? (
             <Eye className="h-5 w-5 text-primary" />
           ) : (
-            <EyeOff className="h-5 w-5 text-muted-foreground" />
+            <EyeOff className="h-5 w-5 text-[#6B6B6B]" />
           )}
           <div>
             <div className="font-medium text-sm">Conditional Visibility</div>
-            <div className="text-xs text-muted-foreground">
+            <div className="text-xs text-[#6B6B6B]">
               {enabled
                 ? "This field will only show when conditions are met"
                 : "This field will always be visible"}
@@ -405,7 +405,7 @@ export function ConditionBuilder({
       {enabled && (
         <>
           {filteredFields.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground border rounded-lg bg-muted/20">
+            <div className="text-center py-6 text-[#6B6B6B] border rounded-lg bg-[#F5F5F5]/20">
               <GitBranch className="h-8 w-8 mx-auto mb-2 opacity-50" />
               <p className="text-sm">No other fields available in this section</p>
               <p className="text-xs mt-1">Add more fields to create conditions</p>
@@ -424,7 +424,7 @@ export function ConditionBuilder({
       {enabled && conditionGroup.conditions.length > 0 && (
         <div className="p-3 border rounded-lg bg-primary/5">
           <div className="text-xs font-medium text-primary mb-1">Condition Summary</div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-[#6B6B6B]">
             {formatConditionSummary(conditionGroup, filteredFields)}
           </div>
         </div>

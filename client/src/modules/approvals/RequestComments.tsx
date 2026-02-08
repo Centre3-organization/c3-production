@@ -91,9 +91,9 @@ export function RequestComments({ requestId, instanceId, taskId, context = "gene
   };
   
   const visibilityConfig = {
-    private: { icon: Lock, label: "Private", color: "bg-gray-100 text-gray-700 border-gray-300", description: "Only you can see this" },
-    group: { icon: Users, label: "Group", color: "bg-blue-100 text-blue-700 border-blue-300", description: "Visible to group members" },
-    requestor: { icon: Eye, label: "Requestor", color: "bg-green-100 text-green-700 border-green-300", description: "Visible to the requestor" },
+    private: { icon: Lock, label: "Private", color: "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0]", description: "Only you can see this" },
+    group: { icon: Users, label: "Group", color: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]", description: "Visible to group members" },
+    requestor: { icon: Eye, label: "Requestor", color: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]", description: "Visible to the requestor" },
   };
   
   const contextLabels: Record<string, string> = {
@@ -107,13 +107,13 @@ export function RequestComments({ requestId, instanceId, taskId, context = "gene
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-2">
-        <MessageSquare className="h-4 w-4 text-purple-600" />
-        <h4 className="font-semibold text-sm">Internal Comments & Notes</h4>
+        <MessageSquare className="h-4 w-4 text-[#5B2C93]" />
+        <h4 className="font-medium text-sm">Internal Comments & Notes</h4>
         <Badge variant="outline" className="text-xs">{comments.length}</Badge>
       </div>
       
       {/* Add Comment Form */}
-      <div className="border rounded-lg p-3 bg-gray-50/50">
+      <div className="border rounded-lg p-3 bg-[#F5F5F5]/50">
         <Textarea
           placeholder="Add a comment or internal note..."
           value={newComment}
@@ -174,7 +174,7 @@ export function RequestComments({ requestId, instanceId, taskId, context = "gene
               </Select>
             )}
             
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-[#6B6B6B]">
               {visibilityConfig[visibility].description}
             </span>
           </div>
@@ -198,10 +198,10 @@ export function RequestComments({ requestId, instanceId, taskId, context = "gene
       {/* Comments List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-4">
-          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          <Loader2 className="h-4 w-4 animate-spin text-[#6B6B6B]" />
         </div>
       ) : comments.length === 0 ? (
-        <p className="text-xs text-muted-foreground italic text-center py-3">
+        <p className="text-xs text-[#6B6B6B] italic text-center py-3">
           No comments yet. Be the first to add a note.
         </p>
       ) : (
@@ -223,7 +223,7 @@ export function RequestComments({ requestId, instanceId, taskId, context = "gene
                       {vis?.label || comment.visibility}
                     </Badge>
                     {comment.targetGroupName && (
-                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-blue-50">
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-[#E8DCF5]">
                         <Users className="h-2.5 w-2.5 mr-0.5" />
                         {comment.targetGroupName}
                       </Badge>
@@ -234,11 +234,11 @@ export function RequestComments({ requestId, instanceId, taskId, context = "gene
                       </Badge>
                     )}
                     {comment.isEdited && (
-                      <span className="text-[10px] text-muted-foreground italic">(edited)</span>
+                      <span className="text-[10px] text-[#6B6B6B] italic">(edited)</span>
                     )}
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-[10px] text-[#6B6B6B]">
                       {comment.createdAt ? format(new Date(comment.createdAt), "MMM d, HH:mm") : ""}
                     </span>
                     {isAuthor && editingId !== comment.id && (
@@ -257,7 +257,7 @@ export function RequestComments({ requestId, instanceId, taskId, context = "gene
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-5 w-5 text-red-500 hover:text-red-700"
+                          className="h-5 w-5 text-[#FF6B6B] hover:text-[#FF6B6B]"
                           onClick={() => deleteComment.mutate({ commentId: comment.id })}
                         >
                           <Trash2 className="h-2.5 w-2.5" />

@@ -195,11 +195,11 @@ export function HierarchicalTypeSelector({
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <Label className={required ? "after:content-['*'] after:text-red-500 after:ml-0.5" : ""}>
+        <Label className={required ? "after:content-['*'] after:text-[#FF6B6B] after:ml-0.5" : ""}>
           {label}
         </Label>
         {isComplete && (
-          <Badge variant="outline" className="text-green-600 border-green-600">
+          <Badge variant="outline" className="text-[#4ECDC4] border-[#4ECDC4]">
             <Check className="h-3 w-3 mr-1" />
             Selected
           </Badge>
@@ -212,7 +212,7 @@ export function HierarchicalTypeSelector({
           <div key={selector.level} className="flex items-center gap-2">
             {/* Indentation indicator */}
             {index > 0 && (
-              <div className="flex items-center text-muted-foreground">
+              <div className="flex items-center text-[#6B6B6B]">
                 <ChevronRight className="h-4 w-4" />
               </div>
             )}
@@ -236,7 +236,7 @@ export function HierarchicalTypeSelector({
                           </Badge>
                           <span>{getDisplayName(option)}</span>
                           {hasChildren && (
-                            <ChevronRight className="h-3 w-3 text-muted-foreground ml-auto" />
+                            <ChevronRight className="h-3 w-3 text-[#6B6B6B] ml-auto" />
                           )}
                         </div>
                       </SelectItem>
@@ -251,7 +251,7 @@ export function HierarchicalTypeSelector({
 
       {/* Selection Path Display */}
       {selectionPath.length > 0 && (
-        <div className="flex items-center gap-1 text-sm text-muted-foreground flex-wrap">
+        <div className="flex items-center gap-1 text-sm text-[#6B6B6B] flex-wrap">
           {selectionPath.map((id, index) => {
             const item = types.find(t => t.id === id);
             if (!item) return null;

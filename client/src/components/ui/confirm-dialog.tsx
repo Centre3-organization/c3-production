@@ -28,28 +28,28 @@ interface ConfirmDialogProps {
 
 const variantConfig = {
   danger: {
-    bg: "bg-red-50",
+    bg: "bg-[#FFE5E5]",
     icon: Trash2,
-    iconColor: "text-red-500",
-    confirmButton: "bg-red-600 hover:bg-red-700 text-white",
+    iconColor: "text-[#FF6B6B]",
+    confirmButton: "bg-[#FF6B6B] hover:bg-[#FF6B6B] text-white",
   },
   warning: {
-    bg: "bg-amber-50",
+    bg: "bg-[#FFF4E5]",
     icon: AlertTriangle,
     iconColor: "text-amber-500",
     confirmButton: "bg-amber-600 hover:bg-amber-700 text-white",
   },
   success: {
-    bg: "bg-green-50",
+    bg: "bg-[#E8F9F8]",
     icon: CheckCircle,
-    iconColor: "text-green-500",
-    confirmButton: "bg-green-600 hover:bg-green-700 text-white",
+    iconColor: "text-[#4ECDC4]",
+    confirmButton: "bg-[#4ECDC4] hover:bg-[#3DBDB4] text-white",
   },
   default: {
-    bg: "bg-purple-50",
+    bg: "bg-[#E8DCF5]",
     icon: HelpCircle,
-    iconColor: "text-purple-500",
-    confirmButton: "bg-purple-600 hover:bg-purple-700 text-white",
+    iconColor: "text-[#5B2C93]",
+    confirmButton: "bg-[#5B2C93] hover:bg-[#5B2C93] text-white",
   },
 };
 

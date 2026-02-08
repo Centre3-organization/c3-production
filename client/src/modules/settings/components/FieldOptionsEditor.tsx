@@ -65,11 +65,11 @@ function SortableOption({
     >
       <button
         type="button"
-        className="cursor-grab hover:bg-muted p-1 rounded"
+        className="cursor-grab hover:bg-[#F5F5F5] p-1 rounded"
         {...attributes}
         {...listeners}
       >
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
+        <GripVertical className="h-4 w-4 text-[#6B6B6B]" />
       </button>
       <Input
         placeholder="Value"
@@ -165,7 +165,7 @@ export function FieldOptionsEditor({ options, onChange }: FieldOptionsEditorProp
       </div>
       
       {localOptions.length === 0 ? (
-        <div className="text-center py-4 text-muted-foreground text-sm border rounded-lg border-dashed">
+        <div className="text-center py-4 text-[#6B6B6B] text-sm border rounded-lg border-dashed">
           No options defined. Click "Add Option" to create options.
         </div>
       ) : (
@@ -192,7 +192,7 @@ export function FieldOptionsEditor({ options, onChange }: FieldOptionsEditorProp
         </DndContext>
       )}
       
-      <p className="text-xs text-muted-foreground">
+      <p className="text-xs text-[#6B6B6B]">
         Drag options to reorder. Value is stored in database, labels are displayed to users.
       </p>
     </div>

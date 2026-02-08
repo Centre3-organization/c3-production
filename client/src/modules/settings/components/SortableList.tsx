@@ -45,11 +45,11 @@ export function SortableItem({ id, children }: SortableItemProps) {
       <div className="flex items-center">
         <button
           type="button"
-          className="absolute left-2 top-1/2 -translate-y-1/2 cursor-grab hover:bg-muted p-1 rounded z-10"
+          className="absolute left-2 top-1/2 -translate-y-1/2 cursor-grab hover:bg-[#F5F5F5] p-1 rounded z-10"
           {...attributes}
           {...listeners}
         >
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
+          <GripVertical className="h-4 w-4 text-[#6B6B6B]" />
         </button>
         <div className="flex-1 pl-8">{children}</div>
       </div>

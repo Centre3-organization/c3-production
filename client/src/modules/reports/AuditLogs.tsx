@@ -67,16 +67,16 @@ export default function AuditLogs() {
 
   const getCategoryBadge = (category: string) => {
     const colors: Record<string, string> = {
-      user: "bg-blue-100 text-blue-700",
-      role: "bg-purple-100 text-purple-700",
-      request: "bg-green-100 text-green-700",
-      site: "bg-amber-100 text-amber-700",
-      settings: "bg-gray-100 text-gray-700",
-      workflow: "bg-indigo-100 text-indigo-700",
-      security: "bg-red-100 text-red-700",
+      user: "bg-[#E8DCF5] text-[#5B2C93]",
+      role: "bg-[#E8DCF5] text-[#5B2C93]",
+      request: "bg-[#E8F9F8] text-[#4ECDC4]",
+      site: "bg-[#FFF4E5] text-[#FFB84D]",
+      settings: "bg-[#F5F5F5] text-[#2C2C2C]",
+      workflow: "bg-[#E8DCF5] text-[#5B2C93]",
+      security: "bg-[#FFE5E5] text-[#FF6B6B]",
     };
     return (
-      <Badge className={`${colors[category] || "bg-gray-100 text-gray-700"} hover:${colors[category] || "bg-gray-100"}`}>
+      <Badge className={`${colors[category] || "bg-[#F5F5F5] text-[#2C2C2C]"} hover:${colors[category] || "bg-[#F5F5F5]"}`}>
         <span className="flex items-center gap-1">
           {getCategoryIcon(category)}
           {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -100,8 +100,8 @@ export default function AuditLogs() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
-          <p className="text-gray-500 mt-1">Track all system activities and changes</p>
+          <h1 className="text-2xl font-medium text-[#2C2C2C]">Audit Logs</h1>
+          <p className="text-[#6B6B6B] mt-1">Track all system activities and changes</p>
         </div>
         <div className="flex gap-3">
           <Select value={dateRange} onValueChange={setDateRange}>
@@ -116,7 +116,7 @@ export default function AuditLogs() {
               <SelectItem value="thisYear">This Year</SelectItem>
             </SelectContent>
           </Select>
-          <Button className="bg-purple-600 hover:bg-purple-700">
+          <Button className="bg-[#5B2C93] hover:bg-[#5B2C93]">
             <Download className="h-4 w-4 mr-2" />
             Export Logs
           </Button>
@@ -128,7 +128,7 @@ export default function AuditLogs() {
         <CardContent className="p-4">
           <div className="flex gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
               <Input 
                 placeholder="Search by user, action, or target..." 
                 className="pl-10"
@@ -182,7 +182,7 @@ export default function AuditLogs() {
             <TableBody>
               {filteredLogs.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell className="text-gray-500">
+                  <TableCell className="text-[#6B6B6B]">
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {log.timestamp}
@@ -192,7 +192,7 @@ export default function AuditLogs() {
                   <TableCell>{log.action}</TableCell>
                   <TableCell>{log.target}</TableCell>
                   <TableCell>{getCategoryBadge(log.category)}</TableCell>
-                  <TableCell className="text-gray-500 font-mono text-sm">{log.ip}</TableCell>
+                  <TableCell className="text-[#6B6B6B] font-mono text-sm">{log.ip}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

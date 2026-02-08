@@ -124,7 +124,7 @@ function TreeNode({ item, level, expandedIds, onToggle, onEdit, onDelete, onAddC
     <div>
       <div 
         className={cn(
-          "flex items-center gap-2 py-2 px-3 hover:bg-muted/50 rounded-lg group transition-colors",
+          "flex items-center gap-2 py-2 px-3 hover:bg-[#F5F5F5]/50 rounded-lg group transition-colors",
           level > 0 && "ml-6 border-l-2 border-muted"
         )}
         style={{ marginLeft: level > 0 ? `${level * 24}px` : 0 }}
@@ -133,14 +133,14 @@ function TreeNode({ item, level, expandedIds, onToggle, onEdit, onDelete, onAddC
         <button
           onClick={() => hasChildren && onToggle(item.id)}
           className={cn(
-            "p-1 rounded hover:bg-muted",
+            "p-1 rounded hover:bg-[#F5F5F5]",
             !hasChildren && "invisible"
           )}
         >
           {isExpanded ? (
-            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            <ChevronDown className="h-4 w-4 text-[#6B6B6B]" />
           ) : (
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            <ChevronRight className="h-4 w-4 text-[#6B6B6B]" />
           )}
         </button>
 
@@ -154,7 +154,7 @@ function TreeNode({ item, level, expandedIds, onToggle, onEdit, onDelete, onAddC
 
         {/* Arabic Name */}
         {item.nameAr && (
-          <span className="text-sm text-muted-foreground" dir="rtl">{item.nameAr}</span>
+          <span className="text-sm text-[#6B6B6B]" dir="rtl">{item.nameAr}</span>
         )}
 
         {/* Level Badge */}
@@ -189,7 +189,7 @@ function TreeNode({ item, level, expandedIds, onToggle, onEdit, onDelete, onAddC
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 hover:text-red-600"
+            className="h-7 w-7 hover:text-[#FF6B6B]"
             onClick={() => {
               if (confirm(`Delete "${item.name}"${hasChildren ? " and all its children" : ""}?`)) {
                 onDelete(item.id);
@@ -336,7 +336,7 @@ export function HierarchicalTypeManager({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
       </div>
     );
   }
@@ -346,8 +346,8 @@ export function HierarchicalTypeManager({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FolderTree className="h-5 w-5 text-purple-600" />
-          <h3 className="text-lg font-semibold">{title}</h3>
+          <FolderTree className="h-5 w-5 text-[#5B2C93]" />
+          <h3 className="text-lg font-medium">{title}</h3>
           <Badge variant="outline">{data.length} items</Badge>
         </div>
         <div className="flex items-center gap-2">
@@ -359,7 +359,7 @@ export function HierarchicalTypeManager({
           </Button>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+              <Button size="sm" className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                 <Plus className="h-4 w-4" /> Add {title.replace(/s$/, "")}
               </Button>
             </DialogTrigger>
@@ -435,7 +435,7 @@ export function HierarchicalTypeManager({
                   <Button type="button" variant="outline" onClick={() => setCreateDialogOpen(false)}>
                     Cancel
                   </Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={isCreating}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={isCreating}>
                     {isCreating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Create
                   </Button>
@@ -449,7 +449,7 @@ export function HierarchicalTypeManager({
       {/* Tree View */}
       <div className="border rounded-lg p-2 bg-card">
         {treeData.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-[#6B6B6B]">
             No {title.toLowerCase()} found. Click "Add {title.replace(/s$/, "")}" to create one.
           </div>
         ) : (
@@ -557,7 +557,7 @@ export function HierarchicalTypeManager({
               <Button type="button" variant="outline" onClick={() => setEditDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={isUpdating}>
+              <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={isUpdating}>
                 {isUpdating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Save
               </Button>

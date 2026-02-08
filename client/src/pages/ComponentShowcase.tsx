@@ -230,7 +230,7 @@ export default function ComponentsShowcase() {
     <div className="min-h-screen bg-background text-foreground">
       <main className="container max-w-6xl mx-auto">
         <div className="space-y-2 justify-between flex">
-          <h2 className="text-3xl font-bold tracking-tight mb-6">
+          <h2 className="text-3xl font-medium tracking-tight mb-6">
             Shadcn/ui Component Library
           </h2>
           <Button variant="outline" size="icon" onClick={toggleTheme}>
@@ -245,13 +245,13 @@ export default function ComponentsShowcase() {
         <div className="space-y-12">
           {/* Text Colors Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Text Colors</h3>
+            <h3 className="text-2xl font-medium">Text Colors</h3>
             <Card>
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
+                      <p className="text-sm text-[#6B6B6B] mb-1">
                         Foreground (Default)
                       </p>
                       <p className="text-foreground text-lg">
@@ -259,15 +259,15 @@ export default function ComponentsShowcase() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
+                      <p className="text-sm text-[#6B6B6B] mb-1">
                         Muted Foreground
                       </p>
-                      <p className="text-muted-foreground text-lg">
+                      <p className="text-[#6B6B6B] text-lg">
                         Muted text for secondary information
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
+                      <p className="text-sm text-[#6B6B6B] mb-1">
                         Primary
                       </p>
                       <p className="text-primary text-lg font-medium">
@@ -275,7 +275,7 @@ export default function ComponentsShowcase() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
+                      <p className="text-sm text-[#6B6B6B] mb-1">
                         Secondary Foreground
                       </p>
                       <p className="text-secondary-foreground text-lg">
@@ -285,7 +285,7 @@ export default function ComponentsShowcase() {
                   </div>
                   <div className="space-y-3">
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
+                      <p className="text-sm text-[#6B6B6B] mb-1">
                         Accent Foreground
                       </p>
                       <p className="text-accent-foreground text-lg">
@@ -293,7 +293,7 @@ export default function ComponentsShowcase() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
+                      <p className="text-sm text-[#6B6B6B] mb-1">
                         Destructive
                       </p>
                       <p className="text-destructive text-lg font-medium">
@@ -301,7 +301,7 @@ export default function ComponentsShowcase() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
+                      <p className="text-sm text-[#6B6B6B] mb-1">
                         Card Foreground
                       </p>
                       <p className="text-card-foreground text-lg">
@@ -309,7 +309,7 @@ export default function ComponentsShowcase() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
+                      <p className="text-sm text-[#6B6B6B] mb-1">
                         Popover Foreground
                       </p>
                       <p className="text-popover-foreground text-lg">
@@ -324,7 +324,7 @@ export default function ComponentsShowcase() {
 
           {/* Color Combinations Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Color Combinations</h3>
+            <h3 className="text-2xl font-medium">Color Combinations</h3>
             <Card>
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -340,7 +340,7 @@ export default function ComponentsShowcase() {
                       Secondary background with foreground text
                     </p>
                   </div>
-                  <div className="bg-muted text-muted-foreground rounded-lg p-4">
+                  <div className="bg-[#F5F5F5] text-[#6B6B6B] rounded-lg p-4">
                     <p className="font-medium mb-1">Muted</p>
                     <p className="text-sm opacity-90">
                       Muted background with foreground text
@@ -383,7 +383,7 @@ export default function ComponentsShowcase() {
 
           {/* Buttons Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Buttons</h3>
+            <h3 className="text-2xl font-medium">Buttons</h3>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex flex-wrap gap-4">
@@ -405,7 +405,7 @@ export default function ComponentsShowcase() {
 
           {/* Form Inputs Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Form Inputs</h3>
+            <h3 className="text-2xl font-medium">Form Inputs</h3>
             <Card>
               <CardContent className="pt-6 space-y-6">
                 <div className="space-y-2">
@@ -477,7 +477,7 @@ export default function ComponentsShowcase() {
                       <Button
                         variant="outline"
                         className={`w-full justify-start text-left font-normal ${
-                          !datePickerDate && "text-muted-foreground"
+                          !datePickerDate && "text-[#6B6B6B]"
                         }`}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -525,7 +525,7 @@ export default function ComponentsShowcase() {
                     </PopoverContent>
                   </Popover>
                   {datePickerDate && (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#6B6B6B]">
                       Selected:{" "}
                       {format(datePickerDate, "yyyy/MM/dd  HH:mm", {
                         locale: zhCN,
@@ -600,7 +600,7 @@ export default function ComponentsShowcase() {
                     </PopoverContent>
                   </Popover>
                   {selectedFramework && (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#6B6B6B]">
                       Selected:{" "}
                       {
                         [
@@ -668,7 +668,7 @@ export default function ComponentsShowcase() {
                     </div>
                   </div>
                   {selectedMonth && selectedYear && (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#6B6B6B]">
                       Selected: {selectedYear}/{selectedMonth}/
                     </p>
                   )}
@@ -679,7 +679,7 @@ export default function ComponentsShowcase() {
 
           {/* Data Display Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Data Display</h3>
+            <h3 className="text-2xl font-medium">Data Display</h3>
             <Card>
               <CardContent className="pt-6 space-y-6">
                 <div className="space-y-2">
@@ -771,7 +771,7 @@ export default function ComponentsShowcase() {
                       </PaginationItem>
                     </PaginationContent>
                   </Pagination>
-                  <p className="text-sm text-muted-foreground text-center">
+                  <p className="text-sm text-[#6B6B6B] text-center">
                     Current page: {currentPage}
                   </p>
                 </div>
@@ -868,7 +868,7 @@ export default function ComponentsShowcase() {
 
           {/* Alerts Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Alerts</h3>
+            <h3 className="text-2xl font-medium">Alerts</h3>
             <div className="space-y-4">
               <Alert>
                 <AlertCircle className="h-4 w-4" />
@@ -889,7 +889,7 @@ export default function ComponentsShowcase() {
 
           {/* Tabs Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Tabs</h3>
+            <h3 className="text-2xl font-medium">Tabs</h3>
             <Tabs defaultValue="account" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="account">Account</TabsTrigger>
@@ -947,7 +947,7 @@ export default function ComponentsShowcase() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#6B6B6B]">
                       Settings content goes here.
                     </p>
                   </CardContent>
@@ -958,7 +958,7 @@ export default function ComponentsShowcase() {
 
           {/* Accordion Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Accordion</h3>
+            <h3 className="text-2xl font-medium">Accordion</h3>
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1">
                 <AccordionTrigger>Is it accessible?</AccordionTrigger>
@@ -985,7 +985,7 @@ export default function ComponentsShowcase() {
 
           {/* Collapsible Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Collapsible</h3>
+            <h3 className="text-2xl font-medium">Collapsible</h3>
             <Collapsible>
               <Card>
                 <CardHeader>
@@ -1016,7 +1016,7 @@ export default function ComponentsShowcase() {
 
           {/* Dialog, Sheet, Drawer Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Overlays</h3>
+            <h3 className="text-2xl font-medium">Overlays</h3>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex flex-wrap gap-4">
@@ -1098,7 +1098,7 @@ export default function ComponentsShowcase() {
                     <PopoverContent>
                       <div className="space-y-2">
                         <h4 className="font-medium leading-none">Dimensions</h4>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#6B6B6B]">
                           Set the dimensions for the layer.
                         </p>
                       </div>
@@ -1120,7 +1120,7 @@ export default function ComponentsShowcase() {
 
           {/* Menus Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Menus</h3>
+            <h3 className="text-2xl font-medium">Menus</h3>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex flex-wrap gap-4">
@@ -1156,7 +1156,7 @@ export default function ComponentsShowcase() {
                     </HoverCardTrigger>
                     <HoverCardContent>
                       <div className="space-y-2">
-                        <h4 className="text-sm font-semibold">@nextjs</h4>
+                        <h4 className="text-sm font-medium">@nextjs</h4>
                         <p className="text-sm">
                           The React Framework – created and maintained by
                           @vercel.
@@ -1171,7 +1171,7 @@ export default function ComponentsShowcase() {
 
           {/* Calendar Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Calendar</h3>
+            <h3 className="text-2xl font-medium">Calendar</h3>
             <Card>
               <CardContent className="pt-6 flex justify-center">
                 <Calendar
@@ -1186,7 +1186,7 @@ export default function ComponentsShowcase() {
 
           {/* Carousel Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Carousel</h3>
+            <h3 className="text-2xl font-medium">Carousel</h3>
             <Card>
               <CardContent className="pt-6">
                 <Carousel className="w-full max-w-xs mx-auto">
@@ -1196,7 +1196,7 @@ export default function ComponentsShowcase() {
                         <div className="p-1">
                           <Card>
                             <CardContent className="flex aspect-square items-center justify-center p-6">
-                              <span className="text-4xl font-semibold">
+                              <span className="text-4xl font-medium">
                                 {index + 1}
                               </span>
                             </CardContent>
@@ -1214,14 +1214,14 @@ export default function ComponentsShowcase() {
 
           {/* Toggle Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Toggle</h3>
+            <h3 className="text-2xl font-medium">Toggle</h3>
             <Card>
               <CardContent className="pt-6 space-y-4">
                 <div className="space-y-2">
                   <Label>Toggle</Label>
                   <div className="flex gap-2">
                     <Toggle aria-label="Toggle italic">
-                      <span className="font-bold">B</span>
+                      <span className="font-medium">B</span>
                     </Toggle>
                     <Toggle aria-label="Toggle italic">
                       <span className="italic">I</span>
@@ -1236,7 +1236,7 @@ export default function ComponentsShowcase() {
                   <Label>Toggle Group</Label>
                   <ToggleGroup type="multiple">
                     <ToggleGroupItem value="bold" aria-label="Toggle bold">
-                      <span className="font-bold">B</span>
+                      <span className="font-medium">B</span>
                     </ToggleGroupItem>
                     <ToggleGroupItem value="italic" aria-label="Toggle italic">
                       <span className="italic">I</span>
@@ -1255,14 +1255,14 @@ export default function ComponentsShowcase() {
 
           {/* Aspect Ratio & Scroll Area Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Layout Components</h3>
+            <h3 className="text-2xl font-medium">Layout Components</h3>
             <Card>
               <CardContent className="pt-6 space-y-6">
                 <div className="space-y-2">
                   <Label>Aspect Ratio (16/9)</Label>
-                  <AspectRatio ratio={16 / 9} className="bg-muted">
+                  <AspectRatio ratio={16 / 9} className="bg-[#F5F5F5]">
                     <div className="flex h-full items-center justify-center">
-                      <p className="text-muted-foreground">16:9 Aspect Ratio</p>
+                      <p className="text-[#6B6B6B]">16:9 Aspect Ratio</p>
                     </div>
                   </AspectRatio>
                 </div>
@@ -1287,7 +1287,7 @@ export default function ComponentsShowcase() {
 
           {/* Resizable Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Resizable Panels</h3>
+            <h3 className="text-2xl font-medium">Resizable Panels</h3>
             <Card>
               <CardContent className="pt-6">
                 <ResizablePanelGroup
@@ -1296,13 +1296,13 @@ export default function ComponentsShowcase() {
                 >
                   <ResizablePanel defaultSize={50}>
                     <div className="flex h-full items-center justify-center p-6">
-                      <span className="font-semibold">Panel One</span>
+                      <span className="font-medium">Panel One</span>
                     </div>
                   </ResizablePanel>
                   <ResizableHandle />
                   <ResizablePanel defaultSize={50}>
                     <div className="flex h-full items-center justify-center p-6">
-                      <span className="font-semibold">Panel Two</span>
+                      <span className="font-medium">Panel Two</span>
                     </div>
                   </ResizablePanel>
                 </ResizablePanelGroup>
@@ -1312,7 +1312,7 @@ export default function ComponentsShowcase() {
 
           {/* Toast Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Toast</h3>
+            <h3 className="text-2xl font-medium">Toast</h3>
             <Card>
               <CardContent className="pt-6 space-y-4">
                 <div className="space-y-2">
@@ -1393,11 +1393,11 @@ export default function ComponentsShowcase() {
 
           {/* AI ChatBox Section */}
           <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">AI ChatBox</h3>
+            <h3 className="text-2xl font-medium">AI ChatBox</h3>
             <Card>
               <CardContent className="pt-6">
                 <div className="space-y-4">
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-[#6B6B6B]">
                     <p>
                       A ready-to-use chat interface component that integrates with the LLM system.
                       Features markdown rendering, auto-scrolling, and loading states.
@@ -1428,7 +1428,7 @@ export default function ComponentsShowcase() {
       </main>
 
       <footer className="border-t py-6 mt-12">
-        <div className="container text-center text-sm text-muted-foreground">
+        <div className="container text-center text-sm text-[#6B6B6B]">
           <p>Shadcn/ui Component Showcase</p>
         </div>
       </footer>

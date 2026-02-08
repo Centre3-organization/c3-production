@@ -83,20 +83,20 @@ const typeLabels: Record<string, string> = {
 };
 
 const statusConfig: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
-  draft: { label: "Draft", icon: <FileText className="h-3 w-3" />, color: "text-muted-foreground bg-muted" },
-  pending_l1: { label: "Pending L1", icon: <Clock className="h-3 w-3" />, color: "text-amber-700 bg-amber-100" },
-  pending_manual: { label: "Pending Manual", icon: <AlertCircle className="h-3 w-3" />, color: "text-blue-700 bg-blue-100" },
-  pending_approval: { label: "Pending Approval", icon: <Clock className="h-3 w-3" />, color: "text-amber-700 bg-amber-100" },
-  approved: { label: "Approved", icon: <CheckCircle2 className="h-3 w-3" />, color: "text-green-700 bg-green-100" },
-  rejected: { label: "Rejected", icon: <XCircle className="h-3 w-3" />, color: "text-red-700 bg-red-100" },
-  cancelled: { label: "Cancelled", icon: <XCircle className="h-3 w-3" />, color: "text-gray-700 bg-gray-100" },
-  expired: { label: "Expired", icon: <Clock className="h-3 w-3" />, color: "text-gray-700 bg-gray-100" },
+  draft: { label: "Draft", icon: <FileText className="h-3 w-3" />, color: "text-[#6B6B6B] bg-[#F5F5F5]" },
+  pending_l1: { label: "Pending L1", icon: <Clock className="h-3 w-3" />, color: "text-[#FFB84D] bg-[#FFF4E5]" },
+  pending_manual: { label: "Pending Manual", icon: <AlertCircle className="h-3 w-3" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
+  pending_approval: { label: "Pending Approval", icon: <Clock className="h-3 w-3" />, color: "text-[#FFB84D] bg-[#FFF4E5]" },
+  approved: { label: "Approved", icon: <CheckCircle2 className="h-3 w-3" />, color: "text-[#4ECDC4] bg-[#E8F9F8]" },
+  rejected: { label: "Rejected", icon: <XCircle className="h-3 w-3" />, color: "text-[#FF6B6B] bg-[#FFE5E5]" },
+  cancelled: { label: "Cancelled", icon: <XCircle className="h-3 w-3" />, color: "text-[#2C2C2C] bg-[#F5F5F5]" },
+  expired: { label: "Expired", icon: <Clock className="h-3 w-3" />, color: "text-[#2C2C2C] bg-[#F5F5F5]" },
 };
 
 const entryMethodConfig: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
-  qr_code: { label: "QR Code", icon: <QrCode className="h-4 w-4" />, color: "text-green-700 bg-green-100" },
-  rfid: { label: "RFID Tag", icon: <Radio className="h-4 w-4" />, color: "text-blue-700 bg-blue-100" },
-  card: { label: "Access Card", icon: <CreditCard className="h-4 w-4" />, color: "text-purple-700 bg-purple-100" },
+  qr_code: { label: "QR Code", icon: <QrCode className="h-4 w-4" />, color: "text-[#4ECDC4] bg-[#E8F9F8]" },
+  rfid: { label: "RFID Tag", icon: <Radio className="h-4 w-4" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
+  card: { label: "Access Card", icon: <CreditCard className="h-4 w-4" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
 };
 
 export default function Requests() {
@@ -292,8 +292,8 @@ export default function Requests() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Requests</h1>
-          <p className="text-sm text-muted-foreground">Manage and track all access requests</p>
+          <h1 className="text-2xl font-medium tracking-tight">Requests</h1>
+          <p className="text-sm text-[#6B6B6B]">Manage and track all access requests</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => refetch()}>
@@ -311,7 +311,7 @@ export default function Requests() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
           <Input
             placeholder="Search by request number, visitor, or company..."
             value={searchQuery}
@@ -349,10 +349,10 @@ export default function Requests() {
         {/* Data Table */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
           </div>
         ) : filteredRequests.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+          <div className="flex flex-col items-center justify-center py-12 text-[#6B6B6B]">
             <FileText className="h-12 w-12 mb-4 opacity-50" />
             <p className="text-lg font-medium">No requests found</p>
             <p className="text-sm">Try adjusting your filters or create a new request</p>
@@ -364,14 +364,14 @@ export default function Requests() {
                 <TableHead className="w-[40px]">
                   <Checkbox />
                 </TableHead>
-                <TableHead className="font-semibold text-foreground">Request ID</TableHead>
-                <TableHead className="font-semibold text-foreground">Status</TableHead>
-                <TableHead className="font-semibold text-foreground">Type</TableHead>
-                <TableHead className="font-semibold text-foreground">Visitor</TableHead>
-                <TableHead className="font-semibold text-foreground">Company</TableHead>
-                <TableHead className="font-semibold text-foreground">Site</TableHead>
-                <TableHead className="font-semibold text-foreground">Date Range</TableHead>
-                <TableHead className="font-semibold text-foreground">Created</TableHead>
+                <TableHead className="font-medium text-foreground">Request ID</TableHead>
+                <TableHead className="font-medium text-foreground">Status</TableHead>
+                <TableHead className="font-medium text-foreground">Type</TableHead>
+                <TableHead className="font-medium text-foreground">Visitor</TableHead>
+                <TableHead className="font-medium text-foreground">Company</TableHead>
+                <TableHead className="font-medium text-foreground">Site</TableHead>
+                <TableHead className="font-medium text-foreground">Date Range</TableHead>
+                <TableHead className="font-medium text-foreground">Created</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -379,11 +379,11 @@ export default function Requests() {
               {filteredRequests.map((req) => {
                 const status = statusConfig[req.status] || statusConfig.draft;
                 return (
-                  <TableRow key={req.id} className="hover:bg-muted/30 h-12">
+                  <TableRow key={req.id} className="hover:bg-[#F5F5F5]/30 h-12">
                     <TableCell>
                       <Checkbox />
                     </TableCell>
-                    <TableCell className="font-medium text-primary cursor-pointer hover:underline" onClick={() => {
+                    <TableCell className="font-medium text-[#5B2C93] cursor-pointer hover:underline" onClick={() => {
                       setSelectedRequest(req.id);
                       setQrCodeImage("");
                     }}>
@@ -399,19 +399,19 @@ export default function Requests() {
                       <Badge variant="outline">{typeLabels[req.type] || req.type}</Badge>
                     </TableCell>
                     <TableCell className="font-medium">{req.visitorName}</TableCell>
-                    <TableCell className="text-muted-foreground">{req.visitorCompany || "-"}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{req.visitorCompany || "-"}</TableCell>
                     <TableCell>{req.siteName || "-"}</TableCell>
                     <TableCell className="text-sm">
                       {req.startDate} → {req.endDate}
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
+                    <TableCell className="text-sm text-[#6B6B6B]">
                       {req.createdAt ? format(new Date(req.createdAt), "MMM dd, yyyy") : "-"}
                     </TableCell>
                     <TableCell>
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="h-8 w-8 text-muted-foreground hover:text-primary"
+                        className="h-8 w-8 text-[#6B6B6B] hover:text-[#5B2C93]"
                         onClick={() => {
                           setSelectedRequest(req.id);
                           setQrCodeImage("");
@@ -448,7 +448,7 @@ export default function Requests() {
           
           {detailLoading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
             </div>
           ) : requestDetail ? (
             <div className="space-y-6">
@@ -476,9 +476,9 @@ export default function Requests() {
               
               {/* Access Method Section - Only for approved requests */}
               {requestDetail.status === "approved" && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-4">
+                <div className="bg-[#E8F9F8] border border-[#4ECDC4] rounded-lg p-4 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold flex items-center gap-2 text-green-800">
+                    <h4 className="font-medium flex items-center gap-2 text-[#4ECDC4]">
                       <Shield className="h-4 w-4" />
                       Access Method
                     </h4>
@@ -496,7 +496,7 @@ export default function Requests() {
                           {entryMethodConfig[requestDetail.accessMethod.entryMethod]?.label}
                         </Badge>
                         {requestDetail.accessMethod.accessGrantedByName && (
-                          <span className="text-sm text-muted-foreground">
+                          <span className="text-sm text-[#6B6B6B]">
                             Granted by {requestDetail.accessMethod.accessGrantedByName}
                           </span>
                         )}
@@ -510,9 +510,9 @@ export default function Requests() {
                           )}
                           <div className="flex-1 space-y-2">
                             <div>
-                              <Label className="text-xs text-muted-foreground">QR Code Data</Label>
+                              <Label className="text-xs text-[#6B6B6B]">QR Code Data</Label>
                               <div className="flex items-center gap-2">
-                                <code className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
+                                <code className="text-sm font-mono bg-[#F5F5F5] px-2 py-1 rounded">
                                   {requestDetail.accessMethod.qrCodeData}
                                 </code>
                                 <Button variant="ghost" size="sm" onClick={handleCopyQrData}>
@@ -531,7 +531,7 @@ export default function Requests() {
                       {/* RFID Display */}
                       {requestDetail.accessMethod.entryMethod === "rfid" && requestDetail.accessMethod.rfidTag && (
                         <div className="p-3 bg-white rounded-lg border">
-                          <Label className="text-xs text-muted-foreground">RFID Tag Number</Label>
+                          <Label className="text-xs text-[#6B6B6B]">RFID Tag Number</Label>
                           <p className="font-mono text-sm">{requestDetail.accessMethod.rfidTag}</p>
                         </div>
                       )}
@@ -539,15 +539,15 @@ export default function Requests() {
                       {/* Card Display */}
                       {requestDetail.accessMethod.entryMethod === "card" && requestDetail.accessMethod.cardNumber && (
                         <div className="p-3 bg-white rounded-lg border">
-                          <Label className="text-xs text-muted-foreground">Card Number</Label>
+                          <Label className="text-xs text-[#6B6B6B]">Card Number</Label>
                           <p className="font-mono text-sm">{requestDetail.accessMethod.cardNumber}</p>
                         </div>
                       )}
                       
                       {/* Resend Credentials Button */}
-                      <div className="pt-3 border-t border-green-200">
+                      <div className="pt-3 border-t border-[#4ECDC4]">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-green-700">Send access credentials to visitor</span>
+                          <span className="text-sm text-[#4ECDC4]">Send access credentials to visitor</span>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant="outline" size="sm" className="gap-2" disabled={!!resendingChannel}>
@@ -580,7 +580,7 @@ export default function Requests() {
                     </div>
                   ) : (
                     <div className="text-center py-4">
-                      <p className="text-sm text-muted-foreground mb-3">No access method assigned yet</p>
+                      <p className="text-sm text-[#6B6B6B] mb-3">No access method assigned yet</p>
                       <Button variant="outline" size="sm" onClick={handleOpenAccessMethodEdit}>
                         Assign Access Method
                       </Button>
@@ -590,62 +590,62 @@ export default function Requests() {
               )}
               
               {/* Visitor Info */}
-              <div className="bg-muted/30 rounded-lg p-4 space-y-3">
-                <h4 className="font-semibold flex items-center gap-2">
+              <div className="bg-[#F5F5F5]/30 rounded-lg p-4 space-y-3">
+                <h4 className="font-medium flex items-center gap-2">
                   <User className="h-4 w-4" />
                   Visitor Information
                 </h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-muted-foreground">Name:</span>
+                    <span className="text-[#6B6B6B]">Name:</span>
                     <p className="font-medium">{requestDetail.visitorName}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Company:</span>
+                    <span className="text-[#6B6B6B]">Company:</span>
                     <p className="font-medium">{requestDetail.visitorCompany || "-"}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">ID Type:</span>
+                    <span className="text-[#6B6B6B]">ID Type:</span>
                     <p className="font-medium capitalize">{requestDetail.visitorIdType?.replace("_", " ")}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">ID Number:</span>
+                    <span className="text-[#6B6B6B]">ID Number:</span>
                     <p className="font-medium">{requestDetail.visitorIdNumber}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Phone:</span>
+                    <span className="text-[#6B6B6B]">Phone:</span>
                     <p className="font-medium">{requestDetail.visitorPhone || "-"}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Email:</span>
+                    <span className="text-[#6B6B6B]">Email:</span>
                     <p className="font-medium">{requestDetail.visitorEmail || "-"}</p>
                   </div>
                 </div>
               </div>
               
               {/* Visit Details */}
-              <div className="bg-muted/30 rounded-lg p-4 space-y-3">
-                <h4 className="font-semibold flex items-center gap-2">
+              <div className="bg-[#F5F5F5]/30 rounded-lg p-4 space-y-3">
+                <h4 className="font-medium flex items-center gap-2">
                   <Building2 className="h-4 w-4" />
                   Visit Details
                 </h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-muted-foreground">Site:</span>
+                    <span className="text-[#6B6B6B]">Site:</span>
                     <p className="font-medium">{requestDetail.siteName || "-"}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Date Range:</span>
+                    <span className="text-[#6B6B6B]">Date Range:</span>
                     <p className="font-medium">{requestDetail.startDate} → {requestDetail.endDate}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Time:</span>
+                    <span className="text-[#6B6B6B]">Time:</span>
                     <p className="font-medium">{requestDetail.startTime || "00:00"} - {requestDetail.endTime || "23:59"}</p>
                   </div>
                 </div>
                 {requestDetail.purpose && (
                   <div>
-                    <span className="text-muted-foreground text-sm">Purpose:</span>
+                    <span className="text-[#6B6B6B] text-sm">Purpose:</span>
                     <p className="text-sm mt-1">{requestDetail.purpose}</p>
                   </div>
                 )}
@@ -653,13 +653,13 @@ export default function Requests() {
               
               {/* Zones */}
               {requestDetail.zones && requestDetail.zones.length > 0 && (
-                <div className="bg-muted/30 rounded-lg p-4 space-y-3">
-                  <h4 className="font-semibold">Requested Zones</h4>
+                <div className="bg-[#F5F5F5]/30 rounded-lg p-4 space-y-3">
+                  <h4 className="font-medium">Requested Zones</h4>
                   <div className="flex flex-wrap gap-2">
                     {requestDetail.zones.map((zone: any) => (
                       <Badge key={zone.id} variant="outline" className="gap-1">
                         {zone.name}
-                        <span className="text-xs text-muted-foreground">({zone.securityLevel})</span>
+                        <span className="text-xs text-[#6B6B6B]">({zone.securityLevel})</span>
                       </Badge>
                     ))}
                   </div>
@@ -668,8 +668,8 @@ export default function Requests() {
               
               {/* Approval History */}
               {requestDetail.approvals && requestDetail.approvals.length > 0 && (
-                <div className="bg-muted/30 rounded-lg p-4 space-y-3">
-                  <h4 className="font-semibold flex items-center gap-2">
+                <div className="bg-[#F5F5F5]/30 rounded-lg p-4 space-y-3">
+                  <h4 className="font-medium flex items-center gap-2">
                     <Briefcase className="h-4 w-4" />
                     Approval History
                   </h4>
@@ -685,9 +685,9 @@ export default function Requests() {
                         <Badge 
                           variant="secondary" 
                           className={
-                            approval.status === "approved" ? "text-green-700 bg-green-100" :
-                            approval.status === "rejected" ? "text-red-700 bg-red-100" :
-                            "text-amber-700 bg-amber-100"
+                            approval.status === "approved" ? "text-[#4ECDC4] bg-[#E8F9F8]" :
+                            approval.status === "rejected" ? "text-[#FF6B6B] bg-[#FFE5E5]" :
+                            "text-[#FFB84D] bg-[#FFF4E5]"
                           }
                         >
                           {approval.status}
@@ -720,41 +720,41 @@ export default function Requests() {
             <div className="space-y-3">
               <Label className="text-sm font-medium">Select Entry Method</Label>
               <RadioGroup value={newEntryMethod} onValueChange={(v) => setNewEntryMethod(v as any)} className="grid gap-3">
-                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "qr_code" ? "border-green-500 bg-green-50" : "hover:bg-gray-50"}`}>
+                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "qr_code" ? "border-[#4ECDC4] bg-[#E8F9F8]" : "hover:bg-[#F5F5F5]"}`}>
                   <RadioGroupItem value="qr_code" id="edit_qr_code" />
                   <Label htmlFor="edit_qr_code" className="flex items-center gap-3 cursor-pointer flex-1">
-                    <div className="p-2 bg-green-100 rounded-lg">
-                      <QrCode className="h-5 w-5 text-green-600" />
+                    <div className="p-2 bg-[#E8F9F8] rounded-lg">
+                      <QrCode className="h-5 w-5 text-[#4ECDC4]" />
                     </div>
                     <div>
                       <p className="font-medium">QR Code</p>
-                      <p className="text-xs text-muted-foreground">Generate a unique QR code for visitor check-in</p>
+                      <p className="text-xs text-[#6B6B6B]">Generate a unique QR code for visitor check-in</p>
                     </div>
                   </Label>
                 </div>
                 
-                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "rfid" ? "border-blue-500 bg-blue-50" : "hover:bg-gray-50"}`}>
+                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "rfid" ? "border-[#5B2C93] bg-[#E8DCF5]" : "hover:bg-[#F5F5F5]"}`}>
                   <RadioGroupItem value="rfid" id="edit_rfid" />
                   <Label htmlFor="edit_rfid" className="flex items-center gap-3 cursor-pointer flex-1">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Radio className="h-5 w-5 text-blue-600" />
+                    <div className="p-2 bg-[#E8DCF5] rounded-lg">
+                      <Radio className="h-5 w-5 text-[#5B2C93]" />
                     </div>
                     <div>
                       <p className="font-medium">RFID Tag</p>
-                      <p className="text-xs text-muted-foreground">Assign an RFID tag for contactless access</p>
+                      <p className="text-xs text-[#6B6B6B]">Assign an RFID tag for contactless access</p>
                     </div>
                   </Label>
                 </div>
                 
-                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "card" ? "border-purple-500 bg-purple-50" : "hover:bg-gray-50"}`}>
+                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "card" ? "border-[#5B2C93] bg-[#E8DCF5]" : "hover:bg-[#F5F5F5]"}`}>
                   <RadioGroupItem value="card" id="edit_card" />
                   <Label htmlFor="edit_card" className="flex items-center gap-3 cursor-pointer flex-1">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <CreditCard className="h-5 w-5 text-purple-600" />
+                    <div className="p-2 bg-[#E8DCF5] rounded-lg">
+                      <CreditCard className="h-5 w-5 text-[#5B2C93]" />
                     </div>
                     <div>
                       <p className="font-medium">Access Card</p>
-                      <p className="text-xs text-muted-foreground">Issue a physical access card</p>
+                      <p className="text-xs text-[#6B6B6B]">Issue a physical access card</p>
                     </div>
                   </Label>
                 </div>

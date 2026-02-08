@@ -274,8 +274,8 @@ export function DynamicForm({
     <div className="flex h-full">
       {/* Left Navigation Tabs (Vertical) */}
       <div className="w-64 bg-white border-r flex flex-col overflow-y-auto">
-        <div className="p-4 border-b bg-gray-50">
-          <h3 className="font-bold text-gray-800 text-sm uppercase">
+        <div className="p-4 border-b bg-[#F5F5F5]">
+          <h3 className="font-medium text-[#2C2C2C] text-sm uppercase">
             {t("requests.sections", "Sections")}
           </h3>
         </div>
@@ -293,14 +293,14 @@ export function DynamicForm({
                 className={cn(
                   "w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-colors",
                   isActive
-                    ? "bg-[#e5f6ff] text-[#0043ce] border-l-4 border-[#0f62fe]"
-                    : "text-gray-600 hover:bg-gray-100 border-l-4 border-transparent"
+                    ? "bg-[#E8F9F8] text-[#3D1C5E] border-l-4 border-[#5B2C93]"
+                    : "text-[#6B6B6B] hover:bg-[#F5F5F5] border-l-4 border-transparent"
                 )}
               >
                 <Icon
                   className={cn(
                     "h-4 w-4 flex-shrink-0",
-                    isActive ? "text-[#0f62fe]" : "text-gray-400"
+                    isActive ? "text-[#5B2C93]" : "text-[#B0B0B0]"
                   )}
                 />
                 <span className="flex-1 text-left truncate">{getSectionName(section)}</span>
@@ -309,7 +309,7 @@ export function DynamicForm({
                     variant="outline"
                     className={cn(
                       "text-[10px] px-1.5",
-                      isActive ? "border-[#0f62fe]/30" : "border-gray-300"
+                      isActive ? "border-[#5B2C93]/30" : "border-[#E0E0E0]"
                     )}
                   >
                     {section.typeCode.toUpperCase()}
@@ -327,16 +327,16 @@ export function DynamicForm({
       </div>
 
       {/* Right Content Area */}
-      <div className="flex-1 overflow-y-auto p-6 bg-[#f4f4f4]">
+      <div className="flex-1 overflow-y-auto p-6 bg-[#F5F5F5]">
         <div className="max-w-5xl mx-auto bg-white border shadow-sm rounded-sm min-h-[500px]">
           {currentSectionData ? (
             <>
               {/* Section Header */}
-              <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
-                <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <div className="px-6 py-4 border-b bg-[#F5F5F5] flex justify-between items-center">
+                <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
                   {(() => {
                     const Icon = getIcon(currentSectionData.icon);
-                    return <Icon className="h-5 w-5 text-[#0f62fe]" />;
+                    return <Icon className="h-5 w-5 text-[#5B2C93]" />;
                   })()}
                   {getSectionName(currentSectionData)}
                   {currentSectionData.typeCode && (
@@ -345,7 +345,7 @@ export function DynamicForm({
                     </Badge>
                   )}
                 </h2>
-                <span className="text-xs text-gray-500 italic">
+                <span className="text-xs text-[#6B6B6B] italic">
                   {t("common.requiredIndicator", "* Indicates mandatory field")}
                 </span>
               </div>
@@ -421,7 +421,7 @@ export function DynamicForm({
               </div>
             </>
           ) : (
-            <div className="p-8 text-center text-gray-500">
+            <div className="p-8 text-center text-[#6B6B6B]">
               {t("requests.selectSection", "Select a section to begin")}
             </div>
           )}

@@ -149,11 +149,11 @@ export default function Companies() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-medium tracking-tight flex items-center gap-2">
             <Building2 className="h-6 w-6 text-primary" />
             {t("companies.title", "Companies")}
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-[#6B6B6B] mt-1">
             {t("companies.description", "Manage contractor, sub-contractor, and client companies with their contract details.")}
           </p>
         </div>
@@ -166,32 +166,32 @@ export default function Companies() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Card className="cursor-pointer" onClick={() => setCompaniesFilter("all")}>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-bold">{stats.total}</div>
-            <p className="text-xs text-muted-foreground">{t("companies.totalCompanies", "Total Companies")}</p>
+            <div className="text-2xl font-medium">{stats.total}</div>
+            <p className="text-xs text-[#6B6B6B]">{t("companies.totalCompanies", "Total Companies")}</p>
           </CardContent>
         </Card>
         <Card className="cursor-pointer" onClick={() => setCompaniesFilter("contractor")}>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-bold text-blue-600">{stats.contractors}</div>
-            <p className="text-xs text-muted-foreground">{t("companies.contractors", "Contractors")}</p>
+            <div className="text-2xl font-medium text-[#5B2C93]">{stats.contractors}</div>
+            <p className="text-xs text-[#6B6B6B]">{t("companies.contractors", "Contractors")}</p>
           </CardContent>
         </Card>
         <Card className="cursor-pointer" onClick={() => setCompaniesFilter("subcontractor")}>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-bold text-purple-600">{stats.subcontractors}</div>
-            <p className="text-xs text-muted-foreground">{t("companies.subContractors", "Sub-Contractors")}</p>
+            <div className="text-2xl font-medium text-[#5B2C93]">{stats.subcontractors}</div>
+            <p className="text-xs text-[#6B6B6B]">{t("companies.subContractors", "Sub-Contractors")}</p>
           </CardContent>
         </Card>
         <Card className="cursor-pointer" onClick={() => setCompaniesFilter("client")}>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-bold text-green-600">{stats.clients}</div>
-            <p className="text-xs text-muted-foreground">{t("companies.clients", "Clients")}</p>
+            <div className="text-2xl font-medium text-[#4ECDC4]">{stats.clients}</div>
+            <p className="text-xs text-[#6B6B6B]">{t("companies.clients", "Clients")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-bold text-emerald-600">{stats.active}</div>
-            <p className="text-xs text-muted-foreground">{t("companies.activeCompanies", "Active")}</p>
+            <div className="text-2xl font-medium text-[#4ECDC4]">{stats.active}</div>
+            <p className="text-xs text-[#6B6B6B]">{t("companies.activeCompanies", "Active")}</p>
           </CardContent>
         </Card>
       </div>
@@ -201,7 +201,7 @@ export default function Companies() {
         <CardContent className="pt-4 pb-4">
           <div className="flex items-center gap-4 flex-wrap">
             <div className="relative flex-1 min-w-[250px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
               <Input
                 placeholder={t("companies.searchPlaceholder", "Search by name, code, contact, or contract...")}
                 value={searchQuery}
@@ -239,7 +239,7 @@ export default function Companies() {
                 : companiesFilter === "subcontractor"
                 ? t("companies.subContractors", "Sub-Contractors")
                 : t("companies.clients", "Clients")}
-              <span className="text-muted-foreground font-normal ml-2">({filteredCompanies.length})</span>
+              <span className="text-[#6B6B6B] font-normal ml-2">({filteredCompanies.length})</span>
             </CardTitle>
           </div>
         </CardHeader>
@@ -264,13 +264,13 @@ export default function Companies() {
               </TableHeader>
               <TableBody>
                 {filteredCompanies.map((company) => (
-                  <TableRow key={company.id} className="cursor-pointer hover:bg-muted/50" onClick={() => setLocation(`/companies/${company.id}`)}>
+                  <TableRow key={company.id} className="cursor-pointer hover:bg-[#F5F5F5]/50" onClick={() => setLocation(`/companies/${company.id}`)}>
                     <TableCell className="font-mono text-sm">{company.code}</TableCell>
                     <TableCell>
                       <div>
                         <div className="font-medium">{company.name}</div>
                         {company.nameAr && (
-                          <div className="text-sm text-muted-foreground" dir="rtl">
+                          <div className="text-sm text-[#6B6B6B]" dir="rtl">
                             {company.nameAr}
                           </div>
                         )}
@@ -309,7 +309,7 @@ export default function Companies() {
                         <div className="text-sm">
                           <div>{company.contactPersonName}</div>
                           {company.contactPersonEmail && (
-                            <div className="text-muted-foreground">{company.contactPersonEmail}</div>
+                            <div className="text-[#6B6B6B]">{company.contactPersonEmail}</div>
                           )}
                         </div>
                       ) : (
@@ -342,14 +342,14 @@ export default function Companies() {
                             deleteCompanyMutation.mutate({ id: company.id });
                         }}
                       >
-                        <Trash2 className="h-4 w-4 text-red-500" />
+                        <Trash2 className="h-4 w-4 text-[#FF6B6B]" />
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))}
                 {filteredCompanies.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center text-muted-foreground py-12">
+                    <TableCell colSpan={8} className="text-center text-[#6B6B6B] py-12">
                       {searchQuery
                         ? t("companies.noResults", "No companies match your search.")
                         : t("companies.noCompanies", "No companies found. Add one to get started.")}

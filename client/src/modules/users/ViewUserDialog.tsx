@@ -35,7 +35,7 @@ interface ViewUserDialogProps {
 function FieldDisplay({ label, value, icon }: { label: string; value: React.ReactNode; icon?: React.ReactNode }) {
   return (
     <div className="space-y-1">
-      <p className="text-xs text-muted-foreground uppercase tracking-wider">{label}</p>
+      <p className="text-xs text-[#6B6B6B] uppercase tracking-wider">{label}</p>
       <div className="flex items-center gap-2">
         {icon}
         <p className="text-sm font-medium text-foreground">{value || "—"}</p>
@@ -47,8 +47,8 @@ function FieldDisplay({ label, value, icon }: { label: string; value: React.Reac
 // Section Header
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="pb-2 mb-4 border-b border-[#4f008c]/20">
-      <h3 className="text-sm font-semibold text-[#4f008c]">{title}</h3>
+    <div className="pb-2 mb-4 border-b border-[#5B2C93]/20">
+      <h3 className="text-sm font-medium text-[#5B2C93]">{title}</h3>
     </div>
   );
 }
@@ -119,18 +119,18 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case "admin": return "bg-purple-100 text-purple-700 border-purple-200";
-      case "user": return "bg-blue-100 text-blue-700 border-blue-200";
-      default: return "bg-gray-100 text-gray-700 border-gray-200";
+      case "admin": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
+      case "user": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
+      default: return "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0]";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-100 text-green-700 border-green-200";
-      case "inactive": return "bg-gray-100 text-gray-700 border-gray-200";
-      case "suspended": return "bg-red-100 text-red-700 border-red-200";
-      default: return "bg-gray-100 text-gray-700 border-gray-200";
+      case "active": return "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]";
+      case "inactive": return "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0]";
+      case "suspended": return "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]";
+      default: return "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0]";
     }
   };
 
@@ -141,13 +141,13 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
         <DialogHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16 border-2 border-[#4f008c]/20">
-                <AvatarFallback className="bg-gradient-to-br from-[#ff375e]/20 to-[#4f008c]/20 text-[#4f008c] text-xl font-semibold">
+              <Avatar className="h-16 w-16 border-2 border-[#5B2C93]/20">
+                <AvatarFallback className="bg-gradient-to-br from-[#FF6B6B]/20 to-[#5B2C93]/20 text-[#5B2C93] text-xl font-medium">
                   {getUserInitials()}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <DialogTitle className="text-xl text-[#4f008c]">{getUserDisplayName()}</DialogTitle>
+                <DialogTitle className="text-xl text-[#5B2C93]">{getUserDisplayName()}</DialogTitle>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge variant="outline" className={getRoleColor(user.role)}>
                     {user.role}
@@ -161,7 +161,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
                 </div>
               </div>
             </div>
-            <Button onClick={onEdit} className="gap-2 bg-[#4f008c] hover:bg-[#3d006d] text-white">
+            <Button onClick={onEdit} className="gap-2 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white">
               <Edit2 className="h-4 w-4" />
               Edit User
             </Button>
@@ -217,12 +217,12 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
                   <FieldDisplay 
                     label="Email Address" 
                     value={user.email} 
-                    icon={<Mail className="h-4 w-4 text-muted-foreground" />} 
+                    icon={<Mail className="h-4 w-4 text-[#6B6B6B]" />} 
                   />
                   <FieldDisplay 
                     label="Mobile Number" 
                     value={user.phone} 
-                    icon={<Phone className="h-4 w-4 text-muted-foreground" />} 
+                    icon={<Phone className="h-4 w-4 text-[#6B6B6B]" />} 
                   />
                 </div>
               </div>
@@ -237,7 +237,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
                   <FieldDisplay 
                     label="Job Title" 
                     value={user.jobTitle} 
-                    icon={<Briefcase className="h-4 w-4 text-muted-foreground" />} 
+                    icon={<Briefcase className="h-4 w-4 text-[#6B6B6B]" />} 
                   />
                   <FieldDisplay label="Employee ID" value={user.employeeId} />
                   <FieldDisplay label="Department" value={getDepartmentName(user.departmentId)} />
@@ -253,7 +253,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
                     <FieldDisplay 
                       label="Contractor Company" 
                       value={getCompanyName(user.contractorCompanyId)} 
-                      icon={<Building2 className="h-4 w-4 text-muted-foreground" />} 
+                      icon={<Building2 className="h-4 w-4 text-[#6B6B6B]" />} 
                     />
                     {user.userType === "sub_contractor" && (
                       <FieldDisplay 
@@ -264,12 +264,12 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
                     <FieldDisplay 
                       label="Contract Reference" 
                       value={user.contractReference} 
-                      icon={<FileText className="h-4 w-4 text-muted-foreground" />} 
+                      icon={<FileText className="h-4 w-4 text-[#6B6B6B]" />} 
                     />
                     <FieldDisplay 
                       label="Contract Expiry" 
                       value={formatDate(user.contractExpiry)} 
-                      icon={<Calendar className="h-4 w-4 text-muted-foreground" />} 
+                      icon={<Calendar className="h-4 w-4 text-[#6B6B6B]" />} 
                     />
                     <FieldDisplay label="Centre3 Contact" value={user.reportingToName || "—"} />
                   </div>
@@ -283,7 +283,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
                     <FieldDisplay 
                       label="Client Company" 
                       value={getCompanyName(user.clientCompanyId)} 
-                      icon={<Building2 className="h-4 w-4 text-muted-foreground" />} 
+                      icon={<Building2 className="h-4 w-4 text-[#6B6B6B]" />} 
                     />
                     <FieldDisplay label="Account Manager" value={user.accountManagerName || "—"} />
                   </div>
@@ -323,11 +323,11 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
                   <FieldDisplay 
                     label="Site Access" 
                     value={user.allSitesAccess ? "All Sites" : "Specific Sites"} 
-                    icon={<MapPin className="h-4 w-4 text-muted-foreground" />} 
+                    icon={<MapPin className="h-4 w-4 text-[#6B6B6B]" />} 
                   />
                   {!user.allSitesAccess && user.siteIds && (
                     <div className="col-span-2">
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Assigned Sites</p>
+                      <p className="text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Assigned Sites</p>
                       <div className="flex flex-wrap gap-2">
                         {user.siteIds.map((siteId: number) => (
                           <Badge key={siteId} variant="secondary">
@@ -347,7 +347,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
                   <FieldDisplay 
                     label="Created" 
                     value={formatDate(user.createdAt)} 
-                    icon={<Calendar className="h-4 w-4 text-muted-foreground" />} 
+                    icon={<Calendar className="h-4 w-4 text-[#6B6B6B]" />} 
                   />
                   <FieldDisplay 
                     label="Last Sign In" 

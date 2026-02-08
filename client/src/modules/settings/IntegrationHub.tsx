@@ -35,10 +35,10 @@ export default function IntegrationHub() {
         <div className="p-4 rounded-full bg-primary/10 mb-4">
           <Radio className="h-12 w-12 text-primary" />
         </div>
-        <h1 className="text-3xl font-bold mb-2">
+        <h1 className="text-3xl font-medium mb-2">
           {t("integrationHub.title", "Integration Hub")}
         </h1>
-        <p className="text-muted-foreground max-w-md">
+        <p className="text-[#6B6B6B] max-w-md">
           {t("integrationHub.subtitle", "Connect Centre3 with your existing systems and tools")}
         </p>
       </div>
@@ -47,17 +47,17 @@ export default function IntegrationHub() {
       <Card className="border-primary/20 bg-primary/5">
         <CardContent className="pt-6">
           <div className="flex flex-col items-center text-center py-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-medium mb-4">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
               </span>
               {t("common.comingSoon", "Coming Soon")}
             </div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-2xl font-medium mb-2">
               {t("integrationHub.underDevelopment", "Under Development")}
             </h2>
-            <p className="text-muted-foreground max-w-lg">
+            <p className="text-[#6B6B6B] max-w-lg">
               {t("integrationHub.description", "We're building powerful integration capabilities to help you connect Centre3 with your existing infrastructure. Stay tuned for updates!")}
             </p>
           </div>
@@ -66,7 +66,7 @@ export default function IntegrationHub() {
 
       {/* Planned Integrations */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">
+        <h3 className="text-lg font-medium mb-4">
           {t("integrationHub.plannedIntegrations", "Planned Integrations")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -74,16 +74,16 @@ export default function IntegrationHub() {
             <Card key={index} className="opacity-60">
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-muted">
-                    <integration.icon className="h-6 w-6 text-muted-foreground" />
+                  <div className="p-2 rounded-lg bg-[#F5F5F5]">
+                    <integration.icon className="h-6 w-6 text-[#6B6B6B]" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-medium mb-1">{integration.title}</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#6B6B6B]">
                       {integration.description}
                     </p>
                   </div>
-                  <ArrowRight className="h-5 w-5 text-muted-foreground/50" />
+                  <ArrowRight className="h-5 w-5 text-[#6B6B6B]/50" />
                 </div>
               </CardContent>
             </Card>

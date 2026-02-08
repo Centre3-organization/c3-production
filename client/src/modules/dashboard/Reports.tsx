@@ -42,15 +42,15 @@ const zoneData = [
   { name: "Zone D (Power)", value: 80 },
 ];
 
-const COLORS = ['#4F008C', '#8B5CF6', '#10B981', '#F59E0B'];
+const COLORS = ['#5B2C93', '#5B2C93', '#4ECDC4', '#FFB84D'];
 
 export default function Reports() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Analytics & Reports</h1>
-          <p className="text-muted-foreground mt-1">Deep insights into facility usage and security trends.</p>
+          <h1 className="text-3xl font-medium tracking-tight text-foreground">Analytics & Reports</h1>
+          <p className="text-[#6B6B6B] mt-1">Deep insights into facility usage and security trends.</p>
         </div>
         <div className="flex items-center gap-2">
           <Select defaultValue="7d">
@@ -78,9 +78,9 @@ export default function Reports() {
             <CardTitle className="text-sm font-medium">Total Access Events</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2,350</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center">
-              <span className="text-emerald-600 flex items-center font-medium">
+            <div className="text-2xl font-medium">2,350</div>
+            <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
+              <span className="text-[#4ECDC4] flex items-center font-medium">
                 <ArrowUpRight className="h-3 w-3 mr-1" />
                 +12.5%
               </span>
@@ -93,9 +93,9 @@ export default function Reports() {
             <CardTitle className="text-sm font-medium">Avg. Visit Duration</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">4h 12m</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center">
-              <span className="text-emerald-600 flex items-center font-medium">
+            <div className="text-2xl font-medium">4h 12m</div>
+            <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
+              <span className="text-[#4ECDC4] flex items-center font-medium">
                 <ArrowDownRight className="h-3 w-3 mr-1" />
                 -5%
               </span>
@@ -108,8 +108,8 @@ export default function Reports() {
             <CardTitle className="text-sm font-medium">Rejected Requests</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center">
+            <div className="text-2xl font-medium">12</div>
+            <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
               <span className="text-destructive flex items-center font-medium">
                 <ArrowUpRight className="h-3 w-3 mr-1" />
                 +2
@@ -123,9 +123,9 @@ export default function Reports() {
             <CardTitle className="text-sm font-medium">Active Contractors</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">45</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center">
-              <span className="text-muted-foreground flex items-center font-medium">
+            <div className="text-2xl font-medium">45</div>
+            <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
+              <span className="text-[#6B6B6B] flex items-center font-medium">
                 <ArrowUpRight className="h-3 w-3 mr-1" />
                 0%
               </span>
@@ -145,16 +145,16 @@ export default function Reports() {
             <ResponsiveContainer width="100%" height={350}>
               <BarChart data={accessData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
+                <XAxis dataKey="name" stroke="#6B6B6B" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="#6B6B6B" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
                 <Tooltip 
                   cursor={{ fill: 'transparent' }}
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                 />
                 <Legend />
-                <Bar dataKey="employees" name="Employees" stackId="a" fill="#4F008C" radius={[0, 0, 4, 4]} />
-                <Bar dataKey="contractors" name="Contractors" stackId="a" fill="#8B5CF6" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="visitors" name="Visitors" stackId="a" fill="#10B981" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="employees" name="Employees" stackId="a" fill="#5B2C93" radius={[0, 0, 4, 4]} />
+                <Bar dataKey="contractors" name="Contractors" stackId="a" fill="#5B2C93" radius={[0, 0, 0, 0]} />
+                <Bar dataKey="visitors" name="Visitors" stackId="a" fill="#4ECDC4" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -174,7 +174,7 @@ export default function Reports() {
                   cy="50%"
                   innerRadius={60}
                   outerRadius={100}
-                  fill="#8884d8"
+                  fill="#5B2C93"
                   paddingAngle={5}
                   dataKey="value"
                 >
@@ -199,12 +199,12 @@ export default function Reports() {
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={accessData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+              <XAxis dataKey="name" stroke="#6B6B6B" fontSize={12} tickLine={false} axisLine={false} />
+              <YAxis stroke="#6B6B6B" fontSize={12} tickLine={false} axisLine={false} />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="visitors" name="Policy Violations" stroke="#ef4444" strokeWidth={2} dot={{ r: 4 }} />
-              <Line type="monotone" dataKey="contractors" name="Overstay Incidents" stroke="#f59e0b" strokeWidth={2} dot={{ r: 4 }} />
+              <Line type="monotone" dataKey="visitors" name="Policy Violations" stroke="#FF6B6B" strokeWidth={2} dot={{ r: 4 }} />
+              <Line type="monotone" dataKey="contractors" name="Overstay Incidents" stroke="#FFB84D" strokeWidth={2} dot={{ r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>

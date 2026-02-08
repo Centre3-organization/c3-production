@@ -267,10 +267,10 @@ export default function Layout({ children }: LayoutProps) {
   // Show loading state while checking authentication
   if (authLoading || (!isAuthenticated && !userError)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">{t('common.loading', 'Authenticating...')}</p>
+          <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
+          <p className="text-[#6B6B6B]">{t('common.loading', 'Authenticating...')}</p>
         </div>
       </div>
     );
@@ -293,7 +293,7 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background flex w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-[#F5F5F5] flex w-full" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
         <div 
@@ -304,7 +304,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 h-full z-50 flex flex-col transition-all duration-300 bg-sidebar text-sidebar-foreground",
+        "fixed top-0 h-full z-50 flex flex-col transition-all duration-300 bg-gradient-to-b from-[#5B2C93] to-[#3D1C5E] text-white",
         isRTL ? "right-0" : "left-0",
         isMobile 
           ? (sidebarOpen 
@@ -314,7 +314,7 @@ export default function Layout({ children }: LayoutProps) {
       )}>
         {/* Logo */}
         <div className={cn(
-          "h-16 flex items-center border-b border-sidebar-border/30 px-4",
+          "h-16 flex items-center border-b border-white/15 px-4",
           !sidebarOpen && !isMobile && "justify-center px-0"
         )}>
           {(sidebarOpen || isMobile) ? (
@@ -342,7 +342,7 @@ export default function Layout({ children }: LayoutProps) {
             <div key={sectionIndex} className={section.title ? "mt-4 first:mt-0" : ""}>
               {section.title && (sidebarOpen || isMobile) && (
                 <div className="px-3 mb-2">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/50">
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-white/50">
                     {section.titleKey ? getLabel(section.titleKey, section.title) : section.title}
                   </span>
                 </div>
@@ -358,10 +358,10 @@ export default function Layout({ children }: LayoutProps) {
                       <CollapsibleTrigger asChild>
                         <div 
                           className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer group",
+                            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 cursor-pointer group",
                             hasActiveChild 
-                              ? "bg-white/15 text-white" 
-                              : "text-sidebar-foreground/80 hover:bg-white/10 hover:text-white"
+                              ? "bg-white/20 text-white" 
+                              : "text-white/80 hover:bg-white/10 hover:text-white"
                           )}
                         >
                           <item.icon className="h-5 w-5 shrink-0 opacity-80" />
@@ -383,7 +383,7 @@ export default function Layout({ children }: LayoutProps) {
                                   "px-3 py-2 rounded-md text-sm transition-colors cursor-pointer",
                                   isChildActive 
                                     ? "bg-white/20 text-white font-medium" 
-                                    : "text-sidebar-foreground/70 hover:bg-white/10 hover:text-white"
+                                    : "text-white/70 hover:bg-white/10 hover:text-white"
                                 )}
                                 onClick={() => isMobile && setSidebarOpen(false)}
                               >
@@ -404,10 +404,10 @@ export default function Layout({ children }: LayoutProps) {
                   <Link key={item.label} href={item.href || "#"}>
                     <div 
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors group relative cursor-pointer",
+                        "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 group relative cursor-pointer",
                         isActive 
                           ? "bg-white/20 text-white shadow-sm" 
-                          : "text-sidebar-foreground/80 hover:bg-white/10 hover:text-white"
+                          : "text-white/80 hover:bg-white/10 hover:text-white"
                       )}
                       onClick={() => isMobile && setSidebarOpen(false)}
                     >
@@ -416,7 +416,7 @@ export default function Layout({ children }: LayoutProps) {
                         <div className="flex items-center justify-between flex-1">
                           <span>{getLabel(item.labelKey, item.label)}</span>
                           {item.badge && (
-                            <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                            <span className="bg-[#FF6B6B] text-white text-[10px] font-medium px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
                               {item.badge}
                             </span>
                           )}
@@ -443,7 +443,7 @@ export default function Layout({ children }: LayoutProps) {
           <div 
             onClick={handleLogout}
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-sidebar-foreground/80 hover:bg-white/10 hover:text-white cursor-pointer",
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 text-white/80 hover:bg-white/10 hover:text-white cursor-pointer",
               !sidebarOpen && !isMobile && "justify-center px-0"
             )}>
             <LogOut className="h-5 w-5 shrink-0 opacity-80" />
@@ -460,7 +460,7 @@ export default function Layout({ children }: LayoutProps) {
           : (isRTL ? "mr-20" : "ml-20"))
       )}>
         {/* Header */}
-        <header className="h-16 bg-background border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-10">
+        <header className="h-16 bg-white border-b border-[#E0E0E0] flex items-center justify-between px-4 md:px-6 sticky top-0 z-10">
           <div className="flex items-center gap-4 flex-1">
             <Button 
               variant="ghost" 
@@ -474,10 +474,10 @@ export default function Layout({ children }: LayoutProps) {
             </Button>
             
             <div className="relative max-w-md flex-1 hidden md:block">
-              <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground", isRTL ? "right-3" : "left-3")} />
+              <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]", isRTL ? "right-3" : "left-3")} />
               <Input 
                 placeholder={t('requests.searchPlaceholder', 'Search requests, visitors, zones...')}
-                className={cn("bg-muted/50 border-0 focus-visible:ring-1", isRTL ? "pr-9" : "pl-9")}
+                className={cn("bg-[#F5F5F5] border-[#E0E0E0] focus-visible:ring-1", isRTL ? "pr-9" : "pl-9")}
               />
             </div>
           </div>
@@ -487,7 +487,7 @@ export default function Layout({ children }: LayoutProps) {
             
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FF6B6B] rounded-full"></span>
             </Button>
 
             <DropdownMenu>
@@ -495,22 +495,22 @@ export default function Layout({ children }: LayoutProps) {
                 <Button variant="ghost" className="flex items-center gap-2 px-2">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={(currentUser as any)?.avatar || ""} />
-                    <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
+                    <AvatarFallback className="bg-[#E8DCF5] text-[#5B2C93] text-sm font-medium">
                       {userInitials}
                     </AvatarFallback>
                   </Avatar>
                   <div className={cn("hidden md:block", isRTL ? "text-right" : "text-left")}>
-                    <p className="text-sm font-medium leading-none">{userName}</p>
-                    <p className="text-xs text-muted-foreground capitalize">{userRoleName}</p>
+                    <p className="text-sm font-medium leading-none text-[#2C2C2C]">{userName}</p>
+                    <p className="text-xs text-[#6B6B6B] capitalize">{userRoleName}</p>
                   </div>
-                  <ChevronDown className="h-4 w-4 text-muted-foreground hidden md:block" />
+                  <ChevronDown className="h-4 w-4 text-[#6B6B6B] hidden md:block" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? "start" : "end"} className="w-56">
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{userName}</p>
-                    <p className="text-xs leading-none text-muted-foreground">{userEmail}</p>
+                    <p className="text-sm font-medium leading-none text-[#2C2C2C]">{userName}</p>
+                    <p className="text-xs leading-none text-[#6B6B6B]">{userEmail}</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -523,7 +523,7 @@ export default function Layout({ children }: LayoutProps) {
                   <span>{t('nav.settings', 'Settings')}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
+                <DropdownMenuItem onClick={handleLogout} className="text-[#FF6B6B] focus:text-[#FF6B6B]">
                   <LogOut className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
                   <span>{t('auth.logout', 'Logout')}</span>
                 </DropdownMenuItem>
@@ -533,7 +533,7 @@ export default function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
+        <main className="flex-1 p-4 md:p-6 overflow-auto bg-[#F5F5F5]">
           {children}
         </main>
       </div>

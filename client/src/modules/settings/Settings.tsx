@@ -612,11 +612,11 @@ export default function Settings() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <SettingsIcon className="h-8 w-8 text-purple-600" />
+          <h1 className="text-3xl font-medium tracking-tight text-foreground flex items-center gap-2">
+            <SettingsIcon className="h-8 w-8 text-[#5B2C93]" />
             System Settings
           </h1>
-          <p className="text-muted-foreground">Configure global preferences and master data.</p>
+          <p className="text-[#6B6B6B]">Configure global preferences and master data.</p>
         </div>
       </div>
 
@@ -635,7 +635,7 @@ export default function Settings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Globe className="h-5 w-5 text-purple-600" />
+                <Globe className="h-5 w-5 text-[#5B2C93]" />
                 Platform Configuration
               </CardTitle>
               <CardDescription>Manage global application settings.</CardDescription>
@@ -656,8 +656,8 @@ export default function Settings() {
                 <Input defaultValue="Asia/Riyadh (GMT+3)" disabled />
               </div>
             </CardContent>
-            <CardFooter className="bg-muted/20 border-t px-6 py-4">
-              <Button className="ml-auto bg-purple-600 hover:bg-purple-700">
+            <CardFooter className="bg-[#F5F5F5]/20 border-t px-6 py-4">
+              <Button className="ml-auto bg-[#5B2C93] hover:bg-[#5B2C93]">
                 <Save className="mr-2 h-4 w-4" /> Save Changes
               </Button>
             </CardFooter>
@@ -668,7 +668,7 @@ export default function Settings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Languages className="h-5 w-5 text-purple-600" />
+                <Languages className="h-5 w-5 text-[#5B2C93]" />
                 Translation Management
               </CardTitle>
               <CardDescription>Manage multi-language support and translations for the application.</CardDescription>
@@ -698,11 +698,11 @@ export default function Settings() {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>English</span>
-                        <span className="text-green-600 font-medium">100% Complete</span>
+                        <span className="text-[#4ECDC4] font-medium">100% Complete</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Arabic</span>
-                        <span className="text-amber-600 font-medium">~85% Complete</span>
+                        <span className="text-[#FFB84D] font-medium">~85% Complete</span>
                       </div>
                     </div>
                   </CardContent>
@@ -710,11 +710,11 @@ export default function Settings() {
               </div>
               <Separator />
               <div className="flex flex-col gap-4">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#6B6B6B]">
                   Use the Translation Management tool to view, edit, and add translations for all UI strings in the application.
                 </p>
                 <Link href="/settings/translations">
-                  <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
+                  <Button className="gap-2 bg-[#5B2C93] hover:bg-[#5B2C93]">
                     <Languages className="h-4 w-4" />
                     Open Translation Manager
                     <ExternalLink className="h-4 w-4" />
@@ -730,14 +730,14 @@ export default function Settings() {
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5 text-purple-600" />
+                  <Building2 className="h-5 w-5 text-[#5B2C93]" />
                   Department Management
                 </CardTitle>
                 <CardDescription>Define organizational units for user assignment.</CardDescription>
               </div>
               <Dialog open={newDeptOpen} onOpenChange={setNewDeptOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-purple-600 hover:bg-purple-700 gap-2">
+                  <Button className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                     <Plus className="h-4 w-4" /> Add Department
                   </Button>
                 </DialogTrigger>
@@ -783,7 +783,7 @@ export default function Settings() {
                       <Button type="button" variant="outline" onClick={() => setNewDeptOpen(false)}>Cancel</Button>
                       <Button 
                         type="submit" 
-                        className="bg-purple-600 hover:bg-purple-700"
+                        className="bg-[#5B2C93] hover:bg-[#5B2C93]"
                         disabled={createDeptMutation.isPending}
                       >
                         {createDeptMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -797,8 +797,8 @@ export default function Settings() {
             <CardContent>
               {departmentsLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-                  <span className="ml-2 text-muted-foreground">Loading departments...</span>
+                  <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
+                  <span className="ml-2 text-[#6B6B6B]">Loading departments...</span>
                 </div>
               ) : (
                 <Table>
@@ -818,7 +818,7 @@ export default function Settings() {
                         <TableCell className="font-medium">{dept.name}</TableCell>
                         <TableCell>{dept.costCenter || "—"}</TableCell>
                         <TableCell>
-                          <span className={`px-2 py-1 rounded-full text-xs ${dept.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          <span className={`px-2 py-1 rounded-full text-xs ${dept.isActive ? 'bg-[#E8F9F8] text-[#4ECDC4]' : 'bg-[#FFE5E5] text-[#FF6B6B]'}`}>
                             {dept.isActive ? "Active" : "Inactive"}
                           </span>
                         </TableCell>
@@ -830,12 +830,12 @@ export default function Settings() {
                               className="h-8 w-8"
                               onClick={() => handleEditDepartment(dept)}
                             >
-                              <Edit2 className="h-4 w-4 text-muted-foreground" />
+                              <Edit2 className="h-4 w-4 text-[#6B6B6B]" />
                             </Button>
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-8 w-8 hover:text-red-600 hover:bg-red-50"
+                              className="h-8 w-8 hover:text-[#FF6B6B] hover:bg-[#FFE5E5]"
                               onClick={() => handleDeleteDept(dept.id)}
                               disabled={deleteDeptMutation.isPending}
                             >
@@ -847,7 +847,7 @@ export default function Settings() {
                     ))}
                     {departments.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                        <TableCell colSpan={5} className="text-center py-8 text-[#6B6B6B]">
                           No departments found. Click "Add Department" to create one.
                         </TableCell>
                       </TableRow>
@@ -901,7 +901,7 @@ export default function Settings() {
                   <Button type="button" variant="outline" onClick={() => setEditDeptOpen(false)}>Cancel</Button>
                   <Button 
                     type="submit" 
-                    className="bg-purple-600 hover:bg-purple-700"
+                    className="bg-[#5B2C93] hover:bg-[#5B2C93]"
                     disabled={updateDeptMutation.isPending}
                   >
                     {updateDeptMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -920,7 +920,7 @@ export default function Settings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Database className="h-5 w-5 text-purple-600" />
+                <Database className="h-5 w-5 text-[#5B2C93]" />
                 Master Data Management
               </CardTitle>
               <CardDescription>Manage countries, regions, cities, and classification types.</CardDescription>
@@ -973,7 +973,7 @@ export default function Settings() {
                       {activitiesSubTab === "main" ? (
                         <Dialog open={newMainActivityOpen} onOpenChange={setNewMainActivityOpen}>
                           <DialogTrigger asChild>
-                            <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                            <Button size="sm" className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                               <Plus className="h-4 w-4" /> Add Main Activity
                             </Button>
                           </DialogTrigger>
@@ -1012,7 +1012,7 @@ export default function Settings() {
                               </div>
                               <DialogFooter>
                                 <Button type="button" variant="outline" onClick={() => setNewMainActivityOpen(false)}>Cancel</Button>
-                                <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createMainActivityMutation.isPending}>
+                                <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={createMainActivityMutation.isPending}>
                                   {createMainActivityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                                   Create
                                 </Button>
@@ -1023,7 +1023,7 @@ export default function Settings() {
                       ) : (
                         <Dialog open={newSubActivityOpen} onOpenChange={setNewSubActivityOpen}>
                           <DialogTrigger asChild>
-                            <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                            <Button size="sm" className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                               <Plus className="h-4 w-4" /> Add Sub-Activity
                             </Button>
                           </DialogTrigger>
@@ -1091,7 +1091,7 @@ export default function Settings() {
                               </div>
                               <DialogFooter>
                                 <Button type="button" variant="outline" onClick={() => setNewSubActivityOpen(false)}>Cancel</Button>
-                                <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createSubActivityMutation.isPending}>
+                                <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={createSubActivityMutation.isPending}>
                                   {createSubActivityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                                   Create
                                 </Button>
@@ -1106,7 +1106,7 @@ export default function Settings() {
                     <TabsContent value="main">
                       {mainActivitiesLoading ? (
                         <div className="flex items-center justify-center py-8">
-                          <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                          <Loader2 className="h-6 w-6 animate-spin text-[#5B2C93]" />
                         </div>
                       ) : (
                         <Table>
@@ -1126,14 +1126,14 @@ export default function Settings() {
                                 <TableRow key={activity.id}>
                                   <TableCell className="font-medium">
                                     <div className="flex items-center gap-2">
-                                      <Activity className="h-4 w-4 text-purple-600" />
+                                      <Activity className="h-4 w-4 text-[#5B2C93]" />
                                       {activity.name}
                                     </div>
                                   </TableCell>
-                                  <TableCell className="text-muted-foreground max-w-md truncate">{activity.description || "-"}</TableCell>
+                                  <TableCell className="text-[#6B6B6B] max-w-md truncate">{activity.description || "-"}</TableCell>
                                   <TableCell>{subCount}</TableCell>
                                   <TableCell>
-                                    <Badge variant={activity.isActive ? "default" : "secondary"} className={activity.isActive ? "bg-green-100 text-green-800" : ""}>
+                                    <Badge variant={activity.isActive ? "default" : "secondary"} className={activity.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
                                       {activity.isActive ? "Active" : "Inactive"}
                                     </Badge>
                                   </TableCell>
@@ -1142,7 +1142,7 @@ export default function Settings() {
                                       <Edit2 className="h-4 w-4" />
                                     </Button>
                                     <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this main activity?")) deleteMainActivityMutation.mutate({ id: activity.id }); }}>
-                                      <Trash2 className="h-4 w-4 text-red-500" />
+                                      <Trash2 className="h-4 w-4 text-[#FF6B6B]" />
                                     </Button>
                                   </TableCell>
                                 </TableRow>
@@ -1150,7 +1150,7 @@ export default function Settings() {
                             })}
                             {(!mainActivitiesData || mainActivitiesData.length === 0) && (
                               <TableRow>
-                                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">No main activities found. Add one to get started.</TableCell>
+                                <TableCell colSpan={5} className="text-center text-[#6B6B6B] py-8">No main activities found. Add one to get started.</TableCell>
                               </TableRow>
                             )}
                           </TableBody>
@@ -1162,7 +1162,7 @@ export default function Settings() {
                     <TabsContent value="sub">
                       {subActivitiesLoading ? (
                         <div className="flex items-center justify-center py-8">
-                          <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                          <Loader2 className="h-6 w-6 animate-spin text-[#5B2C93]" />
                         </div>
                       ) : (
                         <div className="overflow-x-auto">
@@ -1186,47 +1186,47 @@ export default function Settings() {
                                   <TableCell className="font-medium">
                                     <div>
                                       <div>{sub.name}</div>
-                                      {sub.nameAr && <div className="text-xs text-muted-foreground" dir="rtl">{sub.nameAr}</div>}
+                                      {sub.nameAr && <div className="text-xs text-[#6B6B6B]" dir="rtl">{sub.nameAr}</div>}
                                     </div>
                                   </TableCell>
-                                  <TableCell className="text-muted-foreground">{sub.mainActivityName || "-"}</TableCell>
+                                  <TableCell className="text-[#6B6B6B]">{sub.mainActivityName || "-"}</TableCell>
                                   <TableCell className="text-center">
                                     {sub.needsRFC ? (
-                                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">✓</Badge>
+                                      <Badge className="bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]">✓</Badge>
                                     ) : (
-                                      <span className="text-muted-foreground">-</span>
+                                      <span className="text-[#6B6B6B]">-</span>
                                     )}
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {sub.needsHRS ? (
-                                      <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">✓</Badge>
+                                      <Badge className="bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]">✓</Badge>
                                     ) : (
-                                      <span className="text-muted-foreground">-</span>
+                                      <span className="text-[#6B6B6B]">-</span>
                                     )}
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {sub.needsMOP ? (
-                                      <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">✓</Badge>
+                                      <Badge className="bg-[#FFF4E5] text-[#FFB84D] hover:bg-[#FFF4E5]">✓</Badge>
                                     ) : (
-                                      <span className="text-muted-foreground">-</span>
+                                      <span className="text-[#6B6B6B]">-</span>
                                     )}
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {sub.needsMHV ? (
-                                      <Badge className="bg-green-100 text-green-800 hover:bg-green-100">✓</Badge>
+                                      <Badge className="bg-[#E8F9F8] text-[#4ECDC4] hover:bg-[#E8F9F8]">✓</Badge>
                                     ) : (
-                                      <span className="text-muted-foreground">-</span>
+                                      <span className="text-[#6B6B6B]">-</span>
                                     )}
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {sub.needsRoomSelection ? (
-                                      <Badge className="bg-cyan-100 text-cyan-800 hover:bg-cyan-100">✓</Badge>
+                                      <Badge className="bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]">✓</Badge>
                                     ) : (
-                                      <span className="text-muted-foreground">-</span>
+                                      <span className="text-[#6B6B6B]">-</span>
                                     )}
                                   </TableCell>
                                   <TableCell>
-                                    <Badge variant={sub.isActive ? "default" : "secondary"} className={sub.isActive ? "bg-green-100 text-green-800" : ""}>
+                                    <Badge variant={sub.isActive ? "default" : "secondary"} className={sub.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
                                       {sub.isActive ? "Active" : "Inactive"}
                                     </Badge>
                                   </TableCell>
@@ -1235,14 +1235,14 @@ export default function Settings() {
                                       <Edit2 className="h-4 w-4" />
                                     </Button>
                                     <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this sub-activity?")) deleteSubActivityMutation.mutate({ id: sub.id }); }}>
-                                      <Trash2 className="h-4 w-4 text-red-500" />
+                                      <Trash2 className="h-4 w-4 text-[#FF6B6B]" />
                                     </Button>
                                   </TableCell>
                                 </TableRow>
                               ))}
                               {(!subActivitiesData || subActivitiesData.length === 0) && (
                                 <TableRow>
-                                  <TableCell colSpan={9} className="text-center text-muted-foreground py-8">No sub-activities found. Add one to get started.</TableCell>
+                                  <TableCell colSpan={9} className="text-center text-[#6B6B6B] py-8">No sub-activities found. Add one to get started.</TableCell>
                                 </TableRow>
                               )}
                             </TableBody>
@@ -1258,10 +1258,10 @@ export default function Settings() {
                 {/* ============================================================================ */}
                 <TabsContent value="roletypes">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Role Types</h3>
+                    <h3 className="text-lg font-medium">Role Types</h3>
                     <Dialog open={newRoleTypeOpen} onOpenChange={setNewRoleTypeOpen}>
                       <DialogTrigger asChild>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                        <Button size="sm" className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                           <Plus className="h-4 w-4" /> Add Role Type
                         </Button>
                       </DialogTrigger>
@@ -1330,7 +1330,7 @@ export default function Settings() {
                           </div>
                           <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => setNewRoleTypeOpen(false)}>Cancel</Button>
-                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createRoleTypeMutation.isPending}>
+                            <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={createRoleTypeMutation.isPending}>
                               {createRoleTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                               Create
                             </Button>
@@ -1341,7 +1341,7 @@ export default function Settings() {
                   </div>
                   {roleTypesLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                      <Loader2 className="h-6 w-6 animate-spin text-[#5B2C93]" />
                     </div>
                   ) : (
                     <Table>
@@ -1359,7 +1359,7 @@ export default function Settings() {
                           <TableRow key={role.id}>
                             <TableCell className="font-medium">
                               <div className="flex items-center gap-2">
-                                <UserCog className="h-4 w-4 text-purple-600" />
+                                <UserCog className="h-4 w-4 text-[#5B2C93]" />
                                 {role.name}
                               </div>
                             </TableCell>
@@ -1370,7 +1370,7 @@ export default function Settings() {
                               <Badge variant="secondary" className="capitalize">{role.accessLevel}</Badge>
                             </TableCell>
                             <TableCell>
-                              <Badge variant={role.isActive ? "default" : "secondary"} className={role.isActive ? "bg-green-100 text-green-800" : ""}>
+                              <Badge variant={role.isActive ? "default" : "secondary"} className={role.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
                                 {role.isActive ? "Active" : "Inactive"}
                               </Badge>
                             </TableCell>
@@ -1379,14 +1379,14 @@ export default function Settings() {
                                 <Edit2 className="h-4 w-4" />
                               </Button>
                               <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this role type?")) deleteRoleTypeMutation.mutate({ id: role.id }); }}>
-                                <Trash2 className="h-4 w-4 text-red-500" />
+                                <Trash2 className="h-4 w-4 text-[#FF6B6B]" />
                               </Button>
                             </TableCell>
                           </TableRow>
                         ))}
                         {(!roleTypesData || roleTypesData.length === 0) && (
                           <TableRow>
-                            <TableCell colSpan={5} className="text-center text-muted-foreground py-8">No role types found. Add one to get started.</TableCell>
+                            <TableCell colSpan={5} className="text-center text-[#6B6B6B] py-8">No role types found. Add one to get started.</TableCell>
                           </TableRow>
                         )}
                       </TableBody>
@@ -1399,10 +1399,10 @@ export default function Settings() {
                 {/* ============================================================================ */}
                 <TabsContent value="approvers">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Approvers</h3>
+                    <h3 className="text-lg font-medium">Approvers</h3>
                     <Dialog open={newApproverOpen} onOpenChange={setNewApproverOpen}>
                       <DialogTrigger asChild>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                        <Button size="sm" className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                           <Plus className="h-4 w-4" /> Add Approver
                         </Button>
                       </DialogTrigger>
@@ -1462,7 +1462,7 @@ export default function Settings() {
                           </div>
                           <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => setNewApproverOpen(false)}>Cancel</Button>
-                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createApproverMutation.isPending}>
+                            <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={createApproverMutation.isPending}>
                               {createApproverMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                               Create
                             </Button>
@@ -1473,7 +1473,7 @@ export default function Settings() {
                   </div>
                   {approversLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                      <Loader2 className="h-6 w-6 animate-spin text-[#5B2C93]" />
                     </div>
                   ) : (
                     <Table>
@@ -1492,10 +1492,10 @@ export default function Settings() {
                           <TableRow key={approver.id}>
                             <TableCell className="font-medium">
                               <div className="flex items-center gap-2">
-                                <Users2 className="h-4 w-4 text-purple-600" />
+                                <Users2 className="h-4 w-4 text-[#5B2C93]" />
                                 <div>
                                   <div>{approver.userName || "Unknown"}</div>
-                                  <div className="text-xs text-muted-foreground">{approver.userEmail}</div>
+                                  <div className="text-xs text-[#6B6B6B]">{approver.userEmail}</div>
                                 </div>
                               </div>
                             </TableCell>
@@ -1507,11 +1507,11 @@ export default function Settings() {
                               <div className="flex gap-1">
                                 {approver.canApproveEmergency && <Badge variant="destructive" className="text-xs">Emergency</Badge>}
                                 {approver.canApproveVIP && <Badge variant="secondary" className="text-xs">VIP</Badge>}
-                                {!approver.canApproveEmergency && !approver.canApproveVIP && <span className="text-muted-foreground">Standard</span>}
+                                {!approver.canApproveEmergency && !approver.canApproveVIP && <span className="text-[#6B6B6B]">Standard</span>}
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge variant={approver.isActive ? "default" : "secondary"} className={approver.isActive ? "bg-green-100 text-green-800" : ""}>
+                              <Badge variant={approver.isActive ? "default" : "secondary"} className={approver.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
                                 {approver.isActive ? "Active" : "Inactive"}
                               </Badge>
                             </TableCell>
@@ -1520,14 +1520,14 @@ export default function Settings() {
                                 <Edit2 className="h-4 w-4" />
                               </Button>
                               <Button variant="ghost" size="icon" onClick={() => { if(confirm("Delete this approver?")) deleteApproverMutation.mutate({ id: approver.id }); }}>
-                                <Trash2 className="h-4 w-4 text-red-500" />
+                                <Trash2 className="h-4 w-4 text-[#FF6B6B]" />
                               </Button>
                             </TableCell>
                           </TableRow>
                         ))}
                         {(!approversData || approversData.length === 0) && (
                           <TableRow>
-                            <TableCell colSpan={6} className="text-center text-muted-foreground py-8">No approvers found. Add one to get started.</TableCell>
+                            <TableCell colSpan={6} className="text-center text-[#6B6B6B] py-8">No approvers found. Add one to get started.</TableCell>
                           </TableRow>
                         )}
                       </TableBody>
@@ -1538,10 +1538,10 @@ export default function Settings() {
                 {/* Countries Tab */}
                 <TabsContent value="countries">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Countries</h3>
+                    <h3 className="text-lg font-medium">Countries</h3>
                     <Dialog open={newCountryOpen} onOpenChange={setNewCountryOpen}>
                       <DialogTrigger asChild>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                        <Button size="sm" className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                           <Plus className="h-4 w-4" /> Add Country
                         </Button>
                       </DialogTrigger>
@@ -1573,7 +1573,7 @@ export default function Settings() {
                           </div>
                           <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => setNewCountryOpen(false)}>Cancel</Button>
-                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createCountryMutation.isPending}>
+                            <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={createCountryMutation.isPending}>
                               {createCountryMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                               Create
                             </Button>
@@ -1584,7 +1584,7 @@ export default function Settings() {
                   </div>
                   {countriesLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                      <Loader2 className="h-6 w-6 animate-spin text-[#5B2C93]" />
                     </div>
                   ) : (
                     <Table>
@@ -1610,7 +1610,7 @@ export default function Settings() {
                               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditingCountry(country); setEditCountryOpen(true); }}>
                                 <Edit2 className="h-4 w-4" />
                               </Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => { if(confirm("Delete this country?")) deleteCountryMutation.mutate({ id: country.id }); }}>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-[#FF6B6B]" onClick={() => { if(confirm("Delete this country?")) deleteCountryMutation.mutate({ id: country.id }); }}>
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </TableCell>
@@ -1624,10 +1624,10 @@ export default function Settings() {
                 {/* Regions Tab */}
                 <TabsContent value="regions">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Regions</h3>
+                    <h3 className="text-lg font-medium">Regions</h3>
                     <Dialog open={newRegionOpen} onOpenChange={setNewRegionOpen}>
                       <DialogTrigger asChild>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                        <Button size="sm" className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                           <Plus className="h-4 w-4" /> Add Region
                         </Button>
                       </DialogTrigger>
@@ -1658,7 +1658,7 @@ export default function Settings() {
                           </div>
                           <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => setNewRegionOpen(false)}>Cancel</Button>
-                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createRegionMutation.isPending}>
+                            <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={createRegionMutation.isPending}>
                               {createRegionMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                               Create
                             </Button>
@@ -1669,7 +1669,7 @@ export default function Settings() {
                   </div>
                   {regionsLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                      <Loader2 className="h-6 w-6 animate-spin text-[#5B2C93]" />
                     </div>
                   ) : (
                     <Table>
@@ -1695,7 +1695,7 @@ export default function Settings() {
                               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditingRegion(region); setEditRegionOpen(true); }}>
                                 <Edit2 className="h-4 w-4" />
                               </Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => { if(confirm("Delete this region?")) deleteRegionMutation.mutate({ id: region.id }); }}>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-[#FF6B6B]" onClick={() => { if(confirm("Delete this region?")) deleteRegionMutation.mutate({ id: region.id }); }}>
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </TableCell>
@@ -1709,10 +1709,10 @@ export default function Settings() {
                 {/* Cities Tab */}
                 <TabsContent value="cities">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Cities</h3>
+                    <h3 className="text-lg font-medium">Cities</h3>
                     <Dialog open={newCityOpen} onOpenChange={setNewCityOpen}>
                       <DialogTrigger asChild>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 gap-2">
+                        <Button size="sm" className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                           <Plus className="h-4 w-4" /> Add City
                         </Button>
                       </DialogTrigger>
@@ -1747,7 +1747,7 @@ export default function Settings() {
                           </div>
                           <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => setNewCityOpen(false)}>Cancel</Button>
-                            <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={createCityMutation.isPending || !newCity.countryId}>
+                            <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={createCityMutation.isPending || !newCity.countryId}>
                               {createCityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                               Create
                             </Button>
@@ -1758,7 +1758,7 @@ export default function Settings() {
                   </div>
                   {citiesLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+                      <Loader2 className="h-6 w-6 animate-spin text-[#5B2C93]" />
                     </div>
                   ) : (
                     <Table>
@@ -1784,7 +1784,7 @@ export default function Settings() {
                               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditingCity(city); setEditCityOpen(true); }}>
                                 <Edit2 className="h-4 w-4" />
                               </Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => { if(confirm("Delete this city?")) deleteCityMutation.mutate({ id: city.id }); }}>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-[#FF6B6B]" onClick={() => { if(confirm("Delete this city?")) deleteCityMutation.mutate({ id: city.id }); }}>
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </TableCell>
@@ -1860,7 +1860,7 @@ export default function Settings() {
                         <Plus className="h-4 w-4 mr-2" /> Add Company
                       </Button>
                     </div>
-                    <p className="text-sm text-muted-foreground">Manage contractor, sub-contractor, and client companies with their contract details.</p>
+                    <p className="text-sm text-[#6B6B6B]">Manage contractor, sub-contractor, and client companies with their contract details.</p>
                     
                     {companiesLoading ? (
                       <div className="flex items-center justify-center py-8">
@@ -1887,7 +1887,7 @@ export default function Settings() {
                               <TableCell>
                                 <div>
                                   <div className="font-medium">{company.name}</div>
-                                  {company.nameAr && <div className="text-sm text-muted-foreground" dir="rtl">{company.nameAr}</div>}
+                                  {company.nameAr && <div className="text-sm text-[#6B6B6B]" dir="rtl">{company.nameAr}</div>}
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -1907,7 +1907,7 @@ export default function Settings() {
                                 {company.contactPersonName ? (
                                   <div className="text-sm">
                                     <div>{company.contactPersonName}</div>
-                                    {company.contactPersonEmail && <div className="text-muted-foreground">{company.contactPersonEmail}</div>}
+                                    {company.contactPersonEmail && <div className="text-[#6B6B6B]">{company.contactPersonEmail}</div>}
                                   </div>
                                 ) : "-"}
                               </TableCell>
@@ -1921,14 +1921,14 @@ export default function Settings() {
                                   <Edit2 className="h-4 w-4" />
                                 </Button>
                                 <Button variant="ghost" size="icon" onClick={() => { if(confirm("Deactivate this company?")) deleteCompanyMutation.mutate({ id: company.id }); }}>
-                                  <Trash2 className="h-4 w-4 text-red-500" />
+                                  <Trash2 className="h-4 w-4 text-[#FF6B6B]" />
                                 </Button>
                               </TableCell>
                             </TableRow>
                           ))}
                           {filteredCompanies.length === 0 && (
                             <TableRow>
-                              <TableCell colSpan={8} className="text-center text-muted-foreground py-8">No companies found. Add one to get started.</TableCell>
+                              <TableCell colSpan={8} className="text-center text-[#6B6B6B] py-8">No companies found. Add one to get started.</TableCell>
                             </TableRow>
                           )}
                         </TableBody>
@@ -2244,7 +2244,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditMainActivityOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateMainActivityMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateMainActivityMutation.isPending}>
                     {updateMainActivityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2330,7 +2330,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditSubActivityOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateSubActivityMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateSubActivityMutation.isPending}>
                     {updateSubActivityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2398,7 +2398,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditRoleTypeOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateRoleTypeMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateRoleTypeMutation.isPending}>
                     {updateRoleTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2471,7 +2471,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditApproverOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateApproverMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateApproverMutation.isPending}>
                     {updateApproverMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2505,7 +2505,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditCountryOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateCountryMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateCountryMutation.isPending}>
                     {updateCountryMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2539,7 +2539,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditRegionOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateRegionMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateRegionMutation.isPending}>
                     {updateRegionMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2582,7 +2582,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditCityOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateCityMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateCityMutation.isPending}>
                     {updateCityMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2622,7 +2622,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditSiteTypeOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateSiteTypeMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateSiteTypeMutation.isPending}>
                     {updateSiteTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2662,7 +2662,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditZoneTypeOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateZoneTypeMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateZoneTypeMutation.isPending}>
                     {updateZoneTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2702,7 +2702,7 @@ export default function Settings() {
                 )}
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setEditAreaTypeOpen(false)}>Cancel</Button>
-                  <Button type="submit" className="bg-purple-600 hover:bg-purple-700" disabled={updateAreaTypeMutation.isPending}>
+                  <Button type="submit" className="bg-[#5B2C93] hover:bg-[#5B2C93]" disabled={updateAreaTypeMutation.isPending}>
                     {updateAreaTypeMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Save
                   </Button>
@@ -2716,7 +2716,7 @@ export default function Settings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5 text-purple-600" />
+                <Bell className="h-5 w-5 text-[#5B2C93]" />
                 Notification Preferences
               </CardTitle>
               <CardDescription>Configure system-wide alert settings.</CardDescription>
@@ -2725,7 +2725,7 @@ export default function Settings() {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label className="text-base">Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Send critical alerts via email to admins.</p>
+                  <p className="text-sm text-[#6B6B6B]">Send critical alerts via email to admins.</p>
                 </div>
                 <Switch defaultChecked />
               </div>
@@ -2733,7 +2733,7 @@ export default function Settings() {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label className="text-base">SMS Alerts</Label>
-                  <p className="text-sm text-muted-foreground">Enable SMS for P1/P2 incidents.</p>
+                  <p className="text-sm text-[#6B6B6B]">Enable SMS for P1/P2 incidents.</p>
                 </div>
                 <Switch defaultChecked />
               </div>
@@ -2741,7 +2741,7 @@ export default function Settings() {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label className="text-base">Daily Digest</Label>
-                  <p className="text-sm text-muted-foreground">Send a summary report at 08:00 AM.</p>
+                  <p className="text-sm text-[#6B6B6B]">Send a summary report at 08:00 AM.</p>
                 </div>
                 <Switch />
               </div>
@@ -2753,7 +2753,7 @@ export default function Settings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-purple-600" />
+                <Shield className="h-5 w-5 text-[#5B2C93]" />
                 Security Policies
               </CardTitle>
               <CardDescription>Enforce authentication and access rules.</CardDescription>
@@ -2784,9 +2784,9 @@ export default function Settings() {
                 <Label htmlFor="mfa">Enforce Multi-Factor Authentication (MFA)</Label>
               </div>
             </CardContent>
-            <CardFooter className="bg-muted/20 border-t px-6 py-4">
+            <CardFooter className="bg-[#F5F5F5]/20 border-t px-6 py-4">
               <Button 
-                className="ml-auto bg-purple-600 hover:bg-purple-700"
+                className="ml-auto bg-[#5B2C93] hover:bg-[#5B2C93]"
                 onClick={handleSaveSecuritySettings}
                 disabled={updateSecurityMutation.isPending}
               >

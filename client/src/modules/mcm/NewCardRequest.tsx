@@ -185,11 +185,11 @@ export default function NewCardRequest() {
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.companyType", "Company Type")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.companyType", "Company Type")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <Select value={formData.companyType} onValueChange={(v) => updateField("companyType", v)}>
-                  <SelectTrigger className="h-10 border-gray-300">
+                  <SelectTrigger className="h-10 border-[#E0E0E0]">
                     <SelectValue placeholder={t("mcm.selectCompanyType", "Select company type")} />
                   </SelectTrigger>
                   <SelectContent>
@@ -201,14 +201,14 @@ export default function NewCardRequest() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
+                <Label className="text-sm font-medium text-[#2C2C2C]">
                   {t("mcm.company", "Company")}
                 </Label>
                 <Select 
                   value={formData.companyId?.toString()} 
                   onValueChange={(v) => updateField("companyId", parseInt(v))}
                 >
-                  <SelectTrigger className="h-10 border-gray-300">
+                  <SelectTrigger className="h-10 border-[#E0E0E0]">
                     <SelectValue placeholder={t("mcm.selectCompany", "Select company")} />
                   </SelectTrigger>
                   <SelectContent>
@@ -230,11 +230,11 @@ export default function NewCardRequest() {
           <div className="space-y-6">
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.idType", "ID Type")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.idType", "ID Type")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <Select value={formData.idType} onValueChange={(v) => updateField("idType", v)}>
-                  <SelectTrigger className="h-10 border-gray-300">
+                  <SelectTrigger className="h-10 border-[#E0E0E0]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -247,51 +247,51 @@ export default function NewCardRequest() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.idNumber", "ID Number")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.idNumber", "ID Number")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <Input
                   value={formData.idNumber}
                   onChange={(e) => updateField("idNumber", e.target.value)}
-                  className="h-10 border-gray-300"
+                  className="h-10 border-[#E0E0E0]"
                   placeholder={t("mcm.enterIdNumber", "Enter ID number")}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.idExpiryDate", "ID Expiry Date")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.idExpiryDate", "ID Expiry Date")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <Input
                   type="date"
                   value={formData.idExpiryDate}
                   onChange={(e) => updateField("idExpiryDate", e.target.value)}
-                  className="h-10 border-gray-300"
+                  className="h-10 border-[#E0E0E0]"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.fullName", "Full Name (English)")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.fullName", "Full Name (English)")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <Input
                   value={formData.fullName}
                   onChange={(e) => updateField("fullName", e.target.value)}
-                  className="h-10 border-gray-300"
+                  className="h-10 border-[#E0E0E0]"
                   placeholder={t("mcm.enterFullName", "Enter full name")}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
+                <Label className="text-sm font-medium text-[#2C2C2C]">
                   {t("mcm.fullNameAr", "Full Name (Arabic)")}
                 </Label>
                 <Input
                   value={formData.fullNameAr}
                   onChange={(e) => updateField("fullNameAr", e.target.value)}
-                  className="h-10 border-gray-300"
+                  className="h-10 border-[#E0E0E0]"
                   dir="rtl"
                   placeholder={t("mcm.enterFullNameAr", "أدخل الاسم الكامل")}
                 />
@@ -300,35 +300,35 @@ export default function NewCardRequest() {
 
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.birthDate", "Date of Birth")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.birthDate", "Date of Birth")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <Input
                   type="date"
                   value={formData.birthDate}
                   onChange={(e) => updateField("birthDate", e.target.value)}
-                  className="h-10 border-gray-300"
+                  className="h-10 border-[#E0E0E0]"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.nationality", "Nationality")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.nationality", "Nationality")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <Input
                   value={formData.nationality}
                   onChange={(e) => updateField("nationality", e.target.value)}
-                  className="h-10 border-gray-300"
+                  className="h-10 border-[#E0E0E0]"
                   placeholder={t("mcm.enterNationality", "Enter nationality")}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.gender", "Gender")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.gender", "Gender")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <Select value={formData.gender} onValueChange={(v) => updateField("gender", v)}>
-                  <SelectTrigger className="h-10 border-gray-300">
+                  <SelectTrigger className="h-10 border-[#E0E0E0]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -341,38 +341,38 @@ export default function NewCardRequest() {
 
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.mobile", "Mobile Number")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.mobile", "Mobile Number")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <Input
                   value={formData.mobile}
                   onChange={(e) => updateField("mobile", e.target.value)}
-                  className="h-10 border-gray-300"
+                  className="h-10 border-[#E0E0E0]"
                   placeholder="+966 5XX XXX XXXX"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
+                <Label className="text-sm font-medium text-[#2C2C2C]">
                   {t("mcm.email", "Email")}
                 </Label>
                 <Input
                   type="email"
                   value={formData.email}
                   onChange={(e) => updateField("email", e.target.value)}
-                  className="h-10 border-gray-300"
+                  className="h-10 border-[#E0E0E0]"
                   placeholder="email@example.com"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
+                <Label className="text-sm font-medium text-[#2C2C2C]">
                   {t("mcm.profession", "Profession")}
                 </Label>
                 <Input
                   value={formData.profession}
                   onChange={(e) => updateField("profession", e.target.value)}
-                  className="h-10 border-gray-300"
+                  className="h-10 border-[#E0E0E0]"
                   placeholder={t("mcm.enterProfession", "Enter profession")}
                 />
               </div>
@@ -385,35 +385,35 @@ export default function NewCardRequest() {
           <div className="space-y-6">
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.photo", "Photo")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.photo", "Photo")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#0f62fe] transition-colors cursor-pointer">
-                  <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-500">{t("mcm.uploadPhoto", "Click to upload photo")}</p>
-                  <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 5MB</p>
+                <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-6 text-center hover:border-[#5B2C93] transition-colors cursor-pointer">
+                  <Upload className="h-8 w-8 mx-auto text-[#B0B0B0] mb-2" />
+                  <p className="text-sm text-[#6B6B6B]">{t("mcm.uploadPhoto", "Click to upload photo")}</p>
+                  <p className="text-xs text-[#B0B0B0] mt-1">PNG, JPG up to 5MB</p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  {t("mcm.idDocument", "ID Document")} <span className="text-red-500">*</span>
+                <Label className="text-sm font-medium text-[#2C2C2C]">
+                  {t("mcm.idDocument", "ID Document")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#0f62fe] transition-colors cursor-pointer">
-                  <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-500">{t("mcm.uploadIdDocument", "Click to upload ID document")}</p>
-                  <p className="text-xs text-gray-400 mt-1">PDF, PNG, JPG up to 10MB</p>
+                <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-6 text-center hover:border-[#5B2C93] transition-colors cursor-pointer">
+                  <Upload className="h-8 w-8 mx-auto text-[#B0B0B0] mb-2" />
+                  <p className="text-sm text-[#6B6B6B]">{t("mcm.uploadIdDocument", "Click to upload ID document")}</p>
+                  <p className="text-xs text-[#B0B0B0] mt-1">PDF, PNG, JPG up to 10MB</p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
+                <Label className="text-sm font-medium text-[#2C2C2C]">
                   {t("mcm.contract", "Contract/Letter")}
                 </Label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#0f62fe] transition-colors cursor-pointer">
-                  <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-500">{t("mcm.uploadContract", "Click to upload contract")}</p>
-                  <p className="text-xs text-gray-400 mt-1">PDF up to 10MB</p>
+                <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-6 text-center hover:border-[#5B2C93] transition-colors cursor-pointer">
+                  <Upload className="h-8 w-8 mx-auto text-[#B0B0B0] mb-2" />
+                  <p className="text-sm text-[#6B6B6B]">{t("mcm.uploadContract", "Click to upload contract")}</p>
+                  <p className="text-xs text-[#B0B0B0] mt-1">PDF up to 10MB</p>
                 </div>
               </div>
             </div>
@@ -424,7 +424,7 @@ export default function NewCardRequest() {
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="font-medium text-gray-800">
+              <h3 className="font-medium text-[#2C2C2C]">
                 {t("mcm.accessLevels", "Access Levels")}
               </h3>
               <Button
@@ -440,9 +440,9 @@ export default function NewCardRequest() {
             </div>
 
             {formData.accessLevels.length === 0 ? (
-              <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-                <Shield className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                <p className="text-gray-500 mb-4">{t("mcm.noAccessLevels", "No access levels added yet")}</p>
+              <div className="text-center py-12 bg-[#F5F5F5] rounded-lg border-2 border-dashed border-[#E0E0E0]">
+                <Shield className="h-12 w-12 mx-auto text-[#B0B0B0] mb-4" />
+                <p className="text-[#6B6B6B] mb-4">{t("mcm.noAccessLevels", "No access levels added yet")}</p>
                 <Button variant="outline" onClick={addAccessLevel} className="gap-2">
                   <Plus className="h-4 w-4" />
                   {t("mcm.addFirstAccessLevel", "Add First Access Level")}
@@ -451,7 +451,7 @@ export default function NewCardRequest() {
             ) : (
               <div className="space-y-4">
                 {formData.accessLevels.map((level, index) => (
-                  <div key={index} className="bg-gray-50 rounded-lg p-4 border">
+                  <div key={index} className="bg-[#F5F5F5] rounded-lg p-4 border">
                     <div className="flex items-center justify-between mb-4">
                       <Badge variant="outline" className="bg-white">
                         {t("mcm.accessLevel", "Access Level")} #{index + 1}
@@ -461,21 +461,21 @@ export default function NewCardRequest() {
                         variant="ghost"
                         size="sm"
                         onClick={() => removeAccessLevel(index)}
-                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        className="text-[#FF6B6B] hover:text-[#FF6B6B] hover:bg-[#FFE5E5]"
                       >
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium text-gray-700">
-                          {t("mcm.site", "Site")} <span className="text-red-500">*</span>
+                        <Label className="text-sm font-medium text-[#2C2C2C]">
+                          {t("mcm.site", "Site")} <span className="text-[#FF6B6B]">*</span>
                         </Label>
                         <Select
                           value={level.siteId?.toString()}
                           onValueChange={(v) => updateAccessLevel(index, "siteId", parseInt(v))}
                         >
-                          <SelectTrigger className="h-10 border-gray-300 bg-white">
+                          <SelectTrigger className="h-10 border-[#E0E0E0] bg-white">
                             <SelectValue placeholder={t("mcm.selectSite", "Select site")} />
                           </SelectTrigger>
                           <SelectContent>
@@ -489,14 +489,14 @@ export default function NewCardRequest() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium text-gray-700">
-                          {t("mcm.accessLevel", "Access Level")} <span className="text-red-500">*</span>
+                        <Label className="text-sm font-medium text-[#2C2C2C]">
+                          {t("mcm.accessLevel", "Access Level")} <span className="text-[#FF6B6B]">*</span>
                         </Label>
                         <Select
                           value={level.accessLevelId?.toString()}
                           onValueChange={(v) => updateAccessLevel(index, "accessLevelId", parseInt(v))}
                         >
-                          <SelectTrigger className="h-10 border-gray-300 bg-white">
+                          <SelectTrigger className="h-10 border-[#E0E0E0] bg-white">
                             <SelectValue placeholder={t("mcm.selectAccessLevel", "Select access level")} />
                           </SelectTrigger>
                           <SelectContent>
@@ -510,14 +510,14 @@ export default function NewCardRequest() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium text-gray-700">
+                        <Label className="text-sm font-medium text-[#2C2C2C]">
                           {t("mcm.countryCode", "Country")}
                         </Label>
                         <Select
                           value={level.countryCode}
                           onValueChange={(v) => updateAccessLevel(index, "countryCode", v)}
                         >
-                          <SelectTrigger className="h-10 border-gray-300 bg-white">
+                          <SelectTrigger className="h-10 border-[#E0E0E0] bg-white">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -538,29 +538,29 @@ export default function NewCardRequest() {
       case "review":
         return (
           <div className="space-y-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-medium text-blue-800 mb-2">
+            <div className="bg-[#E8DCF5] border border-[#5B2C93] rounded-lg p-4">
+              <h3 className="font-medium text-[#5B2C93] mb-2">
                 {t("mcm.reviewSubmission", "Review Your Submission")}
               </h3>
-              <p className="text-sm text-blue-600">
+              <p className="text-sm text-[#5B2C93]">
                 {t("mcm.reviewDescription", "Please review all information before submitting your card request.")}
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-6">
               {/* Company Info Summary */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
+              <div className="bg-[#F5F5F5] rounded-lg p-4">
+                <h4 className="font-medium text-[#2C2C2C] mb-3 flex items-center gap-2">
                   <Building2 className="h-4 w-4" />
                   {t("mcm.companyInfo", "Company Information")}
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">{t("mcm.companyType", "Company Type")}:</span>
+                    <span className="text-[#6B6B6B]">{t("mcm.companyType", "Company Type")}:</span>
                     <span className="font-medium">{formData.companyType || "-"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">{t("mcm.company", "Company")}:</span>
+                    <span className="text-[#6B6B6B]">{t("mcm.company", "Company")}:</span>
                     <span className="font-medium">
                       {companies?.find((c: any) => c.id === formData.companyId)?.name || "-"}
                     </span>
@@ -569,26 +569,26 @@ export default function NewCardRequest() {
               </div>
 
               {/* Personal Info Summary */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
+              <div className="bg-[#F5F5F5] rounded-lg p-4">
+                <h4 className="font-medium text-[#2C2C2C] mb-3 flex items-center gap-2">
                   <User className="h-4 w-4" />
                   {t("mcm.personalInfo", "Personal Information")}
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">{t("mcm.fullName", "Full Name")}:</span>
+                    <span className="text-[#6B6B6B]">{t("mcm.fullName", "Full Name")}:</span>
                     <span className="font-medium">{formData.fullName || "-"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">{t("mcm.idNumber", "ID Number")}:</span>
+                    <span className="text-[#6B6B6B]">{t("mcm.idNumber", "ID Number")}:</span>
                     <span className="font-medium">{formData.idNumber || "-"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">{t("mcm.nationality", "Nationality")}:</span>
+                    <span className="text-[#6B6B6B]">{t("mcm.nationality", "Nationality")}:</span>
                     <span className="font-medium">{formData.nationality || "-"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">{t("mcm.mobile", "Mobile")}:</span>
+                    <span className="text-[#6B6B6B]">{t("mcm.mobile", "Mobile")}:</span>
                     <span className="font-medium">{formData.mobile || "-"}</span>
                   </div>
                 </div>
@@ -596,8 +596,8 @@ export default function NewCardRequest() {
             </div>
 
             {/* Access Levels Summary */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h4 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
+            <div className="bg-[#F5F5F5] rounded-lg p-4">
+              <h4 className="font-medium text-[#2C2C2C] mb-3 flex items-center gap-2">
                 <Shield className="h-4 w-4" />
                 {t("mcm.accessLevels", "Access Levels")} ({formData.accessLevels.length})
               </h4>
@@ -614,7 +614,7 @@ export default function NewCardRequest() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">{t("mcm.noAccessLevelsAdded", "No access levels added")}</p>
+                <p className="text-sm text-[#6B6B6B]">{t("mcm.noAccessLevelsAdded", "No access levels added")}</p>
               )}
             </div>
           </div>
@@ -626,14 +626,14 @@ export default function NewCardRequest() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#f4f4f4] font-poppins">
+    <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#F5F5F5]">
       {/* Top Toolbar - IBM Maximo Style */}
-      <div className="bg-[#161616] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
+      <div className="bg-[#2C2C2C] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
         <div className="flex items-center gap-6">
-          <span className="font-bold tracking-wide text-white uppercase">
+          <span className="font-medium tracking-wide text-white uppercase">
             {t("mcm.createNewCardRequest", "CREATE NEW CARD REQUEST")}
           </span>
-          <div className="h-5 w-px bg-gray-600" />
+          <div className="h-5 w-px bg-[#6B6B6B]" />
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
@@ -674,11 +674,11 @@ export default function NewCardRequest() {
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs text-gray-300">
-          <span className="uppercase tracking-wider text-[10px] font-medium text-gray-400">
+        <div className="flex items-center gap-2 text-xs text-[#B0B0B0]">
+          <span className="uppercase tracking-wider text-[10px] font-medium text-[#B0B0B0]">
             {t("common.loggedInAs", "LOGGED IN AS:")}
           </span>
-          <span className="font-bold text-white flex items-center gap-1 text-xs">
+          <span className="font-medium text-white flex items-center gap-1 text-xs">
             {user?.name?.toUpperCase() || "USER"} <User className="h-3 w-3" />
           </span>
         </div>
@@ -690,34 +690,34 @@ export default function NewCardRequest() {
           <Button
             variant="ghost"
             size="sm"
-            className="text-[#0f62fe] hover:bg-[#0f62fe]/10 gap-2 font-medium h-8"
+            className="text-[#5B2C93] hover:bg-[#5B2C93]/10 gap-2 font-medium h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             {t("common.returnToList", "Return to List")}
           </Button>
         </Link>
-        <div className="h-6 w-px bg-gray-200" />
+        <div className="h-6 w-px bg-[#E0E0E0]" />
 
-        <div className="ml-auto flex items-center gap-6 text-gray-500">
+        <div className="ml-auto flex items-center gap-6 text-[#6B6B6B]">
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase font-bold text-gray-400">
+            <span className="text-xs uppercase font-medium text-[#B0B0B0]">
               {t("mcm.requestType", "Request Type")}
             </span>
             <Badge
               variant="outline"
-              className="bg-purple-50 text-purple-700 border-purple-200 rounded-sm px-2 py-0.5"
+              className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] rounded-sm px-2 py-0.5"
             >
               <CreditCard className="h-3 w-3 mr-1" />
               {t("mcm.newCard", "NEW CARD")}
             </Badge>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase font-bold text-gray-400">
+            <span className="text-xs uppercase font-medium text-[#B0B0B0]">
               {t("common.status", "Status")}
             </span>
             <Badge
               variant="outline"
-              className="bg-blue-50 text-blue-700 border-blue-200 rounded-sm px-2 py-0.5"
+              className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] rounded-sm px-2 py-0.5"
             >
               {t("common.new", "NEW")}
             </Badge>
@@ -729,8 +729,8 @@ export default function NewCardRequest() {
       <div className="flex-1 overflow-hidden flex">
         {/* Left Navigation Tabs (Vertical) */}
         <div className="w-64 bg-white border-r flex flex-col overflow-y-auto">
-          <div className="p-4 border-b bg-gray-50">
-            <h3 className="font-bold text-gray-800 text-sm uppercase">
+          <div className="p-4 border-b bg-[#F5F5F5]">
+            <h3 className="font-medium text-[#2C2C2C] text-sm uppercase">
               {t("mcm.sections", "Sections")}
             </h3>
           </div>
@@ -747,14 +747,14 @@ export default function NewCardRequest() {
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-colors",
                     isActive
-                      ? "bg-[#e5f6ff] text-[#0043ce] border-l-4 border-[#0f62fe]"
-                      : "text-gray-600 hover:bg-gray-100 border-l-4 border-transparent"
+                      ? "bg-[#E8F9F8] text-[#3D1C5E] border-l-4 border-[#5B2C93]"
+                      : "text-[#6B6B6B] hover:bg-[#F5F5F5] border-l-4 border-transparent"
                   )}
                 >
                   <Icon
                     className={cn(
                       "h-4 w-4 flex-shrink-0",
-                      isActive ? "text-[#0f62fe]" : "text-gray-400"
+                      isActive ? "text-[#5B2C93]" : "text-[#B0B0B0]"
                     )}
                   />
                   <span className="flex-1 text-left truncate">{getSectionName(section)}</span>
@@ -768,7 +768,7 @@ export default function NewCardRequest() {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Section Header */}
           <div className="bg-white border-b px-6 py-4">
-            <h2 className="text-lg font-semibold text-gray-800">
+            <h2 className="text-lg font-medium text-[#2C2C2C]">
               {getSectionName(SECTIONS.find(s => s.code === currentSection)!)}
             </h2>
           </div>
@@ -784,7 +784,7 @@ export default function NewCardRequest() {
               variant="ghost"
               onClick={goToPrevSection}
               disabled={currentSectionIndex === 0}
-              className="text-gray-600"
+              className="text-[#6B6B6B]"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               {t("common.previous", "Previous")}
@@ -803,7 +803,7 @@ export default function NewCardRequest() {
                   <Button
                     onClick={() => handleSubmit(false)}
                     disabled={createMutation.isPending}
-                    className="bg-[#0f62fe] hover:bg-[#0043ce] gap-2"
+                    className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2"
                   >
                     {createMutation.isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -816,7 +816,7 @@ export default function NewCardRequest() {
               ) : (
                 <Button
                   onClick={goToNextSection}
-                  className="bg-[#0f62fe] hover:bg-[#0043ce] gap-2"
+                  className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2"
                 >
                   {t("common.next", "Next")}
                   <ArrowLeft className="h-4 w-4 rotate-180" />

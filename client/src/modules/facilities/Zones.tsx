@@ -273,39 +273,39 @@ export default function Zones() {
 
   const getSecurityLevelBadge = (level: string) => {
     const styles: Record<string, string> = {
-      critical: "border-red-200 text-red-700 bg-red-50",
-      high: "border-orange-200 text-orange-700 bg-orange-50",
-      medium: "border-yellow-200 text-yellow-700 bg-yellow-50",
-      low: "border-green-200 text-green-700 bg-green-50",
+      critical: "border-[#FF6B6B] text-[#FF6B6B] bg-[#FFE5E5]",
+      high: "border-[#FFB84D] text-[#FFB84D] bg-[#FFF4E5]",
+      medium: "border-[#FFB84D] text-[#FFB84D] bg-[#FFF4E5]",
+      low: "border-[#4ECDC4] text-[#4ECDC4] bg-[#E8F9F8]",
     };
-    return styles[level] || "border-gray-200 text-gray-700 bg-gray-50";
+    return styles[level] || "border-[#E0E0E0] text-[#2C2C2C] bg-[#F5F5F5]";
   };
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      active: "bg-green-100 text-green-800",
-      inactive: "bg-gray-100 text-gray-800",
-      maintenance: "bg-yellow-100 text-yellow-800",
+      active: "bg-[#E8F9F8] text-[#4ECDC4]",
+      inactive: "bg-[#F5F5F5] text-[#2C2C2C]",
+      maintenance: "bg-[#FFF4E5] text-[#FFB84D]",
     };
-    return styles[status] || "bg-gray-100 text-gray-800";
+    return styles[status] || "bg-[#F5F5F5] text-[#2C2C2C]";
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#f4f4f4] font-poppins">
+    <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#F5F5F5]">
       {view === "list" ? (
         <div className="flex flex-col h-full p-4 space-y-4">
           {/* SAP Fiori Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="icon" className="h-8 w-8 -ml-2">
-                <ArrowLeft className="h-5 w-5 text-gray-600" />
+                <ArrowLeft className="h-5 w-5 text-[#6B6B6B]" />
               </Button>
-              <h1 className="text-xl font-bold text-gray-900">Security Zones</h1>
-              <ChevronDown className="h-5 w-5 text-blue-600" />
+              <h1 className="text-xl font-medium text-[#2C2C2C]">Security Zones</h1>
+              <ChevronDown className="h-5 w-5 text-[#5B2C93]" />
             </div>
             <div className="flex items-center gap-2">
               {canCreate && (
-                <Button onClick={handleCreate} className="h-9 bg-[#0f62fe] hover:bg-blue-700 text-white px-4 flex items-center gap-2">
+                <Button onClick={handleCreate} className="h-9 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white px-4 flex items-center gap-2">
                   <Plus className="h-4 w-4" /> Add Zone
                 </Button>
               )}
@@ -313,26 +313,26 @@ export default function Zones() {
           </div>
 
           {/* Filter Bar */}
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-[#E0E0E0] space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-bold text-lg text-gray-800">Standard</h2>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600">
+              <h2 className="font-medium text-lg text-[#2C2C2C]">Standard</h2>
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-[#5B2C93]">
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
                 <Input 
                   placeholder="Search" 
-                  className="pl-9 h-9 bg-gray-50 border-gray-200"
+                  className="pl-9 h-9 bg-[#F5F5F5] border-[#E0E0E0]"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <Select value={siteFilter} onValueChange={setSiteFilter}>
-                <SelectTrigger className="h-9 bg-gray-50 border-gray-200">
+                <SelectTrigger className="h-9 bg-[#F5F5F5] border-[#E0E0E0]">
                   <SelectValue placeholder="Site: All" />
                 </SelectTrigger>
                 <SelectContent>
@@ -343,7 +343,7 @@ export default function Zones() {
                 </SelectContent>
               </Select>
               <Select>
-                <SelectTrigger className="h-9 bg-gray-50 border-gray-200">
+                <SelectTrigger className="h-9 bg-[#F5F5F5] border-[#E0E0E0]">
                   <SelectValue placeholder="Zone Type: All" />
                 </SelectTrigger>
                 <SelectContent>
@@ -354,63 +354,63 @@ export default function Zones() {
                 </SelectContent>
               </Select>
               <div className="flex gap-2">
-                <Button className="h-9 bg-[#0f62fe] hover:bg-blue-700 text-white px-4">Go</Button>
-                <Button variant="ghost" className="h-9 text-[#0f62fe] font-medium" onClick={() => { setSearchTerm(""); setSiteFilter("all"); }}>Clear Filters</Button>
+                <Button className="h-9 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white px-4">Go</Button>
+                <Button variant="ghost" className="h-9 text-[#5B2C93] font-medium" onClick={() => { setSearchTerm(""); setSiteFilter("all"); }}>Clear Filters</Button>
               </div>
             </div>
           </div>
 
           {/* Data Table */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden">
-            <div className="p-2 border-b border-gray-200 flex items-center justify-between bg-gray-50/50">
+          <div className="bg-white rounded-lg shadow-sm border border-[#E0E0E0] flex-1 flex flex-col overflow-hidden">
+            <div className="p-2 border-b border-[#E0E0E0] flex items-center justify-between bg-[#F5F5F5]/50">
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-gray-700 text-sm ml-2">Zones ({filteredZones.length})</h3>
+                <h3 className="font-medium text-[#2C2C2C] text-sm ml-2">Zones ({filteredZones.length})</h3>
                 <Separator orientation="vertical" className="h-4 mx-2" />
                 <div className="relative w-48">
-                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400" />
+                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-[#B0B0B0]" />
                   <Input 
                     placeholder="Quick search" 
-                    className="pl-7 h-7 text-xs bg-white border-gray-200"
+                    className="pl-7 h-7 text-xs bg-white border-[#E0E0E0]"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                {canCreate && <Button variant="ghost" size="sm" className="h-7 text-[#0f62fe] font-medium hover:bg-blue-50" onClick={handleCreate}>Create</Button>}
+                {canCreate && <Button variant="ghost" size="sm" className="h-7 text-[#5B2C93] font-medium hover:bg-[#E8DCF5]" onClick={handleCreate}>Create</Button>}
                 <Separator orientation="vertical" className="h-4 mx-1" />
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#0f62fe]"><Download className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#0f62fe]"><Filter className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#0f62fe]"><Settings className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#0f62fe]"><Maximize2 className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#5B2C93]"><Download className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#5B2C93]"><Filter className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#5B2C93]"><Settings className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#5B2C93]"><Maximize2 className="h-4 w-4" /></Button>
               </div>
             </div>
 
             <div className="flex-1 overflow-auto">
               {isLoading ? (
                 <div className="flex items-center justify-center h-full">
-                  <Loader2 className="h-8 w-8 animate-spin text-[#0f62fe]" />
+                  <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
-                    <TableRow className="hover:bg-transparent border-b border-gray-200">
+                    <TableRow className="hover:bg-transparent border-b border-[#E0E0E0]">
                       <TableHead className="w-[40px]"><Checkbox /></TableHead>
-                      <TableHead className="font-bold text-gray-800 text-xs uppercase tracking-wider">Zone Code</TableHead>
-                      <TableHead className="font-bold text-gray-800 text-xs uppercase tracking-wider">Zone Name</TableHead>
-                      <TableHead className="font-bold text-gray-800 text-xs uppercase tracking-wider">Parent Site</TableHead>
-                      <TableHead className="font-bold text-gray-800 text-xs uppercase tracking-wider">Type</TableHead>
-                      <TableHead className="font-bold text-gray-800 text-xs uppercase tracking-wider">Security Level</TableHead>
-                      <TableHead className="font-bold text-gray-800 text-xs uppercase tracking-wider">Locked</TableHead>
-                      <TableHead className="font-bold text-gray-800 text-xs uppercase tracking-wider">Status</TableHead>
-                      <TableHead className="font-bold text-gray-800 text-xs uppercase tracking-wider">Created Date</TableHead>
+                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Zone Code</TableHead>
+                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Zone Name</TableHead>
+                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Parent Site</TableHead>
+                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Type</TableHead>
+                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Security Level</TableHead>
+                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Locked</TableHead>
+                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Status</TableHead>
+                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Created Date</TableHead>
                       <TableHead className="w-[100px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredZones.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={10} className="text-center py-8 text-gray-500">
+                        <TableCell colSpan={10} className="text-center py-8 text-[#6B6B6B]">
                           No zones found. Click "Add Zone" to create one.
                         </TableCell>
                       </TableRow>
@@ -418,14 +418,14 @@ export default function Zones() {
                       filteredZones.map((zone) => (
                         <TableRow 
                           key={zone.id} 
-                          className={`hover:bg-blue-50/50 border-b border-gray-100 ${canUpdate ? 'cursor-pointer' : ''} group`} 
+                          className={`hover:bg-[#E8DCF5]/50 border-b border-[#E0E0E0] ${canUpdate ? 'cursor-pointer' : ''} group`} 
                           onClick={() => canUpdate && handleEdit(zone)}
                         >
                           <TableCell onClick={(e) => e.stopPropagation()}><Checkbox /></TableCell>
-                          <TableCell className="font-medium text-[#0f62fe]">{zone.code}</TableCell>
-                          <TableCell className="text-gray-700">{zone.name}</TableCell>
-                          <TableCell className="text-gray-600">{zone.siteCode || "-"}</TableCell>
-                          <TableCell className="text-gray-600">{zone.zoneTypeName || "-"}</TableCell>
+                          <TableCell className="font-medium text-[#5B2C93]">{zone.code}</TableCell>
+                          <TableCell className="text-[#2C2C2C]">{zone.name}</TableCell>
+                          <TableCell className="text-[#6B6B6B]">{zone.siteCode || "-"}</TableCell>
+                          <TableCell className="text-[#6B6B6B]">{zone.zoneTypeName || "-"}</TableCell>
                           <TableCell>
                             <Badge variant="outline" className={getSecurityLevelBadge(zone.securityLevel)}>
                               {zone.securityLevel}
@@ -433,11 +433,11 @@ export default function Zones() {
                           </TableCell>
                           <TableCell>
                             {zone.isLocked ? (
-                              <Badge variant="destructive" className="bg-red-100 text-red-800 hover:bg-red-100">
+                              <Badge variant="destructive" className="bg-[#FFE5E5] text-[#FF6B6B] hover:bg-[#FFE5E5]">
                                 <Lock className="h-3 w-3 mr-1" /> Locked
                               </Badge>
                             ) : (
-                              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                              <Badge variant="outline" className="bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]">
                                 <Unlock className="h-3 w-3 mr-1" /> Open
                               </Badge>
                             )}
@@ -447,14 +447,14 @@ export default function Zones() {
                               {zone.status}
                             </span>
                           </TableCell>
-                          <TableCell className="text-gray-600 text-xs">{formatDate(zone.createdAt)}</TableCell>
+                          <TableCell className="text-[#6B6B6B] text-xs">{formatDate(zone.createdAt)}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-1">
                               {canLock && (
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
-                                  className={`h-7 w-7 ${zone.isLocked ? "text-green-600 hover:text-green-700" : "text-red-600 hover:text-red-700"}`}
+                                  className={`h-7 w-7 ${zone.isLocked ? "text-[#4ECDC4] hover:text-[#4ECDC4]" : "text-[#FF6B6B] hover:text-[#FF6B6B]"}`}
                                   onClick={(e) => handleLock(zone, e)}
                                   title={zone.isLocked ? "Unlock Zone" : "Lock Zone"}
                                 >
@@ -465,13 +465,13 @@ export default function Zones() {
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
-                                  className="h-7 w-7 text-gray-400 hover:text-red-600"
+                                  className="h-7 w-7 text-[#B0B0B0] hover:text-[#FF6B6B]"
                                   onClick={(e) => handleDelete(zone.id, e)}
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               )}
-                              {canUpdate && <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-[#0f62fe]" />}
+                              {canUpdate && <ArrowRight className="h-4 w-4 text-[#B0B0B0] group-hover:text-[#5B2C93]" />}
                             </div>
                           </TableCell>
                         </TableRow>
@@ -486,12 +486,12 @@ export default function Zones() {
       ) : (
         <div className="flex flex-col h-full">
           {/* IBM Maximo Style Header for Form */}
-          <div className="bg-[#161616] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
+          <div className="bg-[#2C2C2C] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
             <div className="flex items-center gap-6">
-              <span className="font-bold tracking-wide text-white uppercase">
+              <span className="font-medium tracking-wide text-white uppercase">
                 {selectedZone ? "EDIT ZONE" : "CREATE NEW ZONE"}
               </span>
-              <div className="h-5 w-px bg-gray-600" />
+              <div className="h-5 w-px bg-[#6B6B6B]" />
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20 rounded-none">
                   <Search className="h-4 w-4" />
@@ -517,9 +517,9 @@ export default function Zones() {
                 </Button>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-xs text-gray-300">
-              <span className="uppercase tracking-wider text-[10px] font-medium text-gray-400">LOGGED IN AS:</span>
-              <span className="font-bold text-white flex items-center gap-1 text-xs">
+            <div className="flex items-center gap-2 text-xs text-[#B0B0B0]">
+              <span className="uppercase tracking-wider text-[10px] font-medium text-[#B0B0B0]">LOGGED IN AS:</span>
+              <span className="font-medium text-white flex items-center gap-1 text-xs">
                 ADMIN USER <User className="h-3 w-3" />
               </span>
             </div>
@@ -527,14 +527,14 @@ export default function Zones() {
 
           {/* Secondary Toolbar */}
           <div className="bg-white border-b px-4 py-3 flex items-center gap-4 text-sm shadow-sm">
-            <Button onClick={() => { setView("list"); resetForm(); }} variant="ghost" size="sm" className="text-[#0f62fe] hover:bg-[#0f62fe]/10 gap-2 font-medium h-8">
+            <Button onClick={() => { setView("list"); resetForm(); }} variant="ghost" size="sm" className="text-[#5B2C93] hover:bg-[#5B2C93]/10 gap-2 font-medium h-8">
               <ArrowLeft className="h-4 w-4" />
               Return to List
             </Button>
             <div className="flex-1" />
             <Button 
               onClick={handleSave}
-              className="bg-[#0f62fe] hover:bg-blue-700 text-white px-4 h-8"
+              className="bg-[#5B2C93] hover:bg-[#3D1C5E] text-white px-4 h-8"
               disabled={createMutation.isPending || updateMutation.isPending}
             >
               {(createMutation.isPending || updateMutation.isPending) ? (
@@ -550,16 +550,16 @@ export default function Zones() {
             <div className="max-w-5xl mx-auto space-y-6">
               {/* Basic Information */}
               <div className="bg-white border shadow-sm rounded-sm">
-                <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
-                  <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                    <ShieldAlert className="h-5 w-5 text-[#0f62fe]" /> Zone Details
+                <div className="px-6 py-4 border-b bg-[#F5F5F5] flex justify-between items-center">
+                  <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
+                    <ShieldAlert className="h-5 w-5 text-[#5B2C93]" /> Zone Details
                   </h2>
-                  <span className="text-xs text-gray-500 italic">* Indicates mandatory field</span>
+                  <span className="text-xs text-[#6B6B6B] italic">* Indicates mandatory field</span>
                 </div>
                 
                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Parent Site <span className="text-red-600">*</span></Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Parent Site <span className="text-[#FF6B6B]">*</span></Label>
                     <Select 
                       value={formData.siteId}
                       onValueChange={(value) => setFormData({ ...formData, siteId: value })}
@@ -573,7 +573,7 @@ export default function Zones() {
                     </Select>
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Zone Type</Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Zone Type</Label>
                     <Select 
                       value={formData.zoneTypeId}
                       onValueChange={(value) => setFormData({ ...formData, zoneTypeId: value })}
@@ -588,7 +588,7 @@ export default function Zones() {
                   </div>
                   
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Zone Code <span className="text-red-600">*</span></Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Zone Code <span className="text-[#FF6B6B]">*</span></Label>
                     <Input 
                       value={formData.code}
                       onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -596,7 +596,7 @@ export default function Zones() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Zone Name <span className="text-red-600">*</span></Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Zone Name <span className="text-[#FF6B6B]">*</span></Label>
                     <Input 
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -605,7 +605,7 @@ export default function Zones() {
                   </div>
                   
                   <div className="space-y-1 md:col-span-2">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Description</Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Description</Label>
                     <Textarea 
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -615,7 +615,7 @@ export default function Zones() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Security Level</Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Security Level</Label>
                     <Select 
                       value={formData.securityLevel}
                       onValueChange={(value: "low" | "medium" | "high" | "critical") => setFormData({ ...formData, securityLevel: value })}
@@ -630,7 +630,7 @@ export default function Zones() {
                     </Select>
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Access Policy</Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Access Policy</Label>
                     <Select 
                       value={formData.accessPolicy}
                       onValueChange={(value: "open" | "supervised" | "restricted" | "prohibited") => setFormData({ ...formData, accessPolicy: value })}
@@ -646,7 +646,7 @@ export default function Zones() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Max Capacity</Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Max Capacity</Label>
                     <Input 
                       type="number"
                       value={formData.maxCapacity}
@@ -655,7 +655,7 @@ export default function Zones() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Status</Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Status</Label>
                     <Select 
                       value={formData.status}
                       onValueChange={(value: "active" | "inactive" | "maintenance") => setFormData({ ...formData, status: value })}
@@ -673,19 +673,19 @@ export default function Zones() {
 
               {/* Security Controls */}
               <div className="bg-white border shadow-sm rounded-sm">
-                <div className="px-6 py-4 border-b bg-gray-50">
-                  <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                    <Lock className="h-5 w-5 text-[#0f62fe]" /> Security Controls
+                <div className="px-6 py-4 border-b bg-[#F5F5F5]">
+                  <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
+                    <Lock className="h-5 w-5 text-[#5B2C93]" /> Security Controls
                   </h2>
                 </div>
                 
                 <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <Video className="h-5 w-5 text-gray-500" />
+                      <Video className="h-5 w-5 text-[#6B6B6B]" />
                       <div>
-                        <p className="font-medium text-gray-800">CCTV Monitoring</p>
-                        <p className="text-xs text-gray-500">24/7 video surveillance</p>
+                        <p className="font-medium text-[#2C2C2C]">CCTV Monitoring</p>
+                        <p className="text-xs text-[#6B6B6B]">24/7 video surveillance</p>
                       </div>
                     </div>
                     <Switch 
@@ -699,10 +699,10 @@ export default function Zones() {
                   
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <Fingerprint className="h-5 w-5 text-gray-500" />
+                      <Fingerprint className="h-5 w-5 text-[#6B6B6B]" />
                       <div>
-                        <p className="font-medium text-gray-800">Biometric Access</p>
-                        <p className="text-xs text-gray-500">Fingerprint/Face required</p>
+                        <p className="font-medium text-[#2C2C2C]">Biometric Access</p>
+                        <p className="text-xs text-[#6B6B6B]">Fingerprint/Face required</p>
                       </div>
                     </div>
                     <Switch 
@@ -716,10 +716,10 @@ export default function Zones() {
                   
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <ShieldAlert className="h-5 w-5 text-gray-500" />
+                      <ShieldAlert className="h-5 w-5 text-[#6B6B6B]" />
                       <div>
-                        <p className="font-medium text-gray-800">Badge Required</p>
-                        <p className="text-xs text-gray-500">Access card needed</p>
+                        <p className="font-medium text-[#2C2C2C]">Badge Required</p>
+                        <p className="text-xs text-[#6B6B6B]">Access card needed</p>
                       </div>
                     </div>
                     <Switch 
@@ -733,10 +733,10 @@ export default function Zones() {
                   
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <Lock className="h-5 w-5 text-gray-500" />
+                      <Lock className="h-5 w-5 text-[#6B6B6B]" />
                       <div>
-                        <p className="font-medium text-gray-800">Emergency Lock</p>
-                        <p className="text-xs text-gray-500">Auto-lock on emergency</p>
+                        <p className="font-medium text-[#2C2C2C]">Emergency Lock</p>
+                        <p className="text-xs text-[#6B6B6B]">Auto-lock on emergency</p>
                       </div>
                     </div>
                     <Switch 
@@ -750,10 +750,10 @@ export default function Zones() {
                   
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <ShieldAlert className="h-5 w-5 text-gray-500" />
+                      <ShieldAlert className="h-5 w-5 text-[#6B6B6B]" />
                       <div>
-                        <p className="font-medium text-gray-800">Fire Suppression</p>
-                        <p className="text-xs text-gray-500">Auto fire system</p>
+                        <p className="font-medium text-[#2C2C2C]">Fire Suppression</p>
+                        <p className="text-xs text-[#6B6B6B]">Auto fire system</p>
                       </div>
                     </div>
                     <Switch 
@@ -767,10 +767,10 @@ export default function Zones() {
                   
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <Thermometer className="h-5 w-5 text-gray-500" />
+                      <Thermometer className="h-5 w-5 text-[#6B6B6B]" />
                       <div>
-                        <p className="font-medium text-gray-800">Temp Monitoring</p>
-                        <p className="text-xs text-gray-500">Environmental sensors</p>
+                        <p className="font-medium text-[#2C2C2C]">Temp Monitoring</p>
+                        <p className="text-xs text-[#6B6B6B]">Environmental sensors</p>
                       </div>
                     </div>
                     <Switch 

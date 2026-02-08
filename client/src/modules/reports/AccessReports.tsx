@@ -46,32 +46,32 @@ export default function AccessReports() {
       value: requestStats?.totalRequests || 0, 
       icon: FileText, 
       trend: "+12%",
-      color: "text-purple-600",
-      bgColor: "bg-purple-50"
+      color: "text-[#5B2C93]",
+      bgColor: "bg-[#E8DCF5]"
     },
     { 
       title: "Approved", 
       value: requestStats?.approved || 0, 
       icon: CheckCircle2, 
       trend: "+8%",
-      color: "text-green-600",
-      bgColor: "bg-green-50"
+      color: "text-[#4ECDC4]",
+      bgColor: "bg-[#E8F9F8]"
     },
     { 
       title: "Pending", 
       value: (requestStats?.pendingL1 || 0) + (requestStats?.pendingManual || 0) + (requestStats?.pendingApproval || 0), 
       icon: Clock, 
       trend: "-5%",
-      color: "text-amber-600",
-      bgColor: "bg-amber-50"
+      color: "text-[#FFB84D]",
+      bgColor: "bg-[#FFF4E5]"
     },
     { 
       title: "Rejected", 
       value: requestStats?.rejected || 0, 
       icon: XCircle, 
       trend: "-2%",
-      color: "text-red-600",
-      bgColor: "bg-red-50"
+      color: "text-[#FF6B6B]",
+      bgColor: "bg-[#FFE5E5]"
     },
   ];
 
@@ -87,11 +87,11 @@ export default function AccessReports() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "approved":
-        return <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Approved</Badge>;
+        return <Badge className="bg-[#E8F9F8] text-[#4ECDC4] hover:bg-[#E8F9F8]">Approved</Badge>;
       case "pending":
-        return <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">Pending</Badge>;
+        return <Badge className="bg-[#FFF4E5] text-[#FFB84D] hover:bg-[#FFF4E5]">Pending</Badge>;
       case "rejected":
-        return <Badge className="bg-red-100 text-red-700 hover:bg-red-100">Rejected</Badge>;
+        return <Badge className="bg-[#FFE5E5] text-[#FF6B6B] hover:bg-[#FFE5E5]">Rejected</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -102,8 +102,8 @@ export default function AccessReports() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Access Reports</h1>
-          <p className="text-gray-500 mt-1">Analyze access request patterns and trends</p>
+          <h1 className="text-2xl font-medium text-[#2C2C2C]">Access Reports</h1>
+          <p className="text-[#6B6B6B] mt-1">Analyze access request patterns and trends</p>
         </div>
         <div className="flex gap-3">
           <Select value={dateRange} onValueChange={setDateRange}>
@@ -122,7 +122,7 @@ export default function AccessReports() {
             <Filter className="h-4 w-4 mr-2" />
             Filters
           </Button>
-          <Button className="bg-purple-600 hover:bg-purple-700">
+          <Button className="bg-[#5B2C93] hover:bg-[#5B2C93]">
             <Download className="h-4 w-4 mr-2" />
             Export Report
           </Button>
@@ -136,11 +136,11 @@ export default function AccessReports() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">{stat.title}</p>
-                  <p className="text-3xl font-bold mt-1">{stat.value}</p>
+                  <p className="text-sm text-[#6B6B6B]">{stat.title}</p>
+                  <p className="text-3xl font-medium mt-1">{stat.value}</p>
                   <div className="flex items-center mt-2">
-                    <TrendingUp className={`h-4 w-4 mr-1 ${stat.trend.startsWith('+') ? 'text-green-500' : 'text-red-500'}`} />
-                    <span className={`text-sm ${stat.trend.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+                    <TrendingUp className={`h-4 w-4 mr-1 ${stat.trend.startsWith('+') ? 'text-[#4ECDC4]' : 'text-[#FF6B6B]'}`} />
+                    <span className={`text-sm ${stat.trend.startsWith('+') ? 'text-[#4ECDC4]' : 'text-[#FF6B6B]'}`}>
                       {stat.trend} vs last period
                     </span>
                   </div>
@@ -162,7 +162,7 @@ export default function AccessReports() {
             <CardDescription>Distribution of access requests across sites</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-center justify-center text-gray-400">
+            <div className="h-64 flex items-center justify-center text-[#B0B0B0]">
               <div className="text-center">
                 <BarChart3 className="h-12 w-12 mx-auto mb-2 opacity-50" />
                 <p>Chart visualization coming soon</p>
@@ -177,7 +177,7 @@ export default function AccessReports() {
             <CardDescription>Daily request volume over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-center justify-center text-gray-400">
+            <div className="h-64 flex items-center justify-center text-[#B0B0B0]">
               <div className="text-center">
                 <TrendingUp className="h-12 w-12 mx-auto mb-2 opacity-50" />
                 <p>Chart visualization coming soon</p>

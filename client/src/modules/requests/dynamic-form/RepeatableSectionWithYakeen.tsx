@@ -322,7 +322,7 @@ export function RepeatableSectionWithYakeen({
       {/* Header with add button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-gray-800">{getName()}</h3>
+          <h3 className="font-medium text-[#2C2C2C]">{getName()}</h3>
           <Badge variant="outline" className="text-xs">
             {items.length} / {maxItems}
           </Badge>
@@ -339,7 +339,7 @@ export function RepeatableSectionWithYakeen({
                 variant="outline"
                 size="sm"
                 disabled={disabled || items.length >= maxItems}
-                className="gap-1 border-[#0f62fe] text-[#0f62fe] hover:bg-[#0f62fe]/5"
+                className="gap-1 border-[#5B2C93] text-[#5B2C93] hover:bg-[#5B2C93]/5"
               >
                 <Plus className="h-4 w-4" />
                 {t("common.add", "Add")} {getItemLabel()}
@@ -347,7 +347,7 @@ export function RepeatableSectionWithYakeen({
             </DialogTrigger>
             <DialogContent className="sm:max-w-[700px]">
               <DialogHeader>
-                <DialogTitle className="flex items-center gap-2 text-[#0f62fe]">
+                <DialogTitle className="flex items-center gap-2 text-[#5B2C93]">
                   <ShieldCheck className="h-6 w-6" />
                   {manualEntry || yakeenFailed 
                     ? t("visitors.manualEntry", "Manual Visitor Entry")
@@ -366,8 +366,8 @@ export function RepeatableSectionWithYakeen({
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-bold text-gray-600 uppercase">
-                          {t("visitors.idType", "ID Type")} <span className="text-red-600">*</span>
+                        <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                          {t("visitors.idType", "ID Type")} <span className="text-[#FF6B6B]">*</span>
                         </Label>
                         <Select 
                           value={visitorIdType} 
@@ -389,8 +389,8 @@ export function RepeatableSectionWithYakeen({
                         </Select>
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-bold text-gray-600 uppercase">
-                          {t("visitors.idNumber", "ID Number")} <span className="text-red-600">*</span>
+                        <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                          {t("visitors.idNumber", "ID Number")} <span className="text-[#FF6B6B]">*</span>
                         </Label>
                         <div className="flex gap-2">
                           <Input
@@ -418,8 +418,8 @@ export function RepeatableSectionWithYakeen({
                               className={cn(
                                 "min-w-[120px]",
                                 isValidated 
-                                  ? "bg-green-600 hover:bg-green-600" 
-                                  : "bg-[#0f62fe] hover:bg-[#0f62fe]/90"
+                                  ? "bg-[#4ECDC4] hover:bg-[#4ECDC4]" 
+                                  : "bg-[#5B2C93] hover:bg-[#5B2C93]/90"
                               )}
                             >
                               {isValidating ? (
@@ -446,12 +446,12 @@ export function RepeatableSectionWithYakeen({
                     
                     {/* Yakeen Failed Alert */}
                     {yakeenFailed && !manualEntry && (
-                      <Alert className="bg-amber-50 border-amber-200">
-                        <XCircle className="h-4 w-4 text-amber-600" />
-                        <AlertTitle className="text-amber-800">
+                      <Alert className="bg-[#FFF4E5] border-[#FFB84D]">
+                        <XCircle className="h-4 w-4 text-[#FFB84D]" />
+                        <AlertTitle className="text-[#FFB84D]">
                           {t("visitors.cannotIdentify", "Cannot identify through Yakeen")}
                         </AlertTitle>
-                        <AlertDescription className="text-amber-700">
+                        <AlertDescription className="text-[#FFB84D]">
                           <p className="mb-2">
                             {t("visitors.yakeenFailedDesc", "The ID could not be verified through Yakeen. You can enter the visitor details manually.")}
                           </p>
@@ -460,7 +460,7 @@ export function RepeatableSectionWithYakeen({
                             variant="outline" 
                             size="sm"
                             onClick={() => setManualEntry(true)}
-                            className="border-amber-400 text-amber-700 hover:bg-amber-100"
+                            className="border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFF4E5]"
                           >
                             <Edit3 className="h-4 w-4 mr-2" />
                             {t("visitors.enterManually", "Enter Manually")}
@@ -471,12 +471,12 @@ export function RepeatableSectionWithYakeen({
                     
                     {/* Passport Notice */}
                     {visitorIdType === "passport" && !manualEntry && !yakeenFailed && (
-                      <Alert className="bg-blue-50 border-blue-200">
-                        <Globe className="h-4 w-4 text-blue-600" />
-                        <AlertTitle className="text-blue-800">
+                      <Alert className="bg-[#E8DCF5] border-[#5B2C93]">
+                        <Globe className="h-4 w-4 text-[#5B2C93]" />
+                        <AlertTitle className="text-[#5B2C93]">
                           {t("visitors.passportVerification", "Passport Verification")}
                         </AlertTitle>
-                        <AlertDescription className="text-blue-700">
+                        <AlertDescription className="text-[#5B2C93]">
                           {t("visitors.passportNotice", "Passport numbers are alphanumeric. Yakeen verification is not available for passports - manual entry will be required.")}
                         </AlertDescription>
                       </Alert>
@@ -484,12 +484,12 @@ export function RepeatableSectionWithYakeen({
                     
                     {/* Verified Success Alert */}
                     {isValidated && !manualEntry && (
-                      <Alert className="bg-green-50 border-green-200">
-                        <CheckCircle2 className="h-4 w-4 text-green-600" />
-                        <AlertTitle className="text-green-800">
+                      <Alert className="bg-[#E8F9F8] border-[#4ECDC4]">
+                        <CheckCircle2 className="h-4 w-4 text-[#4ECDC4]" />
+                        <AlertTitle className="text-[#4ECDC4]">
                           {t("visitors.identityVerified", "Identity Verified")}
                         </AlertTitle>
-                        <AlertDescription className="text-green-700">
+                        <AlertDescription className="text-[#4ECDC4]">
                           {t("visitors.verifiedDesc", "Visitor identity has been verified via Yakeen.")}
                         </AlertDescription>
                       </Alert>
@@ -501,26 +501,26 @@ export function RepeatableSectionWithYakeen({
                     <>
                       <Separator />
                       <div className="space-y-4">
-                        <h4 className="font-bold text-gray-700 flex items-center gap-2">
+                        <h4 className="font-medium text-[#2C2C2C] flex items-center gap-2">
                           <User className="h-4 w-4" />
                           {t("visitors.verifiedDetails", "Verified Details")}
                         </h4>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <Label className="text-xs text-gray-500 uppercase">{t("visitors.fullName", "Full Name")}</Label>
-                            <Input value={validatedData.full_name} readOnly className="bg-gray-50 font-medium" />
+                            <Label className="text-xs text-[#6B6B6B] uppercase">{t("visitors.fullName", "Full Name")}</Label>
+                            <Input value={validatedData.full_name} readOnly className="bg-[#F5F5F5] font-medium" />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs text-gray-500 uppercase">{t("visitors.nationality", "Nationality")}</Label>
-                            <Input value={validatedData.nationality} readOnly className="bg-gray-50" />
+                            <Label className="text-xs text-[#6B6B6B] uppercase">{t("visitors.nationality", "Nationality")}</Label>
+                            <Input value={validatedData.nationality} readOnly className="bg-[#F5F5F5]" />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs text-gray-500 uppercase">{t("visitors.phone", "Phone")}</Label>
-                            <Input value={validatedData.phone || ""} readOnly className="bg-gray-50" />
+                            <Label className="text-xs text-[#6B6B6B] uppercase">{t("visitors.phone", "Phone")}</Label>
+                            <Input value={validatedData.phone || ""} readOnly className="bg-[#F5F5F5]" />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs text-gray-500 uppercase">{t("visitors.dateOfBirth", "Date of Birth")}</Label>
-                            <Input value={validatedData.dateOfBirth || ""} readOnly className="bg-gray-50" />
+                            <Label className="text-xs text-[#6B6B6B] uppercase">{t("visitors.dateOfBirth", "Date of Birth")}</Label>
+                            <Input value={validatedData.dateOfBirth || ""} readOnly className="bg-[#F5F5F5]" />
                           </div>
                         </div>
                       </div>
@@ -532,14 +532,14 @@ export function RepeatableSectionWithYakeen({
                     <>
                       <Separator />
                       <div className="space-y-4">
-                        <h4 className="font-bold text-gray-700 flex items-center gap-2">
+                        <h4 className="font-medium text-[#2C2C2C] flex items-center gap-2">
                           <Edit3 className="h-4 w-4" />
                           {t("visitors.manualEntry", "Manual Entry")}
                         </h4>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-gray-600 uppercase">
-                              {t("visitors.fullName", "Full Name")} <span className="text-red-600">*</span>
+                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
+                              {t("visitors.fullName", "Full Name")} <span className="text-[#FF6B6B]">*</span>
                             </Label>
                             <Input
                               placeholder={t("visitors.enterFullName", "Enter full name")}
@@ -548,7 +548,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-gray-600 uppercase">
+                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
                               {t("visitors.nationality", "Nationality")}
                             </Label>
                             <Input
@@ -558,7 +558,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-gray-600 uppercase">
+                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
                               {t("visitors.company", "Company")}
                             </Label>
                             <Input
@@ -568,7 +568,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-gray-600 uppercase">
+                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
                               {t("visitors.jobTitle", "Job Title")}
                             </Label>
                             <Input
@@ -578,7 +578,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-gray-600 uppercase">
+                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
                               {t("visitors.mobile", "Mobile")}
                             </Label>
                             <Input
@@ -588,7 +588,7 @@ export function RepeatableSectionWithYakeen({
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <Label className="text-xs font-bold text-gray-600 uppercase">
+                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
                               {t("visitors.email", "Email")}
                             </Label>
                             <Input
@@ -617,7 +617,7 @@ export function RepeatableSectionWithYakeen({
                   </Button>
                   <Button 
                     type="submit" 
-                    className="bg-[#0f62fe] hover:bg-[#0f62fe]/90" 
+                    className="bg-[#5B2C93] hover:bg-[#5B2C93]/90" 
                     disabled={!isValidated && !manualEntry && !yakeenFailed}
                   >
                     <Plus className="h-4 w-4 mr-2" />
@@ -644,9 +644,9 @@ export function RepeatableSectionWithYakeen({
 
       {/* Items list */}
       {items.length === 0 ? (
-        <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
-          <User className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-          <p className="text-gray-500 mb-4">
+        <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-8 text-center">
+          <User className="h-12 w-12 mx-auto text-[#B0B0B0] mb-3" />
+          <p className="text-[#6B6B6B] mb-4">
             {t("common.noItemsYet", "No {{item}} added yet", { item: getItemLabel().toLowerCase() })}
           </p>
           <Button
@@ -677,13 +677,13 @@ export function RepeatableSectionWithYakeen({
               >
                 <Card className={cn(
                   "transition-shadow",
-                  isExpanded && "shadow-md border-[#0f62fe]/30",
+                  isExpanded && "shadow-md border-[#5B2C93]/30",
                   isVerified && "border-l-4 border-l-green-500"
                 )}>
                   <CollapsibleTrigger asChild>
-                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-[#F5F5F5] transition-colors">
                       <div className="flex items-center gap-3">
-                        <GripVertical className="h-4 w-4 text-gray-400 cursor-grab" />
+                        <GripVertical className="h-4 w-4 text-[#B0B0B0] cursor-grab" />
                         <div className="flex-1 flex items-center gap-2">
                           <Badge variant="secondary" className="text-xs">
                             #{index + 1}
@@ -692,13 +692,13 @@ export function RepeatableSectionWithYakeen({
                             {summary}
                           </CardTitle>
                           {isVerified && (
-                            <Badge className="bg-green-100 text-green-700 text-xs">
+                            <Badge className="bg-[#E8F9F8] text-[#4ECDC4] text-xs">
                               <CheckCircle2 className="h-3 w-3 mr-1" />
                               {t("visitors.verified", "Verified")}
                             </Badge>
                           )}
                           {item.manualEntry && (
-                            <Badge variant="outline" className="text-xs text-amber-600 border-amber-300">
+                            <Badge variant="outline" className="text-xs text-[#FFB84D] border-[#FFB84D]">
                               <Edit3 className="h-3 w-3 mr-1" />
                               {t("visitors.manual", "Manual")}
                             </Badge>
@@ -723,7 +723,7 @@ export function RepeatableSectionWithYakeen({
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="h-7 w-7 text-[#FF6B6B] hover:text-[#FF6B6B] hover:bg-[#FFE5E5]"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleRemoveItem(index);
@@ -734,9 +734,9 @@ export function RepeatableSectionWithYakeen({
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                           {isExpanded ? (
-                            <ChevronUp className="h-4 w-4 text-gray-500" />
+                            <ChevronUp className="h-4 w-4 text-[#6B6B6B]" />
                           ) : (
-                            <ChevronDown className="h-4 w-4 text-gray-500" />
+                            <ChevronDown className="h-4 w-4 text-[#6B6B6B]" />
                           )}
                         </div>
                       </div>
@@ -774,7 +774,7 @@ export function RepeatableSectionWithYakeen({
 
       {/* Min/max items hint */}
       {(minItems > 0 || maxItems < 100) && (
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-[#6B6B6B]">
           {minItems > 0 && maxItems < 100
             ? t("common.itemsRange", "{{min}} to {{max}} items required", { min: minItems, max: maxItems })
             : minItems > 0

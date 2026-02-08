@@ -88,29 +88,29 @@ export default function CardDirectory() {
       title: t("mcm.stats.activeCards", "Active Cards"),
       value: stats?.activeCards || 0,
       icon: CreditCard,
-      color: "text-green-500",
-      bgColor: "bg-green-500/10",
+      color: "text-[#4ECDC4]",
+      bgColor: "bg-[#E8F9F8]/10",
     },
     {
       title: t("mcm.stats.pendingRequests", "Pending Requests"),
       value: stats?.pendingRequests || 0,
       icon: FileText,
-      color: "text-blue-500",
-      bgColor: "bg-blue-500/10",
+      color: "text-[#5B2C93]",
+      bgColor: "bg-[#E8DCF5]/10",
     },
     {
       title: t("mcm.stats.expiringSoon", "Expiring Soon"),
       value: stats?.expiringSoon || 0,
       icon: Clock,
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-500/10",
+      color: "text-[#FFB84D]",
+      bgColor: "bg-[#FFF4E5]/10",
     },
     {
       title: t("mcm.stats.blockedCards", "Blocked Cards"),
       value: stats?.blockedCards || 0,
       icon: AlertTriangle,
-      color: "text-red-500",
-      bgColor: "bg-red-500/10",
+      color: "text-[#FF6B6B]",
+      bgColor: "bg-[#FF6B6B]/10",
     },
   ];
 
@@ -127,10 +127,10 @@ export default function CardDirectory() {
 
   const getCompanyTypeBadge = (type: string) => {
     const colors: Record<string, string> = {
-      centre3: "bg-blue-500/10 text-blue-500",
-      contractor: "bg-orange-500/10 text-orange-500",
-      subcontractor: "bg-purple-500/10 text-purple-500",
-      client: "bg-green-500/10 text-green-500",
+      centre3: "bg-[#E8DCF5]/10 text-[#5B2C93]",
+      contractor: "bg-[#FFF4E5]0/10 text-[#FFB84D]",
+      subcontractor: "bg-[#E8DCF5]0/10 text-[#5B2C93]",
+      client: "bg-[#E8F9F8]/10 text-[#4ECDC4]",
     };
     return (
       <span className={`px-2 py-1 rounded text-xs font-medium ${colors[type] || ""}`}>
@@ -160,8 +160,8 @@ export default function CardDirectory() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{t("mcm.title", "Magnetic Card Management")}</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-medium">{t("mcm.title", "Magnetic Card Management")}</h1>
+          <p className="text-[#6B6B6B]">
             {t("mcm.subtitle", "Manage access cards for employees and contractors")}
           </p>
         </div>
@@ -180,8 +180,8 @@ export default function CardDirectory() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  <p className="text-3xl font-bold mt-1">
+                  <p className="text-sm text-[#6B6B6B]">{stat.title}</p>
+                  <p className="text-3xl font-medium mt-1">
                     {statsLoading ? "..." : stat.value}
                   </p>
                 </div>
@@ -199,7 +199,7 @@ export default function CardDirectory() {
         <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
               <Input
                 placeholder={t("mcm.searchCards", "Search by name, ID, or card number...")}
                 value={search}
@@ -287,7 +287,7 @@ export default function CardDirectory() {
                               setShowBlockDialog(true);
                             }}
                           >
-                            <Ban className="h-4 w-4 text-red-500" />
+                            <Ban className="h-4 w-4 text-[#FF6B6B]" />
                           </Button>
                         )}
                         {card.status === "blocked" && (
@@ -296,7 +296,7 @@ export default function CardDirectory() {
                             size="icon"
                             onClick={() => handleUnblock(card.id)}
                           >
-                            <RefreshCw className="h-4 w-4 text-green-500" />
+                            <RefreshCw className="h-4 w-4 text-[#4ECDC4]" />
                           </Button>
                         )}
                       </div>
@@ -305,7 +305,7 @@ export default function CardDirectory() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8 text-[#6B6B6B]">
                     {t("mcm.noCardsFound", "No cards found")}
                   </TableCell>
                 </TableRow>
@@ -318,7 +318,7 @@ export default function CardDirectory() {
       {/* Pagination */}
       {cardsData && cardsData.totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#6B6B6B]">
             {t("common.showing", "Showing")} {((page - 1) * 20) + 1} -{" "}
             {Math.min(page * 20, cardsData.total)} {t("common.of", "of")} {cardsData.total}
           </p>
@@ -348,18 +348,18 @@ export default function CardDirectory() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-red-500" />
+              <AlertTriangle className="h-5 w-5 text-[#FF6B6B]" />
               {t("mcm.blockCard", "Block Card")}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-muted-foreground">
+            <p className="text-[#6B6B6B]">
               {t("mcm.blockCardConfirm", "Are you sure you want to block this card? This will immediately revoke all access.")}
             </p>
             {selectedCard && (
               <div className="p-3 rounded-lg bg-accent/50">
                 <p className="font-medium">{selectedCard.fullName}</p>
-                <p className="text-sm text-muted-foreground">{selectedCard.cardNumber}</p>
+                <p className="text-sm text-[#6B6B6B]">{selectedCard.cardNumber}</p>
               </div>
             )}
             <div className="space-y-2">

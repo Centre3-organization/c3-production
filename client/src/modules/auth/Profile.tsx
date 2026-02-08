@@ -92,15 +92,15 @@ export default function Profile() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-        <span className="ml-2 text-muted-foreground">Loading profile...</span>
+        <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
+        <span className="ml-2 text-[#6B6B6B]">Loading profile...</span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-[400px] text-red-600">
+      <div className="flex items-center justify-center min-h-[400px] text-[#FF6B6B]">
         <AlertCircle className="h-6 w-6 mr-2" />
         <span>Error loading profile: {error.message}</span>
       </div>
@@ -109,7 +109,7 @@ export default function Profile() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-[400px] text-muted-foreground">
+      <div className="flex items-center justify-center min-h-[400px] text-[#6B6B6B]">
         <span>No user data available. Please log in.</span>
       </div>
     );
@@ -122,15 +122,15 @@ export default function Profile() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
-          <p className="text-muted-foreground">Manage your account settings</p>
+          <h1 className="text-2xl font-medium tracking-tight">Profile</h1>
+          <p className="text-[#6B6B6B]">Manage your account settings</p>
         </div>
         <div className="flex gap-2">
           {isEditing ? (
             <>
               <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
               <Button 
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-[#5B2C93] hover:bg-[#5B2C93]"
                 onClick={handleSave}
                 disabled={updateProfileMutation.isPending}
               >
@@ -151,28 +151,28 @@ export default function Profile() {
             <CardContent className="pt-6 text-center">
               <div className="relative inline-block mb-4">
                 <Avatar className="h-24 w-24 border-4 border-white shadow-lg">
-                  <AvatarFallback className="text-2xl bg-purple-100 text-purple-700">
+                  <AvatarFallback className="text-2xl bg-[#E8DCF5] text-[#5B2C93]">
                     {(user.name || "U").charAt(0)}
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <h2 className="text-xl font-bold">{user.name || "Unknown User"}</h2>
-              <p className="text-sm text-muted-foreground mb-2">{user.email}</p>
+              <h2 className="text-xl font-medium">{user.name || "Unknown User"}</h2>
+              <p className="text-sm text-[#6B6B6B] mb-2">{user.email}</p>
               <Badge variant="secondary" className={`mb-4 ${
                 user.role === "admin" 
-                  ? "bg-purple-100 text-purple-700 hover:bg-purple-100" 
-                  : "bg-blue-100 text-blue-700 hover:bg-blue-100"
+                  ? "bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]" 
+                  : "bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]"
               }`}>
                 {user.role === "admin" ? "Administrator" : "User"}
               </Badge>
               
               <div className="w-full space-y-2 text-left mt-4">
                 <div className="flex items-center justify-between text-sm py-2 border-b">
-                  <span className="text-muted-foreground">System Role</span>
+                  <span className="text-[#6B6B6B]">System Role</span>
                   <span className="font-medium capitalize">{user.role}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm py-2">
-                  <span className="text-muted-foreground">Joined</span>
+                  <span className="text-[#6B6B6B]">Joined</span>
                   <span>{formatDate(user.createdAt)}</span>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export default function Profile() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-foreground">Quick Actions</CardTitle>
+              <CardTitle className="text-sm font-medium uppercase tracking-wider text-[#6B6B6B]">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <Button variant="outline" className="w-full justify-start" onClick={() => toast.info("Feature coming soon")}>
@@ -192,7 +192,7 @@ export default function Profile() {
               </Button>
               <Button 
                 variant="ghost" 
-                className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="w-full justify-start text-[#FF6B6B] hover:text-[#FF6B6B] hover:bg-[#FFE5E5]"
                 onClick={handleLogout}
                 disabled={logoutMutation.isPending}
               >
@@ -252,7 +252,7 @@ export default function Profile() {
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address</Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Mail className="absolute left-3 top-2.5 h-4 w-4 text-[#6B6B6B]" />
                       <Input 
                         id="email" 
                         value={user.email || ""} 
@@ -260,7 +260,7 @@ export default function Profile() {
                         disabled 
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground">Email cannot be changed. Contact an administrator.</p>
+                    <p className="text-xs text-[#6B6B6B]">Email cannot be changed. Contact an administrator.</p>
                   </div>
 
                   <div className="space-y-2">
@@ -283,7 +283,7 @@ export default function Profile() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-8 text-muted-foreground">
+                  <div className="text-center py-8 text-[#6B6B6B]">
                     <p>Activity logging coming soon</p>
                   </div>
                 </CardContent>

@@ -7,18 +7,18 @@ export default function AccessDenied() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-white/10 backdrop-blur-lg border-white/20 text-white">
         <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center">
-            <ShieldX className="w-8 h-8 text-red-400" />
+          <div className="mx-auto w-16 h-16 bg-[#FF6B6B]/20 rounded-full flex items-center justify-center">
+            <ShieldX className="w-8 h-8 text-[#FF6B6B]" />
           </div>
-          <CardTitle className="text-2xl font-bold">Access Denied</CardTitle>
-          <CardDescription className="text-slate-300">
+          <CardTitle className="text-2xl font-medium">Access Denied</CardTitle>
+          <CardDescription className="text-[#B0B0B0]">
             Your account is not authorized to access Centre3 Security Operations Platform.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="bg-white/5 rounded-lg p-4 text-sm text-slate-300">
+          <div className="bg-white/5 rounded-lg p-4 text-sm text-[#B0B0B0]">
             <p className="mb-2">This could mean:</p>
-            <ul className="list-disc list-inside space-y-1 text-slate-400">
+            <ul className="list-disc list-inside space-y-1 text-[#B0B0B0]">
               <li>Your account has not been created by an administrator</li>
               <li>Your account has been deactivated</li>
               <li>You're using a different email than registered</li>
@@ -37,7 +37,7 @@ export default function AccessDenied() {
             
             <Button 
               variant="ghost" 
-              className="w-full text-slate-300 hover:text-white hover:bg-white/10"
+              className="w-full text-[#B0B0B0] hover:text-white hover:bg-white/10"
               onClick={() => window.location.href = "/"}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -45,7 +45,7 @@ export default function AccessDenied() {
             </Button>
           </div>
           
-          <p className="text-xs text-center text-slate-500">
+          <p className="text-xs text-center text-[#6B6B6B]">
             If you believe this is an error, please contact your system administrator.
           </p>
         </CardContent>

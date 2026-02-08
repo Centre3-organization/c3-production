@@ -10,13 +10,29 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+          "border-transparent bg-[#5B2C93] text-white [a&]:hover:bg-[#3D1C5E]",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+          "border-transparent bg-[#F5F5F5] text-[#5B2C93] [a&]:hover:bg-[#E8DCF5]",
         destructive:
-          "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "border-transparent bg-[#FF6B6B] text-white [a&]:hover:bg-[#FF6B6B] focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         outline:
-          "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+          "border-[#E0E0E0] text-[#2C2C2C] [a&]:hover:bg-[#F5F5F5]",
+        pending:
+          "border-transparent bg-[#FFF4E5] text-[#FFB84D]",
+        approved:
+          "border-transparent bg-[#E8F9F8] text-[#4ECDC4]",
+        rejected:
+          "border-transparent bg-[#FFE5E5] text-[#FF6B6B]",
+        inProgress:
+          "border-transparent bg-[#E8DCF5] text-[#5B2C93]",
+        cancelled:
+          "border-transparent bg-[#F5F5F5] text-[#6B6B6B]",
+        success:
+          "border-transparent bg-[#E8F9F8] text-[#4ECDC4]",
+        warning:
+          "border-transparent bg-[#FFF4E5] text-[#FFB84D]",
+        info:
+          "border-transparent bg-[#E8DCF5] text-[#5B2C93]",
       },
     },
     defaultVariants: {

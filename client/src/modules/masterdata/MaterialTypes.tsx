@@ -155,11 +155,11 @@ export default function MaterialTypes() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <Package className="h-7 w-7 text-purple-600" />
+          <h1 className="text-2xl font-medium text-[#2C2C2C] flex items-center gap-2">
+            <Package className="h-7 w-7 text-[#5B2C93]" />
             Material Types
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-[#6B6B6B] mt-1">
             Manage material types for MHV and inventory tracking
           </p>
         </div>
@@ -168,7 +168,7 @@ export default function MaterialTypes() {
             <Download className="h-4 w-4 mr-1" />
             Export
           </Button>
-          <Button onClick={() => { resetForm(); setNewDialogOpen(true); }} className="bg-purple-600 hover:bg-purple-700">
+          <Button onClick={() => { resetForm(); setNewDialogOpen(true); }} className="bg-[#5B2C93] hover:bg-[#5B2C93]">
             <Plus className="h-4 w-4 mr-1" />
             Add Material Type
           </Button>
@@ -179,20 +179,20 @@ export default function MaterialTypes() {
       <div className="grid grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-bold text-purple-600">{totalCount}</div>
-            <div className="text-xs text-gray-500">Total Types</div>
+            <div className="text-2xl font-medium text-[#5B2C93]">{totalCount}</div>
+            <div className="text-xs text-[#6B6B6B]">Total Types</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-bold text-green-600">{activeCount}</div>
-            <div className="text-xs text-gray-500">Active</div>
+            <div className="text-2xl font-medium text-[#4ECDC4]">{activeCount}</div>
+            <div className="text-xs text-[#6B6B6B]">Active</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-bold text-gray-400">{totalCount - activeCount}</div>
-            <div className="text-xs text-gray-500">Inactive</div>
+            <div className="text-2xl font-medium text-[#B0B0B0]">{totalCount - activeCount}</div>
+            <div className="text-xs text-[#6B6B6B]">Inactive</div>
           </CardContent>
         </Card>
       </div>
@@ -202,7 +202,7 @@ export default function MaterialTypes() {
         <CardContent className="pt-4">
           <div className="flex items-center gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
               <Input
                 placeholder="Search by name, code, or description..."
                 value={searchQuery}
@@ -226,11 +226,11 @@ export default function MaterialTypes() {
         <CardContent className="p-0">
           {isLoading ? (
             <div className="flex items-center justify-center py-16">
-              <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-gray-500">
-              <Package className="h-12 w-12 mb-3 text-gray-300" />
+            <div className="flex flex-col items-center justify-center py-16 text-[#6B6B6B]">
+              <Package className="h-12 w-12 mb-3 text-[#B0B0B0]" />
               <p className="font-medium">No material types found</p>
               <p className="text-sm">Add a new material type to get started</p>
             </div>
@@ -251,16 +251,16 @@ export default function MaterialTypes() {
               <TableBody>
                 {filtered.map((item, idx) => (
                   <TableRow key={item.id} className={!item.isActive ? "opacity-50" : ""}>
-                    <TableCell className="text-gray-500">{idx + 1}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{idx + 1}</TableCell>
                     <TableCell className="font-mono text-xs">{item.code}</TableCell>
                     <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell className="text-gray-500">{item.nameAr || "—"}</TableCell>
-                    <TableCell className="text-gray-500 text-sm max-w-[200px] truncate">
+                    <TableCell className="text-[#6B6B6B]">{item.nameAr || "—"}</TableCell>
+                    <TableCell className="text-[#6B6B6B] text-sm max-w-[200px] truncate">
                       {item.description || "—"}
                     </TableCell>
-                    <TableCell className="text-gray-500">{item.displayOrder}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{item.displayOrder}</TableCell>
                     <TableCell>
-                      <Badge variant={item.isActive ? "default" : "secondary"} className={item.isActive ? "bg-green-100 text-green-700" : ""}>
+                      <Badge variant={item.isActive ? "default" : "secondary"} className={item.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
                         {item.isActive ? "Active" : "Inactive"}
                       </Badge>
                     </TableCell>
@@ -273,7 +273,7 @@ export default function MaterialTypes() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-red-500 hover:text-red-700"
+                            className="h-8 w-8 text-[#FF6B6B] hover:text-[#FF6B6B]"
                             onClick={() => {
                               if (confirm("Are you sure you want to deactivate this material type?")) {
                                 deleteMutation.mutate({ id: item.id });
@@ -302,7 +302,7 @@ export default function MaterialTypes() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-600 uppercase">Name *</Label>
+                <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Name *</Label>
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -310,7 +310,7 @@ export default function MaterialTypes() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-600 uppercase">Code *</Label>
+                <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Code *</Label>
                 <Input
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -319,7 +319,7 @@ export default function MaterialTypes() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-gray-600 uppercase">Name (Arabic)</Label>
+              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Name (Arabic)</Label>
               <Input
                 value={formData.nameAr}
                 onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
@@ -328,7 +328,7 @@ export default function MaterialTypes() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-gray-600 uppercase">Description</Label>
+              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Description</Label>
               <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -337,7 +337,7 @@ export default function MaterialTypes() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-gray-600 uppercase">Display Order</Label>
+              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Display Order</Label>
               <Input
                 type="number"
                 value={formData.displayOrder}
@@ -347,7 +347,7 @@ export default function MaterialTypes() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setNewDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleCreate} disabled={createMutation.isPending} className="bg-purple-600 hover:bg-purple-700">
+            <Button onClick={handleCreate} disabled={createMutation.isPending} className="bg-[#5B2C93] hover:bg-[#5B2C93]">
               {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}
               Create
             </Button>
@@ -364,14 +364,14 @@ export default function MaterialTypes() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-600 uppercase">Name *</Label>
+                <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Name *</Label>
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-600 uppercase">Code *</Label>
+                <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Code *</Label>
                 <Input
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
@@ -379,7 +379,7 @@ export default function MaterialTypes() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-gray-600 uppercase">Name (Arabic)</Label>
+              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Name (Arabic)</Label>
               <Input
                 value={formData.nameAr}
                 onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
@@ -387,7 +387,7 @@ export default function MaterialTypes() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-gray-600 uppercase">Description</Label>
+              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Description</Label>
               <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -395,7 +395,7 @@ export default function MaterialTypes() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-gray-600 uppercase">Display Order</Label>
+              <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Display Order</Label>
               <Input
                 type="number"
                 value={formData.displayOrder}
@@ -405,7 +405,7 @@ export default function MaterialTypes() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleUpdate} disabled={updateMutation.isPending} className="bg-purple-600 hover:bg-purple-700">
+            <Button onClick={handleUpdate} disabled={updateMutation.isPending} className="bg-[#5B2C93] hover:bg-[#5B2C93]">
               {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}
               Save Changes
             </Button>

@@ -41,11 +41,11 @@ function FormField({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm text-gray-700 font-normal">
+      <Label className="text-sm text-[#2C2C2C] font-normal">
         {label}{required && <span className="text-destructive ml-0.5">*</span>}:
       </Label>
       {children}
-      {hint && <p className="text-xs text-gray-500">{hint}</p>}
+      {hint && <p className="text-xs text-[#6B6B6B]">{hint}</p>}
     </div>
   );
 }
@@ -53,8 +53,8 @@ function FormField({
 // SAP Fiori-style Section Header
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="pb-2 mb-4 border-b border-[#4f008c]/20">
-      <h3 className="text-sm font-semibold text-[#4f008c]">{title}</h3>
+    <div className="pb-2 mb-4 border-b border-[#5B2C93]/20">
+      <h3 className="text-sm font-medium text-[#5B2C93]">{title}</h3>
     </div>
   );
 }
@@ -347,12 +347,12 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b bg-card shrink-0">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-[#4f008c] flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-[#5B2C93] flex items-center justify-center">
             <UserPlus className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-[#4f008c]">Create New User</h1>
-            <p className="text-sm text-muted-foreground">{getUserTypeDisplay()}</p>
+            <h1 className="text-xl font-medium text-[#5B2C93]">Create New User</h1>
+            <p className="text-sm text-[#6B6B6B]">{getUserTypeDisplay()}</p>
           </div>
         </div>
         <Button variant="outline" onClick={onCancel}>
@@ -365,7 +365,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
         {/* Left Sidebar - Vertical Tabs */}
         <div className="w-64 border-r bg-card flex flex-col">
           <div className="p-4 border-b">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Steps</p>
+            <p className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">Steps</p>
           </div>
           <nav className="flex-1 p-2">
             {tabs.map((tab, index) => {
@@ -380,27 +380,27 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                   disabled={isDisabled}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
                     isActive 
-                      ? "bg-gradient-to-r from-[#ff375e]/15 to-[#4f008c]/15 text-gray-900 border-l-4 border-[#4f008c]" 
+                      ? "bg-gradient-to-r from-[#FF6B6B]/15 to-[#5B2C93]/15 text-[#2C2C2C] border-l-4 border-[#5B2C93]" 
                       : isCompleted
-                        ? "text-gray-900 hover:bg-gray-100"
+                        ? "text-[#2C2C2C] hover:bg-[#F5F5F5]"
                         : isDisabled
-                          ? "text-gray-400 cursor-not-allowed"
-                          : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                          ? "text-[#B0B0B0] cursor-not-allowed"
+                          : "text-[#2C2C2C] hover:bg-[#F5F5F5] hover:text-[#2C2C2C]"
                   }`}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     isActive 
-                      ? "bg-[#4f008c] text-white"
+                      ? "bg-[#5B2C93] text-white"
                       : isCompleted
-                        ? "bg-green-500 text-white"
-                        : "bg-muted text-muted-foreground"
+                        ? "bg-[#E8F9F8] text-white"
+                        : "bg-[#F5F5F5] text-[#6B6B6B]"
                   }`}>
                     {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium">{tab.label}</p>
                   </div>
-                  {isActive && <ChevronRight className="h-4 w-4 text-[#4f008c]" />}
+                  {isActive && <ChevronRight className="h-4 w-4 text-[#5B2C93]" />}
                 </button>
               );
             })}
@@ -480,7 +480,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               type="button"
                               onClick={handleVerifyYakeen}
                               disabled={verifyYakeenMutation.isPending || idNumber.length !== 10 || !dateOfBirth}
-                              className="bg-[#4f008c] hover:bg-[#5f00a6] text-white h-10 px-6"
+                              className="bg-[#5B2C93] hover:bg-[#5B2C93] text-white h-10 px-6"
                             >
                               {verifyYakeenMutation.isPending ? (
                                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -493,12 +493,12 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                         {(isVerified || verificationError) && (
                           <div className="mt-4">
                             {isVerified && (
-                              <Badge className="bg-green-500 h-9 px-4">
+                              <Badge className="bg-[#E8F9F8] h-9 px-4">
                                 <CheckCircle className="h-4 w-4 mr-2" /> Verified
                               </Badge>
                             )}
                             {verificationError && (
-                              <div className="flex items-center gap-2 text-amber-600 text-sm">
+                              <div className="flex items-center gap-2 text-[#FFB84D] text-sm">
                                 <AlertCircle className="h-4 w-4 shrink-0" />
                                 <span>{verificationError}</span>
                               </div>
@@ -517,7 +517,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                               placeholder="Enter first name"
                               disabled={isVerified}
-                              className={`bg-background ${isVerified ? "bg-muted" : ""}`}
+                              className={`bg-background ${isVerified ? "bg-[#F5F5F5]" : ""}`}
                             />
                           </FormField>
                           
@@ -527,7 +527,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                               placeholder="Enter last name"
                               disabled={isVerified}
-                              className={`bg-background ${isVerified ? "bg-muted" : ""}`}
+                              className={`bg-background ${isVerified ? "bg-[#F5F5F5]" : ""}`}
                             />
                           </FormField>
                           
@@ -538,7 +538,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               placeholder="أدخل الاسم الأول"
                               dir="rtl"
                               disabled={isVerified}
-                              className={`bg-background ${isVerified ? "bg-muted" : ""}`}
+                              className={`bg-background ${isVerified ? "bg-[#F5F5F5]" : ""}`}
                             />
                           </FormField>
                           
@@ -549,7 +549,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                               placeholder="أدخل اسم العائلة"
                               dir="rtl"
                               disabled={isVerified}
-                              className={`bg-background ${isVerified ? "bg-muted" : ""}`}
+                              className={`bg-background ${isVerified ? "bg-[#F5F5F5]" : ""}`}
                             />
                           </FormField>
                         </div>
@@ -739,7 +739,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                         <FormField label="Contract Reference" hint="Auto-populated from company">
                           <Input
                             value={formData.contractReference}
-                            className="bg-muted"
+                            className="bg-[#F5F5F5]"
                             readOnly
                             placeholder="—"
                           />
@@ -749,7 +749,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                           <Input
                             type="date"
                             value={formData.contractExpiry}
-                            className="bg-muted"
+                            className="bg-[#F5F5F5]"
                             readOnly
                           />
                         </FormField>
@@ -990,7 +990,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                 <Button
                   onClick={goToNextTab}
                   disabled={activeTab === "general" && !canProceedFromGeneral}
-                  className="gap-2 bg-[#4f008c] hover:bg-[#5f00a6] text-white"
+                  className="gap-2 bg-[#5B2C93] hover:bg-[#5B2C93] text-white"
                 >
                   Next
                   <ChevronRight className="h-4 w-4" />
@@ -999,7 +999,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                 <Button
                   onClick={handleSubmit}
                   disabled={createUserMutation.isPending}
-                  className="gap-2 bg-[#4f008c] hover:bg-[#5f00a6] text-white"
+                  className="gap-2 bg-[#5B2C93] hover:bg-[#5B2C93] text-white"
                 >
                   {createUserMutation.isPending ? (
                     <>

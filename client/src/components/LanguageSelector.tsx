@@ -130,7 +130,7 @@ export function LanguageSelector({ variant = 'default', className, modal = false
           >
             <div className="flex flex-col">
               <span className="font-medium">{lang.nativeName}</span>
-              <span className="text-xs text-muted-foreground">{lang.name}</span>
+              <span className="text-xs text-[#6B6B6B]">{lang.name}</span>
             </div>
             {i18n.language === lang.code && (
               <span className="text-primary">✓</span>

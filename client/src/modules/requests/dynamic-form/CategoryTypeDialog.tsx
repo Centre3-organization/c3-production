@@ -196,7 +196,7 @@ export function CategoryTypeDialog({
       <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col p-0">
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-bold">
+            <DialogTitle className="text-xl font-medium">
               {step === "category"
                 ? t("requests.selectCategory", "Select Request Category")
                 : t("requests.selectTypes", "Select Request Type(s)")}
@@ -206,7 +206,7 @@ export function CategoryTypeDialog({
                 variant="ghost"
                 size="sm"
                 onClick={handleBack}
-                className="text-gray-600 gap-1"
+                className="text-[#6B6B6B] gap-1"
               >
                 <ArrowLeft className="h-4 w-4" />
                 {t("common.back", "Back")}
@@ -219,13 +219,13 @@ export function CategoryTypeDialog({
           {/* Category Selection */}
           {step === "category" && (
             <div className="space-y-4">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#6B6B6B]">
                 {t("requests.selectCategoryHint", "Select a request category to begin")}
               </p>
 
               {loadingCategories ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-[#0f62fe]" />
+                  <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
                 </div>
               ) : categories.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -239,22 +239,22 @@ export function CategoryTypeDialog({
                         onClick={() => handleCategorySelect(category.id)}
                         className={cn(
                           "relative flex items-start gap-4 p-5 rounded-lg border-2 transition-all duration-200 text-left",
-                          "border-gray-200 bg-white hover:border-[#0f62fe]/50 hover:shadow-sm"
+                          "border-[#E0E0E0] bg-white hover:border-[#5B2C93]/50 hover:shadow-sm"
                         )}
                       >
                         {/* Icon */}
-                        <div className="flex-shrink-0 h-12 w-12 rounded-lg flex items-center justify-center bg-gray-100">
-                          <Icon className="h-6 w-6 text-gray-600" />
+                        <div className="flex-shrink-0 h-12 w-12 rounded-lg flex items-center justify-center bg-[#F5F5F5]">
+                          <Icon className="h-6 w-6 text-[#6B6B6B]" />
                         </div>
 
                         {/* Content */}
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-base text-gray-800">
+                          <h3 className="font-medium text-base text-[#2C2C2C]">
                             {getCategoryName(category)}
                           </h3>
 
                           {category.description && (
-                            <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                            <p className="text-sm text-[#6B6B6B] mt-1 line-clamp-2">
                               {category.description}
                             </p>
                           )}
@@ -266,13 +266,13 @@ export function CategoryTypeDialog({
                                 <Badge
                                   key={type.id}
                                   variant="outline"
-                                  className="text-xs border-gray-300 text-gray-600"
+                                  className="text-xs border-[#E0E0E0] text-[#6B6B6B]"
                                 >
                                   {type.shortCode || type.name}
                                 </Badge>
                               ))}
                               {category.types.length > 4 && (
-                                <Badge variant="outline" className="text-xs text-gray-500">
+                                <Badge variant="outline" className="text-xs text-[#6B6B6B]">
                                   +{category.types.length - 4}
                                 </Badge>
                               )}
@@ -283,7 +283,7 @@ export function CategoryTypeDialog({
                         {/* Arrow indicator */}
                         <ChevronRight
                           className={cn(
-                            "flex-shrink-0 h-5 w-5 text-gray-400",
+                            "flex-shrink-0 h-5 w-5 text-[#B0B0B0]",
                             isRTL && "rotate-180"
                           )}
                         />
@@ -292,8 +292,8 @@ export function CategoryTypeDialog({
                   })}
                 </div>
               ) : (
-                <div className="text-center py-12 text-gray-500">
-                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                <div className="text-center py-12 text-[#6B6B6B]">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-[#B0B0B0]" />
                   <p>{t("requests.noCategories", "No categories available")}</p>
                 </div>
               )}
@@ -303,7 +303,7 @@ export function CategoryTypeDialog({
           {/* Type Selection */}
           {step === "type" && (
             <div className="space-y-4">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2 text-sm text-[#6B6B6B]">
                 <Info className="h-4 w-4" />
                 <span>
                   {allowMultiple
@@ -327,16 +327,16 @@ export function CategoryTypeDialog({
                         "relative flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200",
                         "min-h-[100px] text-center",
                         isSelected
-                          ? "border-[#0f62fe] bg-[#e5f6ff] shadow-md"
+                          ? "border-[#5B2C93] bg-[#E8F9F8] shadow-md"
                           : isDisabled
-                          ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
-                          : "border-gray-200 bg-white hover:border-[#0f62fe]/50 hover:shadow-sm cursor-pointer"
+                          ? "border-[#E0E0E0] bg-[#F5F5F5] opacity-50 cursor-not-allowed"
+                          : "border-[#E0E0E0] bg-white hover:border-[#5B2C93]/50 hover:shadow-sm cursor-pointer"
                       )}
                     >
                       {/* Selection indicator */}
                       {isSelected && (
                         <div className="absolute top-2 right-2">
-                          <div className="h-5 w-5 rounded-full bg-[#0f62fe] flex items-center justify-center">
+                          <div className="h-5 w-5 rounded-full bg-[#5B2C93] flex items-center justify-center">
                             <Check className="h-3 w-3 text-white" />
                           </div>
                         </div>
@@ -347,10 +347,10 @@ export function CategoryTypeDialog({
                         <Badge
                           variant="outline"
                           className={cn(
-                            "mb-2 font-bold text-xs",
+                            "mb-2 font-medium text-xs",
                             isSelected
-                              ? "bg-[#0f62fe] text-white border-[#0f62fe]"
-                              : "bg-gray-100 text-gray-700"
+                              ? "bg-[#5B2C93] text-white border-[#5B2C93]"
+                              : "bg-[#F5F5F5] text-[#2C2C2C]"
                           )}
                         >
                           {type.shortCode}
@@ -361,7 +361,7 @@ export function CategoryTypeDialog({
                       <span
                         className={cn(
                           "font-medium text-sm",
-                          isSelected ? "text-[#0043ce]" : "text-gray-800"
+                          isSelected ? "text-[#3D1C5E]" : "text-[#2C2C2C]"
                         )}
                       >
                         {getTypeName(type)}
@@ -369,7 +369,7 @@ export function CategoryTypeDialog({
 
                       {/* Exclusive indicator */}
                       {(type.isExclusive || combinationRules?.[type.code]?.exclusive) && (
-                        <span className="text-xs text-orange-600 mt-1 flex items-center gap-1">
+                        <span className="text-xs text-[#FFB84D] mt-1 flex items-center gap-1">
                           <AlertCircle className="h-3 w-3" />
                           {t("requests.exclusiveType", "Exclusive")}
                         </span>
@@ -377,7 +377,7 @@ export function CategoryTypeDialog({
 
                       {/* Max duration */}
                       {type.maxDurationDays && (
-                        <span className="text-xs text-gray-500 mt-1">
+                        <span className="text-xs text-[#6B6B6B] mt-1">
                           {t("requests.maxDays", "Max {{days}} days", {
                             days: type.maxDurationDays,
                           })}
@@ -391,7 +391,7 @@ export function CategoryTypeDialog({
               {/* Selected types summary */}
               {selectedTypeIds.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-3 border-t">
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-[#6B6B6B]">
                     {t("requests.selectedTypes", "Selected:")}
                   </span>
                   {selectedTypeIds.map((typeId) => {
@@ -401,7 +401,7 @@ export function CategoryTypeDialog({
                       <Badge
                         key={typeId}
                         variant="secondary"
-                        className="bg-[#0f62fe] text-white"
+                        className="bg-[#5B2C93] text-white"
                       >
                         {type.shortCode || getTypeName(type)}
                       </Badge>
@@ -415,14 +415,14 @@ export function CategoryTypeDialog({
 
         {/* Footer */}
         {step === "type" && (
-          <div className="px-6 py-4 border-t bg-gray-50 flex justify-end gap-3">
+          <div className="px-6 py-4 border-t bg-[#F5F5F5] flex justify-end gap-3">
             <Button variant="outline" onClick={() => handleOpenChange(false)}>
               {t("common.cancel", "Cancel")}
             </Button>
             <Button
               onClick={handleConfirm}
               disabled={selectedTypeIds.length === 0}
-              className="bg-[#0f62fe] hover:bg-[#0043ce] gap-2"
+              className="bg-[#5B2C93] hover:bg-[#3D1C5E] gap-2"
             >
               {t("common.continue", "Continue")}
               <ChevronRight className="h-4 w-4" />

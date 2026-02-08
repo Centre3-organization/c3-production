@@ -17,17 +17,17 @@ import {
 import { format } from "date-fns";
 
 const statusColors: Record<string, string> = {
-  active: "bg-green-100 text-green-700 border-green-300",
-  inactive: "bg-gray-100 text-gray-600 border-gray-300",
-  suspended: "bg-red-100 text-red-700 border-red-300",
-  pending: "bg-yellow-100 text-yellow-700 border-yellow-300",
-  blocked: "bg-red-100 text-red-700 border-red-300",
-  expired: "bg-orange-100 text-orange-700 border-orange-300",
-  approved: "bg-green-100 text-green-700 border-green-300",
-  rejected: "bg-red-100 text-red-700 border-red-300",
-  pending_approval: "bg-amber-100 text-amber-700 border-amber-300",
-  draft: "bg-gray-100 text-gray-600 border-gray-300",
-  cancelled: "bg-gray-100 text-gray-600 border-gray-300",
+  active: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
+  inactive: "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]",
+  suspended: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
+  pending: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  blocked: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
+  expired: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  approved: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
+  rejected: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
+  pending_approval: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  draft: "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]",
+  cancelled: "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]",
 };
 
 const typeLabels: Record<string, string> = {
@@ -60,7 +60,7 @@ export default function CompanyDetail() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
       </div>
     );
   }
@@ -68,8 +68,8 @@ export default function CompanyDetail() {
   if (!company) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-        <Building2 className="h-12 w-12 text-muted-foreground" />
-        <p className="text-lg text-muted-foreground">Company not found</p>
+        <Building2 className="h-12 w-12 text-[#6B6B6B]" />
+        <p className="text-lg text-[#6B6B6B]">Company not found</p>
         <Button variant="outline" onClick={() => setLocation("/companies")}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Back to Companies
         </Button>
@@ -90,9 +90,9 @@ export default function CompanyDetail() {
           </Button>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold">{company.name}</h1>
+              <h1 className="text-2xl font-medium">{company.name}</h1>
               {company.nameAr && (
-                <span className="text-lg text-muted-foreground font-arabic">{company.nameAr}</span>
+                <span className="text-lg text-[#6B6B6B] font-arabic">{company.nameAr}</span>
               )}
             </div>
             <div className="flex items-center gap-2 mt-1">
@@ -108,14 +108,14 @@ export default function CompanyDetail() {
                 {typeLabels[company.type] || company.type}
               </Badge>
               {company.parentCompany && (
-                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 cursor-pointer"
+                <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] cursor-pointer"
                   onClick={() => setLocation(`/companies/${company.parentCompany!.id}`)}>
                   <Building2 className="h-3 w-3 mr-1" />
                   Parent: {company.parentCompany.name}
                 </Badge>
               )}
               {isContractExpiring && (
-                <Badge className="bg-orange-100 text-orange-700 border-orange-300 border">
+                <Badge className="bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D] border">
                   <AlertTriangle className="h-3 w-3 mr-1" />
                   Contract Expiring Soon
                 </Badge>
@@ -130,47 +130,47 @@ export default function CompanyDetail() {
         <Card>
           <CardContent className="pt-4 pb-3 px-4">
             <div className="flex items-center gap-2">
-              <CreditCard className="h-4 w-4 text-purple-600" />
-              <span className="text-xs text-muted-foreground">Active Cards</span>
+              <CreditCard className="h-4 w-4 text-[#5B2C93]" />
+              <span className="text-xs text-[#6B6B6B]">Active Cards</span>
             </div>
-            <p className="text-2xl font-bold mt-1">{company.stats.activeCardholders}</p>
-            <p className="text-xs text-muted-foreground">of {company.stats.totalCardholders} total</p>
+            <p className="text-2xl font-medium mt-1">{company.stats.activeCardholders}</p>
+            <p className="text-xs text-[#6B6B6B]">of {company.stats.totalCardholders} total</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3 px-4">
             <div className="flex items-center gap-2">
-              <Building2 className="h-4 w-4 text-blue-600" />
-              <span className="text-xs text-muted-foreground">Sub-Companies</span>
+              <Building2 className="h-4 w-4 text-[#5B2C93]" />
+              <span className="text-xs text-[#6B6B6B]">Sub-Companies</span>
             </div>
-            <p className="text-2xl font-bold mt-1">{company.stats.subCompanyCount}</p>
+            <p className="text-2xl font-medium mt-1">{company.stats.subCompanyCount}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3 px-4">
             <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-green-600" />
-              <span className="text-xs text-muted-foreground">Active Requests</span>
+              <FileText className="h-4 w-4 text-[#4ECDC4]" />
+              <span className="text-xs text-[#6B6B6B]">Active Requests</span>
             </div>
-            <p className="text-2xl font-bold mt-1">{company.stats.activeRequests}</p>
+            <p className="text-2xl font-medium mt-1">{company.stats.activeRequests}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3 px-4">
             <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-gray-600" />
-              <span className="text-xs text-muted-foreground">Total Requests</span>
+              <FileText className="h-4 w-4 text-[#6B6B6B]" />
+              <span className="text-xs text-[#6B6B6B]">Total Requests</span>
             </div>
-            <p className="text-2xl font-bold mt-1">{company.stats.totalRequests}</p>
+            <p className="text-2xl font-medium mt-1">{company.stats.totalRequests}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3 px-4">
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-orange-600" />
-              <span className="text-xs text-muted-foreground">Contract End</span>
+              <Calendar className="h-4 w-4 text-[#FFB84D]" />
+              <span className="text-xs text-[#6B6B6B]">Contract End</span>
             </div>
-            <p className="text-lg font-bold mt-1">
+            <p className="text-lg font-medium mt-1">
               {company.contractEndDate 
                 ? format(new Date(company.contractEndDate), "MMM d, yyyy")
                 : "N/A"}
@@ -215,7 +215,7 @@ export default function CompanyDetail() {
                 <InfoRow icon={<Globe className="h-3.5 w-3.5" />} label="Country" value={company.country || "—"} />
                 {company.notes && (
                   <div className="pt-2 border-t">
-                    <p className="text-xs text-muted-foreground mb-1">Notes</p>
+                    <p className="text-xs text-[#6B6B6B] mb-1">Notes</p>
                     <p className="text-sm">{company.notes}</p>
                   </div>
                 )}
@@ -253,7 +253,7 @@ export default function CompanyDetail() {
                     <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="End Date" 
                       value={company.contractEndDate ? format(new Date(company.contractEndDate), "MMM d, yyyy") : "—"} />
                     {isContractExpiring && (
-                      <p className="text-xs text-orange-600 mt-1 flex items-center gap-1">
+                      <p className="text-xs text-[#FFB84D] mt-1 flex items-center gap-1">
                         <AlertTriangle className="h-3 w-3" /> Expiring within 30 days
                       </p>
                     )}
@@ -272,7 +272,7 @@ export default function CompanyDetail() {
             </CardHeader>
             <CardContent>
               {company.cardholders.length === 0 ? (
-                <div className="flex flex-col items-center py-8 text-muted-foreground">
+                <div className="flex flex-col items-center py-8 text-[#6B6B6B]">
                   <CreditCard className="h-8 w-8 mb-2" />
                   <p>No cardholders registered for this company</p>
                 </div>
@@ -297,13 +297,13 @@ export default function CompanyDetail() {
                           <TableCell>
                             <div>
                               <p className="font-medium text-sm">{ch.fullName}</p>
-                              {ch.fullNameAr && <p className="text-xs text-muted-foreground font-arabic">{ch.fullNameAr}</p>}
+                              {ch.fullNameAr && <p className="text-xs text-[#6B6B6B] font-arabic">{ch.fullNameAr}</p>}
                             </div>
                           </TableCell>
                           <TableCell>
                             <div>
                               <p className="text-sm">{ch.idNumber}</p>
-                              <p className="text-xs text-muted-foreground">{ch.idType?.replace("_", " ")}</p>
+                              <p className="text-xs text-[#6B6B6B]">{ch.idType?.replace("_", " ")}</p>
                             </div>
                           </TableCell>
                           <TableCell className="text-sm">{ch.profession || "—"}</TableCell>
@@ -334,7 +334,7 @@ export default function CompanyDetail() {
             </CardHeader>
             <CardContent>
               {company.requests.length === 0 ? (
-                <div className="flex flex-col items-center py-8 text-muted-foreground">
+                <div className="flex flex-col items-center py-8 text-[#6B6B6B]">
                   <FileText className="h-8 w-8 mb-2" />
                   <p>No access requests found for this company</p>
                 </div>
@@ -440,9 +440,9 @@ export default function CompanyDetail() {
 function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-start gap-2">
-      <span className="text-muted-foreground mt-0.5">{icon}</span>
+      <span className="text-[#6B6B6B] mt-0.5">{icon}</span>
       <div>
-        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="text-xs text-[#6B6B6B]">{label}</p>
         <p className="text-sm">{value}</p>
       </div>
     </div>

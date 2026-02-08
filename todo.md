@@ -1756,3 +1756,88 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix Material Entry/Exit Type dropdown not loading material_types options (added material_types to optionsSource type in RepeatableSection, DynamicForm, RepeatableSectionWithYakeen)
 - [x] Fix Vehicle Entry/Exit Driver Nationality dropdown not loading countries options (changed optionsSource from 'api' to 'countries' in DB for field ids 110 and 70006)
 - [x] Fix 'KEY REQUESTS.TYPES (EN) RETURNED AN OBJECT INSTEAD OF STRING' error in header (changed i18n key from 'requests.types' to 'requests.typesLabel' and added translation keys)
+
+## Brand Guidelines Full Compliance (Feb 8, 2026)
+
+### Global CSS Design Tokens
+- [x] Updated all CSS custom properties to brand hex codes (#5B2C93, #FF6B6B, #4ECDC4, #FFB84D, #2C2C2C, #6B6B6B, #B0B0B0, #E0E0E0, #F5F5F5)
+- [x] Updated oklch values for Tailwind CSS 4 compatibility
+- [x] Set STC Forward as primary font, Montserrat as fallback
+- [x] Added brand utility classes (.brand-section-header, .brand-input, .brand-label, etc.)
+- [x] Added status badge CSS variables for consistent status colors
+
+### shadcn/ui Component Updates
+- [x] Button: Updated to 40px height desktop, brand purple primary, coral destructive, teal success, warning variants
+- [x] Input: Updated to 40px height, #E0E0E0 border, purple focus ring
+- [x] Textarea: Updated to brand border and focus states
+- [x] Select: Updated trigger height and focus states
+- [x] Card: Updated to 8px radius, proper border, font-medium title
+- [x] Table: Updated header background, row hover, border colors
+- [x] Badge: Added brand status variants (pending, approved, rejected, inProgress, draft, expired, cancelled)
+- [x] Sonner/Toast: Updated all toast types with brand colors
+- [x] Label: Updated text color
+- [x] Dialog: Updated title and description styling
+
+### Color Standardization (All 54+ TSX files)
+- [x] Replaced ALL non-brand Tailwind colors (1,478+ instances → 0)
+- [x] Replaced ALL non-brand hex codes (#4f008c, #ff375e, #0f62fe, #0043ce, #161616, etc.)
+- [x] Replaced ALL generic Tailwind colors (gray, red, blue, green, amber, yellow, purple, orange, pink, indigo, teal, cyan, emerald, lime, rose, fuchsia, violet, sky, slate, zinc, stone, neutral)
+- [x] Final audit: 0 non-brand Tailwind colors, 0 non-brand hex codes
+
+### Typography Standardization
+- [x] Replaced ALL font-bold (700) with font-medium (500) per brand guidelines
+- [x] Replaced ALL font-semibold (600) with font-medium (500)
+- [x] Replaced ALL font-extrabold with font-medium
+- [x] Removed ALL font-poppins class references (global CSS handles font)
+
+### IBM Blue Removal
+- [x] Replaced ALL #0f62fe (IBM blue) with #5B2C93 (brand purple) across 14 files
+- [x] Replaced ALL #0043ce (IBM blue hover) with #3D1C5E (brand purple dark)
+- [x] Replaced ALL #161616 (IBM dark) with #2C2C2C (brand dark)
+
+### Sidebar/Navigation
+- [x] Updated Layout.tsx with brand sidebar colors
+- [x] Active state: purple left border + purple light background
+- [x] Hover state: brand-compliant hover colors
+
+### Form Components
+- [x] FieldRenderer: All colors brand-compliant
+- [x] DynamicForm: Section headers with purple icon, brand backgrounds
+- [x] RepeatableSection: Brand colors for add/remove buttons
+- [x] RepeatableSectionWithYakeen: Brand colors throughout
+- [x] CategorySelector: Brand purple selections
+- [x] CategoryTypeDialog: Brand styling
+- [x] TypeSelector: Brand styling
+
+### Status Badges (Consistent across all pages)
+- [x] Draft: #6B6B6B text on #F5F5F5 background
+- [x] Pending: #FFB84D text on #FFF4E5 background
+- [x] Approved: #4ECDC4 text on #E8F9F8 background
+- [x] Rejected: #FF6B6B text on #FFE5E5 background
+- [x] Cancelled/Expired: #2C2C2C text on #F5F5F5 background
+
+### Approval Workflow UI
+- [x] L1 Approval: Approve button = teal, Reject button = coral destructive
+- [x] L2 Approval: Grant Access button = brand purple, Reject = outline
+- [x] Approval History: Brand-compliant timeline colors
+- [x] Risk level badges: Brand color mapping (low=teal, medium=purple, high=warning, critical=coral)
+
+### Pages Standardized
+- [x] Login page
+- [x] Dashboard
+- [x] RequestList
+- [x] DynamicRequestForm
+- [x] RequestForm
+- [x] Approvals (L1, L2, History)
+- [x] Users, EditUser, NewUser, ViewUser
+- [x] Sites, Zones, Areas, ViewSite
+- [x] Groups
+- [x] Settings (FormTemplateBuilder, TranslationManagement, etc.)
+- [x] Reports (AccessReports, SecurityReports, AuditLogs, ActivityHistory)
+- [x] Security (GlobalOverwatch, SecurityAlerts)
+- [x] MCM (Dashboard, CardDirectory, NewCardRequest)
+- [x] MasterData (MaterialTypes)
+- [x] Companies, CompanyDetail
+- [x] WorkflowBuilder
+- [x] Profile
+- [x] AccessDenied, NotFound

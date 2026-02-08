@@ -78,13 +78,13 @@ export default function Home() {
 
   // Enterprise muted status colors
   const statusColors: Record<string, string> = {
-    draft: "bg-slate-400",
-    pending_l1: "bg-amber-400",
-    pending_manual: "bg-indigo-400",
-    approved: "bg-teal-500",
-    rejected: "bg-rose-400",
-    expired: "bg-gray-400",
-    cancelled: "bg-slate-500",
+    draft: "bg-[#B0B0B0]",
+    pending_l1: "bg-[#FFB84D]",
+    pending_manual: "bg-[#5B2C93]",
+    approved: "bg-[#E8F9F8]0",
+    rejected: "bg-[#FF6B6B]",
+    expired: "bg-[#B0B0B0]",
+    cancelled: "bg-[#F5F5F5]0",
   };
 
   return (
@@ -92,8 +92,8 @@ export default function Home() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">{t('dashboard.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('dashboard.subtitle')}</p>
+          <h1 className="text-2xl font-medium tracking-tight text-foreground">{t('dashboard.title')}</h1>
+          <p className="text-sm text-[#6B6B6B]">{t('dashboard.subtitle')}</p>
         </div>
         <Button 
           variant="outline" 
@@ -112,9 +112,9 @@ export default function Home() {
         {canViewAnalytics && (
           <Card className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.activeVisitors')}</CardTitle>
-              <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                <Users className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              <CardTitle className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">{t('dashboard.activeVisitors')}</CardTitle>
+              <div className="p-2 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-lg">
+                <Users className="h-4 w-4 text-[#6B6B6B] dark:text-[#B0B0B0]" />
               </div>
             </CardHeader>
             <CardContent>
@@ -122,10 +122,10 @@ export default function Home() {
                 <Skeleton className="h-8 w-16" />
               ) : (
                 <>
-                  <div className="text-2xl font-semibold text-foreground">{stats?.activeVisitors || 0}</div>
-                  <p className="text-xs text-muted-foreground mt-1 flex items-center">
-                    <ArrowUpRight className="h-3 w-3 text-teal-600 mr-1" /> 
-                    <span className="text-teal-600">+12%</span>
+                  <div className="text-2xl font-medium text-foreground">{stats?.activeVisitors || 0}</div>
+                  <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
+                    <ArrowUpRight className="h-3 w-3 text-[#4ECDC4] mr-1" /> 
+                    <span className="text-[#4ECDC4]">+12%</span>
                     <span className="ml-1">{t('common.vsYesterday')}</span>
                   </p>
                 </>
@@ -137,13 +137,13 @@ export default function Home() {
         {/* Pending Approvals - Only show to users with approval permission */}
         {canViewApprovals && (
           <Card 
-            className="border border-amber-200 dark:border-amber-800/50 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            className="border border-[#FFB84D] dark:border-[#FFB84D]/50 bg-[#FFF4E5]/50 dark:bg-[#FFB84D]/10 shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
             onClick={() => navigate("/approvals/l1")}
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-medium text-amber-700 dark:text-amber-400 uppercase tracking-wider">{t('dashboard.pendingApprovals')}</CardTitle>
-              <div className="p-2 bg-amber-100 dark:bg-amber-900/50 rounded-lg">
-                <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              <CardTitle className="text-xs font-medium text-[#FFB84D] dark:text-[#FFB84D] uppercase tracking-wider">{t('dashboard.pendingApprovals')}</CardTitle>
+              <div className="p-2 bg-[#FFF4E5] dark:bg-[#FFB84D]/10 rounded-lg">
+                <Clock className="h-4 w-4 text-[#FFB84D] dark:text-[#FFB84D]" />
               </div>
             </CardHeader>
             <CardContent>
@@ -151,8 +151,8 @@ export default function Home() {
                 <Skeleton className="h-8 w-16" />
               ) : (
                 <>
-                  <div className="text-2xl font-semibold text-amber-700 dark:text-amber-400">{stats?.pendingApprovals || 0}</div>
-                  <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 flex items-center">
+                  <div className="text-2xl font-medium text-[#FFB84D] dark:text-[#FFB84D]">{stats?.pendingApprovals || 0}</div>
+                  <p className="text-xs text-[#FFB84D] dark:text-[#FFB84D] mt-1 flex items-center">
                     <AlertTriangle className="h-3 w-3 mr-1" /> 
                     {t('common.actionRequired')}
                   </p>
@@ -167,9 +167,9 @@ export default function Home() {
           onClick={() => navigate("/requests")}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.totalRequests')}</CardTitle>
-            <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-              <FileText className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+            <CardTitle className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">{t('dashboard.totalRequests')}</CardTitle>
+            <div className="p-2 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-lg">
+              <FileText className="h-4 w-4 text-[#6B6B6B] dark:text-[#B0B0B0]" />
             </div>
           </CardHeader>
           <CardContent>
@@ -177,8 +177,8 @@ export default function Home() {
               <Skeleton className="h-8 w-16" />
             ) : (
               <>
-                <div className="text-2xl font-semibold text-foreground">{stats?.totalRequestsThisMonth || 0}</div>
-                <p className="text-xs text-muted-foreground mt-1">{t('common.thisMonth')}</p>
+                <div className="text-2xl font-medium text-foreground">{stats?.totalRequestsThisMonth || 0}</div>
+                <p className="text-xs text-[#6B6B6B] mt-1">{t('common.thisMonth')}</p>
               </>
             )}
           </CardContent>
@@ -186,9 +186,9 @@ export default function Home() {
 
         <Card className="border border-border/50 bg-card shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.approvalRate')}</CardTitle>
-            <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-              <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+            <CardTitle className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">{t('dashboard.approvalRate')}</CardTitle>
+            <div className="p-2 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-lg">
+              <Target className="h-4 w-4 text-[#6B6B6B] dark:text-[#B0B0B0]" />
             </div>
           </CardHeader>
           <CardContent>
@@ -196,9 +196,9 @@ export default function Home() {
               <Skeleton className="h-8 w-16" />
             ) : (
               <>
-                <div className="text-2xl font-semibold text-foreground">{stats?.approvalRate || 0}%</div>
-                <p className="text-xs text-muted-foreground mt-1 flex items-center">
-                  <TrendingUp className="h-3 w-3 text-teal-600 mr-1" />
+                <div className="text-2xl font-medium text-foreground">{stats?.approvalRate || 0}%</div>
+                <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
+                  <TrendingUp className="h-3 w-3 text-[#4ECDC4] mr-1" />
                   {t('common.vsLastMonth')}
                 </p>
               </>
@@ -208,11 +208,11 @@ export default function Home() {
 
         {/* Security Alerts - Only show to users with alerts permission */}
         {canViewAlerts && (
-          <Card className="border border-rose-200 dark:border-rose-800/50 bg-rose-50/50 dark:bg-rose-950/20 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="border border-[#FF6B6B] dark:border-[#FF6B6B]/50 bg-[#FFE5E5]/50 dark:bg-[#FF6B6B]/10/20 shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-medium text-rose-700 dark:text-rose-400 uppercase tracking-wider">{t('dashboard.securityAlerts')}</CardTitle>
-              <div className="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-lg">
-                <ShieldAlert className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+              <CardTitle className="text-xs font-medium text-[#FF6B6B] dark:text-[#FF6B6B] uppercase tracking-wider">{t('dashboard.securityAlerts')}</CardTitle>
+              <div className="p-2 bg-[#FFE5E5] dark:bg-[#FF6B6B]/10/50 rounded-lg">
+                <ShieldAlert className="h-4 w-4 text-[#FF6B6B] dark:text-[#FF6B6B]" />
               </div>
             </CardHeader>
             <CardContent>
@@ -220,8 +220,8 @@ export default function Home() {
                 <Skeleton className="h-8 w-16" />
               ) : (
                 <>
-                  <div className="text-2xl font-semibold text-rose-700 dark:text-rose-400">{stats?.securityAlerts || 0}</div>
-                  <p className="text-xs text-rose-600 dark:text-rose-500 mt-1">{t('common.critical')}</p>
+                  <div className="text-2xl font-medium text-[#FF6B6B] dark:text-[#FF6B6B]">{stats?.securityAlerts || 0}</div>
+                  <p className="text-xs text-[#FF6B6B] dark:text-[#FF6B6B] mt-1">{t('common.critical')}</p>
                 </>
               )}
             </CardContent>
@@ -235,9 +235,9 @@ export default function Home() {
             onClick={() => navigate("/sites")}
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('dashboard.facilities')}</CardTitle>
-              <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                <Building2 className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              <CardTitle className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">{t('dashboard.facilities')}</CardTitle>
+              <div className="p-2 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-lg">
+                <Building2 className="h-4 w-4 text-[#6B6B6B] dark:text-[#B0B0B0]" />
               </div>
             </CardHeader>
             <CardContent>
@@ -245,8 +245,8 @@ export default function Home() {
                 <Skeleton className="h-8 w-16" />
               ) : (
                 <>
-                  <div className="text-2xl font-semibold text-foreground">{stats?.sites || 0}</div>
-                  <p className="text-xs text-muted-foreground mt-1">{stats?.zones || 0} {t('nav.zones')} · {stats?.areas || 0} {t('nav.areas')}</p>
+                  <div className="text-2xl font-medium text-foreground">{stats?.sites || 0}</div>
+                  <p className="text-xs text-[#6B6B6B] mt-1">{stats?.zones || 0} {t('nav.zones')} · {stats?.areas || 0} {t('nav.areas')}</p>
                 </>
               )}
             </CardContent>
@@ -256,19 +256,19 @@ export default function Home() {
 
       {/* Quick Actions Bar - Only show to users with approval or alerts permission */}
       {(canViewApprovals || canViewAlerts) && (
-        <Card className="border-0 bg-[#4f008c] dark:bg-[#3a1066] text-white shadow-lg">
+        <Card className="border-0 bg-[#5B2C93] dark:bg-[#3D1C5E] text-white shadow-lg">
           <CardContent className="py-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <Activity className="h-5 w-5 text-white/80" />
-                <span className="font-medium text-slate-100">{t('dashboard.quickActions')}</span>
+                <span className="font-medium text-white">{t('dashboard.quickActions')}</span>
               </div>
               <div className="flex flex-wrap gap-3">
                 {canViewApprovals && (
                   <>
                     <Button 
                       size="default" 
-                      className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
+                      className="bg-[#5B2C93] hover:bg-[#5B2C93] text-white border-0 h-10 px-5"
                       onClick={() => navigate("/approvals/l1")}
                     >
                       <CheckCircle2 className="h-4 w-4 mr-2" /> 
@@ -276,7 +276,7 @@ export default function Home() {
                     </Button>
                     <Button 
                       size="default" 
-                      className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
+                      className="bg-[#5B2C93] hover:bg-[#5B2C93] text-white border-0 h-10 px-5"
                       onClick={() => navigate("/approvals/l2")}
                     >
                       <UserCheck className="h-4 w-4 mr-2" /> 
@@ -287,7 +287,7 @@ export default function Home() {
                 {canViewAlerts && (
                   <Button 
                     size="default" 
-                    className="bg-[#7333a3] hover:bg-[#a54ee1] text-white border-0 h-10 px-5"
+                    className="bg-[#5B2C93] hover:bg-[#5B2C93] text-white border-0 h-10 px-5"
                     onClick={() => navigate("/global-overwatch")}
                   >
                     <Eye className="h-4 w-4 mr-2" /> 
@@ -307,16 +307,16 @@ export default function Home() {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-slate-500" />
+                <BarChart3 className="h-4 w-4 text-[#6B6B6B]" />
                 {t('dashboard.visitorTraffic')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">{t('dashboard.hourlyArrivals')}</p>
+              <p className="text-xs text-[#6B6B6B]">{t('dashboard.hourlyArrivals')}</p>
             </div>
           </CardHeader>
           <CardContent className="pt-0">
             {trafficLoading ? (
               <div className="h-[200px] flex items-center justify-center">
-                <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
+                <RefreshCw className="h-6 w-6 animate-spin text-[#6B6B6B]" />
               </div>
             ) : (
               <>
@@ -324,16 +324,16 @@ export default function Home() {
                   {visitorTraffic?.map((t, i) => (
                     <div 
                       key={i} 
-                      className="flex-1 bg-slate-600 dark:bg-slate-500 hover:bg-slate-500 dark:hover:bg-slate-400 transition-all rounded-t relative group cursor-pointer" 
+                      className="flex-1 bg-[#6B6B6B] dark:bg-[#F5F5F5]0 hover:bg-[#F5F5F5]0 dark:hover:bg-[#B0B0B0] transition-all rounded-t relative group cursor-pointer" 
                       style={{ height: `${Math.max((t.visitors / maxTraffic) * 100, 5)}%` }}
                     >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 whitespace-nowrap">
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#2C2C2C] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 whitespace-nowrap">
                         {t.visitors}
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-between text-xs text-muted-foreground px-2 border-t pt-2">
+                <div className="flex justify-between text-xs text-[#6B6B6B] px-2 border-t pt-2">
                   {visitorTraffic?.map((t, i) => (
                     <span key={i} className="flex-1 text-center text-[10px]">{t.hour}</span>
                   ))}
@@ -346,26 +346,26 @@ export default function Home() {
         <Card className="col-span-3 border border-border/50 shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
-              <Layers className="h-4 w-4 text-slate-500" />
+              <Layers className="h-4 w-4 text-[#6B6B6B]" />
               {t('dashboard.zoneOccupancy')}
             </CardTitle>
-            <p className="text-xs text-muted-foreground">{t('dashboard.currentHeadcount')}</p>
+            <p className="text-xs text-[#6B6B6B]">{t('dashboard.currentHeadcount')}</p>
           </CardHeader>
           <CardContent className="pt-0">
             {zoneLoading ? (
               <div className="h-[200px] flex items-center justify-center">
-                <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
+                <RefreshCw className="h-6 w-6 animate-spin text-[#6B6B6B]" />
               </div>
             ) : (
               <>
                 <div className="h-[160px] w-full flex items-end justify-around gap-2 px-2">
                   {zoneOccupancy?.slice(0, 5).map((z, i) => {
                     const colors = [
-                      "bg-slate-600 dark:bg-slate-500",
-                      "bg-slate-500 dark:bg-slate-400",
-                      "bg-teal-600 dark:bg-teal-500",
-                      "bg-amber-500 dark:bg-amber-400",
-                      "bg-indigo-500 dark:bg-indigo-400",
+                      "bg-[#6B6B6B] dark:bg-[#F5F5F5]0",
+                      "bg-[#F5F5F5]0 dark:bg-[#B0B0B0]",
+                      "bg-[#4ECDC4] dark:bg-[#E8F9F8]0",
+                      "bg-[#FFF4E5] dark:bg-[#FFB84D]",
+                      "bg-[#E8DCF5]0 dark:bg-[#5B2C93]",
                     ];
                     return (
                       <div key={z.id} className="flex flex-col items-center flex-1">
@@ -377,7 +377,7 @@ export default function Home() {
                           )}
                           style={{ height: `${Math.max((z.occupancy / maxOccupancy) * 130, 10)}px` }}
                         />
-                        <span className="text-[10px] text-muted-foreground mt-2 truncate max-w-full">{z.code}</span>
+                        <span className="text-[10px] text-[#6B6B6B] mt-2 truncate max-w-full">{z.code}</span>
                       </div>
                     );
                   })}
@@ -397,15 +397,15 @@ export default function Home() {
         <Card className="border border-border/50 shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-slate-500" />
+              <BarChart3 className="h-4 w-4 text-[#6B6B6B]" />
               {t('dashboard.requestStatus')}
             </CardTitle>
-            <p className="text-xs text-muted-foreground">{t('dashboard.distributionBreakdown')}</p>
+            <p className="text-xs text-[#6B6B6B]">{t('dashboard.distributionBreakdown')}</p>
           </CardHeader>
           <CardContent className="pt-0">
             {statusLoading ? (
               <div className="h-[180px] flex items-center justify-center">
-                <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
+                <RefreshCw className="h-6 w-6 animate-spin text-[#6B6B6B]" />
               </div>
             ) : (
               <div className="space-y-3">
@@ -417,7 +417,7 @@ export default function Home() {
                         <span className="text-sm text-foreground">{s.label}</span>
                         <span className="text-sm font-medium text-foreground">{s.count}</span>
                       </div>
-                      <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-full overflow-hidden">
                         <div 
                           className={cn("h-full rounded-full transition-all", statusColors[s.status])}
                           style={{ width: `${totalByStatus > 0 ? (s.count / totalByStatus) * 100 : 0}%` }}
@@ -438,10 +438,10 @@ export default function Home() {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
-                <Clock className="h-4 w-4 text-amber-500" />
+                <Clock className="h-4 w-4 text-[#FFB84D]" />
                 {t('dashboard.pendingL1')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">{t('dashboard.awaitingInitialReview')}</p>
+              <p className="text-xs text-[#6B6B6B]">{t('dashboard.awaitingInitialReview')}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => navigate("/approvals/l1")} className="h-8 px-3">
               {t('common.view')} <ChevronRight className="h-3 w-3 ml-1" />
@@ -453,8 +453,8 @@ export default function Home() {
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
               </div>
             ) : pendingItems?.pendingL1.length === 0 ? (
-              <div className="h-[150px] flex flex-col items-center justify-center text-muted-foreground">
-                <CheckCircle2 className="h-10 w-10 mb-2 text-teal-500" />
+              <div className="h-[150px] flex flex-col items-center justify-center text-[#6B6B6B]">
+                <CheckCircle2 className="h-10 w-10 mb-2 text-[#4ECDC4]" />
                 <p className="text-sm">{t('common.allCaughtUp')}</p>
               </div>
             ) : (
@@ -462,15 +462,15 @@ export default function Home() {
                 {pendingItems?.pendingL1.slice(0, 3).map((item) => (
                   <div 
                     key={item.id} 
-                    className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                    className="p-3 bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 rounded-lg border border-[#E0E0E0] dark:border-[#6B6B6B] hover:bg-[#F5F5F5] dark:hover:bg-[#2C2C2C] cursor-pointer transition-colors"
                     onClick={() => navigate("/approvals/l1")}
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-mono text-xs text-slate-600 dark:text-slate-400">{item.requestNumber}</p>
+                        <p className="font-mono text-xs text-[#6B6B6B] dark:text-[#B0B0B0]">{item.requestNumber}</p>
                         <p className="text-sm font-medium truncate text-foreground">{item.visitorName}</p>
                       </div>
-                      <Badge variant="outline" className="text-xs bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600">
+                      <Badge variant="outline" className="text-xs bg-[#F5F5F5] dark:bg-[#2C2C2C] border-[#E0E0E0] dark:border-[#6B6B6B]">
                         {item.typeLabel}
                       </Badge>
                     </div>
@@ -488,10 +488,10 @@ export default function Home() {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
-                <Shield className="h-4 w-4 text-indigo-500" />
+                <Shield className="h-4 w-4 text-[#5B2C93]" />
                 {t('dashboard.pendingL2')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">{t('dashboard.awaitingFinalReview')}</p>
+              <p className="text-xs text-[#6B6B6B]">{t('dashboard.awaitingFinalReview')}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => navigate("/approvals/l2")} className="h-8 px-3">
               {t('common.view')} <ChevronRight className="h-3 w-3 ml-1" />
@@ -503,8 +503,8 @@ export default function Home() {
                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-14 w-full" />)}
               </div>
             ) : pendingItems?.pendingManual.length === 0 ? (
-              <div className="h-[150px] flex flex-col items-center justify-center text-muted-foreground">
-                <CheckCircle2 className="h-10 w-10 mb-2 text-teal-500" />
+              <div className="h-[150px] flex flex-col items-center justify-center text-[#6B6B6B]">
+                <CheckCircle2 className="h-10 w-10 mb-2 text-[#4ECDC4]" />
                 <p className="text-sm">{t('common.allCaughtUp')}</p>
               </div>
             ) : (
@@ -512,15 +512,15 @@ export default function Home() {
                 {pendingItems?.pendingManual.slice(0, 3).map((item) => (
                   <div 
                     key={item.id} 
-                    className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                    className="p-3 bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 rounded-lg border border-[#E0E0E0] dark:border-[#6B6B6B] hover:bg-[#F5F5F5] dark:hover:bg-[#2C2C2C] cursor-pointer transition-colors"
                     onClick={() => navigate("/approvals/l2")}
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-mono text-xs text-slate-600 dark:text-slate-400">{item.requestNumber}</p>
+                        <p className="font-mono text-xs text-[#6B6B6B] dark:text-[#B0B0B0]">{item.requestNumber}</p>
                         <p className="text-sm font-medium truncate text-foreground">{item.visitorName}</p>
                       </div>
-                      <Badge variant="outline" className="text-xs bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600">
+                      <Badge variant="outline" className="text-xs bg-[#F5F5F5] dark:bg-[#2C2C2C] border-[#E0E0E0] dark:border-[#6B6B6B]">
                         {item.typeLabel}
                       </Badge>
                     </div>
@@ -542,10 +542,10 @@ export default function Home() {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-slate-500" />
+                <MapPin className="h-4 w-4 text-[#6B6B6B]" />
                 {t('dashboard.siteOverview')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">{t('dashboard.facilityStatus')}</p>
+              <p className="text-xs text-[#6B6B6B]">{t('dashboard.facilityStatus')}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => navigate("/sites")} className="h-8 px-3">
               {t('common.manage')} <ChevronRight className="h-3 w-3 ml-1" />
@@ -561,20 +561,20 @@ export default function Home() {
                 {siteOverview?.slice(0, 4).map((site) => (
                   <div 
                     key={site.id}
-                    className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                    className="p-3 rounded-lg bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 border border-[#E0E0E0] dark:border-[#6B6B6B] hover:bg-[#F5F5F5] dark:hover:bg-[#2C2C2C] transition-colors cursor-pointer"
                     onClick={() => navigate("/sites")}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-sm truncate text-foreground">{site.name}</p>
-                        <p className="text-xs text-muted-foreground">{site.code}</p>
+                        <p className="text-xs text-[#6B6B6B]">{site.code}</p>
                       </div>
                       <div className={cn(
                         "w-2 h-2 rounded-full mt-1.5 flex-shrink-0",
-                        site.status === "active" ? "bg-teal-500" : "bg-amber-500"
+                        site.status === "active" ? "bg-[#E8F9F8]0" : "bg-[#FFF4E5]"
                       )} />
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-3 text-xs text-[#6B6B6B]">
                       <span className="flex items-center gap-1">
                         <Layers className="h-3 w-3" /> {site.zoneCount}
                       </span>
@@ -582,7 +582,7 @@ export default function Home() {
                         <Users className="h-3 w-3" /> {site.activeVisitors}
                       </span>
                       {site.alertCount > 0 && (
-                        <span className="flex items-center gap-1 text-rose-500">
+                        <span className="flex items-center gap-1 text-[#FF6B6B]">
                           <AlertCircle className="h-3 w-3" /> {site.alertCount}
                         </span>
                       )}
@@ -600,10 +600,10 @@ export default function Home() {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
-                <Activity className="h-4 w-4 text-slate-500" />
+                <Activity className="h-4 w-4 text-[#6B6B6B]" />
                 {t('dashboard.recentActivity')}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">{t('dashboard.latestSystemEvents')}</p>
+              <p className="text-xs text-[#6B6B6B]">{t('dashboard.latestSystemEvents')}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => navigate("/requests")} className="h-8 px-3">
               {t('dashboard.viewAll')} <ChevronRight className="h-3 w-3 ml-1" />
@@ -620,29 +620,29 @@ export default function Home() {
                   <div key={activity.id} className="flex items-start gap-3">
                     <div className={cn(
                       "p-1.5 rounded",
-                      activity.status === "approved" ? "bg-teal-100 dark:bg-teal-900/30" :
-                      activity.status === "rejected" ? "bg-rose-100 dark:bg-rose-900/30" :
-                      activity.status === "pending_l1" ? "bg-amber-100 dark:bg-amber-900/30" :
-                      activity.status === "pending_manual" ? "bg-indigo-100 dark:bg-indigo-900/30" :
-                      "bg-slate-100 dark:bg-slate-800"
+                      activity.status === "approved" ? "bg-[#E8F9F8] dark:bg-[#4ECDC4]/10/30" :
+                      activity.status === "rejected" ? "bg-[#FFE5E5] dark:bg-[#FF6B6B]/10/30" :
+                      activity.status === "pending_l1" ? "bg-[#FFF4E5] dark:bg-[#FFB84D]/10" :
+                      activity.status === "pending_manual" ? "bg-[#E8DCF5] dark:bg-[#5B2C93]/10/30" :
+                      "bg-[#F5F5F5] dark:bg-[#2C2C2C]"
                     )}>
-                      {activity.status === "approved" ? <CheckCircle2 className="h-3.5 w-3.5 text-teal-600" /> :
-                       activity.status === "rejected" ? <AlertTriangle className="h-3.5 w-3.5 text-rose-600" /> :
-                       activity.status === "pending_l1" ? <Clock className="h-3.5 w-3.5 text-amber-600" /> :
-                       activity.status === "pending_manual" ? <Shield className="h-3.5 w-3.5 text-indigo-600" /> :
-                       <FileText className="h-3.5 w-3.5 text-slate-600" />}
+                      {activity.status === "approved" ? <CheckCircle2 className="h-3.5 w-3.5 text-[#4ECDC4]" /> :
+                       activity.status === "rejected" ? <AlertTriangle className="h-3.5 w-3.5 text-[#FF6B6B]" /> :
+                       activity.status === "pending_l1" ? <Clock className="h-3.5 w-3.5 text-[#FFB84D]" /> :
+                       activity.status === "pending_manual" ? <Shield className="h-3.5 w-3.5 text-[#5B2C93]" /> :
+                       <FileText className="h-3.5 w-3.5 text-[#6B6B6B]" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-foreground truncate">
-                        <span className="font-mono text-xs text-slate-500">{activity.requestNumber}</span>
+                        <span className="font-mono text-xs text-[#6B6B6B]">{activity.requestNumber}</span>
                         <span className="mx-1">·</span>
                         {activity.action}
                       </p>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="text-xs text-[#6B6B6B] truncate">
                         {activity.visitorName}
                       </p>
                     </div>
-                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                    <span className="text-[10px] text-[#6B6B6B] whitespace-nowrap">
                       {activity.timestamp ? formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true }) : ''}
                     </span>
                   </div>
@@ -658,10 +658,10 @@ export default function Home() {
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
             <CardTitle className="text-base font-medium flex items-center gap-2">
-              <FileText className="h-4 w-4 text-slate-500" />
+              <FileText className="h-4 w-4 text-[#6B6B6B]" />
               {t('dashboard.recentRequests')}
             </CardTitle>
-            <p className="text-xs text-muted-foreground">{t('dashboard.latestAccessRequests')}</p>
+            <p className="text-xs text-[#6B6B6B]">{t('dashboard.latestAccessRequests')}</p>
           </div>
           <Button variant="outline" size="default" onClick={() => navigate("/requests")} className="h-9 px-4">
             {t('dashboard.viewAllRequests')}
@@ -686,7 +686,7 @@ export default function Home() {
               <TableBody>
                 {recentActivity?.slice(0, 5).map((row) => (
                   <TableRow key={row.id} className="cursor-pointer" onClick={() => navigate("/requests")}>
-                    <TableCell className="font-mono text-xs text-slate-600 dark:text-slate-400">{row.requestNumber}</TableCell>
+                    <TableCell className="font-mono text-xs text-[#6B6B6B] dark:text-[#B0B0B0]">{row.requestNumber}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className="text-xs font-normal">
                         {row.type}
@@ -698,11 +698,11 @@ export default function Home() {
                         variant="outline" 
                         className={cn(
                           "text-xs",
-                          row.status === "approved" ? "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:border-teal-800" :
-                          row.status === "rejected" ? "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800" :
-                          row.status === "pending_l1" ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800" :
-                          row.status === "pending_manual" ? "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:border-indigo-800" :
-                          "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
+                          row.status === "approved" ? "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4] dark:bg-[#4ECDC4]/10/30 dark:text-[#4ECDC4] dark:border-[#4ECDC4]" :
+                          row.status === "rejected" ? "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B] dark:bg-[#FF6B6B]/10/30 dark:text-[#FF6B6B] dark:border-[#FF6B6B]" :
+                          row.status === "pending_l1" ? "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D] dark:bg-[#FFB84D]/10 dark:text-[#FFB84D] dark:border-[#FFB84D]" :
+                          row.status === "pending_manual" ? "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] dark:bg-[#5B2C93]/10/30 dark:text-[#E8DCF5] dark:border-[#5B2C93]" :
+                          "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0] dark:bg-[#2C2C2C] dark:text-[#B0B0B0] dark:border-[#6B6B6B]"
                         )}
                       >
                         {row.status === "pending_l1" ? t('status.pendingL1') :
@@ -710,7 +710,7 @@ export default function Home() {
                          t(`status.${row.status}`, row.status.charAt(0).toUpperCase() + row.status.slice(1))}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
+                    <TableCell className="text-xs text-[#6B6B6B]">
                       {row.timestamp ? formatDistanceToNow(new Date(row.timestamp), { addSuffix: true }) : '-'}
                     </TableCell>
                   </TableRow>

@@ -43,11 +43,11 @@ function FormField({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm text-muted-foreground font-normal">
+      <Label className="text-sm text-[#6B6B6B] font-normal">
         {label}{required && <span className="text-destructive ml-0.5">*</span>}:
       </Label>
       {children}
-      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {hint && <p className="text-xs text-[#6B6B6B]">{hint}</p>}
     </div>
   );
 }
@@ -55,8 +55,8 @@ function FormField({
 // SAP Fiori-style Section Header
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="pb-2 mb-4 border-b border-[#4f008c]/20">
-      <h3 className="text-sm font-semibold text-[#4f008c]">{title}</h3>
+    <div className="pb-2 mb-4 border-b border-[#5B2C93]/20">
+      <h3 className="text-sm font-medium text-[#5B2C93]">{title}</h3>
     </div>
   );
 }
@@ -261,12 +261,12 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b bg-card">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#ff375e] to-[#4f008c] flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#5B2C93] flex items-center justify-center">
                 <UserCog className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-[#4f008c]">Edit User</h1>
-                <p className="text-sm text-muted-foreground">{getUserTypeDisplay()}</p>
+                <h1 className="text-xl font-medium text-[#5B2C93]">Edit User</h1>
+                <p className="text-sm text-[#6B6B6B]">{getUserTypeDisplay()}</p>
               </div>
             </div>
             <Button variant="outline" onClick={() => onOpenChange(false)}>
@@ -279,7 +279,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
             {/* Left Sidebar - Vertical Tabs */}
             <div className="w-56 border-r bg-card flex flex-col">
               <div className="p-4 border-b">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Sections</p>
+                <p className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">Sections</p>
               </div>
               <nav className="flex-1 p-2">
                 {tabs.map((tab, index) => {
@@ -292,25 +292,25 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                       onClick={() => setActiveTab(tab.id)}
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
                         isActive 
-                          ? "bg-gradient-to-r from-[#ff375e]/10 to-[#4f008c]/10 text-[#4f008c] border-l-4 border-[#4f008c]" 
+                          ? "bg-gradient-to-r from-[#FF6B6B]/10 to-[#5B2C93]/10 text-[#5B2C93] border-l-4 border-[#5B2C93]" 
                           : isCompleted
-                            ? "text-foreground hover:bg-muted"
-                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                            ? "text-foreground hover:bg-[#F5F5F5]"
+                            : "text-[#6B6B6B] hover:bg-[#F5F5F5] hover:text-foreground"
                       }`}
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                         isActive 
-                          ? "bg-gradient-to-br from-[#ff375e] to-[#4f008c] text-white"
+                          ? "bg-gradient-to-br from-[#FF6B6B] to-[#5B2C93] text-white"
                           : isCompleted
-                            ? "bg-green-500 text-white"
-                            : "bg-muted text-muted-foreground"
+                            ? "bg-[#E8F9F8] text-white"
+                            : "bg-[#F5F5F5] text-[#6B6B6B]"
                       }`}>
                         {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">{tab.label}</p>
                       </div>
-                      {isActive && <ChevronRight className="h-4 w-4 text-[#4f008c]" />}
+                      {isActive && <ChevronRight className="h-4 w-4 text-[#5B2C93]" />}
                     </button>
                   );
                 })}
@@ -758,7 +758,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                   {!isLastTab ? (
                     <Button
                       onClick={goToNextTab}
-                      className="gap-2 bg-[#4f008c] hover:bg-[#3d006d] text-white"
+                      className="gap-2 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white"
                     >
                       Next
                       <ChevronRight className="h-4 w-4" />
@@ -767,7 +767,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                     <Button
                       onClick={handleSubmit}
                       disabled={updateUserMutation.isPending}
-                      className="gap-2 bg-[#4f008c] hover:bg-[#3d006d] text-white"
+                      className="gap-2 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white"
                     >
                       {updateUserMutation.isPending ? (
                         <>

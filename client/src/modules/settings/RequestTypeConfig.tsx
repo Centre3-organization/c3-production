@@ -133,25 +133,25 @@ function SortableSectionItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+      className="flex items-center justify-between p-4 border rounded-lg hover:bg-[#F5F5F5]/50 cursor-pointer transition-colors"
       onClick={onClick}
     >
       <div className="flex items-center gap-3">
         <button
           type="button"
-          className="cursor-grab hover:bg-muted p-1 rounded"
+          className="cursor-grab hover:bg-[#F5F5F5] p-1 rounded"
           {...attributes}
           {...listeners}
           onClick={(e) => e.stopPropagation()}
         >
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
+          <GripVertical className="h-4 w-4 text-[#6B6B6B]" />
         </button>
         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
           <LayoutList className="h-5 w-5 text-primary" />
         </div>
         <div>
           <div className="font-medium">{section.name}</div>
-          <div className="text-sm text-muted-foreground">Order: {section.displayOrder}</div>
+          <div className="text-sm text-[#6B6B6B]">Order: {section.displayOrder}</div>
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -167,7 +167,7 @@ function SortableSectionItem({
         <Button variant="ghost" size="icon" onClick={onEdit}>
           <Pencil className="h-4 w-4" />
         </Button>
-        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        <ChevronRight className="h-4 w-4 text-[#6B6B6B]" />
       </div>
     </div>
   );
@@ -202,23 +202,23 @@ function SortableFieldItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+      className="flex items-center justify-between p-4 border rounded-lg hover:bg-[#F5F5F5]/50 transition-colors"
     >
       <div className="flex items-center gap-3">
         <button
           type="button"
-          className="cursor-grab hover:bg-muted p-1 rounded"
+          className="cursor-grab hover:bg-[#F5F5F5] p-1 rounded"
           {...attributes}
           {...listeners}
         >
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
+          <GripVertical className="h-4 w-4 text-[#6B6B6B]" />
         </button>
         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
           <FormInput className="h-5 w-5 text-primary" />
         </div>
         <div>
           <div className="font-medium">{field.name}</div>
-          <div className="text-sm text-muted-foreground">{field.fieldType} · {field.code}</div>
+          <div className="text-sm text-[#6B6B6B]">{field.fieldType} · {field.code}</div>
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -669,8 +669,8 @@ export default function RequestTypeConfig() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">{t("settings.requestTypes", "Request Type Configuration")}</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-medium">{t("settings.requestTypes", "Request Type Configuration")}</h1>
+          <p className="text-[#6B6B6B]">
             {t("settings.requestTypesDesc", "Configure request categories, types, form sections, and fields")}
           </p>
         </div>
@@ -692,7 +692,7 @@ export default function RequestTypeConfig() {
         </Button>
         {selectedCategory && (
           <>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            <ChevronRight className="h-4 w-4 text-[#6B6B6B]" />
             <Button
               variant={!selectedType ? "default" : "ghost"}
               size="sm"
@@ -708,7 +708,7 @@ export default function RequestTypeConfig() {
         )}
         {selectedType && (
           <>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            <ChevronRight className="h-4 w-4 text-[#6B6B6B]" />
             <Button
               variant={!selectedSection ? "default" : "ghost"}
               size="sm"
@@ -721,7 +721,7 @@ export default function RequestTypeConfig() {
         )}
         {selectedSection && (
           <>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            <ChevronRight className="h-4 w-4 text-[#6B6B6B]" />
             <Button variant="default" size="sm" className="bg-primary/10 text-primary">
               <FormInput className="h-4 w-4 mr-1" />
               {selectedSection.name}
@@ -782,7 +782,7 @@ export default function RequestTypeConfig() {
                   {(categories as Category[] | undefined)?.map((category) => (
                     <div
                       key={category.id}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-[#F5F5F5]/50 cursor-pointer transition-colors"
                       onClick={() => setSelectedCategory(category)}
                     >
                       <div className="flex items-center gap-3">
@@ -791,7 +791,7 @@ export default function RequestTypeConfig() {
                         </div>
                         <div>
                           <div className="font-medium">{category.name}</div>
-                          <div className="text-sm text-muted-foreground">{category.code}</div>
+                          <div className="text-sm text-[#6B6B6B]">{category.code}</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -812,12 +812,12 @@ export default function RequestTypeConfig() {
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        <ChevronRight className="h-4 w-4 text-[#6B6B6B]" />
                       </div>
                     </div>
                   ))}
                   {(!categories || (categories as Category[]).length === 0) && (
-                    <div className="text-center py-8 text-muted-foreground">
+                    <div className="text-center py-8 text-[#6B6B6B]">
                       No categories found. Create your first category to get started.
                     </div>
                   )}
@@ -830,7 +830,7 @@ export default function RequestTypeConfig() {
                   {(types as RequestType[] | undefined)?.map((type) => (
                     <div
                       key={type.id}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-[#F5F5F5]/50 cursor-pointer transition-colors"
                       onClick={() => setSelectedType(type)}
                     >
                       <div className="flex items-center gap-3">
@@ -839,7 +839,7 @@ export default function RequestTypeConfig() {
                         </div>
                         <div>
                           <div className="font-medium">{type.name}</div>
-                          <div className="text-sm text-muted-foreground">Max {type.maxDurationDays} days</div>
+                          <div className="text-sm text-[#6B6B6B]">Max {type.maxDurationDays} days</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -860,12 +860,12 @@ export default function RequestTypeConfig() {
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        <ChevronRight className="h-4 w-4 text-[#6B6B6B]" />
                       </div>
                     </div>
                   ))}
                   {(!types || (types as RequestType[]).length === 0) && (
-                    <div className="text-center py-8 text-muted-foreground">
+                    <div className="text-center py-8 text-[#6B6B6B]">
                       No types found. Create your first request type.
                     </div>
                   )}
@@ -897,7 +897,7 @@ export default function RequestTypeConfig() {
                         />
                       ))}
                       {(!sections || (sections as FormSection[]).length === 0) && (
-                        <div className="text-center py-8 text-muted-foreground">
+                        <div className="text-center py-8 text-[#6B6B6B]">
                           No sections found. Create your first form section.
                         </div>
                       )}
@@ -940,7 +940,7 @@ export default function RequestTypeConfig() {
                         />
                       ))}
                       {(!fields || (fields as FormField[]).length === 0) && (
-                        <div className="text-center py-8 text-muted-foreground">
+                        <div className="text-center py-8 text-[#6B6B6B]">
                           No fields found. Create your first form field.
                         </div>
                       )}
@@ -960,24 +960,24 @@ export default function RequestTypeConfig() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Categories</span>
+                <span className="text-[#6B6B6B]">Categories</span>
                 <span className="font-medium">{(categories as Category[])?.length || 0}</span>
               </div>
               {selectedCategory && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Types</span>
+                  <span className="text-[#6B6B6B]">Types</span>
                   <span className="font-medium">{(types as RequestType[])?.length || 0}</span>
                 </div>
               )}
               {selectedType && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Sections</span>
+                  <span className="text-[#6B6B6B]">Sections</span>
                   <span className="font-medium">{(sections as FormSection[])?.length || 0}</span>
                 </div>
               )}
               {selectedSection && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Fields</span>
+                  <span className="text-[#6B6B6B]">Fields</span>
                   <span className="font-medium">{(fields as FormField[])?.length || 0}</span>
                 </div>
               )}
@@ -988,7 +988,7 @@ export default function RequestTypeConfig() {
             <CardHeader>
               <CardTitle className="text-lg">Help</CardTitle>
             </CardHeader>
-            <CardContent className="text-sm text-muted-foreground space-y-2">
+            <CardContent className="text-sm text-[#6B6B6B] space-y-2">
               <p><strong>Categories</strong> are top-level groupings (e.g., Admin Visit, Technical & Delivery).</p>
               <p><strong>Types</strong> are specific permit types within a category (e.g., TEP, WP, MOP).</p>
               <p><strong>Sections</strong> are form tabs that organize fields.</p>
@@ -1427,14 +1427,14 @@ export default function RequestTypeConfig() {
 
             {/* Data Source Selector for dropdown fields */}
             {showDataSourceSelector && (
-              <div className="border rounded-lg overflow-hidden bg-gray-50">
+              <div className="border rounded-lg overflow-hidden bg-[#F5F5F5]">
                 {/* Header */}
                 <div className="px-4 py-3 bg-primary/5 border-b">
-                  <h4 className="font-semibold text-sm flex items-center gap-2">
+                  <h4 className="font-medium text-sm flex items-center gap-2">
                     <span className="w-5 h-5 rounded bg-primary/10 flex items-center justify-center text-xs">📋</span>
                     Options Source
                   </h4>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-[#6B6B6B] mt-1">
                     Choose where dropdown options come from
                   </p>
                 </div>
@@ -1444,7 +1444,7 @@ export default function RequestTypeConfig() {
                   <div className="grid grid-cols-2 gap-2">
                     {dataSourceGroups.map((group) => (
                       <div key={group.label} className="space-y-1">
-                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-1">
+                        <p className="text-[10px] font-medium text-[#6B6B6B] uppercase tracking-wider px-1">
                           {group.label}
                         </p>
                         {group.options.map((opt) => (
@@ -1460,7 +1460,7 @@ export default function RequestTypeConfig() {
                             className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all flex items-center gap-2 ${
                               selectedDataSource === opt.value
                                 ? "bg-primary text-primary-foreground shadow-sm"
-                                : "bg-white border hover:bg-gray-100 hover:border-primary/30"
+                                : "bg-white border hover:bg-[#F5F5F5] hover:border-primary/30"
                             }`}
                           >
                             <span className="text-base">{opt.icon}</span>
@@ -1477,22 +1477,22 @@ export default function RequestTypeConfig() {
                   {selectedDataSource && (
                     <div className={`rounded-lg p-3 border-2 ${
                       selectedDataSource === "static" 
-                        ? "border-amber-200 bg-amber-50" 
-                        : "border-green-200 bg-green-50"
+                        ? "border-[#FFB84D] bg-[#FFF4E5]" 
+                        : "border-[#4ECDC4] bg-[#E8F9F8]"
                     }`}>
                       <div className="flex items-start gap-3">
                         <span className="text-2xl">
                           {dataSourceOptions.find(o => o.value === selectedDataSource)?.icon}
                         </span>
                         <div className="flex-1">
-                          <p className="font-semibold text-sm">
+                          <p className="font-medium text-sm">
                             {dataSourceOptions.find(o => o.value === selectedDataSource)?.label}
                           </p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-[#6B6B6B]">
                             {dataSourceOptions.find(o => o.value === selectedDataSource)?.description}
                           </p>
                           {selectedDataSource !== "static" && (
-                            <p className="text-xs text-green-700 mt-1 font-medium">
+                            <p className="text-xs text-[#4ECDC4] mt-1 font-medium">
                               ✓ Options will be loaded dynamically from the system
                             </p>
                           )}
@@ -1503,10 +1503,10 @@ export default function RequestTypeConfig() {
 
                   {/* Filter By Field selector for cascading dropdowns */}
                   {cascadingFilters[selectedDataSource] && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2">
+                    <div className="bg-[#E8DCF5] border border-[#5B2C93] rounded-lg p-3 space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-blue-600">🔗</span>
-                        <Label className="text-sm font-semibold text-blue-800">
+                        <span className="text-[#5B2C93]">🔗</span>
+                        <Label className="text-sm font-medium text-[#5B2C93]">
                           Cascading Filter: {cascadingFilters[selectedDataSource].label}
                         </Label>
                       </div>
@@ -1519,7 +1519,7 @@ export default function RequestTypeConfig() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="">
-                            <span className="text-muted-foreground">No filter (show all)</span>
+                            <span className="text-[#6B6B6B]">No filter (show all)</span>
                           </SelectItem>
                           {(fields || []).filter((f: FormField) => 
                             ["dropdown", "dropdown_multi"].includes(f.fieldType) &&
@@ -1531,7 +1531,7 @@ export default function RequestTypeConfig() {
                           ))}
                         </SelectContent>
                       </Select>
-                      <p className="text-xs text-blue-600">
+                      <p className="text-xs text-[#5B2C93]">
                         💡 Options will be filtered based on the selected value of this field
                       </p>
                     </div>

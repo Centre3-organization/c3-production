@@ -47,12 +47,12 @@ const typeLabels: Record<string, string> = {
 };
 
 const typeColors: Record<string, string> = {
-  admin_visit: "bg-blue-100 text-blue-800 border-blue-200",
-  work_permit: "bg-purple-100 text-purple-800 border-purple-200",
-  material_entry: "bg-amber-100 text-amber-800 border-amber-200",
-  tep: "bg-cyan-100 text-cyan-800 border-cyan-200",
-  mop: "bg-rose-100 text-rose-800 border-rose-200",
-  escort: "bg-green-100 text-green-800 border-green-200",
+  admin_visit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
+  work_permit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
+  material_entry: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  tep: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]/20",
+  mop: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
+  escort: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
 };
 
 export default function L1Approval() {
@@ -150,16 +150,16 @@ export default function L1Approval() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <Zap className="h-6 w-6 text-amber-500" />
+          <h1 className="text-2xl font-medium tracking-tight text-foreground flex items-center gap-2">
+            <Zap className="h-6 w-6 text-[#FFB84D]" />
             L1 Approval Queue
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-[#6B6B6B] mt-1">
             Initial review stage - Quick review and forward requests to security approval
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+          <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]">
             <GitBranch className="h-3 w-3 mr-1" />
             Workflow-Based
           </Badge>
@@ -172,57 +172,57 @@ export default function L1Approval() {
 
       {/* Stats Bar */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
+        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-[#FFB84D]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-amber-700">In L1 Queue</p>
-                <p className="text-3xl font-bold text-amber-900">{l1Tasks.length}</p>
+                <p className="text-sm font-medium text-[#FFB84D]">In L1 Queue</p>
+                <p className="text-3xl font-medium text-[#FFB84D]">{l1Tasks.length}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
-                <Clock className="h-6 w-6 text-amber-600" />
+              <div className="h-12 w-12 rounded-full bg-[#FFF4E5] flex items-center justify-center">
+                <Clock className="h-6 w-6 text-[#FFB84D]" />
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-[#5B2C93]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-blue-700">Pending L2</p>
-                <p className="text-3xl font-bold text-blue-900">{stats?.pendingManual || 0}</p>
+                <p className="text-sm font-medium text-[#5B2C93]">Pending L2</p>
+                <p className="text-3xl font-medium text-[#5B2C93]">{stats?.pendingManual || 0}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-                <Shield className="h-6 w-6 text-blue-600" />
+              <div className="h-12 w-12 rounded-full bg-[#E8DCF5] flex items-center justify-center">
+                <Shield className="h-6 w-6 text-[#5B2C93]" />
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-[#4ECDC4]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-700">Approved</p>
-                <p className="text-3xl font-bold text-green-900">{stats?.approved || 0}</p>
+                <p className="text-sm font-medium text-[#4ECDC4]">Approved</p>
+                <p className="text-3xl font-medium text-[#4ECDC4]">{stats?.approved || 0}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-green-600" />
+              <div className="h-12 w-12 rounded-full bg-[#E8F9F8] flex items-center justify-center">
+                <CheckCircle2 className="h-6 w-6 text-[#4ECDC4]" />
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-red-50 to-rose-50 border-red-200">
+        <Card className="bg-gradient-to-br from-red-50 to-rose-50 border-[#FF6B6B]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-red-700">Rejected</p>
-                <p className="text-3xl font-bold text-red-900">{stats?.rejected || 0}</p>
+                <p className="text-sm font-medium text-[#FF6B6B]">Rejected</p>
+                <p className="text-3xl font-medium text-[#FF6B6B]">{stats?.rejected || 0}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
-                <XCircle className="h-6 w-6 text-red-600" />
+              <div className="h-12 w-12 rounded-full bg-[#FFE5E5] flex items-center justify-center">
+                <XCircle className="h-6 w-6 text-[#FF6B6B]" />
               </div>
             </div>
           </CardContent>
@@ -232,7 +232,7 @@ export default function L1Approval() {
       {/* Search */}
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
           <Input 
             placeholder="Search by ID, visitor name, company..." 
             className="pl-10 bg-white"
@@ -253,11 +253,11 @@ export default function L1Approval() {
       ) : filteredTasks.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
-              <CheckCircle2 className="h-8 w-8 text-green-600" />
+            <div className="h-16 w-16 rounded-full bg-[#E8F9F8] flex items-center justify-center mb-4">
+              <CheckCircle2 className="h-8 w-8 text-[#4ECDC4]" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground">All caught up!</h3>
-            <p className="text-muted-foreground mt-1">No pending L1 approvals at the moment</p>
+            <h3 className="text-lg font-medium text-foreground">All caught up!</h3>
+            <p className="text-[#6B6B6B] mt-1">No pending L1 approvals at the moment</p>
           </CardContent>
         </Card>
       ) : (
@@ -273,22 +273,22 @@ export default function L1Approval() {
                   <div className="flex-1 p-5">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <Badge variant="outline" className={typeColors[task.type] || "bg-gray-100"}>
+                        <Badge variant="outline" className={typeColors[task.type] || "bg-[#F5F5F5]"}>
                           {typeLabels[task.type] || task.type}
                         </Badge>
-                        <span className="text-sm font-mono text-muted-foreground">
+                        <span className="text-sm font-mono text-[#6B6B6B]">
                           {task.requestNumber}
                         </span>
-                        <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                        <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]">
                           <GitBranch className="h-3 w-3 mr-1" />
                           {task.workflowName || "Standard Workflow"}
                         </Badge>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                        <Badge variant="outline" className="bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]">
                           Stage {task.stageOrder}: {task.stageName}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-[#6B6B6B]">
                           {task.createdAt ? format(new Date(task.createdAt), "MMM dd, HH:mm") : ""}
                         </span>
                       </div>
@@ -301,32 +301,32 @@ export default function L1Approval() {
                           <User className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                          <p className="font-semibold text-foreground">{task.visitorName}</p>
-                          <p className="text-sm text-muted-foreground">{task.visitorCompany || "Individual"}</p>
+                          <p className="font-medium text-foreground">{task.visitorName}</p>
+                          <p className="text-sm text-[#6B6B6B]">{task.visitorCompany || "Individual"}</p>
                         </div>
                       </div>
                       
                       {/* Site */}
                       <div className="flex items-start gap-3">
-                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                          <Building2 className="h-5 w-5 text-blue-600" />
+                        <div className="h-10 w-10 rounded-full bg-[#E8DCF5] flex items-center justify-center shrink-0">
+                          <Building2 className="h-5 w-5 text-[#5B2C93]" />
                         </div>
                         <div>
                           <p className="font-medium text-foreground">{task.siteName || "N/A"}</p>
-                          <p className="text-sm text-muted-foreground">Destination</p>
+                          <p className="text-sm text-[#6B6B6B]">Destination</p>
                         </div>
                       </div>
                       
                       {/* Date */}
                       <div className="flex items-start gap-3">
-                        <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                          <Calendar className="h-5 w-5 text-green-600" />
+                        <div className="h-10 w-10 rounded-full bg-[#E8F9F8] flex items-center justify-center shrink-0">
+                          <Calendar className="h-5 w-5 text-[#4ECDC4]" />
                         </div>
                         <div>
                           <p className="font-medium text-foreground">
                             {task.startDate ? format(new Date(task.startDate), "MMM dd") : "N/A"}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-[#6B6B6B]">
                             {task.startTime || ""} - {task.endTime || ""}
                           </p>
                         </div>
@@ -334,22 +334,22 @@ export default function L1Approval() {
                       
                       {/* Purpose */}
                       <div className="flex items-start gap-3">
-                        <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
-                          <FileText className="h-5 w-5 text-purple-600" />
+                        <div className="h-10 w-10 rounded-full bg-[#E8DCF5] flex items-center justify-center shrink-0">
+                          <FileText className="h-5 w-5 text-[#5B2C93]" />
                         </div>
                         <div>
                           <p className="font-medium text-foreground line-clamp-1">{task.purpose || "General Visit"}</p>
-                          <p className="text-sm text-muted-foreground">Purpose</p>
+                          <p className="text-sm text-[#6B6B6B]">Purpose</p>
                         </div>
                       </div>
                     </div>
                   </div>
                   
                   {/* Action Panel */}
-                  <div className="flex flex-col justify-center gap-2 px-5 py-4 bg-muted/30 border-l min-w-[180px]">
+                  <div className="flex flex-col justify-center gap-2 px-5 py-4 bg-[#F5F5F5]/30 border-l min-w-[180px]">
                     <Button 
                       size="sm" 
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-[#4ECDC4] hover:bg-[#3DBDB4]"
                       onClick={() => handleApprove(task)}
                       disabled={processingId === task.taskId}
                     >
@@ -389,7 +389,7 @@ export default function L1Approval() {
       <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600">
+            <DialogTitle className="flex items-center gap-2 text-[#FF6B6B]">
               <AlertTriangle className="h-5 w-5" />
               Reject Request
             </DialogTitle>
@@ -441,51 +441,51 @@ export default function L1Approval() {
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Visitor</label>
-                  <p className="font-semibold">{selectedRequest.visitorName}</p>
+                  <label className="text-sm font-medium text-[#6B6B6B]">Visitor</label>
+                  <p className="font-medium">{selectedRequest.visitorName}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Company</label>
-                  <p className="font-semibold">{selectedRequest.visitorCompany || "Individual"}</p>
+                  <label className="text-sm font-medium text-[#6B6B6B]">Company</label>
+                  <p className="font-medium">{selectedRequest.visitorCompany || "Individual"}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Site</label>
-                  <p className="font-semibold">{selectedRequest.siteName || "N/A"}</p>
+                  <label className="text-sm font-medium text-[#6B6B6B]">Site</label>
+                  <p className="font-medium">{selectedRequest.siteName || "N/A"}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Request Type</label>
-                  <p className="font-semibold">{typeLabels[selectedRequest.type] || selectedRequest.type}</p>
+                  <label className="text-sm font-medium text-[#6B6B6B]">Request Type</label>
+                  <p className="font-medium">{typeLabels[selectedRequest.type] || selectedRequest.type}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Visit Date</label>
-                  <p className="font-semibold">
+                  <label className="text-sm font-medium text-[#6B6B6B]">Visit Date</label>
+                  <p className="font-medium">
                     {selectedRequest.startDate ? format(new Date(selectedRequest.startDate), "MMM dd, yyyy") : "N/A"}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Time</label>
-                  <p className="font-semibold">{selectedRequest.startTime} - {selectedRequest.endTime}</p>
+                  <label className="text-sm font-medium text-[#6B6B6B]">Time</label>
+                  <p className="font-medium">{selectedRequest.startTime} - {selectedRequest.endTime}</p>
                 </div>
               </div>
               
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Purpose</label>
-                <p className="font-semibold">{selectedRequest.purpose || "General Visit"}</p>
+                <label className="text-sm font-medium text-[#6B6B6B]">Purpose</label>
+                <p className="font-medium">{selectedRequest.purpose || "General Visit"}</p>
               </div>
               
               <div className="border-t pt-4">
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <label className="text-sm font-medium text-[#6B6B6B] flex items-center gap-2">
                   <GitBranch className="h-4 w-4" />
                   Workflow Information
                 </label>
-                <div className="mt-2 p-3 bg-muted/50 rounded-lg">
+                <div className="mt-2 p-3 bg-[#F5F5F5]/50 rounded-lg">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Workflow:</span>
                     <Badge variant="outline">{selectedRequest.workflowName || "Standard Workflow"}</Badge>
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-sm">Current Stage:</span>
-                    <Badge variant="outline" className="bg-amber-50 text-amber-700">
+                    <Badge variant="outline" className="bg-[#FFF4E5] text-[#FFB84D]">
                       Stage {selectedRequest.stageOrder}: {selectedRequest.stageName}
                     </Badge>
                   </div>

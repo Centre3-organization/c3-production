@@ -581,17 +581,17 @@ export default function Users() {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case "admin": return "bg-purple-100 text-purple-700 border-purple-200";
-      case "user": return "bg-blue-100 text-blue-700 border-blue-200";
-      default: return "bg-slate-100 text-slate-600 border-slate-200";
+      case "admin": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
+      case "user": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
+      default: return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-100 text-green-700 border-green-200";
-      case "inactive": return "bg-gray-100 text-gray-500 border-gray-200";
-      default: return "bg-slate-100 text-slate-600 border-slate-200";
+      case "active": return "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]";
+      case "inactive": return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
+      default: return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
     }
   };
 
@@ -646,10 +646,10 @@ export default function Users() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">User Management</h1>
-          <p className="text-muted-foreground">Manage system access, roles, and permissions.</p>
+          <h1 className="text-2xl font-medium tracking-tight">User Management</h1>
+          <p className="text-[#6B6B6B]">Manage system access, roles, and permissions.</p>
         </div>
-        <Button onClick={() => setNewUserOpen(true)} className="bg-purple-600 hover:bg-purple-700 gap-2">
+        <Button onClick={() => setNewUserOpen(true)} className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
           <UserPlus className="h-4 w-4" /> Add User
         </Button>
       </div>
@@ -703,7 +703,7 @@ export default function Users() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setChangePasswordOpen(false)}>Cancel</Button>
             <Button 
-              className="bg-purple-600 hover:bg-purple-700"
+              className="bg-[#5B2C93] hover:bg-[#5B2C93]"
               disabled={changePasswordMutation.isPending}
               onClick={handleSubmitPasswordChange}
             >
@@ -715,7 +715,7 @@ export default function Users() {
       </Dialog>
 
       <Tabs defaultValue="users" className="w-full">
-        <TabsList className="bg-muted/50">
+        <TabsList className="bg-[#F5F5F5]/50">
           <TabsTrigger value="users" className="gap-2">
             Users Directory
           </TabsTrigger>
@@ -727,7 +727,7 @@ export default function Users() {
         <TabsContent value="users" className="mt-4 space-y-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
               <Input 
                 placeholder="Search users..." 
                 className="pl-9 bg-white" 
@@ -739,7 +739,7 @@ export default function Users() {
             {/* Filter Popover */}
             <Popover open={filterOpen} onOpenChange={setFilterOpen}>
               <PopoverTrigger asChild>
-                <Button variant="outline" size="icon" className={hasActiveFilters ? "border-purple-500 text-purple-600" : ""}>
+                <Button variant="outline" size="icon" className={hasActiveFilters ? "border-[#5B2C93] text-[#5B2C93]" : ""}>
                   <Filter className="h-4 w-4" />
                 </Button>
               </PopoverTrigger>
@@ -829,7 +829,7 @@ export default function Users() {
           {/* Active Filters Display */}
           {hasActiveFilters && (
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-muted-foreground">Active filters:</span>
+              <span className="text-sm text-[#6B6B6B]">Active filters:</span>
               {statusFilter !== "all" && (
                 <Badge variant="secondary" className="gap-1">
                   Status: {statusFilter}
@@ -860,16 +860,16 @@ export default function Users() {
           <Card>
             {usersLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-                <span className="ml-2 text-muted-foreground">Loading users...</span>
+                <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
+                <span className="ml-2 text-[#6B6B6B]">Loading users...</span>
               </div>
             ) : usersError ? (
-              <div className="flex items-center justify-center py-12 text-red-600">
+              <div className="flex items-center justify-center py-12 text-[#FF6B6B]">
                 <AlertCircle className="h-6 w-6 mr-2" />
                 <span>Error loading users: {usersError.message}</span>
               </div>
             ) : filteredUsers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <div className="flex flex-col items-center justify-center py-12 text-[#6B6B6B]">
                 <UsersIcon className="h-12 w-12 mb-4 opacity-50" />
                 <p className="text-lg font-medium">No users found</p>
                 <p className="text-sm">Click "Add User" to create a new user account.</p>
@@ -888,27 +888,27 @@ export default function Users() {
                 </TableHeader>
                 <TableBody>
                   {filteredUsers.map((user) => (
-                    <TableRow key={user.id} className="cursor-pointer hover:bg-muted/50" onClick={() => handleViewUser(user)}>
+                    <TableRow key={user.id} className="cursor-pointer hover:bg-[#F5F5F5]/50" onClick={() => handleViewUser(user)}>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar className="h-10 w-10">
-                            <AvatarFallback className="bg-purple-100 text-purple-700">
+                            <AvatarFallback className="bg-[#E8DCF5] text-[#5B2C93]">
                               {getUserInitials(user)}
                             </AvatarFallback>
                           </Avatar>
                           <div>
                             <p className="font-medium">{getUserDisplayName(user)}</p>
-                            <p className="text-sm text-muted-foreground">{user.email || "No email"}</p>
+                            <p className="text-sm text-[#6B6B6B]">{user.email || "No email"}</p>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                        <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]">
                           {(user as any).systemRole?.name || (user.role === "admin" ? "Administrator" : "Requestor")}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1.5 text-sm text-[#6B6B6B]">
                           <Building2 className="h-3.5 w-3.5" />
                           {getDepartmentName(user.departmentId)}
                         </div>
@@ -918,7 +918,7 @@ export default function Users() {
                           {(user as any).status || "active"}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-muted-foreground">
+                      <TableCell className="text-[#6B6B6B]">
                         {formatDate(user.lastSignedIn)}
                       </TableCell>
                       <TableCell className="text-right">
@@ -949,17 +949,17 @@ export default function Users() {
                               <Key className="h-4 w-4 mr-2" /> Change Password
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Change Status</DropdownMenuLabel>
+                            <DropdownMenuLabel className="text-xs text-[#6B6B6B] font-normal">Change Status</DropdownMenuLabel>
                             <DropdownMenuItem 
                               onClick={(e) => { e.stopPropagation(); handleActivateUser(user); }}
-                              className="text-green-600"
+                              className="text-[#4ECDC4]"
                               disabled={(user as any).status === "active"}
                             >
                               <CheckCircle2 className="h-4 w-4 mr-2" /> Activate
                             </DropdownMenuItem>
                             <DropdownMenuItem 
                               onClick={(e) => { e.stopPropagation(); handleDeactivateUser(user); }}
-                              className="text-red-600"
+                              className="text-[#FF6B6B]"
                               disabled={(user as any).status === "inactive"}
                             >
                               <XCircle className="h-4 w-4 mr-2" /> Deactivate
@@ -977,30 +977,30 @@ export default function Users() {
 
         <TabsContent value="roles" className="mt-4 space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-[#6B6B6B]">
               Define roles and their associated permissions
             </p>
-            <Button onClick={handleCreateRole} className="gap-2 bg-purple-600 hover:bg-purple-700">
+            <Button onClick={handleCreateRole} className="gap-2 bg-[#5B2C93] hover:bg-[#5B2C93]">
               <Plus className="h-4 w-4" /> Create Role
             </Button>
           </div>
 
           {rolesLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-              <span className="ml-2 text-muted-foreground">Loading roles...</span>
+              <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
+              <span className="ml-2 text-[#6B6B6B]">Loading roles...</span>
             </div>
           ) : rolesError ? (
-            <div className="flex items-center justify-center py-12 text-red-600">
+            <div className="flex items-center justify-center py-12 text-[#FF6B6B]">
               <AlertCircle className="h-6 w-6 mr-2" />
               <span>Error loading roles: {rolesError.message}</span>
             </div>
           ) : roles.length === 0 ? (
             <Card className="p-8 text-center">
-              <Shield className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <p className="text-lg font-medium text-muted-foreground">No custom roles defined</p>
-              <p className="text-sm text-muted-foreground mb-4">Create roles to define specific permissions for users</p>
-              <Button onClick={handleCreateRole} className="gap-2 bg-purple-600 hover:bg-purple-700">
+              <Shield className="h-12 w-12 mx-auto mb-4 text-[#6B6B6B] opacity-50" />
+              <p className="text-lg font-medium text-[#6B6B6B]">No custom roles defined</p>
+              <p className="text-sm text-[#6B6B6B] mb-4">Create roles to define specific permissions for users</p>
+              <Button onClick={handleCreateRole} className="gap-2 bg-[#5B2C93] hover:bg-[#5B2C93]">
                 <Plus className="h-4 w-4" /> Create First Role
               </Button>
             </Card>
@@ -1011,7 +1011,7 @@ export default function Users() {
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg">{role.name}</CardTitle>
-                      <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                      <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]">
                         {role.userCount || 0} users
                       </Badge>
                     </div>
@@ -1066,7 +1066,7 @@ export default function Users() {
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-purple-600" />
+              <Shield className="h-5 w-5 text-[#5B2C93]" />
               Assign System Role
             </DialogTitle>
             <DialogDescription>
@@ -1076,10 +1076,10 @@ export default function Users() {
           <div className="py-4 space-y-4">
             <div className="space-y-2">
               <Label>Current Role</Label>
-              <div className="p-3 bg-muted rounded-lg">
+              <div className="p-3 bg-[#F5F5F5] rounded-lg">
                 <span className="font-medium">{editUserRoleUser?.systemRole?.name || 'No role assigned'}</span>
                 {editUserRoleUser?.systemRole?.description && (
-                  <p className="text-sm text-muted-foreground mt-1">{editUserRoleUser?.systemRole?.description}</p>
+                  <p className="text-sm text-[#6B6B6B] mt-1">{editUserRoleUser?.systemRole?.description}</p>
                 )}
               </div>
             </div>
@@ -1094,7 +1094,7 @@ export default function Users() {
                     <SelectItem key={role.code} value={role.code}>
                       <div className="flex flex-col">
                         <span className="font-medium">{role.name}</span>
-                        <span className="text-xs text-muted-foreground">{role.description}</span>
+                        <span className="text-xs text-[#6B6B6B]">{role.description}</span>
                       </div>
                     </SelectItem>
                   ))}
@@ -1102,8 +1102,8 @@ export default function Users() {
               </Select>
             </div>
             {selectedRoleValue && (
-              <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
-                <p className="text-sm text-purple-800">
+              <div className="p-3 bg-[#E8DCF5] border border-[#5B2C93] rounded-lg">
+                <p className="text-sm text-[#5B2C93]">
                   <strong>Note:</strong> Changing a user's role will immediately update their permissions and access levels.
                 </p>
               </div>
@@ -1112,7 +1112,7 @@ export default function Users() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditUserRoleOpen(false)}>Cancel</Button>
             <Button 
-              className="bg-purple-600 hover:bg-purple-700"
+              className="bg-[#5B2C93] hover:bg-[#5B2C93]"
               disabled={assignRoleMutation.isPending || !selectedRoleValue}
               onClick={() => {
                 if (editUserRoleUser && selectedRoleValue) {
@@ -1137,14 +1137,14 @@ export default function Users() {
           <div className="px-6 pt-6 pb-4 border-b bg-gradient-to-r from-purple-50 to-white">
             <div className="flex items-center justify-between">
               <div>
-                <DialogTitle className="text-xl font-semibold text-gray-900">
+                <DialogTitle className="text-xl font-medium text-[#2C2C2C]">
                   {selectedRole?.isNew ? "Create New Role" : "Edit Role"}
                 </DialogTitle>
                 <DialogDescription className="mt-1">
                   Configure role properties and authorization objects
                 </DialogDescription>
               </div>
-              <Badge variant="outline" className="bg-purple-100 text-purple-700 border-purple-200">
+              <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]">
                 {selectedRole?.isNew ? "New" : "Editing"}
               </Badge>
             </div>
@@ -1153,15 +1153,15 @@ export default function Users() {
           {selectedRole && (
             <div className="flex-1 overflow-y-auto px-6 py-4">
               {/* Role Properties Section */}
-              <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+              <div className="bg-[#F5F5F5] rounded-lg p-4 mb-6">
+                <h3 className="text-sm font-medium text-[#2C2C2C] uppercase tracking-wide mb-4 flex items-center gap-2">
                   <Shield className="h-4 w-4" />
                   Role Properties
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="roleName" className="text-xs font-medium text-gray-600 uppercase">
-                      Role Name <span className="text-red-500">*</span>
+                    <Label htmlFor="roleName" className="text-xs font-medium text-[#6B6B6B] uppercase">
+                      Role Name <span className="text-[#FF6B6B]">*</span>
                     </Label>
                     <Input 
                       id="roleName" 
@@ -1172,7 +1172,7 @@ export default function Users() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="roleDescription" className="text-xs font-medium text-gray-600 uppercase">
+                    <Label htmlFor="roleDescription" className="text-xs font-medium text-[#6B6B6B] uppercase">
                       Description
                     </Label>
                     <Input 
@@ -1188,8 +1188,8 @@ export default function Users() {
 
               {/* Authorization Objects Section - SAP Style Table */}
               <div className="border rounded-lg overflow-hidden">
-                <div className="bg-purple-600 text-white px-4 py-3 flex items-center justify-between">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide flex items-center gap-2">
+                <div className="bg-[#5B2C93] text-white px-4 py-3 flex items-center justify-between">
+                  <h3 className="text-sm font-medium uppercase tracking-wide flex items-center gap-2">
                     <Key className="h-4 w-4" />
                     Authorization Objects
                   </h3>
@@ -1228,14 +1228,14 @@ export default function Users() {
                     const someChecked = module.actions.some(a => modulePerms[a.id]);
                     
                     return (
-                      <div key={module.id} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                      <div key={module.id} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-[#F5F5F5]/50'}`}>
                         {/* Module Header Row */}
-                        <div className="flex items-center px-4 py-2.5 border-b border-gray-100">
+                        <div className="flex items-center px-4 py-2.5 border-b border-[#E0E0E0]">
                           <div className="flex items-center gap-3 flex-1">
                             <Checkbox 
                               id={`module-${module.id}`}
                               checked={allChecked}
-                              className={someChecked && !allChecked ? 'data-[state=checked]:bg-purple-300' : ''}
+                              className={someChecked && !allChecked ? 'data-[state=checked]:bg-[#E8DCF5]' : ''}
                               onCheckedChange={(checked) => {
                                 const newModulePerms: Record<string, boolean> = {};
                                 module.actions.forEach(a => { newModulePerms[a.id] = !!checked; });
@@ -1248,8 +1248,8 @@ export default function Users() {
                                 });
                               }}
                             />
-                            <span className="font-medium text-sm text-gray-900">{module.label}</span>
-                            <Badge variant="outline" className="text-[10px] h-5 bg-gray-100 text-gray-600 border-gray-200">
+                            <span className="font-medium text-sm text-[#2C2C2C]">{module.label}</span>
+                            <Badge variant="outline" className="text-[10px] h-5 bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]">
                               {module.actions.filter(a => modulePerms[a.id]).length}/{module.actions.length}
                             </Badge>
                           </div>
@@ -1279,7 +1279,7 @@ export default function Users() {
                                 />
                                 <Label 
                                   htmlFor={`${module.id}-${action.id}`} 
-                                  className="text-sm text-gray-700 cursor-pointer hover:text-purple-600 transition-colors"
+                                  className="text-sm text-[#2C2C2C] cursor-pointer hover:text-[#5B2C93] transition-colors"
                                 >
                                   {action.label}
                                 </Label>
@@ -1296,8 +1296,8 @@ export default function Users() {
           )}
           
           {/* Footer */}
-          <div className="px-6 py-4 border-t bg-gray-50 flex items-center justify-between">
-            <div className="text-xs text-gray-500">
+          <div className="px-6 py-4 border-t bg-[#F5F5F5] flex items-center justify-between">
+            <div className="text-xs text-[#6B6B6B]">
               {selectedRole && (
                 <span>
                   {Object.values(selectedRole.permissions || {}).reduce((acc: number, mod: any) => 
@@ -1311,7 +1311,7 @@ export default function Users() {
                 Cancel
               </Button>
               <Button 
-                className="bg-purple-600 hover:bg-purple-700 min-w-[140px]"
+                className="bg-[#5B2C93] hover:bg-[#5B2C93] min-w-[140px]"
                 onClick={handleSaveRole}
                 disabled={createRoleMutation.isPending || updateRoleMutation.isPending}
               >

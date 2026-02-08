@@ -388,20 +388,20 @@ export default function NewRequest() {
   // Helper to render field value or empty indicator
   const renderFieldValue = (value: string | undefined | null, emptyText: string = "Not provided") => {
     if (value && value.trim()) {
-      return <span className="font-medium text-gray-900">{value}</span>;
+      return <span className="font-medium text-[#2C2C2C]">{value}</span>;
     }
-    return <span className="text-gray-400 italic">{emptyText}</span>;
+    return <span className="text-[#B0B0B0] italic">{emptyText}</span>;
   };
 
   return (
     <>
     <ErrorDialogComponent />
-    <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#f4f4f4] font-poppins">
+    <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#F5F5F5]">
       {/* Top Toolbar - IBM Maximo Style */}
-      <div className="bg-[#161616] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
+      <div className="bg-[#2C2C2C] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
         <div className="flex items-center gap-6">
-          <span className="font-bold tracking-wide text-white uppercase">CREATE NEW REQUEST</span>
-          <div className="h-5 w-px bg-gray-600" />
+          <span className="font-medium tracking-wide text-white uppercase">CREATE NEW REQUEST</span>
+          <div className="h-5 w-px bg-[#6B6B6B]" />
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20 rounded-none">
               <Search className="h-4 w-4" />
@@ -426,9 +426,9 @@ export default function NewRequest() {
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs text-gray-300">
-          <span className="uppercase tracking-wider text-[10px] font-medium text-gray-400">LOGGED IN AS:</span>
-          <span className="font-bold text-white flex items-center gap-1 text-xs">
+        <div className="flex items-center gap-2 text-xs text-[#B0B0B0]">
+          <span className="uppercase tracking-wider text-[10px] font-medium text-[#B0B0B0]">LOGGED IN AS:</span>
+          <span className="font-medium text-white flex items-center gap-1 text-xs">
             {user?.name?.toUpperCase() || "USER"} <User className="h-3 w-3" />
           </span>
         </div>
@@ -437,17 +437,17 @@ export default function NewRequest() {
       {/* Secondary Toolbar */}
       <div className="bg-white border-b px-4 py-3 flex items-center gap-4 text-sm shadow-sm">
         <Link href="/requests">
-          <Button variant="ghost" size="sm" className="text-[#0f62fe] hover:bg-[#0f62fe]/10 gap-2 font-medium h-8">
+          <Button variant="ghost" size="sm" className="text-[#5B2C93] hover:bg-[#5B2C93]/10 gap-2 font-medium h-8">
             <ArrowLeft className="h-4 w-4" />
             Return to List
           </Button>
         </Link>
-        <div className="h-6 w-px bg-gray-200" />
+        <div className="h-6 w-px bg-[#E0E0E0]" />
         <div className="flex items-center gap-2">
-          <span className="text-red-600 font-bold">*</span>
-          <span className="font-medium text-gray-700">Request Type:</span>
+          <span className="text-[#FF6B6B] font-medium">*</span>
+          <span className="font-medium text-[#2C2C2C]">Request Type:</span>
           <Select value={requestType} onValueChange={setRequestType}>
-            <SelectTrigger className="w-[240px] h-9 border-gray-300 bg-gray-50 focus:ring-2 focus:ring-[#0f62fe] font-semibold text-[#0f62fe]">
+            <SelectTrigger className="w-[240px] h-9 border-[#E0E0E0] bg-[#F5F5F5] focus:ring-2 focus:ring-[#5B2C93] font-medium text-[#5B2C93]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -459,13 +459,13 @@ export default function NewRequest() {
             </SelectContent>
           </Select>
         </div>
-        <div className="ml-auto flex items-center gap-6 text-gray-500">
+        <div className="ml-auto flex items-center gap-6 text-[#6B6B6B]">
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase font-bold text-gray-400">Status</span>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 rounded-sm px-2 py-0.5">NEW</Badge>
+            <span className="text-xs uppercase font-medium text-[#B0B0B0]">Status</span>
+            <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] rounded-sm px-2 py-0.5">NEW</Badge>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase font-bold text-gray-400">Request ID</span>
+            <span className="text-xs uppercase font-medium text-[#B0B0B0]">Request ID</span>
             <span className="font-mono text-black font-medium">REQ-DRAFT</span>
           </div>
         </div>
@@ -475,8 +475,8 @@ export default function NewRequest() {
       <div className="flex-1 overflow-hidden flex">
         {/* Left Navigation Tabs (Vertical) */}
         <div className="w-64 bg-white border-r flex flex-col overflow-y-auto">
-          <div className="p-4 border-b bg-gray-50">
-            <h3 className="font-bold text-gray-800 text-sm">SECTIONS</h3>
+          <div className="p-4 border-b bg-[#F5F5F5]">
+            <h3 className="font-medium text-[#2C2C2C] text-sm">SECTIONS</h3>
           </div>
           <nav className="flex-1 p-2 space-y-1">
             {[
@@ -493,11 +493,11 @@ export default function NewRequest() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-colors ${
                   activeTab === tab.id 
-                    ? "bg-[#e5f6ff] text-[#0043ce] border-l-4 border-[#0f62fe]" 
-                    : "text-gray-600 hover:bg-gray-100 border-l-4 border-transparent"
+                    ? "bg-[#E8F9F8] text-[#3D1C5E] border-l-4 border-[#5B2C93]" 
+                    : "text-[#6B6B6B] hover:bg-[#F5F5F5] border-l-4 border-transparent"
                 }`}
               >
-                <tab.icon className={`h-4 w-4 ${activeTab === tab.id ? "text-[#0f62fe]" : "text-gray-400"}`} />
+                <tab.icon className={`h-4 w-4 ${activeTab === tab.id ? "text-[#5B2C93]" : "text-[#B0B0B0]"}`} />
                 {tab.label}
               </button>
             ))}
@@ -505,21 +505,21 @@ export default function NewRequest() {
         </div>
 
         {/* Right Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 bg-[#f4f4f4]">
+        <div className="flex-1 overflow-y-auto p-6 bg-[#F5F5F5]">
           <div className="max-w-5xl mx-auto bg-white border shadow-sm rounded-sm min-h-[600px]">
             
             {/* Header for current section */}
-            <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
-              <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                {activeTab === "basic" && <><FileText className="h-5 w-5 text-[#0f62fe]" /> Basic Information</>}
-                {activeTab === "location" && <><MapPin className="h-5 w-5 text-[#0f62fe]" /> Location Details</>}
-                {activeTab === "schedule" && <><Calendar className="h-5 w-5 text-[#0f62fe]" /> Schedule & Timing</>}
-                {activeTab === "visitors" && <><Users className="h-5 w-5 text-[#0f62fe]" /> Visitor Management</>}
-                {activeTab === "specific" && <><Settings className="h-5 w-5 text-[#0f62fe]" /> {requestType} Specifics</>}
-                {activeTab === "attachments" && <><Paperclip className="h-5 w-5 text-[#0f62fe]" /> Documents & Attachments</>}
-                {activeTab === "review" && <><ShieldCheck className="h-5 w-5 text-[#0f62fe]" /> Review & Submit</>}
+            <div className="px-6 py-4 border-b bg-[#F5F5F5] flex justify-between items-center">
+              <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
+                {activeTab === "basic" && <><FileText className="h-5 w-5 text-[#5B2C93]" /> Basic Information</>}
+                {activeTab === "location" && <><MapPin className="h-5 w-5 text-[#5B2C93]" /> Location Details</>}
+                {activeTab === "schedule" && <><Calendar className="h-5 w-5 text-[#5B2C93]" /> Schedule & Timing</>}
+                {activeTab === "visitors" && <><Users className="h-5 w-5 text-[#5B2C93]" /> Visitor Management</>}
+                {activeTab === "specific" && <><Settings className="h-5 w-5 text-[#5B2C93]" /> {requestType} Specifics</>}
+                {activeTab === "attachments" && <><Paperclip className="h-5 w-5 text-[#5B2C93]" /> Documents & Attachments</>}
+                {activeTab === "review" && <><ShieldCheck className="h-5 w-5 text-[#5B2C93]" /> Review & Submit</>}
               </h2>
-              <span className="text-xs text-gray-500 italic">* Indicates mandatory field</span>
+              <span className="text-xs text-[#6B6B6B] italic">* Indicates mandatory field</span>
             </div>
 
             <div className="p-8">
@@ -527,19 +527,19 @@ export default function NewRequest() {
               {activeTab === "basic" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Requestor Full Name <span className="text-red-600">*</span></Label>
-                    <Input defaultValue={user?.name || "User"} className="bg-gray-50" readOnly />
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Requestor Full Name <span className="text-[#FF6B6B]">*</span></Label>
+                    <Input defaultValue={user?.name || "User"} className="bg-[#F5F5F5]" readOnly />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Requestor Company <span className="text-red-600">*</span></Label>
-                    <Input defaultValue="Centre3" className="bg-gray-50" readOnly />
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Requestor Company <span className="text-[#FF6B6B]">*</span></Label>
+                    <Input defaultValue="Centre3" className="bg-[#F5F5F5]" readOnly />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Email Address <span className="text-red-600">*</span></Label>
-                    <Input defaultValue={user?.email || "user@centre3.com"} className="bg-gray-50" readOnly />
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Email Address <span className="text-[#FF6B6B]">*</span></Label>
+                    <Input defaultValue={user?.email || "user@centre3.com"} className="bg-[#F5F5F5]" readOnly />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Mobile Number</Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Mobile Number</Label>
                     <Input 
                       placeholder="+966 5XX XXX XXXX" 
                       value={mobileNumber}
@@ -547,7 +547,7 @@ export default function NewRequest() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Department <span className="text-red-600">*</span></Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Department <span className="text-[#FF6B6B]">*</span></Label>
                     <Select value={departmentId} onValueChange={setDepartmentId}>
                       <SelectTrigger><SelectValue placeholder="Select Department" /></SelectTrigger>
                       <SelectContent>
@@ -560,7 +560,7 @@ export default function NewRequest() {
                     </Select>
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Request Sub-Type</Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Request Sub-Type</Label>
                     <Select value={subType} onValueChange={setSubType}>
                       <SelectTrigger><SelectValue placeholder="Select Sub-Type" /></SelectTrigger>
                       <SelectContent>
@@ -572,7 +572,7 @@ export default function NewRequest() {
                     </Select>
                   </div>
                   <div className="col-span-2 space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Purpose of Visit <span className="text-red-600">*</span></Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Purpose of Visit <span className="text-[#FF6B6B]">*</span></Label>
                     <Textarea 
                       placeholder="Describe the purpose of this visit..." 
                       className="h-24"
@@ -581,7 +581,7 @@ export default function NewRequest() {
                     />
                   </div>
                   <div className="col-span-2 space-y-1">
-                    <Label className="text-xs font-bold text-gray-600 uppercase">Additional Notes</Label>
+                    <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Additional Notes</Label>
                     <Textarea 
                       placeholder="Any additional context for this request..." 
                       className="h-24"
@@ -597,13 +597,13 @@ export default function NewRequest() {
                 <div className="space-y-8">
                   {/* Site Selection */}
                   <div className="space-y-4">
-                    <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                      <Building2 className="h-5 w-5 text-[#0f62fe]" />
-                      Select Site <span className="text-red-600">*</span>
+                    <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                      <Building2 className="h-5 w-5 text-[#5B2C93]" />
+                      Select Site <span className="text-[#FF6B6B]">*</span>
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-1">
-                        <Label className="text-xs font-bold text-gray-600 uppercase">Data Center / Site <span className="text-red-600">*</span></Label>
+                        <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Data Center / Site <span className="text-[#FF6B6B]">*</span></Label>
                         <Select value={siteId} onValueChange={(v) => { setSiteId(v); setSelectedZoneId(""); setSelectedAreaId(""); }}>
                           <SelectTrigger><SelectValue placeholder="Select Site" /></SelectTrigger>
                           <SelectContent>
@@ -619,23 +619,23 @@ export default function NewRequest() {
                     
                     {/* Auto-populated location info */}
                     {selectedSite && (
-                      <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-                        <h4 className="font-bold text-blue-800 text-sm mb-3 flex items-center gap-2">
+                      <div className="bg-[#E8DCF5] border border-[#5B2C93] rounded-md p-4">
+                        <h4 className="font-medium text-[#5B2C93] text-sm mb-3 flex items-center gap-2">
                           <MapPin className="h-4 w-4" />
                           Site Location (Auto-populated)
                         </h4>
                         <div className="grid grid-cols-3 gap-4 text-sm">
                           <div>
-                            <span className="text-blue-600 font-medium">Country:</span>
-                            <p className="text-blue-900 font-bold">{selectedSite.countryName || "N/A"}</p>
+                            <span className="text-[#5B2C93] font-medium">Country:</span>
+                            <p className="text-[#5B2C93] font-medium">{selectedSite.countryName || "N/A"}</p>
                           </div>
                           <div>
-                            <span className="text-blue-600 font-medium">Region:</span>
-                            <p className="text-blue-900 font-bold">{selectedSite.regionName || "N/A"}</p>
+                            <span className="text-[#5B2C93] font-medium">Region:</span>
+                            <p className="text-[#5B2C93] font-medium">{selectedSite.regionName || "N/A"}</p>
                           </div>
                           <div>
-                            <span className="text-blue-600 font-medium">City:</span>
-                            <p className="text-blue-900 font-bold">{selectedSite.cityName || "N/A"}</p>
+                            <span className="text-[#5B2C93] font-medium">City:</span>
+                            <p className="text-[#5B2C93] font-medium">{selectedSite.cityName || "N/A"}</p>
                           </div>
                         </div>
                       </div>
@@ -647,17 +647,17 @@ export default function NewRequest() {
                     <>
                       <Separator />
                       <div className="space-y-4">
-                        <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                          <MapPin className="h-5 w-5 text-[#0f62fe]" />
+                        <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                          <MapPin className="h-5 w-5 text-[#5B2C93]" />
                           Select Zone
                           <Badge variant="outline" className="ml-2 text-xs">Optional</Badge>
                         </h3>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-[#6B6B6B]">
                           Leave blank to request access to the entire site, or select a specific zone.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-1">
-                            <Label className="text-xs font-bold text-gray-600 uppercase">Zone</Label>
+                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Zone</Label>
                             <Select 
                               value={selectedZoneId} 
                               onValueChange={(v) => { setSelectedZoneId(v); setSelectedAreaId(""); }}
@@ -675,10 +675,10 @@ export default function NewRequest() {
                           {selectedZone && (
                             <div className="flex items-center">
                               <Badge className={`
-                                ${selectedZone.securityLevel === 'critical' ? 'bg-red-100 text-red-800 border-red-200' : ''}
-                                ${selectedZone.securityLevel === 'high' ? 'bg-orange-100 text-orange-800 border-orange-200' : ''}
-                                ${selectedZone.securityLevel === 'medium' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : ''}
-                                ${selectedZone.securityLevel === 'low' ? 'bg-green-100 text-green-800 border-green-200' : ''}
+                                ${selectedZone.securityLevel === 'critical' ? 'bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]' : ''}
+                                ${selectedZone.securityLevel === 'high' ? 'bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]' : ''}
+                                ${selectedZone.securityLevel === 'medium' ? 'bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]' : ''}
+                                ${selectedZone.securityLevel === 'low' ? 'bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]' : ''}
                               `}>
                                 Security Level: {selectedZone.securityLevel?.toUpperCase()}
                               </Badge>
@@ -694,17 +694,17 @@ export default function NewRequest() {
                     <>
                       <Separator />
                       <div className="space-y-4">
-                        <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                          <MapPin className="h-5 w-5 text-[#0f62fe]" />
+                        <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                          <MapPin className="h-5 w-5 text-[#5B2C93]" />
                           Select Area
                           <Badge variant="outline" className="ml-2 text-xs">Optional</Badge>
                         </h3>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-[#6B6B6B]">
                           Leave blank to request access to the entire zone, or select a specific area.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-1">
-                            <Label className="text-xs font-bold text-gray-600 uppercase">Area</Label>
+                            <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Area</Label>
                             <Select 
                               value={selectedAreaId} 
                               onValueChange={setSelectedAreaId}
@@ -728,12 +728,12 @@ export default function NewRequest() {
                   {siteId && (
                     <>
                       <Separator />
-                      <div className="bg-green-50 border border-green-200 rounded-md p-4">
-                        <h4 className="font-bold text-green-800 text-sm mb-2 flex items-center gap-2">
+                      <div className="bg-[#E8F9F8] border border-[#4ECDC4] rounded-md p-4">
+                        <h4 className="font-medium text-[#4ECDC4] text-sm mb-2 flex items-center gap-2">
                           <CheckCircle2 className="h-4 w-4" />
                           Access Scope
                         </h4>
-                        <p className="text-sm text-green-700">
+                        <p className="text-sm text-[#4ECDC4]">
                           {selectedArea ? (
                             <>Requesting access to <strong>{selectedArea.name}</strong> in <strong>{selectedZone?.name}</strong> at <strong>{selectedSite?.name}</strong></>
                           ) : selectedZone ? (
@@ -750,7 +750,7 @@ export default function NewRequest() {
                     <>
                       <Separator />
                       <div className="space-y-1">
-                        <Label className="text-xs font-bold text-gray-600 uppercase">Cabinet / Rack Reference</Label>
+                        <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Cabinet / Rack Reference</Label>
                         <Input 
                           placeholder="e.g. RACK-04-B" 
                           value={rackReference}
@@ -768,7 +768,7 @@ export default function NewRequest() {
                 <div className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                     <div className="space-y-1">
-                      <Label className="text-xs font-bold text-gray-600 uppercase">Start Date <span className="text-red-600">*</span></Label>
+                      <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Start Date <span className="text-[#FF6B6B]">*</span></Label>
                       <Input 
                         type="date" 
                         value={startDate}
@@ -776,7 +776,7 @@ export default function NewRequest() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs font-bold text-gray-600 uppercase">Start Time</Label>
+                      <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Start Time</Label>
                       <Input 
                         type="time" 
                         value={startTime}
@@ -784,7 +784,7 @@ export default function NewRequest() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs font-bold text-gray-600 uppercase">End Date <span className="text-red-600">*</span></Label>
+                      <Label className="text-xs font-medium text-[#6B6B6B] uppercase">End Date <span className="text-[#FF6B6B]">*</span></Label>
                       <Input 
                         type="date" 
                         value={endDate}
@@ -792,7 +792,7 @@ export default function NewRequest() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs font-bold text-gray-600 uppercase">End Time</Label>
+                      <Label className="text-xs font-medium text-[#6B6B6B] uppercase">End Time</Label>
                       <Input 
                         type="time" 
                         value={endTime}
@@ -801,13 +801,13 @@ export default function NewRequest() {
                     </div>
                   </div>
 
-                  <div className="bg-blue-50 p-4 rounded-md border border-blue-100">
+                  <div className="bg-[#E8DCF5] p-4 rounded-md border border-[#5B2C93]/20">
                     <div className="flex items-center gap-2 mb-2">
-                      <Clock className="h-4 w-4 text-blue-600" />
-                      <span className="font-bold text-blue-800 text-sm">Duration Calculation</span>
+                      <Clock className="h-4 w-4 text-[#5B2C93]" />
+                      <span className="font-medium text-[#5B2C93] text-sm">Duration Calculation</span>
                     </div>
-                    <p className="text-sm text-blue-700">
-                      Total Duration: <span className="font-mono font-bold">{duration.days} Days, {duration.hours} Hours</span>
+                    <p className="text-sm text-[#5B2C93]">
+                      Total Duration: <span className="font-mono font-medium">{duration.days} Days, {duration.hours} Hours</span>
                     </p>
                   </div>
 
@@ -846,17 +846,17 @@ export default function NewRequest() {
               {activeTab === "visitors" && (
                 <div className="space-y-6">
                   <div className="flex justify-between items-center">
-                    <h3 className="font-bold text-gray-800">Visitor List (Minimum 1 Required)</h3>
+                    <h3 className="font-medium text-[#2C2C2C]">Visitor List (Minimum 1 Required)</h3>
                     <Dialog open={yakeenOpen} onOpenChange={(open) => { setYakeenOpen(open); if (!open) resetYakeenForm(); }}>
                       <DialogTrigger asChild>
-                        <Button className="bg-[#0f62fe] hover:bg-[#0f62fe]/90">
+                        <Button className="bg-[#5B2C93] hover:bg-[#5B2C93]/90">
                           <Plus className="mr-2 h-4 w-4" />
                           Add Visitor
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[650px]">
                         <DialogHeader>
-                          <DialogTitle className="flex items-center gap-2 text-[#0f62fe]">
+                          <DialogTitle className="flex items-center gap-2 text-[#5B2C93]">
                             <ShieldCheck className="h-6 w-6" />
                             {manualEntry || yakeenFailed ? "Manual Visitor Entry" : "Yakeen Identity Verification"}
                           </DialogTitle>
@@ -872,7 +872,7 @@ export default function NewRequest() {
                             <div className="space-y-4">
                               <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
-                                  <Label>ID Type <span className="text-red-600">*</span></Label>
+                                  <Label>ID Type <span className="text-[#FF6B6B]">*</span></Label>
                                   <Select 
                                     value={visitorIdType} 
                                     onValueChange={(v) => { setVisitorIdType(v); resetYakeenForm(); setVisitorIdType(v); }}
@@ -890,7 +890,7 @@ export default function NewRequest() {
                                   <Label>
                                     {visitorIdType === "national_id" ? "National ID Number" : 
                                      visitorIdType === "iqama" ? "Iqama Number" : "Passport Number"} 
-                                    <span className="text-red-600">*</span>
+                                    <span className="text-[#FF6B6B]">*</span>
                                   </Label>
                                   <div className="flex gap-2">
                                     <Input 
@@ -917,7 +917,7 @@ export default function NewRequest() {
                                         type="button"
                                         onClick={handleYakeenValidate}
                                         disabled={!visitorIdNumber || isValidating || isValidated}
-                                        className={isValidated ? "bg-green-600 hover:bg-green-600" : "bg-[#0f62fe]"}
+                                        className={isValidated ? "bg-[#4ECDC4] hover:bg-[#4ECDC4]" : "bg-[#5B2C93]"}
                                       >
                                         {isValidating ? (
                                           <Loader2 className="h-4 w-4 animate-spin" />
@@ -934,17 +934,17 @@ export default function NewRequest() {
                               
                               {/* Yakeen Failed - Show manual entry option */}
                               {yakeenFailed && !manualEntry && (
-                                <Alert className="bg-amber-50 border-amber-200">
-                                  <XCircle className="h-4 w-4 text-amber-600" />
-                                  <AlertTitle className="text-amber-800">Cannot identify through Yakeen</AlertTitle>
-                                  <AlertDescription className="text-amber-700">
+                                <Alert className="bg-[#FFF4E5] border-[#FFB84D]">
+                                  <XCircle className="h-4 w-4 text-[#FFB84D]" />
+                                  <AlertTitle className="text-[#FFB84D]">Cannot identify through Yakeen</AlertTitle>
+                                  <AlertDescription className="text-[#FFB84D]">
                                     <p className="mb-2">The ID could not be verified through Yakeen. You can enter the visitor details manually.</p>
                                     <Button 
                                       type="button" 
                                       variant="outline" 
                                       size="sm"
                                       onClick={() => setManualEntry(true)}
-                                      className="border-amber-400 text-amber-700 hover:bg-amber-100"
+                                      className="border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFF4E5]"
                                     >
                                       <Edit3 className="h-4 w-4 mr-2" />
                                       Enter Manually
@@ -955,20 +955,20 @@ export default function NewRequest() {
                               
                               {/* Passport note */}
                               {visitorIdType === "passport" && !manualEntry && (
-                                <Alert className="bg-blue-50 border-blue-200">
-                                  <Globe className="h-4 w-4 text-blue-600" />
-                                  <AlertTitle className="text-blue-800">Passport Verification</AlertTitle>
-                                  <AlertDescription className="text-blue-700">
+                                <Alert className="bg-[#E8DCF5] border-[#5B2C93]">
+                                  <Globe className="h-4 w-4 text-[#5B2C93]" />
+                                  <AlertTitle className="text-[#5B2C93]">Passport Verification</AlertTitle>
+                                  <AlertDescription className="text-[#5B2C93]">
                                     Passport numbers are alphanumeric. Yakeen verification is not available for passports - manual entry will be required.
                                   </AlertDescription>
                                 </Alert>
                               )}
                               
                               {isValidated && !manualEntry && (
-                                <Alert className="bg-green-50 border-green-200">
-                                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                                  <AlertTitle className="text-green-800">Identity Verified</AlertTitle>
-                                  <AlertDescription className="text-green-700">
+                                <Alert className="bg-[#E8F9F8] border-[#4ECDC4]">
+                                  <CheckCircle2 className="h-4 w-4 text-[#4ECDC4]" />
+                                  <AlertTitle className="text-[#4ECDC4]">Identity Verified</AlertTitle>
+                                  <AlertDescription className="text-[#4ECDC4]">
                                     Visitor identity has been verified via Yakeen.
                                   </AlertDescription>
                                 </Alert>
@@ -980,27 +980,27 @@ export default function NewRequest() {
                               <>
                                 <Separator />
                                 <div className="space-y-4">
-                                  <h4 className="font-bold text-gray-700">Verified Details</h4>
+                                  <h4 className="font-medium text-[#2C2C2C]">Verified Details</h4>
                                   <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1">
-                                      <Label className="text-gray-500">Full Name</Label>
-                                      <Input value={validatedVisitor.name} readOnly className="bg-gray-50 font-medium" />
+                                      <Label className="text-[#6B6B6B]">Full Name</Label>
+                                      <Input value={validatedVisitor.name} readOnly className="bg-[#F5F5F5] font-medium" />
                                     </div>
                                     <div className="space-y-1">
-                                      <Label className="text-gray-500">Nationality</Label>
-                                      <Input value={validatedVisitor.nationality} readOnly className="bg-gray-50" />
+                                      <Label className="text-[#6B6B6B]">Nationality</Label>
+                                      <Input value={validatedVisitor.nationality} readOnly className="bg-[#F5F5F5]" />
                                     </div>
                                     <div className="space-y-1">
-                                      <Label className="text-gray-500">Phone</Label>
-                                      <Input value={validatedVisitor.phone} readOnly className="bg-gray-50" />
+                                      <Label className="text-[#6B6B6B]">Phone</Label>
+                                      <Input value={validatedVisitor.phone} readOnly className="bg-[#F5F5F5]" />
                                     </div>
                                     <div className="space-y-1">
-                                      <Label className="text-gray-500">Company</Label>
-                                      <Input value={validatedVisitor.company} readOnly className="bg-gray-50" />
+                                      <Label className="text-[#6B6B6B]">Company</Label>
+                                      <Input value={validatedVisitor.company} readOnly className="bg-[#F5F5F5]" />
                                     </div>
                                     <div className="col-span-2 space-y-1">
-                                      <Label className="text-gray-500">Email</Label>
-                                      <Input value={validatedVisitor.email} readOnly className="bg-gray-50" />
+                                      <Label className="text-[#6B6B6B]">Email</Label>
+                                      <Input value={validatedVisitor.email} readOnly className="bg-[#F5F5F5]" />
                                     </div>
                                   </div>
                                 </div>
@@ -1012,13 +1012,13 @@ export default function NewRequest() {
                               <>
                                 <Separator />
                                 <div className="space-y-4">
-                                  <h4 className="font-bold text-gray-700 flex items-center gap-2">
+                                  <h4 className="font-medium text-[#2C2C2C] flex items-center gap-2">
                                     <Edit3 className="h-4 w-4" />
                                     Manual Entry
                                   </h4>
                                   <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1">
-                                      <Label>Full Name <span className="text-red-600">*</span></Label>
+                                      <Label>Full Name <span className="text-[#FF6B6B]">*</span></Label>
                                       <Input 
                                         value={manualVisitorName}
                                         onChange={(e) => setManualVisitorName(e.target.value)}
@@ -1069,7 +1069,7 @@ export default function NewRequest() {
                             </Button>
                             <Button 
                               type="submit" 
-                              className="bg-[#0f62fe]" 
+                              className="bg-[#5B2C93]" 
                               disabled={!isValidated && !manualEntry && !yakeenFailed}
                             >
                               Add Visitor
@@ -1081,22 +1081,22 @@ export default function NewRequest() {
                   </div>
 
                   {visitors.length === 0 ? (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                      <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                      <h4 className="font-bold text-gray-600 mb-2">No Visitors Added</h4>
-                      <p className="text-sm text-gray-500">Click "Add Visitor" to verify and add visitors to this request.</p>
+                    <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-8 text-center">
+                      <Users className="h-12 w-12 text-[#B0B0B0] mx-auto mb-4" />
+                      <h4 className="font-medium text-[#6B6B6B] mb-2">No Visitors Added</h4>
+                      <p className="text-sm text-[#6B6B6B]">Click "Add Visitor" to verify and add visitors to this request.</p>
                     </div>
                   ) : (
                     <div className="border rounded-md overflow-hidden">
                       <table className="w-full text-sm">
-                        <thead className="bg-gray-50">
+                        <thead className="bg-[#F5F5F5]">
                           <tr>
-                            <th className="p-3 text-left font-bold text-gray-600">Name</th>
-                            <th className="p-3 text-left font-bold text-gray-600">ID Type</th>
-                            <th className="p-3 text-left font-bold text-gray-600">ID Number</th>
-                            <th className="p-3 text-left font-bold text-gray-600">Nationality</th>
-                            <th className="p-3 text-left font-bold text-gray-600">Company</th>
-                            <th className="p-3 text-left font-bold text-gray-600">Status</th>
+                            <th className="p-3 text-left font-medium text-[#6B6B6B]">Name</th>
+                            <th className="p-3 text-left font-medium text-[#6B6B6B]">ID Type</th>
+                            <th className="p-3 text-left font-medium text-[#6B6B6B]">ID Number</th>
+                            <th className="p-3 text-left font-medium text-[#6B6B6B]">Nationality</th>
+                            <th className="p-3 text-left font-medium text-[#6B6B6B]">Company</th>
+                            <th className="p-3 text-left font-medium text-[#6B6B6B]">Status</th>
                             <th className="p-3 w-20"></th>
                           </tr>
                         </thead>
@@ -1110,12 +1110,12 @@ export default function NewRequest() {
                               <td className="p-3">{visitor.company || "-"}</td>
                               <td className="p-3">
                                 {visitor.verified ? (
-                                  <Badge className="bg-green-100 text-green-800 border-green-200">
+                                  <Badge className="bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]">
                                     <CheckCircle2 className="h-3 w-3 mr-1" />
                                     Verified
                                   </Badge>
                                 ) : (
-                                  <Badge className="bg-amber-100 text-amber-800 border-amber-200">
+                                  <Badge className="bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]">
                                     <Edit3 className="h-3 w-3 mr-1" />
                                     Manual
                                   </Badge>
@@ -1125,7 +1125,7 @@ export default function NewRequest() {
                                 <Button 
                                   variant="ghost" 
                                   size="icon"
-                                  className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                  className="h-8 w-8 text-[#FF6B6B] hover:text-[#FF6B6B] hover:bg-[#FFE5E5]"
                                   onClick={() => handleRemoveVisitor(index)}
                                 >
                                   <Trash2 className="h-4 w-4" />
@@ -1144,10 +1144,10 @@ export default function NewRequest() {
               {activeTab === "specific" && (
                 <div className="space-y-6">
                   {requestType === "Admin Visit" && (
-                    <Alert className="bg-blue-50 border-blue-200">
-                      <Info className="h-4 w-4 text-blue-600" />
-                      <AlertTitle className="text-blue-800">Admin Visit</AlertTitle>
-                      <AlertDescription className="text-blue-700">
+                    <Alert className="bg-[#E8DCF5] border-[#5B2C93]">
+                      <Info className="h-4 w-4 text-[#5B2C93]" />
+                      <AlertTitle className="text-[#5B2C93]">Admin Visit</AlertTitle>
+                      <AlertDescription className="text-[#5B2C93]">
                         Standard administrative visit. No additional details required.
                       </AlertDescription>
                     </Alert>
@@ -1155,16 +1155,16 @@ export default function NewRequest() {
 
                   {requestType === "TEP" && (
                     <div className="space-y-6">
-                      <Alert className="bg-amber-50 border-amber-200">
-                        <AlertTriangle className="h-4 w-4 text-amber-600" />
-                        <AlertTitle className="text-amber-800">Temporary Entry Permit</AlertTitle>
-                        <AlertDescription className="text-amber-700">
+                      <Alert className="bg-[#FFF4E5] border-[#FFB84D]">
+                        <AlertTriangle className="h-4 w-4 text-[#FFB84D]" />
+                        <AlertTitle className="text-[#FFB84D]">Temporary Entry Permit</AlertTitle>
+                        <AlertDescription className="text-[#FFB84D]">
                           TEP requires zone-level access approval. Select zone in the Location tab if needed.
                         </AlertDescription>
                       </Alert>
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-1">
-                          <Label className="text-xs font-bold text-gray-600 uppercase">Work Order Reference</Label>
+                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Work Order Reference</Label>
                           <Input 
                             placeholder="WO-XXXX" 
                             value={workOrderRef}
@@ -1172,7 +1172,7 @@ export default function NewRequest() {
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs font-bold text-gray-600 uppercase">Escort Required</Label>
+                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Escort Required</Label>
                           <Select value={escortRequired} onValueChange={setEscortRequired}>
                             <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>
@@ -1187,16 +1187,16 @@ export default function NewRequest() {
 
                   {requestType === "WP" && (
                     <div className="space-y-6">
-                      <Alert className="bg-orange-50 border-orange-200">
-                        <HardHat className="h-4 w-4 text-orange-600" />
-                        <AlertTitle className="text-orange-800">Work Permit</AlertTitle>
-                        <AlertDescription className="text-orange-700">
+                      <Alert className="bg-[#FFF4E5] border-[#FFB84D]">
+                        <HardHat className="h-4 w-4 text-[#FFB84D]" />
+                        <AlertTitle className="text-[#FFB84D]">Work Permit</AlertTitle>
+                        <AlertDescription className="text-[#FFB84D]">
                           Work permits require detailed safety documentation and risk assessment.
                         </AlertDescription>
                       </Alert>
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-1">
-                          <Label className="text-xs font-bold text-gray-600 uppercase">Work Type</Label>
+                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Work Type</Label>
                           <Select value={workType} onValueChange={setWorkType}>
                             <SelectTrigger><SelectValue placeholder="Select Work Type" /></SelectTrigger>
                             <SelectContent>
@@ -1208,7 +1208,7 @@ export default function NewRequest() {
                           </Select>
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs font-bold text-gray-600 uppercase">Risk Level</Label>
+                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Risk Level</Label>
                           <Select value={riskLevel} onValueChange={setRiskLevel}>
                             <SelectTrigger><SelectValue placeholder="Select Risk Level" /></SelectTrigger>
                             <SelectContent>
@@ -1224,16 +1224,16 @@ export default function NewRequest() {
 
                   {requestType === "MOP" && (
                     <div className="space-y-6">
-                      <Alert className="bg-purple-50 border-purple-200">
-                        <Settings className="h-4 w-4 text-purple-600" />
-                        <AlertTitle className="text-purple-800">Method of Procedure</AlertTitle>
-                        <AlertDescription className="text-purple-700">
+                      <Alert className="bg-[#E8DCF5] border-[#5B2C93]">
+                        <Settings className="h-4 w-4 text-[#5B2C93]" />
+                        <AlertTitle className="text-[#5B2C93]">Method of Procedure</AlertTitle>
+                        <AlertDescription className="text-[#5B2C93]">
                           MOP requires detailed step-by-step procedure documentation and CAB approval.
                         </AlertDescription>
                       </Alert>
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-1">
-                          <Label className="text-xs font-bold text-gray-600 uppercase">Change Ticket</Label>
+                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Change Ticket</Label>
                           <Input 
                             placeholder="CHG-XXXX" 
                             value={changeTicket}
@@ -1241,7 +1241,7 @@ export default function NewRequest() {
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs font-bold text-gray-600 uppercase">Impact Level</Label>
+                          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">Impact Level</Label>
                           <Select value={impactLevel} onValueChange={setImpactLevel}>
                             <SelectTrigger><SelectValue placeholder="Select Impact" /></SelectTrigger>
                             <SelectContent>
@@ -1258,16 +1258,16 @@ export default function NewRequest() {
 
                   {requestType === "MVP" && (
                     <div className="space-y-6">
-                      <Alert className="bg-green-50 border-green-200">
-                        <Truck className="h-4 w-4 text-green-600" />
-                        <AlertTitle className="text-green-800">Material Entry Permit</AlertTitle>
-                        <AlertDescription className="text-green-700">
+                      <Alert className="bg-[#E8F9F8] border-[#4ECDC4]">
+                        <Truck className="h-4 w-4 text-[#4ECDC4]" />
+                        <AlertTitle className="text-[#4ECDC4]">Material Entry Permit</AlertTitle>
+                        <AlertDescription className="text-[#4ECDC4]">
                           List all materials to be brought into the facility.
                         </AlertDescription>
                       </Alert>
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                          <h4 className="font-bold text-gray-700">Materials List</h4>
+                          <h4 className="font-medium text-[#2C2C2C]">Materials List</h4>
                           <Button variant="outline" size="sm" onClick={handleAddMaterial}>
                             <Plus className="mr-2 h-4 w-4" />
                             Add Item
@@ -1275,7 +1275,7 @@ export default function NewRequest() {
                         </div>
                         <div className="border rounded-md overflow-hidden">
                           <table className="w-full text-sm">
-                            <thead className="bg-gray-50">
+                            <thead className="bg-[#F5F5F5]">
                               <tr>
                                 <th className="p-2 text-left">Description *</th>
                                 <th className="p-2 w-24 text-left">Qty *</th>
@@ -1285,7 +1285,7 @@ export default function NewRequest() {
                             </thead>
                             <tbody>
                               {materials.length === 0 ? (
-                                <tr><td colSpan={4} className="p-4 text-center text-gray-500">No items added.</td></tr>
+                                <tr><td colSpan={4} className="p-4 text-center text-[#6B6B6B]">No items added.</td></tr>
                               ) : (
                                 materials.map((m, i) => (
                                   <tr key={i} className="border-t">
@@ -1329,7 +1329,7 @@ export default function NewRequest() {
                                       <Button 
                                         variant="ghost" 
                                         size="icon"
-                                        className="h-8 w-8 text-red-500"
+                                        className="h-8 w-8 text-[#FF6B6B]"
                                         onClick={() => handleRemoveMaterial(i)}
                                       >
                                         <Trash2 className="h-4 w-4" />
@@ -1350,31 +1350,31 @@ export default function NewRequest() {
               {/* ATTACHMENTS TAB */}
               {activeTab === "attachments" && (
                 <div className="space-y-6">
-                  <Alert className="bg-blue-50 border-blue-200">
-                    <Info className="h-4 w-4 text-blue-600" />
-                    <AlertTitle className="text-blue-800">Required Documents</AlertTitle>
-                    <AlertDescription className="text-blue-700">
+                  <Alert className="bg-[#E8DCF5] border-[#5B2C93]">
+                    <Info className="h-4 w-4 text-[#5B2C93]" />
+                    <AlertTitle className="text-[#5B2C93]">Required Documents</AlertTitle>
+                    <AlertDescription className="text-[#5B2C93]">
                       Based on your request type ({requestType}), please upload the following documents.
                     </AlertDescription>
                   </Alert>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-gray-50 transition-colors cursor-pointer">
-                      <div className="bg-blue-100 p-3 rounded-full mb-3">
-                        <Paperclip className="h-6 w-6 text-blue-600" />
+                    <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-[#F5F5F5] transition-colors cursor-pointer">
+                      <div className="bg-[#E8DCF5] p-3 rounded-full mb-3">
+                        <Paperclip className="h-6 w-6 text-[#5B2C93]" />
                       </div>
-                      <h4 className="font-bold text-gray-700">Visitor ID Copies</h4>
-                      <p className="text-xs text-gray-500 mt-1">Upload scanned copies of ID for all visitors.</p>
+                      <h4 className="font-medium text-[#2C2C2C]">Visitor ID Copies</h4>
+                      <p className="text-xs text-[#6B6B6B] mt-1">Upload scanned copies of ID for all visitors.</p>
                       <Button variant="outline" size="sm" className="mt-4">Browse Files</Button>
                     </div>
 
                     {(requestType === "WP" || requestType === "MOP") && (
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-gray-50 transition-colors cursor-pointer">
-                        <div className="bg-blue-100 p-3 rounded-full mb-3">
-                          <FileText className="h-6 w-6 text-blue-600" />
+                      <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-[#F5F5F5] transition-colors cursor-pointer">
+                        <div className="bg-[#E8DCF5] p-3 rounded-full mb-3">
+                          <FileText className="h-6 w-6 text-[#5B2C93]" />
                         </div>
-                        <h4 className="font-bold text-gray-700">Method Statement / Risk Assessment</h4>
-                        <p className="text-xs text-gray-500 mt-1">Upload approved technical documents.</p>
+                        <h4 className="font-medium text-[#2C2C2C]">Method Statement / Risk Assessment</h4>
+                        <p className="text-xs text-[#6B6B6B] mt-1">Upload approved technical documents.</p>
                         <Button variant="outline" size="sm" className="mt-4">Browse Files</Button>
                       </div>
                     )}
@@ -1386,19 +1386,19 @@ export default function NewRequest() {
               {activeTab === "review" && (
                 <div className="space-y-8">
                   {validateForm() ? (
-                    <div className="bg-amber-50 border border-amber-200 p-4 rounded-md flex items-start gap-3">
-                      <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <div className="bg-[#FFF4E5] border border-[#FFB84D] p-4 rounded-md flex items-start gap-3">
+                      <AlertTriangle className="h-5 w-5 text-[#FFB84D] mt-0.5" />
                       <div>
-                        <h4 className="font-bold text-amber-800">Missing Information</h4>
-                        <p className="text-sm text-amber-700">{validateForm()}</p>
+                        <h4 className="font-medium text-[#FFB84D]">Missing Information</h4>
+                        <p className="text-sm text-[#FFB84D]">{validateForm()}</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-green-50 border border-green-200 p-4 rounded-md flex items-start gap-3">
-                      <CheckSquare className="h-5 w-5 text-green-600 mt-0.5" />
+                    <div className="bg-[#E8F9F8] border border-[#4ECDC4] p-4 rounded-md flex items-start gap-3">
+                      <CheckSquare className="h-5 w-5 text-[#4ECDC4] mt-0.5" />
                       <div>
-                        <h4 className="font-bold text-green-800">Ready to Submit</h4>
-                        <p className="text-sm text-green-700">
+                        <h4 className="font-medium text-[#4ECDC4]">Ready to Submit</h4>
+                        <p className="text-sm text-[#4ECDC4]">
                           All mandatory fields have been filled. Please review the complete summary below before submitting.
                         </p>
                       </div>
@@ -1407,44 +1407,44 @@ export default function NewRequest() {
 
                   {/* Basic Information Section */}
                   <div className="border rounded-lg overflow-hidden">
-                    <div className="bg-gray-100 px-4 py-3 border-b">
-                      <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-[#0f62fe]" />
+                    <div className="bg-[#F5F5F5] px-4 py-3 border-b">
+                      <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-[#5B2C93]" />
                         Basic Information
                       </h3>
                     </div>
                     <div className="p-4">
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Request Type</span>
-                          <span className="font-bold text-[#0f62fe]">{requestType}</span>
+                          <span className="text-[#6B6B6B]">Request Type</span>
+                          <span className="font-medium text-[#5B2C93]">{requestType}</span>
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Requestor</span>
+                          <span className="text-[#6B6B6B]">Requestor</span>
                           {renderFieldValue(user?.name)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Email</span>
+                          <span className="text-[#6B6B6B]">Email</span>
                           {renderFieldValue(user?.email)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Mobile</span>
+                          <span className="text-[#6B6B6B]">Mobile</span>
                           {renderFieldValue(mobileNumber)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Department</span>
+                          <span className="text-[#6B6B6B]">Department</span>
                           {renderFieldValue(selectedDepartment?.name)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Sub-Type</span>
+                          <span className="text-[#6B6B6B]">Sub-Type</span>
                           {renderFieldValue(subType ? subType.charAt(0).toUpperCase() + subType.slice(1) : "")}
                         </div>
                         <div className="col-span-2 py-2 border-b">
-                          <span className="text-gray-500 block mb-1">Purpose of Visit</span>
+                          <span className="text-[#6B6B6B] block mb-1">Purpose of Visit</span>
                           {renderFieldValue(purpose)}
                         </div>
                         <div className="col-span-2 py-2">
-                          <span className="text-gray-500 block mb-1">Additional Notes</span>
+                          <span className="text-[#6B6B6B] block mb-1">Additional Notes</span>
                           {renderFieldValue(notes)}
                         </div>
                       </div>
@@ -1453,41 +1453,41 @@ export default function NewRequest() {
 
                   {/* Location Section */}
                   <div className="border rounded-lg overflow-hidden">
-                    <div className="bg-gray-100 px-4 py-3 border-b">
-                      <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-[#0f62fe]" />
+                    <div className="bg-[#F5F5F5] px-4 py-3 border-b">
+                      <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-[#5B2C93]" />
                         Location Details
                       </h3>
                     </div>
                     <div className="p-4">
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Site</span>
+                          <span className="text-[#6B6B6B]">Site</span>
                           {renderFieldValue(selectedSite?.name)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Country</span>
+                          <span className="text-[#6B6B6B]">Country</span>
                           {renderFieldValue(selectedSite?.countryName)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Region</span>
+                          <span className="text-[#6B6B6B]">Region</span>
                           {renderFieldValue(selectedSite?.regionName)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">City</span>
+                          <span className="text-[#6B6B6B]">City</span>
                           {renderFieldValue(selectedSite?.cityName)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Zone</span>
+                          <span className="text-[#6B6B6B]">Zone</span>
                           {renderFieldValue(selectedZone?.name, "Entire Site")}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Area</span>
+                          <span className="text-[#6B6B6B]">Area</span>
                           {renderFieldValue(selectedArea?.name, selectedZone ? "Entire Zone" : "N/A")}
                         </div>
                         {(requestType === "WP" || requestType === "MOP") && (
                           <div className="flex justify-between py-2">
-                            <span className="text-gray-500">Rack Reference</span>
+                            <span className="text-[#6B6B6B]">Rack Reference</span>
                             {renderFieldValue(rackReference)}
                           </div>
                         )}
@@ -1497,46 +1497,46 @@ export default function NewRequest() {
 
                   {/* Schedule Section */}
                   <div className="border rounded-lg overflow-hidden">
-                    <div className="bg-gray-100 px-4 py-3 border-b">
-                      <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-[#0f62fe]" />
+                    <div className="bg-[#F5F5F5] px-4 py-3 border-b">
+                      <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-[#5B2C93]" />
                         Schedule & Timing
                       </h3>
                     </div>
                     <div className="p-4">
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Start Date</span>
+                          <span className="text-[#6B6B6B]">Start Date</span>
                           {renderFieldValue(startDate)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Start Time</span>
+                          <span className="text-[#6B6B6B]">Start Time</span>
                           {renderFieldValue(startTime)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">End Date</span>
+                          <span className="text-[#6B6B6B]">End Date</span>
                           {renderFieldValue(endDate)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">End Time</span>
+                          <span className="text-[#6B6B6B]">End Time</span>
                           {renderFieldValue(endTime)}
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Duration</span>
+                          <span className="text-[#6B6B6B]">Duration</span>
                           <span className="font-mono font-medium">{duration.days}d {duration.hours}h</span>
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">After-Hours</span>
-                          <span className={afterHours ? "text-green-600 font-medium" : "text-gray-400"}>{afterHours ? "Yes" : "No"}</span>
+                          <span className="text-[#6B6B6B]">After-Hours</span>
+                          <span className={afterHours ? "text-[#4ECDC4] font-medium" : "text-[#B0B0B0]"}>{afterHours ? "Yes" : "No"}</span>
                         </div>
                         <div className="flex justify-between py-2 border-b">
-                          <span className="text-gray-500">Weekend Access</span>
-                          <span className={weekend ? "text-green-600 font-medium" : "text-gray-400"}>{weekend ? "Yes" : "No"}</span>
+                          <span className="text-[#6B6B6B]">Weekend Access</span>
+                          <span className={weekend ? "text-[#4ECDC4] font-medium" : "text-[#B0B0B0]"}>{weekend ? "Yes" : "No"}</span>
                         </div>
                         {requestType === "TEP" && (
                           <div className="flex justify-between py-2">
-                            <span className="text-gray-500">Recurring</span>
-                            <span className={recurring ? "text-green-600 font-medium" : "text-gray-400"}>{recurring ? "Yes" : "No"}</span>
+                            <span className="text-[#6B6B6B]">Recurring</span>
+                            <span className={recurring ? "text-[#4ECDC4] font-medium" : "text-[#B0B0B0]"}>{recurring ? "Yes" : "No"}</span>
                           </div>
                         )}
                       </div>
@@ -1545,24 +1545,24 @@ export default function NewRequest() {
 
                   {/* Visitors Section */}
                   <div className="border rounded-lg overflow-hidden">
-                    <div className="bg-gray-100 px-4 py-3 border-b">
-                      <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                        <Users className="h-4 w-4 text-[#0f62fe]" />
+                    <div className="bg-[#F5F5F5] px-4 py-3 border-b">
+                      <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                        <Users className="h-4 w-4 text-[#5B2C93]" />
                         Visitors ({visitors.length})
                       </h3>
                     </div>
                     <div className="p-4">
                       {visitors.length === 0 ? (
-                        <p className="text-gray-400 italic text-sm">No visitors added</p>
+                        <p className="text-[#B0B0B0] italic text-sm">No visitors added</p>
                       ) : (
                         <div className="space-y-3">
                           {visitors.map((v, i) => (
                             <div key={i} className="flex items-center justify-between py-2 border-b last:border-b-0">
                               <div>
                                 <span className="font-medium">{v.name}</span>
-                                <span className="text-gray-500 text-sm ml-2">({v.idType.replace("_", " ")} - {v.idNumber})</span>
+                                <span className="text-[#6B6B6B] text-sm ml-2">({v.idType.replace("_", " ")} - {v.idNumber})</span>
                               </div>
-                              <Badge className={v.verified ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}>
+                              <Badge className={v.verified ? "bg-[#E8F9F8] text-[#4ECDC4]" : "bg-[#FFF4E5] text-[#FFB84D]"}>
                                 {v.verified ? "Verified" : "Manual"}
                               </Badge>
                             </div>
@@ -1575,9 +1575,9 @@ export default function NewRequest() {
                   {/* Type-Specific Section */}
                   {(requestType === "TEP" || requestType === "WP" || requestType === "MOP") && (
                     <div className="border rounded-lg overflow-hidden">
-                      <div className="bg-gray-100 px-4 py-3 border-b">
-                        <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                          <Settings className="h-4 w-4 text-[#0f62fe]" />
+                      <div className="bg-[#F5F5F5] px-4 py-3 border-b">
+                        <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                          <Settings className="h-4 w-4 text-[#5B2C93]" />
                           {requestType} Details
                         </h3>
                       </div>
@@ -1586,11 +1586,11 @@ export default function NewRequest() {
                           {requestType === "TEP" && (
                             <>
                               <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-500">Work Order Ref</span>
+                                <span className="text-[#6B6B6B]">Work Order Ref</span>
                                 {renderFieldValue(workOrderRef)}
                               </div>
                               <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-500">Escort Required</span>
+                                <span className="text-[#6B6B6B]">Escort Required</span>
                                 {renderFieldValue(escortRequired ? (escortRequired === "yes" ? "Yes" : "No") : "")}
                               </div>
                             </>
@@ -1598,11 +1598,11 @@ export default function NewRequest() {
                           {requestType === "WP" && (
                             <>
                               <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-500">Work Type</span>
+                                <span className="text-[#6B6B6B]">Work Type</span>
                                 {renderFieldValue(workType ? workType.charAt(0).toUpperCase() + workType.slice(1) : "")}
                               </div>
                               <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-500">Risk Level</span>
+                                <span className="text-[#6B6B6B]">Risk Level</span>
                                 {renderFieldValue(riskLevel ? riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1) : "")}
                               </div>
                             </>
@@ -1610,11 +1610,11 @@ export default function NewRequest() {
                           {requestType === "MOP" && (
                             <>
                               <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-500">Change Ticket</span>
+                                <span className="text-[#6B6B6B]">Change Ticket</span>
                                 {renderFieldValue(changeTicket)}
                               </div>
                               <div className="flex justify-between py-2 border-b">
-                                <span className="text-gray-500">Impact Level</span>
+                                <span className="text-[#6B6B6B]">Impact Level</span>
                                 {renderFieldValue(impactLevel ? impactLevel.charAt(0).toUpperCase() + impactLevel.slice(1) : "")}
                               </div>
                             </>
@@ -1627,21 +1627,21 @@ export default function NewRequest() {
                   {/* Materials Section (MVP) */}
                   {requestType === "MVP" && (
                     <div className="border rounded-lg overflow-hidden">
-                      <div className="bg-gray-100 px-4 py-3 border-b">
-                        <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                          <Truck className="h-4 w-4 text-[#0f62fe]" />
+                      <div className="bg-[#F5F5F5] px-4 py-3 border-b">
+                        <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                          <Truck className="h-4 w-4 text-[#5B2C93]" />
                           Materials ({materials.length})
                         </h3>
                       </div>
                       <div className="p-4">
                         {materials.length === 0 ? (
-                          <p className="text-gray-400 italic text-sm">No materials added</p>
+                          <p className="text-[#B0B0B0] italic text-sm">No materials added</p>
                         ) : (
                           <div className="space-y-2">
                             {materials.map((m, i) => (
                               <div key={i} className="flex items-center justify-between py-2 border-b last:border-b-0 text-sm">
-                                <span>{m.description || <span className="text-gray-400 italic">No description</span>}</span>
-                                <span className="text-gray-500">Qty: {m.quantity} {m.serialNumber && `| S/N: ${m.serialNumber}`}</span>
+                                <span>{m.description || <span className="text-[#B0B0B0] italic">No description</span>}</span>
+                                <span className="text-[#6B6B6B]">Qty: {m.quantity} {m.serialNumber && `| S/N: ${m.serialNumber}`}</span>
                               </div>
                             ))}
                           </div>
@@ -1652,26 +1652,26 @@ export default function NewRequest() {
 
                   {/* Approval Path */}
                   <div className="border rounded-lg overflow-hidden">
-                    <div className="bg-gray-100 px-4 py-3 border-b">
-                      <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                        <ShieldCheck className="h-4 w-4 text-[#0f62fe]" />
+                    <div className="bg-[#F5F5F5] px-4 py-3 border-b">
+                      <h3 className="font-medium text-[#2C2C2C] flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4 text-[#5B2C93]" />
                         Approval Path
                       </h3>
                     </div>
                     <div className="p-4">
                       <div className="space-y-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs font-bold">1</div>
+                          <div className="w-6 h-6 rounded-full bg-[#E8F9F8] text-[#4ECDC4] flex items-center justify-center text-xs font-medium">1</div>
                           <span className="text-sm font-medium">L1 Approval (Security Supervisor)</span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-xs font-bold">2</div>
-                          <span className="text-sm text-gray-500">L2 Approval (Data Center Manager)</span>
+                          <div className="w-6 h-6 rounded-full bg-[#F5F5F5] text-[#6B6B6B] flex items-center justify-center text-xs font-medium">2</div>
+                          <span className="text-sm text-[#6B6B6B]">L2 Approval (Data Center Manager)</span>
                         </div>
                         {requestType === "MOP" && (
                           <div className="flex items-center gap-3">
-                            <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-xs font-bold">3</div>
-                            <span className="text-sm text-gray-500">Change Advisory Board (CAB)</span>
+                            <div className="w-6 h-6 rounded-full bg-[#F5F5F5] text-[#6B6B6B] flex items-center justify-center text-xs font-medium">3</div>
+                            <span className="text-sm text-[#6B6B6B]">Change Advisory Board (CAB)</span>
                           </div>
                         )}
                       </div>
@@ -1694,7 +1694,7 @@ export default function NewRequest() {
                     </Button>
                     <Button 
                       size="lg" 
-                      className="bg-[#0f62fe] hover:bg-[#0f62fe]/90 px-8"
+                      className="bg-[#5B2C93] hover:bg-[#5B2C93]/90 px-8"
                       onClick={() => handleSubmit(false)}
                       disabled={createRequest.isPending || !!validateForm()}
                     >

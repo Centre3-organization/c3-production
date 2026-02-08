@@ -166,8 +166,8 @@ export function ShiftManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Shift Management</h1>
-          <p className="text-muted-foreground">Configure shift schedules for time-based approval routing</p>
+          <h1 className="text-2xl font-medium">Shift Management</h1>
+          <p className="text-[#6B6B6B]">Configure shift schedules for time-based approval routing</p>
         </div>
         <Button onClick={() => setIsCreateScheduleOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
@@ -188,8 +188,8 @@ export function ShiftManagement() {
                 )}
               </div>
               <div>
-                <p className="font-semibold">Current Shift: {currentShift.shift.name}</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="font-medium">Current Shift: {currentShift.shift.name}</p>
+                <p className="text-sm text-[#6B6B6B]">
                   {currentShift.shift.startTime} - {currentShift.shift.endTime} ({currentShift.schedule.name})
                 </p>
               </div>
@@ -207,12 +207,12 @@ export function ShiftManagement() {
       <div className="grid grid-cols-3 gap-6">
         {/* Schedules List */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Schedules</h2>
+          <h2 className="text-lg font-medium">Schedules</h2>
           {isLoading ? (
-            <div className="text-muted-foreground">Loading...</div>
+            <div className="text-[#6B6B6B]">Loading...</div>
           ) : schedules?.length === 0 ? (
             <Card>
-              <CardContent className="py-8 text-center text-muted-foreground">
+              <CardContent className="py-8 text-center text-[#6B6B6B]">
                 <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No schedules configured</p>
               </CardContent>
@@ -231,7 +231,7 @@ export function ShiftManagement() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">{schedule.name}</p>
-                        <p className="text-sm text-muted-foreground">{schedule.timezone}</p>
+                        <p className="text-sm text-[#6B6B6B]">{schedule.timezone}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         {schedule.isDefault && <Badge>Default</Badge>}
@@ -251,8 +251,8 @@ export function ShiftManagement() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-lg font-semibold">{scheduleDetails.schedule.name}</h2>
-                  <p className="text-sm text-muted-foreground">Timezone: {scheduleDetails.schedule.timezone}</p>
+                  <h2 className="text-lg font-medium">{scheduleDetails.schedule.name}</h2>
+                  <p className="text-sm text-[#6B6B6B]">Timezone: {scheduleDetails.schedule.timezone}</p>
                 </div>
                 <Button onClick={() => setIsCreateShiftOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" />
@@ -262,7 +262,7 @@ export function ShiftManagement() {
 
               {scheduleDetails.shifts.length === 0 ? (
                 <Card>
-                  <CardContent className="py-12 text-center text-muted-foreground">
+                  <CardContent className="py-12 text-center text-[#6B6B6B]">
                     <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No shifts configured for this schedule</p>
                   </CardContent>
@@ -313,7 +313,7 @@ export function ShiftManagement() {
                       </CardHeader>
                       <CardContent>
                         {shift.assignments.length === 0 ? (
-                          <p className="text-sm text-muted-foreground">No users assigned to this shift</p>
+                          <p className="text-sm text-[#6B6B6B]">No users assigned to this shift</p>
                         ) : (
                           <Table>
                             <TableHeader>
@@ -329,7 +329,7 @@ export function ShiftManagement() {
                                 <TableRow key={assignment.id}>
                                   <TableCell>
                                     {assignment.userName} {assignment.userLastName}
-                                    <span className="text-muted-foreground text-xs block">
+                                    <span className="text-[#6B6B6B] text-xs block">
                                       {assignment.userEmail}
                                     </span>
                                   </TableCell>
@@ -337,7 +337,7 @@ export function ShiftManagement() {
                                     <Badge variant="outline">{assignment.roleInShift}</Badge>
                                   </TableCell>
                                   <TableCell>
-                                    {assignment.isPrimary && <CheckCircle className="h-4 w-4 text-green-500" />}
+                                    {assignment.isPrimary && <CheckCircle className="h-4 w-4 text-[#4ECDC4]" />}
                                   </TableCell>
                                   <TableCell>
                                     <Button
@@ -360,7 +360,7 @@ export function ShiftManagement() {
               )}
             </div>
           ) : (
-            <div className="flex items-center justify-center h-64 text-muted-foreground">
+            <div className="flex items-center justify-center h-64 text-[#6B6B6B]">
               <div className="text-center">
                 <Calendar className="h-16 w-16 mx-auto mb-4 opacity-50" />
                 <p>Select a schedule to view shifts</p>

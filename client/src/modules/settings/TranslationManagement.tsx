@@ -289,11 +289,11 @@ export default function TranslationManagement() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-medium tracking-tight flex items-center gap-2">
             <Languages className="h-6 w-6 text-primary" />
             {isRTL ? 'إدارة الترجمات' : 'Translation Management'}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-[#6B6B6B] mt-1">
             {isRTL ? 'إدارة وتحرير جميع سلاسل الترجمة للتطبيق' : 'Manage and edit all translation strings for the application'}
           </p>
         </div>
@@ -332,27 +332,27 @@ export default function TranslationManagement() {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
+            <div className="h-3 w-full bg-[#F5F5F5] rounded-full overflow-hidden">
               <div 
                 className={`h-full transition-all duration-500 rounded-full ${
                   completionPercentage === 100 
-                    ? 'bg-green-500' 
+                    ? 'bg-[#E8F9F8]' 
                     : completionPercentage >= 80 
-                      ? 'bg-blue-500' 
+                      ? 'bg-[#E8DCF5]' 
                       : completionPercentage >= 50 
-                        ? 'bg-amber-500' 
-                        : 'bg-red-500'
+                        ? 'bg-[#FFF4E5]' 
+                        : 'bg-[#FF6B6B]'
                 }`}
                 style={{ width: `${completionPercentage}%` }}
               />
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground">
+            <div className="flex justify-between text-xs text-[#6B6B6B]">
               <span className="flex items-center gap-1">
-                <CheckCircle2 className="h-3 w-3 text-green-500" />
+                <CheckCircle2 className="h-3 w-3 text-[#4ECDC4]" />
                 {isRTL ? 'مترجم' : 'Translated'}: {stats.translated}
               </span>
               <span className="flex items-center gap-1">
-                <AlertCircle className="h-3 w-3 text-amber-500" />
+                <AlertCircle className="h-3 w-3 text-[#FFB84D]" />
                 {isRTL ? 'مفقود' : 'Missing'}: {stats.missing}
               </span>
             </div>
@@ -364,42 +364,42 @@ export default function TranslationManagement() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-medium text-[#6B6B6B]">
               {isRTL ? 'إجمالي السلاسل' : 'Total Strings'}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
+            <div className="text-2xl font-medium">{stats.total}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-medium text-[#6B6B6B]">
               {isRTL ? 'مترجم' : 'Translated'}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.translated}</div>
+            <div className="text-2xl font-medium text-[#4ECDC4]">{stats.translated}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-medium text-[#6B6B6B]">
               {isRTL ? 'مفقود' : 'Missing'}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-amber-600">{stats.missing}</div>
+            <div className="text-2xl font-medium text-[#FFB84D]">{stats.missing}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-medium text-[#6B6B6B]">
               {isRTL ? 'معدل' : 'Modified'}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats.modified}</div>
+            <div className="text-2xl font-medium text-[#5B2C93]">{stats.modified}</div>
           </CardContent>
         </Card>
       </div>
@@ -409,7 +409,7 @@ export default function TranslationManagement() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <div className="relative flex-1">
-              <Search className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground`} />
+              <Search className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]`} />
               <Input
                 placeholder={isRTL ? 'البحث في الترجمات...' : 'Search translations...'}
                 value={searchQuery}
@@ -445,7 +445,7 @@ export default function TranslationManagement() {
         <CardContent>
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
-              <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
+              <RefreshCw className="h-6 w-6 animate-spin text-[#6B6B6B]" />
             </div>
           ) : (
             <div className="rounded-md border">
@@ -463,7 +463,7 @@ export default function TranslationManagement() {
                 <TableBody>
                   {filteredTranslations.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={6} className="text-center py-8 text-[#6B6B6B]">
                         {isRTL ? 'لا توجد ترجمات مطابقة' : 'No matching translations found'}
                       </TableCell>
                     </TableRow>
@@ -502,16 +502,16 @@ export default function TranslationManagement() {
                         </TableCell>
                         <TableCell>
                           {entry.isModified ? (
-                            <Badge className="bg-blue-100 text-blue-700">
+                            <Badge className="bg-[#E8DCF5] text-[#5B2C93]">
                               {isRTL ? 'معدل' : 'Modified'}
                             </Badge>
                           ) : entry.ar && entry.ar !== entry.en ? (
-                            <Badge className="bg-green-100 text-green-700">
+                            <Badge className="bg-[#E8F9F8] text-[#4ECDC4]">
                               <CheckCircle2 className="h-3 w-3 mr-1" />
                               {isRTL ? 'مترجم' : 'Done'}
                             </Badge>
                           ) : (
-                            <Badge className="bg-amber-100 text-amber-700">
+                            <Badge className="bg-[#FFF4E5] text-[#FFB84D]">
                               <AlertCircle className="h-3 w-3 mr-1" />
                               {isRTL ? 'مفقود' : 'Missing'}
                             </Badge>
@@ -521,10 +521,10 @@ export default function TranslationManagement() {
                           {editingKey === entry.key ? (
                             <div className="flex gap-1">
                               <Button size="icon" variant="ghost" onClick={saveEdit}>
-                                <Save className="h-4 w-4 text-green-600" />
+                                <Save className="h-4 w-4 text-[#4ECDC4]" />
                               </Button>
                               <Button size="icon" variant="ghost" onClick={cancelEdit}>
-                                <X className="h-4 w-4 text-red-600" />
+                                <X className="h-4 w-4 text-[#FF6B6B]" />
                               </Button>
                             </div>
                           ) : (
@@ -539,7 +539,7 @@ export default function TranslationManagement() {
                 </TableBody>
               </Table>
               {filteredTranslations.length > 50 && (
-                <div className="p-4 text-center text-sm text-muted-foreground border-t">
+                <div className="p-4 text-center text-sm text-[#6B6B6B] border-t">
                   {isRTL 
                     ? `عرض 50 من ${filteredTranslations.length} ترجمة. استخدم البحث لتضييق النتائج.`
                     : `Showing 50 of ${filteredTranslations.length} translations. Use search to narrow results.`

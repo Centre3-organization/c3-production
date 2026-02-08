@@ -106,9 +106,9 @@ function SiteTypeField({
   if (isLoading) {
     return (
       <div className="space-y-1.5">
-        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
           {getLabel()}
-          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
         </Label>
         <div className="flex items-center justify-center p-4 border rounded-md">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -139,9 +139,9 @@ function SiteTypeField({
         isRTL={isRTL}
       />
       {getHelpText() && (
-        <p className="text-xs text-gray-500">{getHelpText()}</p>
+        <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
       )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
     </div>
   );
 }
@@ -171,9 +171,9 @@ function ZoneTypeField({
   if (isLoading) {
     return (
       <div className="space-y-1.5">
-        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
           {getLabel()}
-          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
         </Label>
         <div className="flex items-center justify-center p-4 border rounded-md">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -204,9 +204,9 @@ function ZoneTypeField({
         isRTL={isRTL}
       />
       {getHelpText() && (
-        <p className="text-xs text-gray-500">{getHelpText()}</p>
+        <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
       )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
     </div>
   );
 }
@@ -236,9 +236,9 @@ function AreaTypeField({
   if (isLoading) {
     return (
       <div className="space-y-1.5">
-        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
           {getLabel()}
-          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
         </Label>
         <div className="flex items-center justify-center p-4 border rounded-md">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -269,9 +269,9 @@ function AreaTypeField({
         isRTL={isRTL}
       />
       {getHelpText() && (
-        <p className="text-xs text-gray-500">{getHelpText()}</p>
+        <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
       )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
     </div>
   );
 }
@@ -361,19 +361,19 @@ function UserLookupField({
 
   return (
     <div className="space-y-1.5">
-      <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+      <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
         {getLabel()}
-        {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+        {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
       </Label>
       
       {value?.id ? (
         // Selected user display
-        <div className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
-          <User className="h-4 w-4 text-blue-600" />
+        <div className="flex items-center gap-2 p-2 bg-[#E8DCF5] border border-[#5B2C93] rounded-md">
+          <User className="h-4 w-4 text-[#5B2C93]" />
           <div className="flex-1">
-            <p className="text-sm font-medium text-blue-800">{value.name}</p>
+            <p className="text-sm font-medium text-[#5B2C93]">{value.name}</p>
             {value.email && (
-              <p className="text-xs text-blue-600">{value.email}</p>
+              <p className="text-xs text-[#5B2C93]">{value.email}</p>
             )}
           </div>
           {!disabled && (
@@ -381,7 +381,7 @@ function UserLookupField({
               type="button"
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-blue-600 hover:text-red-600 hover:bg-red-50"
+              className="h-6 w-6 text-[#5B2C93] hover:text-[#FF6B6B] hover:bg-[#FFE5E5]"
               onClick={handleClear}
             >
               <X className="h-4 w-4" />
@@ -403,9 +403,9 @@ function UserLookupField({
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2">
               {isSearching ? (
-                <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                <Loader2 className="h-4 w-4 animate-spin text-[#B0B0B0]" />
               ) : (
-                <Search className="h-4 w-4 text-gray-400" />
+                <Search className="h-4 w-4 text-[#B0B0B0]" />
               )}
             </div>
           </div>
@@ -417,14 +417,14 @@ function UserLookupField({
                 <button
                   key={user.value}
                   type="button"
-                  className="w-full px-3 py-2 text-left hover:bg-gray-100 flex items-center gap-2 border-b last:border-b-0"
+                  className="w-full px-3 py-2 text-left hover:bg-[#F5F5F5] flex items-center gap-2 border-b last:border-b-0"
                   onClick={() => handleSelectUser(user)}
                 >
-                  <User className="h-4 w-4 text-gray-400" />
+                  <User className="h-4 w-4 text-[#B0B0B0]" />
                   <div>
                     <p className="text-sm font-medium">{user.label}</p>
                     {user.email && (
-                      <p className="text-xs text-gray-500">{user.email}</p>
+                      <p className="text-xs text-[#6B6B6B]">{user.email}</p>
                     )}
                   </div>
                 </button>
@@ -433,7 +433,7 @@ function UserLookupField({
           )}
           
           {showResults && searchResults.length === 0 && searchQuery.length >= 2 && !isSearching && (
-            <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg p-3 text-center text-sm text-gray-500">
+            <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg p-3 text-center text-sm text-[#6B6B6B]">
               {t("common.noUsersFound", "No users found")}
             </div>
           )}
@@ -441,9 +441,9 @@ function UserLookupField({
       )}
       
       {getHelpText() && (
-        <p className="text-xs text-gray-500">{getHelpText()}</p>
+        <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
       )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
     </div>
   );
 }
@@ -540,9 +540,9 @@ function MultiUserLookupField({
 
   return (
     <div className="space-y-1.5">
-      <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+      <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
         {getLabel()}
-        {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+        {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
       </Label>
 
       {/* Selected users as badges */}
@@ -552,7 +552,7 @@ function MultiUserLookupField({
             <Badge
               key={u.id}
               variant="secondary"
-              className="text-xs flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200 px-2 py-1"
+              className="text-xs flex items-center gap-1 bg-[#E8DCF5] text-[#5B2C93] border border-[#5B2C93] px-2 py-1"
             >
               <User className="h-3 w-3" />
               {u.name}
@@ -560,7 +560,7 @@ function MultiUserLookupField({
                 <button
                   type="button"
                   onClick={() => handleRemoveUser(u.id)}
-                  className="ml-0.5 hover:text-red-600"
+                  className="ml-0.5 hover:text-[#FF6B6B]"
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -584,9 +584,9 @@ function MultiUserLookupField({
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2">
               {isSearching ? (
-                <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                <Loader2 className="h-4 w-4 animate-spin text-[#B0B0B0]" />
               ) : (
-                <Search className="h-4 w-4 text-gray-400" />
+                <Search className="h-4 w-4 text-[#B0B0B0]" />
               )}
             </div>
           </div>
@@ -598,14 +598,14 @@ function MultiUserLookupField({
                 <button
                   key={user.value}
                   type="button"
-                  className="w-full px-3 py-2 text-left hover:bg-gray-100 flex items-center gap-2 border-b last:border-b-0"
+                  className="w-full px-3 py-2 text-left hover:bg-[#F5F5F5] flex items-center gap-2 border-b last:border-b-0"
                   onClick={() => handleSelectUser(user)}
                 >
-                  <User className="h-4 w-4 text-gray-400" />
+                  <User className="h-4 w-4 text-[#B0B0B0]" />
                   <div>
                     <p className="text-sm font-medium">{user.label}</p>
                     {user.email && (
-                      <p className="text-xs text-gray-500">{user.email}</p>
+                      <p className="text-xs text-[#6B6B6B]">{user.email}</p>
                     )}
                   </div>
                 </button>
@@ -614,7 +614,7 @@ function MultiUserLookupField({
           )}
 
           {showResults && searchResults.length === 0 && searchQuery.length >= 2 && !isSearching && (
-            <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg p-3 text-center text-sm text-gray-500">
+            <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg p-3 text-center text-sm text-[#6B6B6B]">
               {t("common.noUsersFound", "No users found")}
             </div>
           )}
@@ -622,9 +622,9 @@ function MultiUserLookupField({
       )}
 
       {getHelpText() && (
-        <p className="text-xs text-gray-500">{getHelpText()}</p>
+        <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
       )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
     </div>
   );
 }
@@ -711,9 +711,9 @@ function ActivitySelectorField({
   if (loadingMain) {
     return (
       <div className="space-y-1.5">
-        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
           {getLabel()}
-          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
         </Label>
         <div className="flex items-center justify-center p-4 border rounded-md">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -726,17 +726,17 @@ function ActivitySelectorField({
     <div className="space-y-4">
       {/* Main Activity Selector */}
       <div className="space-y-1.5">
-        <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+        <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
           <Activity className="h-3.5 w-3.5" />
           {isRTL ? "النشاط الرئيسي" : "Main Activity"}
-          {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+          {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
         </Label>
         <Select
           value={selectedMainActivityId?.toString() || ""}
           onValueChange={(v) => setSelectedMainActivityId(parseInt(v))}
           disabled={disabled}
         >
-          <SelectTrigger className={error ? "border-red-500" : ""}>
+          <SelectTrigger className={error ? "border-[#FF6B6B]" : ""}>
             <SelectValue placeholder={isRTL ? "اختر النشاط الرئيسي" : "Select main activity"} />
           </SelectTrigger>
           <SelectContent>
@@ -752,10 +752,10 @@ function ActivitySelectorField({
       {/* Sub-Activity Selector */}
       {selectedMainActivityId && (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             <ClipboardList className="h-3.5 w-3.5" />
             {isRTL ? "النشاط الفرعي" : "Sub-Activity"}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           {loadingSub ? (
             <div className="flex items-center justify-center p-4 border rounded-md">
@@ -767,7 +767,7 @@ function ActivitySelectorField({
               onValueChange={(v) => setSelectedSubActivityId(parseInt(v))}
               disabled={disabled || filteredSubActivities.length === 0}
             >
-              <SelectTrigger className={error ? "border-red-500" : ""}>
+              <SelectTrigger className={error ? "border-[#FF6B6B]" : ""}>
                 <SelectValue placeholder={isRTL ? "اختر النشاط الفرعي" : "Select sub-activity"} />
               </SelectTrigger>
               <SelectContent>
@@ -780,7 +780,7 @@ function ActivitySelectorField({
             </Select>
           )}
           {filteredSubActivities.length === 0 && !loadingSub && (
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-[#6B6B6B]">
               {isRTL ? "لا توجد أنشطة فرعية لهذا النشاط الرئيسي" : "No sub-activities available for this main activity"}
             </p>
           )}
@@ -789,44 +789,44 @@ function ActivitySelectorField({
 
       {/* Requirements Display */}
       {selectedSubActivity && (
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-md space-y-2">
-          <Label className="text-xs font-bold text-blue-800 uppercase flex items-center gap-1">
+        <div className="p-3 bg-[#E8DCF5] border border-[#5B2C93] rounded-md space-y-2">
+          <Label className="text-xs font-medium text-[#5B2C93] uppercase flex items-center gap-1">
             <FileCheck className="h-3.5 w-3.5" />
             {isRTL ? "المتطلبات" : "Requirements"}
           </Label>
           <div className="flex flex-wrap gap-2">
             {selectedSubActivity.needsRFC && (
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+              <Badge className="bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]">
                 <AlertTriangle className="h-3 w-3 mr-1" />
                 RFC
               </Badge>
             )}
             {selectedSubActivity.needsHRS && (
-              <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">
+              <Badge className="bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]">
                 <FileCheck className="h-3 w-3 mr-1" />
                 HRS
               </Badge>
             )}
             {selectedSubActivity.needsMOP && (
-              <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">
+              <Badge className="bg-[#FFF4E5] text-[#FFB84D] hover:bg-[#FFF4E5]">
                 <ClipboardList className="h-3 w-3 mr-1" />
                 MOP
               </Badge>
             )}
             {selectedSubActivity.needsMHV && (
-              <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+              <Badge className="bg-[#E8F9F8] text-[#4ECDC4] hover:bg-[#E8F9F8]">
                 <FileCheck className="h-3 w-3 mr-1" />
                 MHV
               </Badge>
             )}
             {selectedSubActivity.needsRoomSelection && (
-              <Badge className="bg-cyan-100 text-cyan-800 hover:bg-cyan-100">
+              <Badge className="bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]">
                 <RoomIcon className="h-3 w-3 mr-1" />
                 {isRTL ? "اختيار الغرفة" : "Room Selection"}
               </Badge>
             )}
             {!selectedSubActivity.needsRFC && !selectedSubActivity.needsHRS && !selectedSubActivity.needsMOP && !selectedSubActivity.needsMHV && !selectedSubActivity.needsRoomSelection && (
-              <span className="text-xs text-blue-600">
+              <span className="text-xs text-[#5B2C93]">
                 {isRTL ? "لا توجد متطلبات إضافية" : "No additional requirements"}
               </span>
             )}
@@ -835,9 +835,9 @@ function ActivitySelectorField({
       )}
 
       {getHelpText() && (
-        <p className="text-xs text-gray-500">{getHelpText()}</p>
+        <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
       )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
     </div>
   );
 }
@@ -999,7 +999,7 @@ export function FieldRenderer({
 
   const baseInputClass = cn(
     "w-full",
-    error && "border-red-500 focus:ring-red-500"
+    error && "border-[#FF6B6B] focus:ring-[#FF6B6B]"
   );
 
   // Render based on field type
@@ -1009,9 +1009,9 @@ export function FieldRenderer({
     case "phone":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           <Input
             type={field.fieldType === "email" ? "email" : "text"}
@@ -1023,18 +1023,18 @@ export function FieldRenderer({
             maxLength={field.validation?.maxLength}
           />
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
     case "number":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           <Input
             type="number"
@@ -1047,18 +1047,18 @@ export function FieldRenderer({
             max={field.validation?.max}
           />
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
     case "textarea":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           <Textarea
             value={value || ""}
@@ -1069,18 +1069,18 @@ export function FieldRenderer({
             maxLength={field.validation?.maxLength}
           />
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
     case "date":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           <Input
             type="date"
@@ -1090,18 +1090,18 @@ export function FieldRenderer({
             className={baseInputClass}
           />
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
     case "datetime":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           <Input
             type="datetime-local"
@@ -1111,18 +1111,18 @@ export function FieldRenderer({
             className={baseInputClass}
           />
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
     case "dropdown":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           <Select
             value={value || ""}
@@ -1147,9 +1147,9 @@ export function FieldRenderer({
             </SelectContent>
           </Select>
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
@@ -1157,9 +1157,9 @@ export function FieldRenderer({
       const selectedValues = Array.isArray(value) ? value : [];
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           <div className="border rounded-md p-3 space-y-2">
             {getOptions().map((opt) => (
@@ -1195,7 +1195,7 @@ export function FieldRenderer({
                     <button
                       type="button"
                       onClick={() => onChange(selectedValues.filter((sv: string) => sv !== v))}
-                      className="ml-1 hover:text-red-600"
+                      className="ml-1 hover:text-[#FF6B6B]"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -1205,18 +1205,18 @@ export function FieldRenderer({
             </div>
           )}
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
     case "radio":
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           <RadioGroup
             value={value || ""}
@@ -1237,9 +1237,9 @@ export function FieldRenderer({
             ))}
           </RadioGroup>
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
@@ -1258,13 +1258,13 @@ export function FieldRenderer({
               className="text-sm font-medium cursor-pointer flex items-center gap-1"
             >
               {getLabel()}
-              {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+              {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
             </Label>
           </div>
           {getHelpText() && (
-            <p className="text-xs text-gray-500 ml-6">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B] ml-6">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600 ml-6">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B] ml-6">{error}</p>}
         </div>
       );
 
@@ -1272,9 +1272,9 @@ export function FieldRenderer({
       const checkedValues = Array.isArray(value) ? value : [];
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
           <div className="border rounded-md p-3 space-y-2.5">
             {getOptions().map((opt) => (
@@ -1302,9 +1302,9 @@ export function FieldRenderer({
             ))}
           </div>
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
@@ -1316,11 +1316,11 @@ export function FieldRenderer({
 
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase flex items-center gap-1">
             {getLabel()}
-            {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-[#0f62fe]/50 transition-colors">
+          <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-4 text-center hover:border-[#5B2C93]/50 transition-colors">
             <input
               type="file"
               id={field.code}
@@ -1341,13 +1341,13 @@ export function FieldRenderer({
               htmlFor={field.code}
               className="cursor-pointer flex flex-col items-center gap-2"
             >
-              <Upload className="h-8 w-8 text-gray-400" />
-              <span className="text-sm text-gray-600">
+              <Upload className="h-8 w-8 text-[#B0B0B0]" />
+              <span className="text-sm text-[#6B6B6B]">
                 {t("common.clickToUpload", "Click to upload")}
                 {isMulti && ` (${files.length}/${maxFiles})`}
               </span>
               {field.validation?.accept && (
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-[#B0B0B0]">
                   {field.validation.accept}
                 </span>
               )}
@@ -1358,9 +1358,9 @@ export function FieldRenderer({
               {files.map((file: File | string, index: number) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 p-2 bg-gray-50 rounded"
+                  className="flex items-center gap-2 p-2 bg-[#F5F5F5] rounded"
                 >
-                  <FileText className="h-4 w-4 text-gray-500" />
+                  <FileText className="h-4 w-4 text-[#6B6B6B]" />
                   <span className="text-sm flex-1 truncate">
                     {typeof file === "string" ? file : file.name}
                   </span>
@@ -1373,7 +1373,7 @@ export function FieldRenderer({
                         onChange(null);
                       }
                     }}
-                    className="text-gray-400 hover:text-red-600"
+                    className="text-[#B0B0B0] hover:text-[#FF6B6B]"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -1382,9 +1382,9 @@ export function FieldRenderer({
             </div>
           )}
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
 
@@ -1424,17 +1424,17 @@ export function FieldRenderer({
       }
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
             {getLabel()}
           </Label>
           <Input
             type="text"
             value={displayValue}
             readOnly
-            className="bg-gray-50"
+            className="bg-[#F5F5F5]"
           />
           {getHelpText() && (
-            <p className="text-xs text-gray-500">{getHelpText()}</p>
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
         </div>
       );
@@ -1514,7 +1514,7 @@ export function FieldRenderer({
     default:
       return (
         <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-gray-600 uppercase">
+          <Label className="text-xs font-medium text-[#6B6B6B] uppercase">
             {getLabel()} (Unsupported: {field.fieldType})
           </Label>
           <Input

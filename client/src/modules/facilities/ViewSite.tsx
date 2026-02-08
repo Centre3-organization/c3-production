@@ -222,24 +222,24 @@ export default function ViewSite() {
 
   const getOccupancyColor = (current: number, max: number) => {
     const percentage = (current / max) * 100;
-    if (percentage >= 90) return "bg-red-500";
-    if (percentage >= 75) return "bg-orange-500";
-    return "bg-green-500";
+    if (percentage >= 90) return "bg-[#FF6B6B]";
+    if (percentage >= 75) return "bg-[#FFF4E5]0";
+    return "bg-[#E8F9F8]";
   };
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <Globe className="h-8 w-8 text-purple-600" />
+          <h1 className="text-3xl font-medium tracking-tight text-foreground flex items-center gap-2">
+            <Globe className="h-8 w-8 text-[#5B2C93]" />
             Global Overwatch
           </h1>
-          <p className="text-muted-foreground">Centralized command for all data center facilities.</p>
+          <p className="text-[#6B6B6B]">Centralized command for all data center facilities.</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="relative w-64">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
             <Input placeholder="Search global assets..." className="pl-9 bg-white" />
           </div>
         </div>
@@ -251,7 +251,7 @@ export default function ViewSite() {
           <Card className="h-full border-none shadow-lg bg-gradient-to-b from-slate-900 to-slate-800 text-white overflow-hidden relative">
             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
             <CardHeader>
-              <CardTitle className="text-lg font-medium text-slate-300">Select Facility</CardTitle>
+              <CardTitle className="text-lg font-medium text-[#B0B0B0]">Select Facility</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 relative z-10">
               <Select value={selectedSiteId} onValueChange={setSelectedSiteId}>
@@ -262,7 +262,7 @@ export default function ViewSite() {
                   {sites.map(site => (
                     <SelectItem key={site.id} value={String(site.id)}>
                       <div className="flex items-center gap-2">
-                        <Building2 className="h-4 w-4 text-muted-foreground" />
+                        <Building2 className="h-4 w-4 text-[#6B6B6B]" />
                         <span>{site.name}</span>
                       </div>
                     </SelectItem>
@@ -273,37 +273,37 @@ export default function ViewSite() {
               <div className="pt-4 space-y-4">
                 <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/10">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-green-500/20 text-green-400">
+                    <div className="p-2 rounded-full bg-[#E8F9F8]/20 text-[#4ECDC4]">
                       <Activity className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400">System Status</p>
-                      <p className="font-semibold">{selectedSite.status}</p>
+                      <p className="text-sm text-[#B0B0B0]">System Status</p>
+                      <p className="font-medium">{selectedSite.status}</p>
                     </div>
                   </div>
-                  <div className={`h-2 w-2 rounded-full ${selectedSite.status === 'Normal' ? 'bg-green-500' : 'bg-orange-500'} animate-pulse`}></div>
+                  <div className={`h-2 w-2 rounded-full ${selectedSite.status === 'Normal' ? 'bg-[#E8F9F8]' : 'bg-[#FFF4E5]0'} animate-pulse`}></div>
                 </div>
 
                 <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/10">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-blue-500/20 text-blue-400">
+                    <div className="p-2 rounded-full bg-[#E8DCF5]/20 text-[#5B2C93]">
                       <Users className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400">Total Personnel</p>
-                      <p className="font-semibold">{selectedSite.totalOccupancy} / {selectedSite.maxCapacity}</p>
+                      <p className="text-sm text-[#B0B0B0]">Total Personnel</p>
+                      <p className="font-medium">{selectedSite.totalOccupancy} / {selectedSite.maxCapacity}</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/10">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-purple-500/20 text-purple-400">
+                    <div className="p-2 rounded-full bg-[#E8DCF5]0/20 text-[#5B2C93]">
                       <ShieldCheck className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400">Security Level</p>
-                      <p className="font-semibold">DEFCON 4</p>
+                      <p className="text-sm text-[#B0B0B0]">Security Level</p>
+                      <p className="font-medium">DEFCON 4</p>
                     </div>
                   </div>
                 </div>
@@ -323,8 +323,8 @@ export default function ViewSite() {
             <div className="absolute bottom-0 left-0 right-0 p-6 z-20 text-white">
               <div className="flex items-end justify-between">
                 <div>
-                  <Badge className="mb-2 bg-purple-600 hover:bg-purple-700 border-none">Live Feed Active</Badge>
-                  <h2 className="text-4xl font-bold mb-1">{selectedSite.name}</h2>
+                  <Badge className="mb-2 bg-[#5B2C93] hover:bg-[#5B2C93] border-none">Live Feed Active</Badge>
+                  <h2 className="text-4xl font-medium mb-1">{selectedSite.name}</h2>
                   <div className="flex items-center gap-2 text-white/80">
                     <MapPin className="h-5 w-5" />
                     <span className="text-lg">{selectedSite.location}</span>
@@ -347,8 +347,8 @@ export default function ViewSite() {
       <Separator className="my-6" />
 
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-semibold flex items-center gap-2">
-          <Server className="h-5 w-5 text-purple-600" />
+        <h3 className="text-xl font-medium flex items-center gap-2">
+          <Server className="h-5 w-5 text-[#5B2C93]" />
           Zone Monitoring
         </h3>
         <div className="flex gap-2">
@@ -360,8 +360,8 @@ export default function ViewSite() {
       {/* Zones Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {selectedSite.zones.map((zone) => (
-          <Card key={zone.id} className={`overflow-hidden transition-all ${zone.locked ? 'border-red-200 bg-red-50/30' : 'hover:border-purple-200 shadow-sm hover:shadow-md'}`}>
-            <CardHeader className="pb-3 bg-muted/20">
+          <Card key={zone.id} className={`overflow-hidden transition-all ${zone.locked ? 'border-[#FF6B6B] bg-[#FFE5E5]/30' : 'hover:border-[#5B2C93] shadow-sm hover:shadow-md'}`}>
+            <CardHeader className="pb-3 bg-[#F5F5F5]/20">
               <div className="flex items-center justify-between">
                 <Badge variant="outline" className="bg-background font-mono">{zone.id}</Badge>
                 {zone.locked && (
@@ -376,7 +376,7 @@ export default function ViewSite() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Occupancy</span>
+                    <span className="text-[#6B6B6B]">Occupancy</span>
                     <span className="font-medium">{zone.occupancy} / {zone.capacity}</span>
                   </div>
                   <Progress value={(zone.occupancy / zone.capacity) * 100} className="h-2" indicatorClassName={getOccupancyColor(zone.occupancy, zone.capacity)} />
@@ -387,12 +387,12 @@ export default function ViewSite() {
                     <Button variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => openCCTV(zone.name)} title="View CCTV">
                       <Video className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-orange-600 hover:text-orange-700 hover:bg-orange-50" onClick={() => handleBuzzer(zone.name)} title="Sound Buzzer">
+                    <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-[#FFB84D] hover:text-[#FFB84D] hover:bg-[#FFF4E5]" onClick={() => handleBuzzer(zone.name)} title="Sound Buzzer">
                       <Bell className="h-4 w-4" />
                     </Button>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Label htmlFor={`lock-${zone.id}`} className="text-xs font-medium text-muted-foreground">
+                    <Label htmlFor={`lock-${zone.id}`} className="text-xs font-medium text-[#6B6B6B]">
                       {zone.locked ? "Unlock" : "Lock"}
                     </Label>
                     <Switch 
@@ -404,7 +404,7 @@ export default function ViewSite() {
                 </div>
               </div>
             </CardContent>
-            <CardFooter className="bg-muted/30 p-3 border-t">
+            <CardFooter className="bg-[#F5F5F5]/30 p-3 border-t">
               <Button variant="ghost" className="w-full justify-between h-auto py-2 text-sm font-normal hover:bg-white/50" onClick={() => setSelectedZone(selectedZone?.id === zone.id ? null : zone)}>
                 View Areas ({zone.areas.length})
                 <ChevronRight className={`h-4 w-4 transition-transform ${selectedZone?.id === zone.id ? 'rotate-90' : ''}`} />
@@ -415,13 +415,13 @@ export default function ViewSite() {
             {selectedZone?.id === zone.id && (
               <div className="border-t bg-background p-3 space-y-3 animate-in slide-in-from-top-2">
                 {zone.areas.map((area) => (
-                  <div key={area.id} className="flex items-center justify-between p-2 rounded-md border bg-muted/10 hover:bg-muted/20 transition-colors">
+                  <div key={area.id} className="flex items-center justify-between p-2 rounded-md border bg-[#F5F5F5]/10 hover:bg-[#F5F5F5]/20 transition-colors">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-sm">{area.name}</span>
-                        {area.locked && <Lock className="h-3 w-3 text-red-500" />}
+                        {area.locked && <Lock className="h-3 w-3 text-[#FF6B6B]" />}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-2 text-xs text-[#6B6B6B]">
                         <Users className="h-3 w-3" />
                         {area.occupancy} / {area.capacity}
                       </div>
@@ -430,7 +430,7 @@ export default function ViewSite() {
                       <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => openCCTV(area.name)}>
                         <Video className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-blue-600" onClick={() => handleHelp(area.name)}>
+                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-[#5B2C93]" onClick={() => handleHelp(area.name)}>
                         <HelpCircle className="h-3 w-3" />
                       </Button>
                       <Switch 
@@ -449,16 +449,16 @@ export default function ViewSite() {
 
       {/* CCTV Dialog */}
       <Dialog open={cctvOpen} onOpenChange={setCctvOpen}>
-        <DialogContent className="max-w-4xl bg-black border-zinc-800 p-0 overflow-hidden">
-          <div className="relative aspect-video bg-zinc-900 flex items-center justify-center">
+        <DialogContent className="max-w-4xl bg-black border-[#2C2C2C] p-0 overflow-hidden">
+          <div className="relative aspect-video bg-[#2C2C2C] flex items-center justify-center">
             <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/50 px-3 py-1 rounded text-white text-sm backdrop-blur-sm">
-              <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+              <div className="h-2 w-2 rounded-full bg-[#FF6B6B] animate-pulse" />
               LIVE REC
             </div>
             <div className="absolute top-4 right-4 text-white/80 text-sm font-mono">
               CAM-04: {cctvTarget}
             </div>
-            <div className="text-zinc-600 flex flex-col items-center gap-2">
+            <div className="text-[#6B6B6B] flex flex-col items-center gap-2">
               <Video className="h-12 w-12 opacity-20" />
               <p>Connecting to secure feed...</p>
             </div>
@@ -486,7 +486,7 @@ export default function ViewSite() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-orange-500" />
+              <AlertTriangle className="h-5 w-5 text-[#FFB84D]" />
               Confirm {lockTarget?.locked ? "Unlock" : "Lockdown"}
             </DialogTitle>
             <DialogDescription>
@@ -496,12 +496,12 @@ export default function ViewSite() {
           
           <div className="py-4">
             {!lockTarget?.locked && (
-              <div className="bg-red-50 border border-red-100 rounded-md p-3 text-sm text-red-800">
+              <div className="bg-[#FFE5E5] border border-[#FF6B6B]/20 rounded-md p-3 text-sm text-[#FF6B6B]">
                 <strong>Warning:</strong> Locking this area will prevent any new entries. Current occupants will still be able to exit.
               </div>
             )}
             {lockTarget?.locked && (
-              <div className="bg-green-50 border border-green-100 rounded-md p-3 text-sm text-green-800">
+              <div className="bg-[#E8F9F8] border border-[#4ECDC4]/20 rounded-md p-3 text-sm text-[#4ECDC4]">
                 <strong>Note:</strong> Unlocking will restore normal access control operations.
               </div>
             )}

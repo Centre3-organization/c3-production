@@ -112,18 +112,18 @@ export default function GlobalOverwatch() {
   };
 
   const severityColors: Record<string, { bg: string; text: string; border: string }> = {
-    critical: { bg: "bg-rose-50 dark:bg-rose-950/30", text: "text-rose-700 dark:text-rose-400", border: "border-rose-200 dark:border-rose-800" },
-    high: { bg: "bg-orange-50 dark:bg-orange-950/30", text: "text-orange-700 dark:text-orange-400", border: "border-orange-200 dark:border-orange-800" },
-    medium: { bg: "bg-amber-50 dark:bg-amber-950/30", text: "text-amber-700 dark:text-amber-400", border: "border-amber-200 dark:border-amber-800" },
-    low: { bg: "bg-slate-50 dark:bg-slate-800/50", text: "text-slate-700 dark:text-slate-400", border: "border-slate-200 dark:border-slate-700" },
+    critical: { bg: "bg-[#FFE5E5] dark:bg-[#FF6B6B]/10/30", text: "text-[#FF6B6B] dark:text-[#FF6B6B]", border: "border-[#FF6B6B] dark:border-[#FF6B6B]" },
+    high: { bg: "bg-[#FFF4E5] dark:bg-[#FFB84D]/10/30", text: "text-[#FFB84D] dark:text-[#FFB84D]", border: "border-[#FFB84D] dark:border-[#FFB84D]" },
+    medium: { bg: "bg-[#FFF4E5] dark:bg-[#FFB84D]/10", text: "text-[#FFB84D] dark:text-[#FFB84D]", border: "border-[#FFB84D] dark:border-[#FFB84D]" },
+    low: { bg: "bg-[#F5F5F5] dark:bg-[#2C2C2C]/50", text: "text-[#2C2C2C] dark:text-[#B0B0B0]", border: "border-[#E0E0E0] dark:border-[#6B6B6B]" },
   };
 
   const statusColors: Record<string, { bg: string; text: string }> = {
-    active: { bg: "bg-rose-100 dark:bg-rose-900/30", text: "text-rose-700 dark:text-rose-400" },
-    acknowledged: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-700 dark:text-amber-400" },
-    investigating: { bg: "bg-indigo-100 dark:bg-indigo-900/30", text: "text-indigo-700 dark:text-indigo-400" },
-    resolved: { bg: "bg-teal-100 dark:bg-teal-900/30", text: "text-teal-700 dark:text-teal-400" },
-    false_alarm: { bg: "bg-slate-100 dark:bg-slate-800", text: "text-slate-700 dark:text-slate-400" },
+    active: { bg: "bg-[#FFE5E5] dark:bg-[#FF6B6B]/10/30", text: "text-[#FF6B6B] dark:text-[#FF6B6B]" },
+    acknowledged: { bg: "bg-[#FFF4E5] dark:bg-[#FFB84D]/10", text: "text-[#FFB84D] dark:text-[#FFB84D]" },
+    investigating: { bg: "bg-[#E8DCF5] dark:bg-[#5B2C93]/10/30", text: "text-[#5B2C93] dark:text-[#E8DCF5]" },
+    resolved: { bg: "bg-[#E8F9F8] dark:bg-[#4ECDC4]/10/30", text: "text-[#4ECDC4] dark:text-[#4ECDC4]" },
+    false_alarm: { bg: "bg-[#F5F5F5] dark:bg-[#2C2C2C]", text: "text-[#2C2C2C] dark:text-[#B0B0B0]" },
   };
 
   const typeLabels: Record<string, string> = {
@@ -144,11 +144,11 @@ export default function GlobalOverwatch() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-2">
-            <Eye className="h-6 w-6 text-slate-500" />
+          <h1 className="text-2xl font-medium tracking-tight text-foreground flex items-center gap-2">
+            <Eye className="h-6 w-6 text-[#6B6B6B]" />
             Global Overwatch
           </h1>
-          <p className="text-sm text-muted-foreground">Real-time security monitoring across all facilities</p>
+          <p className="text-sm text-[#6B6B6B]">Real-time security monitoring across all facilities</p>
         </div>
         <div className="flex items-center gap-2">
           <Button 
@@ -168,82 +168,82 @@ export default function GlobalOverwatch() {
 
       {/* Alert Summary Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <Card className="border border-rose-200 dark:border-rose-800/50 bg-rose-50/50 dark:bg-rose-950/20 shadow-sm">
+        <Card className="border border-[#FF6B6B] dark:border-[#FF6B6B]/50 bg-[#FFE5E5]/50 dark:bg-[#FF6B6B]/10/20 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-rose-700 dark:text-rose-400 uppercase tracking-wider">Critical</CardTitle>
-            <div className="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-lg">
-              <AlertCircle className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+            <CardTitle className="text-xs font-medium text-[#FF6B6B] dark:text-[#FF6B6B] uppercase tracking-wider">Critical</CardTitle>
+            <div className="p-2 bg-[#FFE5E5] dark:bg-[#FF6B6B]/10/50 rounded-lg">
+              <AlertCircle className="h-4 w-4 text-[#FF6B6B] dark:text-[#FF6B6B]" />
             </div>
           </CardHeader>
           <CardContent>
             {alertCountsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-semibold text-rose-700 dark:text-rose-400">{alertCounts?.critical || 0}</div>
+              <div className="text-2xl font-medium text-[#FF6B6B] dark:text-[#FF6B6B]">{alertCounts?.critical || 0}</div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border border-orange-200 dark:border-orange-800/50 bg-orange-50/50 dark:bg-orange-950/20 shadow-sm">
+        <Card className="border border-[#FFB84D] dark:border-[#FFB84D]/50 bg-[#FFF4E5]/50 dark:bg-[#FFB84D]/10/20 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-orange-700 dark:text-orange-400 uppercase tracking-wider">High</CardTitle>
-            <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-lg">
-              <AlertTriangle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+            <CardTitle className="text-xs font-medium text-[#FFB84D] dark:text-[#FFB84D] uppercase tracking-wider">High</CardTitle>
+            <div className="p-2 bg-[#FFF4E5] dark:bg-[#FFB84D]/10/50 rounded-lg">
+              <AlertTriangle className="h-4 w-4 text-[#FFB84D] dark:text-[#FFB84D]" />
             </div>
           </CardHeader>
           <CardContent>
             {alertCountsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-semibold text-orange-700 dark:text-orange-400">{alertCounts?.high || 0}</div>
+              <div className="text-2xl font-medium text-[#FFB84D] dark:text-[#FFB84D]">{alertCounts?.high || 0}</div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border border-amber-200 dark:border-amber-800/50 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm">
+        <Card className="border border-[#FFB84D] dark:border-[#FFB84D]/50 bg-[#FFF4E5]/50 dark:bg-[#FFB84D]/10 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-amber-700 dark:text-amber-400 uppercase tracking-wider">Medium</CardTitle>
-            <div className="p-2 bg-amber-100 dark:bg-amber-900/50 rounded-lg">
-              <Bell className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+            <CardTitle className="text-xs font-medium text-[#FFB84D] dark:text-[#FFB84D] uppercase tracking-wider">Medium</CardTitle>
+            <div className="p-2 bg-[#FFF4E5] dark:bg-[#FFB84D]/10 rounded-lg">
+              <Bell className="h-4 w-4 text-[#FFB84D] dark:text-[#FFB84D]" />
             </div>
           </CardHeader>
           <CardContent>
             {alertCountsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-semibold text-amber-700 dark:text-amber-400">{alertCounts?.medium || 0}</div>
+              <div className="text-2xl font-medium text-[#FFB84D] dark:text-[#FFB84D]">{alertCounts?.medium || 0}</div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/20 shadow-sm">
+        <Card className="border border-[#E0E0E0] dark:border-[#6B6B6B] bg-[#F5F5F5]/50 dark:bg-[#2C2C2C]/20 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wider">Low</CardTitle>
-            <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-              <Activity className="h-4 w-4 text-slate-500" />
+            <CardTitle className="text-xs font-medium text-[#6B6B6B] dark:text-[#B0B0B0] uppercase tracking-wider">Low</CardTitle>
+            <div className="p-2 bg-[#F5F5F5] dark:bg-[#2C2C2C] rounded-lg">
+              <Activity className="h-4 w-4 text-[#6B6B6B]" />
             </div>
           </CardHeader>
           <CardContent>
             {alertCountsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-semibold text-slate-600 dark:text-slate-400">{alertCounts?.low || 0}</div>
+              <div className="text-2xl font-medium text-[#6B6B6B] dark:text-[#B0B0B0]">{alertCounts?.low || 0}</div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border border-teal-200 dark:border-teal-800/50 bg-teal-50/50 dark:bg-teal-950/20 shadow-sm">
+        <Card className="border border-[#4ECDC4] dark:border-[#4ECDC4]/50 bg-[#E8F9F8]/50 dark:bg-[#4ECDC4]/10/20 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-teal-700 dark:text-teal-400 uppercase tracking-wider">Total Active</CardTitle>
-            <div className="p-2 bg-teal-100 dark:bg-teal-900/50 rounded-lg">
-              <Shield className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+            <CardTitle className="text-xs font-medium text-[#4ECDC4] dark:text-[#4ECDC4] uppercase tracking-wider">Total Active</CardTitle>
+            <div className="p-2 bg-[#E8F9F8] dark:bg-[#4ECDC4]/10/50 rounded-lg">
+              <Shield className="h-4 w-4 text-[#4ECDC4] dark:text-[#4ECDC4]" />
             </div>
           </CardHeader>
           <CardContent>
             {alertCountsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-semibold text-teal-700 dark:text-teal-400">{alertCounts?.total || 0}</div>
+              <div className="text-2xl font-medium text-[#4ECDC4] dark:text-[#4ECDC4]">{alertCounts?.total || 0}</div>
             )}
           </CardContent>
         </Card>
@@ -257,7 +257,7 @@ export default function GlobalOverwatch() {
             <CardHeader className="pb-3">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <CardTitle className="text-base font-medium flex items-center gap-2">
-                  <ShieldAlert className="h-4 w-4 text-slate-500" />
+                  <ShieldAlert className="h-4 w-4 text-[#6B6B6B]" />
                   Security Alerts
                 </CardTitle>
                 <div className="flex items-center gap-2">
@@ -294,8 +294,8 @@ export default function GlobalOverwatch() {
                   {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-24 w-full" />)}
                 </div>
               ) : alertsData?.alerts.length === 0 ? (
-                <div className="h-[300px] flex flex-col items-center justify-center text-muted-foreground">
-                  <CheckCircle2 className="h-12 w-12 mb-3 text-teal-500" />
+                <div className="h-[300px] flex flex-col items-center justify-center text-[#6B6B6B]">
+                  <CheckCircle2 className="h-12 w-12 mb-3 text-[#4ECDC4]" />
                   <p className="text-sm font-medium">No alerts found</p>
                   <p className="text-xs">All systems operating normally</p>
                 </div>
@@ -313,7 +313,7 @@ export default function GlobalOverwatch() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-mono text-xs text-muted-foreground">{alert.alert_number}</span>
+                            <span className="font-mono text-xs text-[#6B6B6B]">{alert.alert_number}</span>
                             <Badge className={cn("text-[10px]", severityColors[alert.severity]?.text, "bg-transparent border-0")}>
                               {alert.severity.toUpperCase()}
                             </Badge>
@@ -322,8 +322,8 @@ export default function GlobalOverwatch() {
                             </Badge>
                           </div>
                           <h4 className="font-medium text-sm text-foreground mb-1">{alert.title}</h4>
-                          <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{alert.description}</p>
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                          <p className="text-xs text-[#6B6B6B] mb-2 line-clamp-2">{alert.description}</p>
+                          <div className="flex items-center gap-4 text-xs text-[#6B6B6B]">
                             <span className="flex items-center gap-1">
                               <Radio className="h-3 w-3" />
                               {typeLabels[alert.type] || alert.type}
@@ -378,7 +378,7 @@ export default function GlobalOverwatch() {
                             <Button 
                               size="sm" 
                               variant="default" 
-                              className="h-7 text-xs bg-teal-600 hover:bg-teal-700"
+                              className="h-7 text-xs bg-[#4ECDC4] hover:bg-[#3DBDB4]"
                               onClick={() => {
                                 setSelectedAlert(alert);
                                 setResolveDialogOpen(true);
@@ -403,7 +403,7 @@ export default function GlobalOverwatch() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base font-medium flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-slate-500" />
+                  <Building2 className="h-4 w-4 text-[#6B6B6B]" />
                   Site Status
                 </CardTitle>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/sites")} className="h-8 px-3">
@@ -421,7 +421,7 @@ export default function GlobalOverwatch() {
                   {siteOverview?.map((site: any) => (
                     <div 
                       key={site.id}
-                      className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                      className="p-3 rounded-lg bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 border border-[#E0E0E0] dark:border-[#6B6B6B] hover:bg-[#F5F5F5] dark:hover:bg-[#2C2C2C] transition-colors cursor-pointer"
                       onClick={() => navigate("/sites")}
                     >
                       <div className="flex items-start justify-between mb-2">
@@ -430,13 +430,13 @@ export default function GlobalOverwatch() {
                             <p className="font-medium text-sm truncate text-foreground">{site.name}</p>
                             <div className={cn(
                               "w-2 h-2 rounded-full flex-shrink-0",
-                              site.status === "active" ? "bg-teal-500" : "bg-amber-500"
+                              site.status === "active" ? "bg-[#E8F9F8]0" : "bg-[#FFF4E5]"
                             )} />
                           </div>
-                          <p className="text-xs text-muted-foreground">{site.code}</p>
+                          <p className="text-xs text-[#6B6B6B]">{site.code}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-4 text-xs text-[#6B6B6B]">
                         <span className="flex items-center gap-1">
                           <Layers className="h-3 w-3" /> {site.zoneCount} zones
                         </span>
@@ -444,7 +444,7 @@ export default function GlobalOverwatch() {
                           <Users className="h-3 w-3" /> {site.activeVisitors} visitors
                         </span>
                         {site.alertCount > 0 && (
-                          <span className="flex items-center gap-1 text-rose-500">
+                          <span className="flex items-center gap-1 text-[#FF6B6B]">
                             <AlertCircle className="h-3 w-3" /> {site.alertCount}
                           </span>
                         )}
@@ -460,31 +460,31 @@ export default function GlobalOverwatch() {
           <Card className="border border-border/50 shadow-sm">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-medium flex items-center gap-2">
-                <Zap className="h-4 w-4 text-slate-500" />
+                <Zap className="h-4 w-4 text-[#6B6B6B]" />
                 Quick Stats
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                  <span className="text-sm text-muted-foreground">Active Visitors</span>
-                  <span className="font-semibold text-foreground">{stats?.activeVisitors || 0}</span>
+                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 rounded-lg">
+                  <span className="text-sm text-[#6B6B6B]">Active Visitors</span>
+                  <span className="font-medium text-foreground">{stats?.activeVisitors || 0}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                  <span className="text-sm text-muted-foreground">Pending L1</span>
-                  <span className="font-semibold text-amber-600">{stats?.pendingL1 || 0}</span>
+                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 rounded-lg">
+                  <span className="text-sm text-[#6B6B6B]">Pending L1</span>
+                  <span className="font-medium text-[#FFB84D]">{stats?.pendingL1 || 0}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                  <span className="text-sm text-muted-foreground">Pending L2</span>
-                  <span className="font-semibold text-indigo-600">{stats?.pendingManual || 0}</span>
+                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 rounded-lg">
+                  <span className="text-sm text-[#6B6B6B]">Pending L2</span>
+                  <span className="font-medium text-[#5B2C93]">{stats?.pendingManual || 0}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                  <span className="text-sm text-muted-foreground">Total Sites</span>
-                  <span className="font-semibold text-foreground">{stats?.sites || 0}</span>
+                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 rounded-lg">
+                  <span className="text-sm text-[#6B6B6B]">Total Sites</span>
+                  <span className="font-medium text-foreground">{stats?.sites || 0}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                  <span className="text-sm text-muted-foreground">Total Zones</span>
-                  <span className="font-semibold text-foreground">{stats?.zones || 0}</span>
+                <div className="flex items-center justify-between p-3 bg-[#F5F5F5] dark:bg-[#2C2C2C]/50 rounded-lg">
+                  <span className="text-sm text-[#6B6B6B]">Total Zones</span>
+                  <span className="font-medium text-foreground">{stats?.zones || 0}</span>
                 </div>
               </div>
             </CardContent>
@@ -524,7 +524,7 @@ export default function GlobalOverwatch() {
             <Button
               onClick={() => handleResolve(false)}
               disabled={resolveMutation.isPending}
-              className="bg-teal-600 hover:bg-teal-700"
+              className="bg-[#4ECDC4] hover:bg-[#3DBDB4]"
             >
               Resolve Alert
             </Button>

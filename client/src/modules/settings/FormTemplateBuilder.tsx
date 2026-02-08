@@ -127,12 +127,12 @@ const DEFAULT_INFO_SECTIONS: InfoSection[] = [
 ];
 
 const DEFAULT_SAFETY_RULES: SafetyRule[] = [
-  { icon: "shield", iconColor: "#EF4444", title: "Safety First", titleAr: "السلامة أولاً", subtitle: "Follow all safety instructions", subtitleAr: "اتبع جميع تعليمات السلامة", isActive: true, sortOrder: 1 },
-  { icon: "hardhat", iconColor: "#F59E0B", title: "PPE Required", titleAr: "معدات الحماية مطلوبة", subtitle: "Wear required protective equipment", subtitleAr: "ارتد معدات الحماية المطلوبة", isActive: true, sortOrder: 2 },
-  { icon: "cigarette", iconColor: "#EF4444", title: "No Smoking", titleAr: "ممنوع التدخين", subtitle: "Smoking is strictly prohibited", subtitleAr: "التدخين ممنوع منعاً باتاً", isActive: true, sortOrder: 3 },
-  { icon: "camera", iconColor: "#3B82F6", title: "No Photography", titleAr: "ممنوع التصوير", subtitle: "Photography is not allowed", subtitleAr: "التصوير غير مسموح", isActive: true, sortOrder: 4 },
-  { icon: "phone", iconColor: "#8B5CF6", title: "Emergency", titleAr: "الطوارئ", subtitle: "Call 911 for emergencies", subtitleAr: "اتصل 911 للطوارئ", isActive: true, sortOrder: 5 },
-  { icon: "footprints", iconColor: "#10B981", title: "Restricted Areas", titleAr: "مناطق محظورة", subtitle: "Stay in authorized areas only", subtitleAr: "ابق في المناطق المصرح بها فقط", isActive: true, sortOrder: 6 },
+  { icon: "shield", iconColor: "#FF6B6B", title: "Safety First", titleAr: "السلامة أولاً", subtitle: "Follow all safety instructions", subtitleAr: "اتبع جميع تعليمات السلامة", isActive: true, sortOrder: 1 },
+  { icon: "hardhat", iconColor: "#FFB84D", title: "PPE Required", titleAr: "معدات الحماية مطلوبة", subtitle: "Wear required protective equipment", subtitleAr: "ارتد معدات الحماية المطلوبة", isActive: true, sortOrder: 2 },
+  { icon: "cigarette", iconColor: "#FF6B6B", title: "No Smoking", titleAr: "ممنوع التدخين", subtitle: "Smoking is strictly prohibited", subtitleAr: "التدخين ممنوع منعاً باتاً", isActive: true, sortOrder: 3 },
+  { icon: "camera", iconColor: "#5B2C93", title: "No Photography", titleAr: "ممنوع التصوير", subtitle: "Photography is not allowed", subtitleAr: "التصوير غير مسموح", isActive: true, sortOrder: 4 },
+  { icon: "phone", iconColor: "#5B2C93", title: "Emergency", titleAr: "الطوارئ", subtitle: "Call 911 for emergencies", subtitleAr: "اتصل 911 للطوارئ", isActive: true, sortOrder: 5 },
+  { icon: "footprints", iconColor: "#4ECDC4", title: "Restricted Areas", titleAr: "مناطق محظورة", subtitle: "Stay in authorized areas only", subtitleAr: "ابق في المناطق المصرح بها فقط", isActive: true, sortOrder: 6 },
 ];
 
 const getDefaultTemplate = (): FormTemplateData => ({
@@ -143,7 +143,7 @@ const getDefaultTemplate = (): FormTemplateData => ({
   companyName: "Centre3",
   companyNameAr: "سنتر3",
   logoUrl: "",
-  headerColor: "#6B21A8",
+  headerColor: "#5B2C93",
   footerText: "This pass must be displayed at all times while on premises.",
   footerTextAr: "يجب عرض هذا التصريح في جميع الأوقات أثناء التواجد في المبنى.",
   footerPhone: "+966 11 000 0000",
@@ -201,7 +201,7 @@ function FormPreview({ template }: { template: FormTemplateData }) {
             </div>
           )}
           <div>
-            <h1 className="text-white font-bold text-lg">{template.companyName}</h1>
+            <h1 className="text-white font-medium text-lg">{template.companyName}</h1>
             {template.companyNameAr && (
               <p className="text-white/80 text-sm" dir="rtl">{template.companyNameAr}</p>
             )}
@@ -209,23 +209,23 @@ function FormPreview({ template }: { template: FormTemplateData }) {
         </div>
         {template.showQrCode && (
           <div className="bg-white p-2 rounded-lg">
-            <QrCode className="h-16 w-16 text-gray-800" />
+            <QrCode className="h-16 w-16 text-[#2C2C2C]" />
           </div>
         )}
       </div>
 
       {/* Form Title */}
-      <div className="px-6 py-3 border-b bg-gray-50">
+      <div className="px-6 py-3 border-b bg-[#F5F5F5]">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="font-bold text-lg text-gray-800">{template.formTitle}</h2>
+            <h2 className="font-medium text-lg text-[#2C2C2C]">{template.formTitle}</h2>
             {template.formSubtitle && (
-              <p className="text-sm text-gray-500">{template.formSubtitle}</p>
+              <p className="text-sm text-[#6B6B6B]">{template.formSubtitle}</p>
             )}
           </div>
           <div className="text-right" dir="rtl">
-            {template.formTitleAr && <h2 className="font-bold text-lg text-gray-800">{template.formTitleAr}</h2>}
-            {template.formSubtitleAr && <p className="text-sm text-gray-500">{template.formSubtitleAr}</p>}
+            {template.formTitleAr && <h2 className="font-medium text-lg text-[#2C2C2C]">{template.formTitleAr}</h2>}
+            {template.formSubtitleAr && <p className="text-sm text-[#6B6B6B]">{template.formSubtitleAr}</p>}
           </div>
         </div>
         <div className="mt-1">
@@ -237,12 +237,12 @@ function FormPreview({ template }: { template: FormTemplateData }) {
       <div className="px-6 py-4">
         <div className="grid grid-cols-2 gap-x-6 gap-y-3">
           {template.fields.filter(f => f.isRequired || sampleData[f.key]).sort((a, b) => a.sortOrder - b.sortOrder).map((field) => (
-            <div key={field.key} className="border-b border-gray-100 pb-2">
+            <div key={field.key} className="border-b border-[#E0E0E0] pb-2">
               <div className="flex justify-between">
-                <span className="text-xs text-gray-500 uppercase tracking-wide">{field.label}</span>
-                {field.labelAr && <span className="text-xs text-gray-400" dir="rtl">{field.labelAr}</span>}
+                <span className="text-xs text-[#6B6B6B] uppercase tracking-wide">{field.label}</span>
+                {field.labelAr && <span className="text-xs text-[#B0B0B0]" dir="rtl">{field.labelAr}</span>}
               </div>
-              <p className="text-sm font-medium text-gray-800 mt-0.5">
+              <p className="text-sm font-medium text-[#2C2C2C] mt-0.5">
                 {sampleData[field.key] || "—"}
               </p>
             </div>
@@ -252,7 +252,7 @@ function FormPreview({ template }: { template: FormTemplateData }) {
 
       {/* Info Sections */}
       {template.infoSections && template.infoSections.filter(s => s.isActive).length > 0 && (
-        <div className="px-6 py-3 bg-gray-50 border-t">
+        <div className="px-6 py-3 bg-[#F5F5F5] border-t">
           <div className="grid grid-cols-3 gap-3">
             {template.infoSections.filter(s => s.isActive).sort((a, b) => a.sortOrder - b.sortOrder).map((section, idx) => (
               <div key={idx} className="flex items-start gap-2">
@@ -260,8 +260,8 @@ function FormPreview({ template }: { template: FormTemplateData }) {
                   <IconComponent name={section.icon} color={template.headerColor} size={16} />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-700">{section.title}</p>
-                  <p className="text-xs text-gray-500">{section.content}</p>
+                  <p className="text-xs font-medium text-[#2C2C2C]">{section.title}</p>
+                  <p className="text-xs text-[#6B6B6B]">{section.content}</p>
                 </div>
               </div>
             ))}
@@ -272,16 +272,16 @@ function FormPreview({ template }: { template: FormTemplateData }) {
       {/* Safety Rules */}
       {template.safetyRules && template.safetyRules.filter(r => r.isActive).length > 0 && (
         <div className="px-6 py-3 border-t">
-          <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Safety Rules / قواعد السلامة</p>
+          <p className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider mb-2">Safety Rules / قواعد السلامة</p>
           <div className="grid grid-cols-3 gap-2">
             {template.safetyRules.filter(r => r.isActive).sort((a, b) => a.sortOrder - b.sortOrder).map((rule, idx) => (
-              <div key={idx} className="flex items-center gap-2 bg-gray-50 rounded-lg p-2">
+              <div key={idx} className="flex items-center gap-2 bg-[#F5F5F5] rounded-lg p-2">
                 <div className="shrink-0">
                   <IconComponent name={rule.icon} color={rule.iconColor} size={18} />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-700 leading-tight">{rule.title}</p>
-                  {rule.subtitle && <p className="text-[10px] text-gray-400 leading-tight">{rule.subtitle}</p>}
+                  <p className="text-xs font-medium text-[#2C2C2C] leading-tight">{rule.title}</p>
+                  {rule.subtitle && <p className="text-[10px] text-[#B0B0B0] leading-tight">{rule.subtitle}</p>}
                 </div>
               </div>
             ))}
@@ -291,28 +291,28 @@ function FormPreview({ template }: { template: FormTemplateData }) {
 
       {/* Disclaimer */}
       {template.disclaimerText && (
-        <div className="px-6 py-2 bg-amber-50 border-t border-amber-200">
-          <p className="text-[10px] text-amber-700 leading-relaxed">{template.disclaimerText}</p>
+        <div className="px-6 py-2 bg-[#FFF4E5] border-t border-[#FFB84D]">
+          <p className="text-[10px] text-[#FFB84D] leading-relaxed">{template.disclaimerText}</p>
           {template.disclaimerTextAr && (
-            <p className="text-[10px] text-amber-600 leading-relaxed mt-1" dir="rtl">{template.disclaimerTextAr}</p>
+            <p className="text-[10px] text-[#FFB84D] leading-relaxed mt-1" dir="rtl">{template.disclaimerTextAr}</p>
           )}
         </div>
       )}
 
       {/* Footer */}
-      <div className="px-6 py-3 border-t bg-gray-100">
+      <div className="px-6 py-3 border-t bg-[#F5F5F5]">
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-xs font-medium text-gray-600">{template.footerDepartment}</p>
-            {template.footerPhone && <p className="text-[10px] text-gray-400">{template.footerPhone}</p>}
-            {template.footerEmail && <p className="text-[10px] text-gray-400">{template.footerEmail}</p>}
+            <p className="text-xs font-medium text-[#6B6B6B]">{template.footerDepartment}</p>
+            {template.footerPhone && <p className="text-[10px] text-[#B0B0B0]">{template.footerPhone}</p>}
+            {template.footerEmail && <p className="text-[10px] text-[#B0B0B0]">{template.footerEmail}</p>}
           </div>
           <div className="text-right" dir="rtl">
-            {template.footerDepartmentAr && <p className="text-xs font-medium text-gray-600">{template.footerDepartmentAr}</p>}
+            {template.footerDepartmentAr && <p className="text-xs font-medium text-[#6B6B6B]">{template.footerDepartmentAr}</p>}
           </div>
         </div>
         {template.footerText && (
-          <p className="text-[10px] text-gray-500 mt-1 border-t border-gray-200 pt-1">{template.footerText}</p>
+          <p className="text-[10px] text-[#6B6B6B] mt-1 border-t border-[#E0E0E0] pt-1">{template.footerText}</p>
         )}
       </div>
     </div>
@@ -385,7 +385,7 @@ export default function FormTemplateBuilder() {
       companyName: t.companyName || "Centre3",
       companyNameAr: t.companyNameAr || "",
       logoUrl: t.logoUrl || "",
-      headerColor: t.headerColor || "#6B21A8",
+      headerColor: t.headerColor || "#5B2C93",
       footerText: t.footerText || "",
       footerTextAr: t.footerTextAr || "",
       footerPhone: t.footerPhone || "",
@@ -464,7 +464,7 @@ export default function FormTemplateBuilder() {
   const addSafetyRule = () => {
     const newRule: SafetyRule = {
       icon: "shield",
-      iconColor: "#EF4444",
+      iconColor: "#FF6B6B",
       title: "New Rule",
       isActive: true,
       sortOrder: (template.safetyRules?.length || 0) + 1,
@@ -491,13 +491,13 @@ export default function FormTemplateBuilder() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold">Form Templates</h3>
-            <p className="text-sm text-muted-foreground">
+            <h3 className="text-lg font-medium">Form Templates</h3>
+            <p className="text-sm text-[#6B6B6B]">
               Customize the visit permission forms that are generated with approved requests.
             </p>
           </div>
           <Button
-            className="bg-purple-600 hover:bg-purple-700"
+            className="bg-[#5B2C93] hover:bg-[#5B2C93]"
             onClick={() => { setTemplate(getDefaultTemplate()); setEditingId(null); setMode("create"); }}
           >
             <Plus className="mr-2 h-4 w-4" /> New Template
@@ -506,16 +506,16 @@ export default function FormTemplateBuilder() {
 
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
           </div>
         ) : !templates || templates.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No Form Templates</h3>
-              <p className="text-muted-foreground mb-4">Create your first form template to generate visit permission forms.</p>
+              <FileText className="h-12 w-12 mx-auto text-[#6B6B6B] mb-4" />
+              <h3 className="text-lg font-medium mb-2">No Form Templates</h3>
+              <p className="text-[#6B6B6B] mb-4">Create your first form template to generate visit permission forms.</p>
               <Button
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-[#5B2C93] hover:bg-[#5B2C93]"
                 onClick={() => { setTemplate(getDefaultTemplate()); setEditingId(null); setMode("create"); }}
               >
                 <Plus className="mr-2 h-4 w-4" /> Create Template
@@ -533,7 +533,7 @@ export default function FormTemplateBuilder() {
                       <CardDescription className="mt-1">{t.description || "No description"}</CardDescription>
                     </div>
                     <div className="flex gap-1">
-                      {t.isDefault && <Badge className="bg-purple-100 text-purple-700 text-xs">Default</Badge>}
+                      {t.isDefault && <Badge className="bg-[#E8DCF5] text-[#5B2C93] text-xs">Default</Badge>}
                       <Badge variant={t.isActive ? "default" : "secondary"} className="text-xs">
                         {t.isActive ? "Active" : "Inactive"}
                       </Badge>
@@ -541,7 +541,7 @@ export default function FormTemplateBuilder() {
                   </div>
                 </CardHeader>
                 <CardContent className="pb-3">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2 text-sm text-[#6B6B6B]">
                     <Badge variant="outline">{REQUEST_TYPE_LABELS[t.requestType] || t.requestType}</Badge>
                     <span>{t.fields?.length || 0} fields</span>
                   </div>
@@ -565,7 +565,7 @@ export default function FormTemplateBuilder() {
                   <Button size="sm" variant="outline" onClick={() => { handleEdit(t); setPreviewOpen(true); }}>
                     <Eye className="h-3.5 w-3.5 mr-1" /> Preview
                   </Button>
-                  <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700 ml-auto" onClick={() => handleDelete(t.id)}>
+                  <Button size="sm" variant="outline" className="text-[#FF6B6B] hover:text-[#FF6B6B] ml-auto" onClick={() => handleDelete(t.id)}>
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </CardFooter>
@@ -589,7 +589,7 @@ export default function FormTemplateBuilder() {
             <ArrowLeft className="h-4 w-4 mr-1" /> Back
           </Button>
           <div>
-            <h3 className="text-lg font-semibold">
+            <h3 className="text-lg font-medium">
               {mode === "create" ? "Create Form Template" : "Edit Form Template"}
             </h3>
           </div>
@@ -599,7 +599,7 @@ export default function FormTemplateBuilder() {
             <Eye className="h-4 w-4 mr-2" /> Preview
           </Button>
           <Button
-            className="bg-purple-600 hover:bg-purple-700"
+            className="bg-[#5B2C93] hover:bg-[#5B2C93]"
             onClick={handleSave}
             disabled={createMutation.isPending || updateMutation.isPending}
           >
@@ -762,8 +762,8 @@ export default function FormTemplateBuilder() {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {template.fields.sort((a, b) => a.sortOrder - b.sortOrder).map((field, idx) => (
-                    <div key={idx} className="flex items-center gap-2 p-2 border rounded-lg bg-muted/30">
-                      <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <div key={idx} className="flex items-center gap-2 p-2 border rounded-lg bg-[#F5F5F5]/30">
+                      <GripVertical className="h-4 w-4 text-[#6B6B6B] shrink-0" />
                       <div className="flex-1 grid grid-cols-4 gap-2">
                         <Input
                           value={field.label}
@@ -798,8 +798,8 @@ export default function FormTemplateBuilder() {
                             checked={field.isRequired}
                             onCheckedChange={v => updateField(idx, { isRequired: v })}
                           />
-                          <span className="text-xs text-muted-foreground">Req</span>
-                          <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-red-500 ml-auto" onClick={() => removeField(idx)}>
+                          <span className="text-xs text-[#6B6B6B]">Req</span>
+                          <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-[#FF6B6B] ml-auto" onClick={() => removeField(idx)}>
                             <X className="h-3.5 w-3.5" />
                           </Button>
                         </div>
@@ -836,7 +836,7 @@ export default function FormTemplateBuilder() {
                           </Select>
                           <Switch checked={section.isActive} onCheckedChange={v => updateInfoSection(idx, { isActive: v })} />
                         </div>
-                        <Button size="sm" variant="ghost" className="text-red-500" onClick={() => removeInfoSection(idx)}>
+                        <Button size="sm" variant="ghost" className="text-[#FF6B6B]" onClick={() => removeInfoSection(idx)}>
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </div>
@@ -881,7 +881,7 @@ export default function FormTemplateBuilder() {
                           <input type="color" value={rule.iconColor} onChange={e => updateSafetyRule(idx, { iconColor: e.target.value })} className="h-8 w-10 rounded border cursor-pointer" />
                           <Switch checked={rule.isActive} onCheckedChange={v => updateSafetyRule(idx, { isActive: v })} />
                         </div>
-                        <Button size="sm" variant="ghost" className="text-red-500" onClick={() => removeSafetyRule(idx)}>
+                        <Button size="sm" variant="ghost" className="text-[#FF6B6B]" onClick={() => removeSafetyRule(idx)}>
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </div>
@@ -983,8 +983,8 @@ export default function FormTemplateBuilder() {
         {/* Right: Live Preview */}
         <div className="hidden xl:block">
           <div className="sticky top-4">
-            <h4 className="text-sm font-semibold text-muted-foreground mb-3">LIVE PREVIEW</h4>
-            <div className="border rounded-lg p-4 bg-gray-100 overflow-auto" style={{ maxHeight: "calc(100vh - 200px)" }}>
+            <h4 className="text-sm font-medium text-[#6B6B6B] mb-3">LIVE PREVIEW</h4>
+            <div className="border rounded-lg p-4 bg-[#F5F5F5] overflow-auto" style={{ maxHeight: "calc(100vh - 200px)" }}>
               <FormPreview template={template} />
             </div>
           </div>

@@ -136,20 +136,20 @@ export default function SecurityAlerts() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "Critical": return "bg-red-100 text-red-800 border-red-200";
-      case "High": return "bg-orange-100 text-orange-800 border-orange-200";
-      case "Medium": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      default: return "bg-blue-100 text-blue-800 border-blue-200";
+      case "Critical": return "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]";
+      case "High": return "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]";
+      case "Medium": return "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]";
+      default: return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "New": return "bg-purple-100 text-purple-800 border-purple-200 animate-pulse";
-      case "Viewed": return "bg-blue-50 text-blue-700 border-blue-200";
-      case "Action Taken": return "bg-green-50 text-green-700 border-green-200";
-      case "Resolved": return "bg-slate-100 text-slate-600 border-slate-200";
-      default: return "bg-slate-100 text-slate-600";
+      case "New": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] animate-pulse";
+      case "Viewed": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
+      case "Action Taken": return "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]";
+      case "Resolved": return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
+      default: return "bg-[#F5F5F5] text-[#6B6B6B]";
     }
   };
 
@@ -157,15 +157,15 @@ export default function SecurityAlerts() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <ShieldAlert className="h-8 w-8 text-red-600" />
+          <h1 className="text-3xl font-medium tracking-tight text-foreground flex items-center gap-2">
+            <ShieldAlert className="h-8 w-8 text-[#FF6B6B]" />
             Security Alerts
           </h1>
-          <p className="text-muted-foreground">Real-time incident monitoring and response log.</p>
+          <p className="text-[#6B6B6B]">Real-time incident monitoring and response log.</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="relative w-64">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
             <Input placeholder="Search alerts..." className="pl-9 bg-white" />
           </div>
           <Button variant="outline" size="icon">
@@ -175,46 +175,46 @@ export default function SecurityAlerts() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4 mb-6">
-        <Card className="bg-red-50 border-red-100">
+        <Card className="bg-[#FFE5E5] border-[#FF6B6B]/20">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-red-800">Active Critical</CardTitle>
+            <CardTitle className="text-sm font-medium text-[#FF6B6B]">Active Critical</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-red-900">
+            <div className="text-3xl font-medium text-[#FF6B6B]">
               {alerts.filter(a => a.severity === "Critical" && a.status !== "Resolved").length}
             </div>
-            <p className="text-xs text-red-700 mt-1">Requires immediate response</p>
+            <p className="text-xs text-[#FF6B6B] mt-1">Requires immediate response</p>
           </CardContent>
         </Card>
-        <Card className="bg-purple-50 border-purple-100">
+        <Card className="bg-[#E8DCF5] border-[#5B2C93]/20">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-purple-800">New Alerts</CardTitle>
+            <CardTitle className="text-sm font-medium text-[#5B2C93]">New Alerts</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-purple-900">
+            <div className="text-3xl font-medium text-[#5B2C93]">
               {alerts.filter(a => a.status === "New").length}
             </div>
-            <p className="text-xs text-purple-700 mt-1">Unacknowledged incidents</p>
+            <p className="text-xs text-[#5B2C93] mt-1">Unacknowledged incidents</p>
           </CardContent>
         </Card>
-        <Card className="bg-blue-50 border-blue-100">
+        <Card className="bg-[#E8DCF5] border-[#5B2C93]/20">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-blue-800">Under Investigation</CardTitle>
+            <CardTitle className="text-sm font-medium text-[#5B2C93]">Under Investigation</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-900">
+            <div className="text-3xl font-medium text-[#5B2C93]">
               {alerts.filter(a => a.status === "Viewed").length}
             </div>
-            <p className="text-xs text-blue-700 mt-1">Being processed</p>
+            <p className="text-xs text-[#5B2C93] mt-1">Being processed</p>
           </CardContent>
         </Card>
-        <Card className="bg-green-50 border-green-100">
+        <Card className="bg-[#E8F9F8] border-[#4ECDC4]/20">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-green-800">Resolved Today</CardTitle>
+            <CardTitle className="text-sm font-medium text-[#4ECDC4]">Resolved Today</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-900">14</div>
-            <p className="text-xs text-green-700 mt-1">Incidents closed</p>
+            <div className="text-3xl font-medium text-[#4ECDC4]">14</div>
+            <p className="text-xs text-[#4ECDC4] mt-1">Incidents closed</p>
           </CardContent>
         </Card>
       </div>
@@ -225,7 +225,7 @@ export default function SecurityAlerts() {
           <TabsTrigger value="new" className="relative">
             New
             {alerts.filter(a => a.status === "New").length > 0 && (
-              <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500" />
+              <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-[#FF6B6B]" />
             )}
           </TabsTrigger>
           <TabsTrigger value="critical">Critical Only</TabsTrigger>
@@ -247,7 +247,7 @@ export default function SecurityAlerts() {
               </TableHeader>
               <TableBody>
                 {filteredAlerts.map((alert) => (
-                  <TableRow key={alert.id} className={alert.status === "New" ? "bg-purple-50/50" : ""}>
+                  <TableRow key={alert.id} className={alert.status === "New" ? "bg-[#E8DCF5]/50" : ""}>
                     <TableCell className="font-medium">{alert.id}</TableCell>
                     <TableCell>{alert.type}</TableCell>
                     <TableCell>
@@ -256,7 +256,7 @@ export default function SecurityAlerts() {
                       </Badge>
                     </TableCell>
                     <TableCell>{alert.location}</TableCell>
-                    <TableCell className="text-muted-foreground">{alert.timestamp}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{alert.timestamp}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={getStatusColor(alert.status)}>
                         {alert.status}
@@ -291,7 +291,7 @@ export default function SecurityAlerts() {
               </TableHeader>
               <TableBody>
                 {filteredAlerts.map((alert) => (
-                  <TableRow key={alert.id} className="bg-purple-50/50">
+                  <TableRow key={alert.id} className="bg-[#E8DCF5]/50">
                     <TableCell className="font-medium">{alert.id}</TableCell>
                     <TableCell>{alert.type}</TableCell>
                     <TableCell>
@@ -300,7 +300,7 @@ export default function SecurityAlerts() {
                       </Badge>
                     </TableCell>
                     <TableCell>{alert.location}</TableCell>
-                    <TableCell className="text-muted-foreground">{alert.timestamp}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{alert.timestamp}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={getStatusColor(alert.status)}>
                         {alert.status}
@@ -343,7 +343,7 @@ export default function SecurityAlerts() {
                       </Badge>
                     </TableCell>
                     <TableCell>{alert.location}</TableCell>
-                    <TableCell className="text-muted-foreground">{alert.timestamp}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{alert.timestamp}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={getStatusColor(alert.status)}>
                         {alert.status}
@@ -367,7 +367,7 @@ export default function SecurityAlerts() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-xl">
-              <AlertTriangle className="h-6 w-6 text-red-600" />
+              <AlertTriangle className="h-6 w-6 text-[#FF6B6B]" />
               Incident Details
             </DialogTitle>
             <DialogDescription>
@@ -377,10 +377,10 @@ export default function SecurityAlerts() {
           
           {selectedAlert && (
             <div className="space-y-6 py-4">
-              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border">
+              <div className="flex items-center justify-between p-4 bg-[#F5F5F5]/30 rounded-lg border">
                 <div className="space-y-1">
-                  <span className="text-sm text-muted-foreground">Incident Type</span>
-                  <p className="font-semibold text-lg">{selectedAlert.type}</p>
+                  <span className="text-sm text-[#6B6B6B]">Incident Type</span>
+                  <p className="font-medium text-lg">{selectedAlert.type}</p>
                 </div>
                 <Badge className={`${getSeverityColor(selectedAlert.severity)} text-sm px-3 py-1`}>
                   {selectedAlert.severity} Severity
@@ -389,13 +389,13 @@ export default function SecurityAlerts() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <span className="text-sm text-muted-foreground flex items-center gap-1">
+                  <span className="text-sm text-[#6B6B6B] flex items-center gap-1">
                     <MapPin className="h-3 w-3" /> Location
                   </span>
                   <p className="font-medium">{selectedAlert.location}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm text-muted-foreground flex items-center gap-1">
+                  <span className="text-sm text-[#6B6B6B] flex items-center gap-1">
                     <Clock className="h-3 w-3" /> Detected At
                   </span>
                   <p className="font-medium">{selectedAlert.timestamp}</p>
@@ -404,7 +404,7 @@ export default function SecurityAlerts() {
 
               <div className="space-y-2">
                 <h4 className="font-medium text-sm">Description</h4>
-                <p className="text-sm text-muted-foreground bg-slate-50 p-3 rounded-md border">
+                <p className="text-sm text-[#6B6B6B] bg-[#F5F5F5] p-3 rounded-md border">
                   {selectedAlert.description}
                 </p>
               </div>
@@ -424,7 +424,7 @@ export default function SecurityAlerts() {
             <Button variant="outline" onClick={() => setViewOpen(false)}>Close</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="bg-purple-600 hover:bg-purple-700 gap-2">
+                <Button className="bg-[#5B2C93] hover:bg-[#5B2C93] gap-2">
                   Take Action <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -441,7 +441,7 @@ export default function SecurityAlerts() {
                   Mark as False Alarm
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleAction("Escalate")} className="text-red-600">
+                <DropdownMenuItem onClick={() => handleAction("Escalate")} className="text-[#FF6B6B]">
                   Escalate to Supervisor
                 </DropdownMenuItem>
               </DropdownMenuContent>

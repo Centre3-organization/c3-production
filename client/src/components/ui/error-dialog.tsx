@@ -31,22 +31,22 @@ const iconMap = {
 
 const colorMap = {
   error: {
-    bg: "bg-red-50",
-    icon: "text-red-500",
-    border: "border-red-200",
-    button: "bg-red-600 hover:bg-red-700 text-white",
+    bg: "bg-[#FFE5E5]",
+    icon: "text-[#FF6B6B]",
+    border: "border-[#FF6B6B]",
+    button: "bg-[#FF6B6B] hover:bg-[#FF6B6B] text-white",
   },
   warning: {
-    bg: "bg-amber-50",
+    bg: "bg-[#FFF4E5]",
     icon: "text-amber-500",
-    border: "border-amber-200",
+    border: "border-[#FFB84D]",
     button: "bg-amber-600 hover:bg-amber-700 text-white",
   },
   info: {
-    bg: "bg-blue-50",
-    icon: "text-blue-500",
-    border: "border-blue-200",
-    button: "bg-blue-600 hover:bg-blue-700 text-white",
+    bg: "bg-[#E8DCF5]",
+    icon: "text-[#5B2C93]",
+    border: "border-[#5B2C93]",
+    button: "bg-[#5B2C93] hover:bg-[#3D1C5E] text-white",
   },
 };
 

@@ -62,27 +62,27 @@ export default function ActivityHistory() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "success":
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+        return <CheckCircle2 className="h-4 w-4 text-[#4ECDC4]" />;
       case "error":
-        return <XCircle className="h-4 w-4 text-red-500" />;
+        return <XCircle className="h-4 w-4 text-[#FF6B6B]" />;
       case "warning":
-        return <AlertCircle className="h-4 w-4 text-amber-500" />;
+        return <AlertCircle className="h-4 w-4 text-[#FFB84D]" />;
       default:
-        return <FileText className="h-4 w-4 text-blue-500" />;
+        return <FileText className="h-4 w-4 text-[#5B2C93]" />;
     }
   };
 
   const getActionBadge = (action: string) => {
     const colors: Record<string, string> = {
-      approved: "bg-green-100 text-green-700",
-      rejected: "bg-red-100 text-red-700",
-      created: "bg-blue-100 text-blue-700",
-      updated: "bg-amber-100 text-amber-700",
-      resolved: "bg-purple-100 text-purple-700",
-      deleted: "bg-gray-100 text-gray-700",
+      approved: "bg-[#E8F9F8] text-[#4ECDC4]",
+      rejected: "bg-[#FFE5E5] text-[#FF6B6B]",
+      created: "bg-[#E8DCF5] text-[#5B2C93]",
+      updated: "bg-[#FFF4E5] text-[#FFB84D]",
+      resolved: "bg-[#E8DCF5] text-[#5B2C93]",
+      deleted: "bg-[#F5F5F5] text-[#2C2C2C]",
     };
     return (
-      <Badge className={`${colors[action] || "bg-gray-100 text-gray-700"} hover:${colors[action] || "bg-gray-100"}`}>
+      <Badge className={`${colors[action] || "bg-[#F5F5F5] text-[#2C2C2C]"} hover:${colors[action] || "bg-[#F5F5F5]"}`}>
         {action.charAt(0).toUpperCase() + action.slice(1)}
       </Badge>
     );
@@ -93,8 +93,8 @@ export default function ActivityHistory() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Activity History</h1>
-          <p className="text-gray-500 mt-1">View timeline of all user activities</p>
+          <h1 className="text-2xl font-medium text-[#2C2C2C]">Activity History</h1>
+          <p className="text-[#6B6B6B] mt-1">View timeline of all user activities</p>
         </div>
         <div className="flex gap-3">
           <Select value={dateRange} onValueChange={setDateRange}>
@@ -109,7 +109,7 @@ export default function ActivityHistory() {
               <SelectItem value="thisYear">This Year</SelectItem>
             </SelectContent>
           </Select>
-          <Button className="bg-purple-600 hover:bg-purple-700">
+          <Button className="bg-[#5B2C93] hover:bg-[#5B2C93]">
             <Download className="h-4 w-4 mr-2" />
             Export History
           </Button>
@@ -121,7 +121,7 @@ export default function ActivityHistory() {
         <CardContent className="p-4">
           <div className="flex gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
               <Input 
                 placeholder="Search activities..." 
                 className="pl-10"
@@ -141,26 +141,26 @@ export default function ActivityHistory() {
       <div className="space-y-6">
         {activityGroups.map((group, groupIndex) => (
           <div key={groupIndex}>
-            <h3 className="text-sm font-semibold text-gray-500 mb-4">{group.date}</h3>
+            <h3 className="text-sm font-medium text-[#6B6B6B] mb-4">{group.date}</h3>
             <Card className="border-0 shadow-sm">
               <CardContent className="p-0">
                 <div className="divide-y">
                   {group.activities.map((activity, index) => (
-                    <div key={activity.id} className="p-4 hover:bg-gray-50 transition-colors">
+                    <div key={activity.id} className="p-4 hover:bg-[#F5F5F5] transition-colors">
                       <div className="flex items-start gap-4">
-                        <Avatar className="h-10 w-10 bg-purple-100">
-                          <AvatarFallback className="bg-purple-100 text-purple-700 text-sm font-medium">
+                        <Avatar className="h-10 w-10 bg-[#E8DCF5]">
+                          <AvatarFallback className="bg-[#E8DCF5] text-[#5B2C93] text-sm font-medium">
                             {activity.initials}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-medium text-gray-900">{activity.user}</span>
+                            <span className="font-medium text-[#2C2C2C]">{activity.user}</span>
                             {getActionBadge(activity.action)}
-                            <ArrowRight className="h-3 w-3 text-gray-400" />
-                            <span className="text-gray-600">{activity.target}</span>
+                            <ArrowRight className="h-3 w-3 text-[#B0B0B0]" />
+                            <span className="text-[#6B6B6B]">{activity.target}</span>
                           </div>
-                          <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+                          <div className="flex items-center gap-2 mt-1 text-sm text-[#6B6B6B]">
                             <Clock className="h-3 w-3" />
                             {activity.time}
                           </div>

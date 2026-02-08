@@ -259,8 +259,8 @@ function Router() {
         {(params) => (
           <Layout>
             <div className="flex flex-col items-center justify-center h-[60vh] text-center">
-              <h1 className="text-2xl font-bold mb-2">Page Under Construction</h1>
-              <p className="text-muted-foreground">The requested page "{params["rest*"]}" is being built.</p>
+              <h1 className="text-2xl font-medium mb-2">Page Under Construction</h1>
+              <p className="text-[#6B6B6B]">The requested page "{params["rest*"]}" is being built.</p>
             </div>
           </Layout>
         )}

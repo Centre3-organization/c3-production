@@ -40,29 +40,29 @@ export default function McmDashboard() {
       title: t("mcm.stats.activeCards", "Active Cards"),
       value: stats?.activeCards || 0,
       icon: CreditCard,
-      color: "text-green-500",
-      bgColor: "bg-green-500/10",
+      color: "text-[#4ECDC4]",
+      bgColor: "bg-[#E8F9F8]/10",
     },
     {
       title: t("mcm.stats.pendingRequests", "Pending Requests"),
       value: stats?.pendingRequests || 0,
       icon: FileText,
-      color: "text-blue-500",
-      bgColor: "bg-blue-500/10",
+      color: "text-[#5B2C93]",
+      bgColor: "bg-[#E8DCF5]/10",
     },
     {
       title: t("mcm.stats.expiringSoon", "Expiring Soon"),
       value: stats?.expiringSoon || 0,
       icon: Clock,
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-500/10",
+      color: "text-[#FFB84D]",
+      bgColor: "bg-[#FFF4E5]/10",
     },
     {
       title: t("mcm.stats.blockedCards", "Blocked Cards"),
       value: stats?.blockedCards || 0,
       icon: AlertTriangle,
-      color: "text-red-500",
-      bgColor: "bg-red-500/10",
+      color: "text-[#FF6B6B]",
+      bgColor: "bg-[#FF6B6B]/10",
     },
   ];
 
@@ -71,8 +71,8 @@ export default function McmDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{t("mcm.title", "Magnetic Card Management")}</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-medium">{t("mcm.title", "Magnetic Card Management")}</h1>
+          <p className="text-[#6B6B6B]">
             {t("mcm.subtitle", "Manage access cards for employees and contractors")}
           </p>
         </div>
@@ -93,8 +93,8 @@ export default function McmDashboard() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  <p className="text-3xl font-bold mt-1">
+                  <p className="text-sm text-[#6B6B6B]">{stat.title}</p>
+                  <p className="text-3xl font-medium mt-1">
                     {statsLoading ? "..." : stat.value}
                   </p>
                 </div>
@@ -117,12 +117,12 @@ export default function McmDashboard() {
                   <Users className="h-6 w-6 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold">{t("mcm.cardDirectory", "Card Directory")}</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-medium">{t("mcm.cardDirectory", "Card Directory")}</h3>
+                  <p className="text-sm text-[#6B6B6B]">
                     {t("mcm.cardDirectoryDesc", "View and manage all cards")}
                   </p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                <ChevronRight className="h-5 w-5 text-[#6B6B6B]" />
               </div>
             </CardContent>
           </Card>
@@ -132,16 +132,16 @@ export default function McmDashboard() {
           <Card className="cursor-pointer hover:bg-accent/50 transition-colors">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-orange-500/10">
-                  <Building2 className="h-6 w-6 text-orange-500" />
+                <div className="p-3 rounded-full bg-[#FFF4E5]0/10">
+                  <Building2 className="h-6 w-6 text-[#FFB84D]" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold">{t("mcm.companies", "Companies")}</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-medium">{t("mcm.companies", "Companies")}</h3>
+                  <p className="text-sm text-[#6B6B6B]">
                     {t("mcm.companiesDesc", "Manage contractors & clients")}
                   </p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                <ChevronRight className="h-5 w-5 text-[#6B6B6B]" />
               </div>
             </CardContent>
           </Card>
@@ -151,16 +151,16 @@ export default function McmDashboard() {
           <Card className="cursor-pointer hover:bg-accent/50 transition-colors">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-purple-500/10">
-                  <Shield className="h-6 w-6 text-purple-500" />
+                <div className="p-3 rounded-full bg-[#E8DCF5]0/10">
+                  <Shield className="h-6 w-6 text-[#5B2C93]" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold">{t("mcm.accessLevels", "Access Levels")}</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-medium">{t("mcm.accessLevels", "Access Levels")}</h3>
+                  <p className="text-sm text-[#6B6B6B]">
                     {t("mcm.accessLevelsDesc", "Configure access permissions")}
                   </p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                <ChevronRight className="h-5 w-5 text-[#6B6B6B]" />
               </div>
             </CardContent>
           </Card>
@@ -191,10 +191,10 @@ export default function McmDashboard() {
                   >
                     <div>
                       <p className="font-medium">{card.fullName}</p>
-                      <p className="text-sm text-muted-foreground">{card.cardNumber}</p>
+                      <p className="text-sm text-[#6B6B6B]">{card.cardNumber}</p>
                     </div>
                     <div className="text-right">
-                      <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+                      <Badge variant="outline" className="text-[#FFB84D] border-[#FFB84D]">
                         {new Date(card.expiryDate!).toLocaleDateString()}
                       </Badge>
                     </div>
@@ -202,7 +202,7 @@ export default function McmDashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-center py-8">
+              <p className="text-[#6B6B6B] text-center py-8">
                 {t("mcm.noExpiringCards", "No cards expiring in the next 30 days")}
               </p>
             )}
@@ -231,7 +231,7 @@ export default function McmDashboard() {
                   >
                     <div>
                       <p className="font-medium">{card.fullName}</p>
-                      <p className="text-sm text-muted-foreground">{card.cardNumber}</p>
+                      <p className="text-sm text-[#6B6B6B]">{card.cardNumber}</p>
                     </div>
                     <div className="text-right">
                       <Badge variant="destructive">
@@ -242,7 +242,7 @@ export default function McmDashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-center py-8">
+              <p className="text-[#6B6B6B] text-center py-8">
                 {t("mcm.noBlockedCards", "No blocked cards")}
               </p>
             )}
@@ -273,7 +273,7 @@ export default function McmDashboard() {
                   <div className="flex items-center gap-3">
                     <div>
                       <p className="font-medium">{request.requestNumber}</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#6B6B6B]">
                         {request.operationType?.replace(/_/g, " ")}
                       </p>
                     </div>
@@ -290,7 +290,7 @@ export default function McmDashboard() {
                     >
                       {request.status}
                     </Badge>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-[#6B6B6B]">
                       {new Date(request.createdAt!).toLocaleDateString()}
                     </span>
                   </div>
@@ -298,7 +298,7 @@ export default function McmDashboard() {
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-center py-8">
+            <p className="text-[#6B6B6B] text-center py-8">
               {t("mcm.noRecentRequests", "No recent requests")}
             </p>
           )}

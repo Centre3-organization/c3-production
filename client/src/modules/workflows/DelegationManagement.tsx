@@ -99,8 +99,8 @@ export function DelegationManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Delegation Management</h1>
-          <p className="text-muted-foreground">Delegate your approval authority to other users</p>
+          <h1 className="text-2xl font-medium">Delegation Management</h1>
+          <p className="text-[#6B6B6B]">Delegate your approval authority to other users</p>
         </div>
         <Button onClick={() => setIsCreateDialogOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
@@ -113,14 +113,14 @@ export function DelegationManagement() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-full bg-blue-100">
-                <ArrowRight className="h-6 w-6 text-blue-600" />
+              <div className="p-3 rounded-full bg-[#E8DCF5]">
+                <ArrowRight className="h-6 w-6 text-[#5B2C93]" />
               </div>
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-medium">
                   {asDelegator.filter((d: any) => d.isActive).length}
                 </p>
-                <p className="text-sm text-muted-foreground">Active Delegations</p>
+                <p className="text-sm text-[#6B6B6B]">Active Delegations</p>
               </div>
             </div>
           </CardContent>
@@ -128,14 +128,14 @@ export function DelegationManagement() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-full bg-green-100">
-                <UserCheck className="h-6 w-6 text-green-600" />
+              <div className="p-3 rounded-full bg-[#E8F9F8]">
+                <UserCheck className="h-6 w-6 text-[#4ECDC4]" />
               </div>
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-medium">
                   {asDelegate.filter((d: any) => d.isActive).length}
                 </p>
-                <p className="text-sm text-muted-foreground">Delegated to Me</p>
+                <p className="text-sm text-[#6B6B6B]">Delegated to Me</p>
               </div>
             </div>
           </CardContent>
@@ -143,18 +143,18 @@ export function DelegationManagement() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-full bg-amber-100">
-                <Clock className="h-6 w-6 text-amber-600" />
+              <div className="p-3 rounded-full bg-[#FFF4E5]">
+                <Clock className="h-6 w-6 text-[#FFB84D]" />
               </div>
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-medium">
                   {asDelegator.filter((d: any) => {
                     const now = new Date();
                     const start = new Date(d.validFrom);
                     return d.isActive && now < start;
                   }).length}
                 </p>
-                <p className="text-sm text-muted-foreground">Scheduled</p>
+                <p className="text-sm text-[#6B6B6B]">Scheduled</p>
               </div>
             </div>
           </CardContent>
@@ -169,7 +169,7 @@ export function DelegationManagement() {
         </CardHeader>
         <CardContent>
           {asDelegator.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-[#6B6B6B]">
               <UserCheck className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>You haven't created any delegations</p>
             </div>
@@ -193,7 +193,7 @@ export function DelegationManagement() {
                       <TableCell>
                         <div>
                           <p className="font-medium">{delegation.delegateName} {delegation.delegateLastName}</p>
-                          <p className="text-sm text-muted-foreground">{delegation.delegateEmail}</p>
+                          <p className="text-sm text-[#6B6B6B]">{delegation.delegateEmail}</p>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -204,7 +204,7 @@ export function DelegationManagement() {
                       <TableCell>
                         <div className="text-sm">
                           <p>{format(new Date(delegation.validFrom), "MMM d, yyyy")}</p>
-                          <p className="text-muted-foreground">
+                          <p className="text-[#6B6B6B]">
                             to {format(new Date(delegation.validUntil), "MMM d, yyyy")}
                           </p>
                         </div>
@@ -243,7 +243,7 @@ export function DelegationManagement() {
         </CardHeader>
         <CardContent>
           {asDelegate.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-[#6B6B6B]">
               <ArrowRight className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No one has delegated authority to you</p>
             </div>
@@ -266,7 +266,7 @@ export function DelegationManagement() {
                       <TableCell>
                         <div>
                           <p className="font-medium">{delegation.delegatorName} {delegation.delegatorLastName}</p>
-                          <p className="text-sm text-muted-foreground">{delegation.delegatorEmail}</p>
+                          <p className="text-sm text-[#6B6B6B]">{delegation.delegatorEmail}</p>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -277,7 +277,7 @@ export function DelegationManagement() {
                       <TableCell>
                         <div className="text-sm">
                           <p>{format(new Date(delegation.validFrom), "MMM d, yyyy")}</p>
-                          <p className="text-muted-foreground">
+                          <p className="text-[#6B6B6B]">
                             to {format(new Date(delegation.validUntil), "MMM d, yyyy")}
                           </p>
                         </div>
@@ -370,10 +370,10 @@ export function DelegationManagement() {
               />
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+            <div className="bg-[#FFF4E5] border border-[#FFB84D] rounded-lg p-3">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                <div className="text-sm text-amber-800">
+                <AlertTriangle className="h-5 w-5 text-[#FFB84D] shrink-0 mt-0.5" />
+                <div className="text-sm text-[#FFB84D]">
                   <p className="font-medium">Important</p>
                   <p>The delegate will be able to approve or reject requests on your behalf during the specified period.</p>
                 </div>

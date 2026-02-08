@@ -47,7 +47,7 @@ export default function Login() {
   return (
     <div className="min-h-screen w-full flex" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Left Side - Purple Gradient with Logo */}
-      <div className={`hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#4f008c] via-[#6b21a8] to-[#4f008c] relative overflow-hidden ${isRTL ? 'order-2' : 'order-1'}`}>
+      <div className={`hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#5B2C93] via-[#5B2C93] to-[#5B2C93] relative overflow-hidden ${isRTL ? 'order-2' : 'order-1'}`}>
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center w-full px-16">
           {/* Logo with background */}
@@ -57,9 +57,9 @@ export default function Login() {
               <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M30 5L55 30L30 55L5 30L30 5Z" stroke="white" strokeWidth="2" fill="none"/>
                 <path d="M30 15L45 30L30 45L15 30L30 15Z" stroke="white" strokeWidth="2" fill="none"/>
-                <circle cx="30" cy="30" r="4" fill="#ff375e"/>
+                <circle cx="30" cy="30" r="4" fill="#FF6B6B"/>
               </svg>
-              <span className="text-4xl font-bold text-white tracking-wide">center3</span>
+              <span className="text-4xl font-medium text-white tracking-wide">center3</span>
             </div>
           </div>
           
@@ -81,14 +81,14 @@ export default function Login() {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className={`w-full lg:w-1/2 flex items-center justify-center bg-gray-50 ${isRTL ? 'order-1' : 'order-2'}`}>
+      <div className={`w-full lg:w-1/2 flex items-center justify-center bg-[#F5F5F5] ${isRTL ? 'order-1' : 'order-2'}`}>
         <div className="w-full max-w-md px-8">
           {/* Form Card */}
           <div className="bg-white rounded-2xl shadow-lg p-10">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-semibold text-gray-900 mb-2">Welcome Back</h1>
-              <p className="text-gray-500 text-sm">Sign in to access your account</p>
+              <h1 className="text-2xl font-medium text-[#2C2C2C] mb-2">Welcome Back</h1>
+              <p className="text-[#6B6B6B] text-sm">Sign in to access your account</p>
             </div>
 
             {/* Error Alert */}
@@ -103,33 +103,33 @@ export default function Login() {
             <form onSubmit={handleLogin} className="space-y-5">
               {/* Email Field */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Email</label>
+                <label className="text-sm font-medium text-[#2C2C2C]">Email</label>
                 <div className="relative">
                   <Input
                     type="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 pl-4 pr-4 bg-gray-50 border-gray-200 rounded-lg focus:bg-white"
+                    className="h-12 pl-4 pr-4 bg-[#F5F5F5] border-[#E0E0E0] rounded-lg focus:bg-white"
                   />
                 </div>
               </div>
 
               {/* Password Field */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Password</label>
+                <label className="text-sm font-medium text-[#2C2C2C]">Password</label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 pl-4 pr-12 bg-gray-50 border-gray-200 rounded-lg focus:bg-white"
+                    className="h-12 pl-4 pr-12 bg-[#F5F5F5] border-[#E0E0E0] rounded-lg focus:bg-white"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className={`absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 ${isRTL ? 'left-4' : 'right-4'}`}
+                    className={`absolute top-1/2 -translate-y-1/2 text-[#B0B0B0] hover:text-[#6B6B6B] ${isRTL ? 'left-4' : 'right-4'}`}
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Lock className="h-5 w-5" />}
                   </button>
@@ -143,7 +143,7 @@ export default function Login() {
                   checked={rememberMe}
                   onCheckedChange={(checked) => setRememberMe(checked as boolean)}
                 />
-                <label htmlFor="remember" className="text-sm text-gray-600 cursor-pointer">
+                <label htmlFor="remember" className="text-sm text-[#6B6B6B] cursor-pointer">
                   Remember this device for 30 days
                 </label>
               </div>
@@ -152,7 +152,7 @@ export default function Login() {
               <Button
                 type="submit"
                 disabled={loginMutation.isPending}
-                className="w-full h-12 bg-[#4f008c] hover:bg-[#3d006d] text-white font-medium rounded-lg text-base"
+                className="w-full h-12 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white font-medium rounded-lg text-base"
               >
                 {loginMutation.isPending ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
@@ -170,7 +170,7 @@ export default function Login() {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center justify-center gap-2 text-sm text-[#6B6B6B]">
               <span>© 2026 Centre3</span>
               <span>•</span>
               <a href="#" className="hover:text-primary">Privacy Policy</a>

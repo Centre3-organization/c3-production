@@ -57,10 +57,10 @@ const typeLabels: Record<string, string> = {
 };
 
 const securityLevelColors: Record<string, string> = {
-  low: "bg-green-100 text-green-800",
-  medium: "bg-blue-100 text-blue-800",
-  high: "bg-orange-100 text-orange-800",
-  critical: "bg-red-100 text-red-800",
+  low: "bg-[#E8F9F8] text-[#4ECDC4]",
+  medium: "bg-[#E8DCF5] text-[#5B2C93]",
+  high: "bg-[#FFF4E5] text-[#FFB84D]",
+  critical: "bg-[#FFE5E5] text-[#FF6B6B]",
 };
 
 export default function ManualApproval() {
@@ -186,16 +186,16 @@ export default function ManualApproval() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <Shield className="h-6 w-6 text-indigo-600" />
+          <h1 className="text-2xl font-medium tracking-tight text-foreground flex items-center gap-2">
+            <Shield className="h-6 w-6 text-[#5B2C93]" />
             L2 Security Approval
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-[#6B6B6B] mt-1">
             Final security review and access credential issuance
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+          <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]">
             <GitBranch className="h-3 w-3 mr-1" />
             Workflow-Based
           </Badge>
@@ -208,43 +208,43 @@ export default function ManualApproval() {
 
       {/* Stats Bar */}
       <div className="grid grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-200">
+        <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-[#5B2C93]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-indigo-700">In L2 Queue</p>
-                <p className="text-3xl font-bold text-indigo-900">{l2Tasks.length}</p>
+                <p className="text-sm font-medium text-[#5B2C93]">In L2 Queue</p>
+                <p className="text-3xl font-medium text-[#5B2C93]">{l2Tasks.length}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center">
-                <Shield className="h-6 w-6 text-indigo-600" />
+              <div className="h-12 w-12 rounded-full bg-[#E8DCF5] flex items-center justify-center">
+                <Shield className="h-6 w-6 text-[#5B2C93]" />
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-[#4ECDC4]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-700">Access Granted Today</p>
-                <p className="text-3xl font-bold text-green-900">{stats?.approved || 0}</p>
+                <p className="text-sm font-medium text-[#4ECDC4]">Access Granted Today</p>
+                <p className="text-3xl font-medium text-[#4ECDC4]">{stats?.approved || 0}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
-                <BadgeCheck className="h-6 w-6 text-green-600" />
+              <div className="h-12 w-12 rounded-full bg-[#E8F9F8] flex items-center justify-center">
+                <BadgeCheck className="h-6 w-6 text-[#4ECDC4]" />
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-slate-50 to-gray-50 border-slate-200">
+        <Card className="bg-gradient-to-br from-slate-50 to-gray-50 border-[#E0E0E0]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-700">Total Processed</p>
-                <p className="text-3xl font-bold text-slate-900">{stats?.totalRequests || 0}</p>
+                <p className="text-sm font-medium text-[#2C2C2C]">Total Processed</p>
+                <p className="text-3xl font-medium text-[#2C2C2C]">{stats?.totalRequests || 0}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
-                <History className="h-6 w-6 text-slate-600" />
+              <div className="h-12 w-12 rounded-full bg-[#F5F5F5] flex items-center justify-center">
+                <History className="h-6 w-6 text-[#6B6B6B]" />
               </div>
             </div>
           </CardContent>
@@ -254,7 +254,7 @@ export default function ManualApproval() {
       {/* Search */}
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
           <Input 
             placeholder="Search by ID, visitor name, company..." 
             className="pl-10 bg-white"
@@ -275,11 +275,11 @@ export default function ManualApproval() {
       ) : filteredTasks.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="h-16 w-16 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
-              <Shield className="h-8 w-8 text-indigo-600" />
+            <div className="h-16 w-16 rounded-full bg-[#E8DCF5] flex items-center justify-center mb-4">
+              <Shield className="h-8 w-8 text-[#5B2C93]" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground">No pending L2 reviews</h3>
-            <p className="text-muted-foreground mt-1">All security reviews have been processed</p>
+            <h3 className="text-lg font-medium text-foreground">No pending L2 reviews</h3>
+            <p className="text-[#6B6B6B] mt-1">All security reviews have been processed</p>
           </CardContent>
         </Card>
       ) : (
@@ -291,31 +291,31 @@ export default function ManualApproval() {
             >
               {/* Header Row */}
               <div 
-                className="p-4 cursor-pointer hover:bg-muted/30 transition-colors"
+                className="p-4 cursor-pointer hover:bg-[#F5F5F5]/30 transition-colors"
                 onClick={() => toggleExpand(task.taskId)}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center">
-                      <User className="h-6 w-6 text-indigo-600" />
+                    <div className="h-12 w-12 rounded-full bg-[#E8DCF5] flex items-center justify-center">
+                      <User className="h-6 w-6 text-[#5B2C93]" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-foreground">{task.visitorName}</span>
+                        <span className="font-medium text-foreground">{task.visitorName}</span>
                         <Badge variant="outline" className="text-xs">
                           {typeLabels[task.type] || task.type}
                         </Badge>
-                        <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 text-xs">
+                        <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] text-xs">
                           <GitBranch className="h-3 w-3 mr-1" />
                           {task.workflowName || "Standard Workflow"}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2 mt-1 text-sm text-[#6B6B6B]">
                         <span className="font-mono">{task.requestNumber}</span>
                         <span>•</span>
                         <span>{task.visitorCompany || "Individual"}</span>
                         <span>•</span>
-                        <Badge variant="outline" className="bg-indigo-50 text-indigo-700 text-xs">
+                        <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] text-xs">
                           Stage {task.stageOrder}: {task.stageName}
                         </Badge>
                       </div>
@@ -326,14 +326,14 @@ export default function ManualApproval() {
                       <p className="text-sm font-medium text-foreground">
                         {task.startDate ? format(new Date(task.startDate), "MMM dd, yyyy") : "N/A"}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-[#6B6B6B]">
                         {task.startTime} - {task.endTime}
                       </p>
                     </div>
                     {expandedId === task.taskId ? (
-                      <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                      <ChevronUp className="h-5 w-5 text-[#6B6B6B]" />
                     ) : (
-                      <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                      <ChevronDown className="h-5 w-5 text-[#6B6B6B]" />
                     )}
                   </div>
                 </div>
@@ -341,24 +341,24 @@ export default function ManualApproval() {
               
               {/* Expanded Content */}
               {expandedId === task.taskId && (
-                <div className="border-t bg-muted/20">
+                <div className="border-t bg-[#F5F5F5]/20">
                   <div className="p-5 grid grid-cols-3 gap-6">
                     {/* Visitor Details */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                      <h4 className="font-medium text-sm text-[#6B6B6B] uppercase tracking-wide">
                         Visitor Information
                       </h4>
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
-                          <IdCard className="h-4 w-4 text-muted-foreground" />
+                          <IdCard className="h-4 w-4 text-[#6B6B6B]" />
                           <span className="text-sm">{task.visitorIdType}: {task.visitorIdNumber}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Phone className="h-4 w-4 text-muted-foreground" />
+                          <Phone className="h-4 w-4 text-[#6B6B6B]" />
                           <span className="text-sm">{task.visitorPhone || "N/A"}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          <Mail className="h-4 w-4 text-[#6B6B6B]" />
                           <span className="text-sm">{task.visitorEmail || "N/A"}</span>
                         </div>
                       </div>
@@ -366,20 +366,20 @@ export default function ManualApproval() {
                     
                     {/* Visit Details */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                      <h4 className="font-medium text-sm text-[#6B6B6B] uppercase tracking-wide">
                         Visit Details
                       </h4>
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
-                          <Building2 className="h-4 w-4 text-muted-foreground" />
+                          <Building2 className="h-4 w-4 text-[#6B6B6B]" />
                           <span className="text-sm">{task.siteName || "N/A"}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4 text-muted-foreground" />
+                          <FileText className="h-4 w-4 text-[#6B6B6B]" />
                           <span className="text-sm">{task.purpose || "General Visit"}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-muted-foreground" />
+                          <User className="h-4 w-4 text-[#6B6B6B]" />
                           <span className="text-sm">Host: {task.hostName || "N/A"}</span>
                         </div>
                       </div>
@@ -387,20 +387,20 @@ export default function ManualApproval() {
                     
                     {/* Workflow Info */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                      <h4 className="font-medium text-sm text-[#6B6B6B] uppercase tracking-wide">
                         Workflow Status
                       </h4>
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
-                          <GitBranch className="h-4 w-4 text-muted-foreground" />
+                          <GitBranch className="h-4 w-4 text-[#6B6B6B]" />
                           <span className="text-sm">{task.workflowName || "Standard Workflow"}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Shield className="h-4 w-4 text-muted-foreground" />
+                          <Shield className="h-4 w-4 text-[#6B6B6B]" />
                           <span className="text-sm">Stage {task.stageOrder}: {task.stageName}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <Clock className="h-4 w-4 text-[#6B6B6B]" />
                           <span className="text-sm">
                             Assigned: {task.assignedAt ? format(new Date(task.assignedAt), "MMM dd, HH:mm") : "N/A"}
                           </span>
@@ -420,7 +420,7 @@ export default function ManualApproval() {
                       Reject
                     </Button>
                     <Button 
-                      className="bg-indigo-600 hover:bg-indigo-700"
+                      className="bg-[#5B2C93] hover:bg-[#3D1C5E]"
                       onClick={() => handleApproveClick(task)}
                       disabled={processingId === task.taskId}
                     >
@@ -444,7 +444,7 @@ export default function ManualApproval() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Key className="h-5 w-5 text-indigo-600" />
+              <Key className="h-5 w-5 text-[#5B2C93]" />
               Grant Access
             </DialogTitle>
             <DialogDescription>
@@ -465,7 +465,7 @@ export default function ManualApproval() {
                   <RadioGroupItem value="qr_code" id="qr_code" className="peer sr-only" />
                   <Label 
                     htmlFor="qr_code" 
-                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-indigo-600 cursor-pointer"
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[#5B2C93] cursor-pointer"
                   >
                     <Scan className="h-6 w-6 mb-2" />
                     <span className="text-xs font-medium">QR Code</span>
@@ -475,7 +475,7 @@ export default function ManualApproval() {
                   <RadioGroupItem value="rfid" id="rfid" className="peer sr-only" />
                   <Label 
                     htmlFor="rfid" 
-                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-indigo-600 cursor-pointer"
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[#5B2C93] cursor-pointer"
                   >
                     <Scan className="h-6 w-6 mb-2" />
                     <span className="text-xs font-medium">RFID Tag</span>
@@ -485,7 +485,7 @@ export default function ManualApproval() {
                   <RadioGroupItem value="card" id="card" className="peer sr-only" />
                   <Label 
                     htmlFor="card" 
-                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-indigo-600 cursor-pointer"
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[#5B2C93] cursor-pointer"
                   >
                     <CreditCard className="h-6 w-6 mb-2" />
                     <span className="text-xs font-medium">Access Card</span>
@@ -527,7 +527,7 @@ export default function ManualApproval() {
               Cancel
             </Button>
             <Button 
-              className="bg-indigo-600 hover:bg-indigo-700"
+              className="bg-[#5B2C93] hover:bg-[#3D1C5E]"
               onClick={handleApproveConfirm}
               disabled={processingId !== null}
             >
@@ -546,7 +546,7 @@ export default function ManualApproval() {
       <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600">
+            <DialogTitle className="flex items-center gap-2 text-[#FF6B6B]">
               <AlertCircle className="h-5 w-5" />
               Reject Request
             </DialogTitle>

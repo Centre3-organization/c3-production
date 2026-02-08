@@ -153,7 +153,7 @@ export function RepeatableSection({
       {/* Header with add button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-gray-800">{getName()}</h3>
+          <h3 className="font-medium text-[#2C2C2C]">{getName()}</h3>
           <Badge variant="outline" className="text-xs">
             {items.length} / {maxItems}
           </Badge>
@@ -173,8 +173,8 @@ export function RepeatableSection({
 
       {/* Items list */}
       {items.length === 0 ? (
-        <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
-          <p className="text-gray-500 mb-4">
+        <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-8 text-center">
+          <p className="text-[#6B6B6B] mb-4">
             {t("common.noItemsYet", "No {{item}} added yet", { item: getItemLabel().toLowerCase() })}
           </p>
           <Button
@@ -204,12 +204,12 @@ export function RepeatableSection({
               >
                 <Card className={cn(
                   "transition-shadow",
-                  isExpanded && "shadow-md border-[#0f62fe]/30"
+                  isExpanded && "shadow-md border-[#5B2C93]/30"
                 )}>
                   <CollapsibleTrigger asChild>
-                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-[#F5F5F5] transition-colors">
                       <div className="flex items-center gap-3">
-                        <GripVertical className="h-4 w-4 text-gray-400 cursor-grab" />
+                        <GripVertical className="h-4 w-4 text-[#B0B0B0] cursor-grab" />
                         <div className="flex-1 flex items-center gap-2">
                           <Badge variant="secondary" className="text-xs">
                             #{index + 1}
@@ -237,7 +237,7 @@ export function RepeatableSection({
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="h-7 w-7 text-[#FF6B6B] hover:text-[#FF6B6B] hover:bg-[#FFE5E5]"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleRemoveItem(index);
@@ -248,9 +248,9 @@ export function RepeatableSection({
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                           {isExpanded ? (
-                            <ChevronUp className="h-4 w-4 text-gray-500" />
+                            <ChevronUp className="h-4 w-4 text-[#6B6B6B]" />
                           ) : (
-                            <ChevronDown className="h-4 w-4 text-gray-500" />
+                            <ChevronDown className="h-4 w-4 text-[#6B6B6B]" />
                           )}
                         </div>
                       </div>
@@ -288,7 +288,7 @@ export function RepeatableSection({
 
       {/* Min/max items hint */}
       {(minItems > 0 || maxItems < 100) && (
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-[#6B6B6B]">
           {minItems > 0 && maxItems < 100
             ? t("common.itemsRange", "{{min}} to {{max}} items required", { min: minItems, max: maxItems })
             : minItems > 0

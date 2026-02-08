@@ -88,38 +88,38 @@ export default function Reports() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-[#F5F5F5]">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-white border-b border-[#E0E0E0] px-6 py-4">
         <div>
-          <p className="text-sm text-gray-500">Reports</p>
-          <h1 className="text-xl font-semibold text-gray-900">All Reports</h1>
-          <p className="text-sm text-gray-500 mt-1">{reportsData.length} items</p>
+          <p className="text-sm text-[#6B6B6B]">Reports</p>
+          <h1 className="text-xl font-medium text-[#2C2C2C]">All Reports</h1>
+          <p className="text-sm text-[#6B6B6B] mt-1">{reportsData.length} items</p>
         </div>
       </div>
 
       {/* Reports Table */}
       <div className="flex-1 overflow-auto p-6">
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-lg border border-[#E0E0E0] overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-[#F5F5F5] border-b border-[#E0E0E0]">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
                   Report Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
                   Description
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
                   Folder
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
                   Created By
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
                   Created On
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
                   Subscribed
                 </th>
               </tr>
@@ -128,7 +128,7 @@ export default function Reports() {
               {reportsData.map((report) => (
                 <tr 
                   key={report.id} 
-                  className="hover:bg-gray-50 cursor-pointer transition-colors"
+                  className="hover:bg-[#F5F5F5] cursor-pointer transition-colors"
                   onClick={() => handleReportClick(report.id)}
                 >
                   <td className="px-6 py-4">
@@ -136,7 +136,7 @@ export default function Reports() {
                       {report.name}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-[#6B6B6B]">
                     {report.description}
                   </td>
                   <td className="px-6 py-4">
@@ -149,7 +149,7 @@ export default function Reports() {
                       {report.createdBy}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-[#6B6B6B]">
                     {new Date(report.createdOn).toLocaleDateString('en-US', {
                       month: 'numeric',
                       day: 'numeric',
@@ -161,7 +161,7 @@ export default function Reports() {
                   </td>
                   <td className="px-6 py-4">
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <Star className="h-4 w-4 text-gray-400" />
+                      <Star className="h-4 w-4 text-[#B0B0B0]" />
                     </Button>
                   </td>
                 </tr>
@@ -178,8 +178,8 @@ export default function Reports() {
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <BarChart3 className="h-8 w-8 text-primary" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Coming Soon</h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="text-xl font-medium text-[#2C2C2C] mb-2">Coming Soon</h2>
+            <p className="text-[#6B6B6B] mb-6">
               This report is currently under development. Check back soon for detailed analytics and insights.
             </p>
             <Button onClick={() => setSelectedReport(null)} className="w-full">
