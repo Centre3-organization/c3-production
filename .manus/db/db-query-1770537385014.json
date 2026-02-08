@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE formFields SET dependsOnField = NULL, filterByField = NULL WHERE id = 9;\nUPDATE formFields SET dependsOnField = 'country', filterByField = 'country' WHERE id = 11;\nUPDATE formFields SET dependsOnField = 'city', filterByField = 'city' WHERE id = 12;\nUPDATE formFields SET dependsOnField = 'site', filterByField = 'site' WHERE id = 30002;\nUPDATE formFields SET dependsOnField = 'zone', filterByField = 'zone' WHERE id = 30001;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute UPDATE formFields SET dependsOnField = NULL, filterByField = NULL WHERE id = 9;\nUPDATE formFields SET dependsOnField = 'country', filterByField = 'country' WHERE id = 11;\nUPDATE formFields SET dependsOnField = 'city', filterByField = 'city' WHERE id = 12;\nUPDATE formFields SET dependsOnField = 'site', filterByField = 'site' WHERE id = 30002;\nUPDATE formFields SET dependsOnField = 'zone', filterByField = 'zone' WHERE id = 30001;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2495
+}

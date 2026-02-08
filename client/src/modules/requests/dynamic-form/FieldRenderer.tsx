@@ -745,9 +745,18 @@ export function FieldRenderer({
     // Handle dynamic data sources
     if (dynamicDataSources.includes(source)) {
       const filterValue = field.filterByField ? formValues[field.filterByField] : undefined;
+      // If this field depends on a parent via filterByField, only load when parent has a value
+      if (field.filterByField && !filterValue) {
+        setDynamicOptions([]);
+        return;
+      }
       loadDataSourceOptions(source, filterValue);
     }
   }, [field.optionsSource, field.dependsOnField, field.filterByField, formValues]);
+
+  // Check if this field's parent filter has a value (for cascading dropdowns)
+  const isWaitingForParent = field.filterByField && !formValues[field.filterByField];
+  const parentFieldName = field.filterByField ? field.filterByField.charAt(0).toUpperCase() + field.filterByField.slice(1) : '';
 
   const loadDataSourceOptions = async (source: string, filterValue?: any) => {
     setIsLoadingOptions(true);
@@ -936,10 +945,10 @@ export function FieldRenderer({
           <Select
             value={value || ""}
             onValueChange={onChange}
-            disabled={disabled || isLoadingOptions}
+            disabled={disabled || isLoadingOptions || !!isWaitingForParent}
           >
-            <SelectTrigger className={baseInputClass}>
-              <SelectValue placeholder={getPlaceholder() || t("common.select", "Select...")} />
+            <SelectTrigger className={cn(baseInputClass, isWaitingForParent && "opacity-60")}>
+              <SelectValue placeholder={isWaitingForParent ? `Select ${parentFieldName} first` : (getPlaceholder() || t("common.select", "Select..."))} />
             </SelectTrigger>
             <SelectContent>
               {isLoadingOptions ? (

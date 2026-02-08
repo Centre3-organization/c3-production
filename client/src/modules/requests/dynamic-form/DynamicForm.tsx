@@ -185,12 +185,53 @@ export function DynamicForm({
   // Get current section data
   const currentSectionData = visibleSections.find((s) => s.code === currentSection);
 
-  // Handle field value change
+  // Build a map of field dependencies for cascading clears
+  const dependencyMap = useMemo(() => {
+    const map: Record<string, string[]> = {};
+    const allFields = flatSections.flatMap(s => s.fields);
+    for (const f of allFields) {
+      if (f.filterByField) {
+        if (!map[f.filterByField]) map[f.filterByField] = [];
+        if (!map[f.filterByField].includes(f.code)) {
+          map[f.filterByField].push(f.code);
+        }
+      }
+      if (f.dependsOnField && f.dependsOnField !== f.filterByField) {
+        if (!map[f.dependsOnField]) map[f.dependsOnField] = [];
+        if (!map[f.dependsOnField].includes(f.code)) {
+          map[f.dependsOnField].push(f.code);
+        }
+      }
+    }
+    return map;
+  }, [flatSections]);
+
+  // Recursively collect all descendant field codes that should be cleared
+  const getDescendants = (fieldCode: string, visited = new Set<string>()): string[] => {
+    if (visited.has(fieldCode)) return [];
+    visited.add(fieldCode);
+    const children = dependencyMap[fieldCode] || [];
+    const all: string[] = [...children];
+    for (const child of children) {
+      all.push(...getDescendants(child, visited));
+    }
+    return all;
+  };
+
+  // Handle field value change with cascading clear of dependent fields
   const handleFieldChange = (fieldCode: string, value: any) => {
-    onFormDataChange({
+    const updated: Record<string, any> = {
       ...formData,
       [fieldCode]: value,
-    });
+    };
+    // Clear all descendant fields when a parent value changes
+    const descendants = getDescendants(fieldCode);
+    for (const desc of descendants) {
+      if (updated[desc] !== undefined && updated[desc] !== "" && updated[desc] !== null) {
+        updated[desc] = "";
+      }
+    }
+    onFormDataChange(updated);
   };
 
   // Handle repeatable section change

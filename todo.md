@@ -1677,3 +1677,11 @@ Create a unified data source system that can pull options from anywhere in the p
 
 ## Bug Fix: Persistent Select.Item empty string error (Feb 8, 2026)
 - [x] Fix Select.Item empty string error - added global safety guard in SelectItem component (select.tsx) that silently returns null for empty/falsy values. This is a universal fix protecting ALL Select components app-wide.
+
+## Fix: Cascading Location Dropdowns in Admin Visit & TEP (Feb 8, 2026)
+- [x] Fix Country → City cascade (cities filtered by selected country)
+- [x] Fix City → Site cascade (sites filtered by selected city)
+- [x] Fix Site → Zone cascade (zones filtered by selected site)
+- [x] Fix Zone → Area cascade (areas filtered by selected zone)
+- [x] Apply to both Admin Visit and TEP form types
+- [x] Clear dependent fields when parent selection changes (recursive descendant clearing)

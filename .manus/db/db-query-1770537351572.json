@@ -1,0 +1,153 @@
+{
+  "query": "SELECT ff.id, ff.code, ff.name, ff.fieldType, ff.optionsSource, ff.dependsOnField, ff.filterByField, fs.name as sectionName, rt.name as requestTypeName\nFROM formFields ff\nLEFT JOIN formSections fs ON ff.sectionId = fs.id\nLEFT JOIN requestTypes rt ON fs.requestTypeId = rt.id\nWHERE ff.optionsSource IN ('countries', 'cities', 'sites', 'zones', 'areas', 'regions')\nORDER BY rt.name, fs.displayOrder, ff.displayOrder",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT ff.id, ff.code, ff.name, ff.fieldType, ff.optionsSource, ff.dependsOnField, ff.filterByField, fs.name as sectionName, rt.name as requestTypeName\nFROM formFields ff\nLEFT JOIN formSections fs ON ff.sectionId = fs.id\nLEFT JOIN requestTypes rt ON fs.requestTypeId = rt.id\nWHERE ff.optionsSource IN ('countries', 'cities', 'sites', 'zones', 'areas', 'regions')\nORDER BY rt.name, fs.displayOrder, ff.displayOrder",
+  "rows": [
+    {
+      "id": "9",
+      "code": "country",
+      "name": "Country",
+      "fieldType": "dropdown",
+      "optionsSource": "countries",
+      "dependsOnField": "NULL",
+      "filterByField": "NULL",
+      "sectionName": "Location",
+      "requestTypeName": "Admin Visit"
+    },
+    {
+      "id": "10",
+      "code": "region",
+      "name": "Region",
+      "fieldType": "dropdown",
+      "optionsSource": "regions",
+      "dependsOnField": "country",
+      "filterByField": "NULL",
+      "sectionName": "Location",
+      "requestTypeName": "Admin Visit"
+    },
+    {
+      "id": "11",
+      "code": "city",
+      "name": "City",
+      "fieldType": "dropdown",
+      "optionsSource": "cities",
+      "dependsOnField": "region",
+      "filterByField": "country",
+      "sectionName": "Location",
+      "requestTypeName": "Admin Visit"
+    },
+    {
+      "id": "12",
+      "code": "site",
+      "name": "Site",
+      "fieldType": "dropdown",
+      "optionsSource": "sites",
+      "dependsOnField": "city",
+      "filterByField": "city",
+      "sectionName": "Location",
+      "requestTypeName": "Admin Visit"
+    },
+    {
+      "id": "30002",
+      "code": "zone",
+      "name": "Zone",
+      "fieldType": "dropdown",
+      "optionsSource": "zones",
+      "dependsOnField": "NULL",
+      "filterByField": "area",
+      "sectionName": "Location",
+      "requestTypeName": "Admin Visit"
+    },
+    {
+      "id": "30001",
+      "code": "area",
+      "name": "Area",
+      "fieldType": "dropdown",
+      "optionsSource": "areas",
+      "dependsOnField": "NULL",
+      "filterByField": "site",
+      "sectionName": "Location",
+      "requestTypeName": "Admin Visit"
+    },
+    {
+      "id": "30004",
+      "code": "driver_nationality",
+      "name": "Driver Nationality",
+      "fieldType": "dropdown",
+      "optionsSource": "countries",
+      "dependsOnField": "NULL",
+      "filterByField": "NULL",
+      "sectionName": "VIP Details",
+      "requestTypeName": "Admin Visit"
+    },
+    {
+      "id": "35",
+      "code": "country",
+      "name": "Country",
+      "fieldType": "dropdown",
+      "optionsSource": "countries",
+      "dependsOnField": "NULL",
+      "filterByField": "NULL",
+      "sectionName": "Location",
+      "requestTypeName": "Temporary Entry Permission"
+    },
+    {
+      "id": "36",
+      "code": "region",
+      "name": "Region",
+      "fieldType": "dropdown",
+      "optionsSource": "regions",
+      "dependsOnField": "country",
+      "filterByField": "NULL",
+      "sectionName": "Location",
+      "requestTypeName": "Temporary Entry Permission"
+    },
+    {
+      "id": "37",
+      "code": "city",
+      "name": "City",
+      "fieldType": "dropdown",
+      "optionsSource": "cities",
+      "dependsOnField": "region",
+      "filterByField": "country",
+      "sectionName": "Location",
+      "requestTypeName": "Temporary Entry Permission"
+    },
+    {
+      "id": "38",
+      "code": "site",
+      "name": "Site",
+      "fieldType": "dropdown",
+      "optionsSource": "sites",
+      "dependsOnField": "city",
+      "filterByField": "city",
+      "sectionName": "Location",
+      "requestTypeName": "Temporary Entry Permission"
+    },
+    {
+      "id": "60004",
+      "code": "Zone",
+      "name": "Zone",
+      "fieldType": "dropdown",
+      "optionsSource": "zones",
+      "dependsOnField": "NULL",
+      "filterByField": "area",
+      "sectionName": "Location",
+      "requestTypeName": "Temporary Entry Permission"
+    },
+    {
+      "id": "60005",
+      "code": "area",
+      "name": "Area",
+      "fieldType": "dropdown",
+      "optionsSource": "areas",
+      "dependsOnField": "NULL",
+      "filterByField": "site",
+      "sectionName": "Location",
+      "requestTypeName": "Temporary Entry Permission"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tfieldType\toptionsSource\tdependsOnField\tfilterByField\tsectionName\trequestTypeName\n9\tcountry\tCountry\tdropdown\tcountries\tNULL\tNULL\tLocation\tAdmin Visit\n10\tregion\tRegion\tdropdown\tregions\tcountry\tNULL\tLocation\tAdmin Visit\n11\tcity\tCity\tdropdown\tcities\tregion\tcountry\tLocation\tAdmin Visit\n12\tsite\tSite\tdropdown\tsites\tcity\tcity\tLocation\tAdmin Visit\n30002\tzone\tZone\tdropdown\tzones\tNULL\tarea\tLocation\tAdmin Visit\n30001\tarea\tArea\tdropdown\tareas\tNULL\tsite\tLocation\tAdmin Visit\n30004\tdriver_nationality\tDriver Nationality\tdropdown\tcountries\tNULL\tNULL\tVIP Details\tAdmin Visit\n35\tcountry\tCountry\tdropdown\tcountries\tNULL\tNULL\tLocation\tTemporary Entry Permission\n36\tregion\tRegion\tdropdown\tregions\tcountry\tNULL\tLocation\tTemporary Entry Permission\n37\tcity\tCity\tdropdown\tcities\tregion\tcountry\tLocation\tTemporary Entry Permission\n38\tsite\tSite\tdropdown\tsites\tcity\tcity\tLocation\tTemporary Entry Permission\n60004\tZone\tZone\tdropdown\tzones\tNULL\tarea\tLocation\tTemporary Entry Permission\n60005\tarea\tArea\tdropdown\tareas\tNULL\tsite\tLocation\tTemporary Entry Permission\n",
+  "stderr": "",
+  "execution_time_ms": 1589
+}
