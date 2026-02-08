@@ -1,0 +1,1 @@
+ALTER TABLE `materialTypes` ADD `qtyEnabled` boolean DEFAULT false NOT NULL;

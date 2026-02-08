@@ -1742,3 +1742,12 @@ Create a unified data source system that can pull options from anywhere in the p
 
 ## Material Types Tab in Master Data Settings (Feb 8, 2026)
 - [x] Add Material Types tab to Master Data section in System Settings page
+
+## MHV Form Updates (Feb 8, 2026)
+- [x] Remove Material Entry - Person Details section from MHV form
+- [x] Add qtyEnabled field to materialTypes table (boolean)
+- [x] Set Qty Status per material type: Enabled for Cables, Tools only; rest Disabled
+- [x] Made Material Entry and Exit forms consistent (same 4 fields: Type, Model, Serial#, Qty with col 3 each)
+- [x] Removed extra Direction field from Material Entry
+- [ ] Disable Qty field in form when selected material type has qtyEnabled=false
+- [x] Auto-generated row numbers already shown via #1, #2 badges in RepeatableSection

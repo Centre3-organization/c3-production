@@ -1526,6 +1526,7 @@ export const masterDataRouter = router({
       code: z.string().min(1).max(100),
       description: z.string().optional(),
       displayOrder: z.number().optional(),
+      qtyEnabled: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -1536,6 +1537,7 @@ export const masterDataRouter = router({
         code: input.code.toUpperCase().replace(/[^A-Z0-9_]/g, '_'),
         description: input.description || null,
         displayOrder: input.displayOrder || 0,
+        qtyEnabled: input.qtyEnabled ?? false,
       });
       return { success: true, message: "Material type created successfully" };
     }),
@@ -1549,6 +1551,7 @@ export const masterDataRouter = router({
       description: z.string().optional(),
       isActive: z.boolean().optional(),
       displayOrder: z.number().optional(),
+      qtyEnabled: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();

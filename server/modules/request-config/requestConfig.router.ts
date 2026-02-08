@@ -1258,13 +1258,13 @@ export const formFieldsRouter = router({
           // ============ MATERIAL TYPES ============
           case "material_types": {
             const [rows] = await connection.execute(`
-              SELECT id as value, name as label, nameAr as labelAr 
+              SELECT id as value, name as label, nameAr as labelAr, qtyEnabled 
               FROM materialTypes 
               WHERE isActive = 1
               ORDER BY displayOrder ASC, name ASC
               LIMIT ${limit}
             `);
-            options = rows as any;
+            options = (rows as any).map((r: any) => ({ ...r, qtyEnabled: !!r.qtyEnabled }));
             break;
           }
           
@@ -1274,10 +1274,11 @@ export const formFieldsRouter = router({
         }
         
         // Convert numeric IDs to strings for consistency
-        return options.map(opt => ({
+        return options.map((opt: any) => ({
           value: String(opt.value),
           label: opt.label || '',
-          labelAr: opt.labelAr || undefined
+          labelAr: opt.labelAr || undefined,
+          ...(opt.qtyEnabled !== undefined ? { qtyEnabled: opt.qtyEnabled } : {})
         }));
       } finally {
         await connection.end();

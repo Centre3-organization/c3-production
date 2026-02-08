@@ -2198,6 +2198,7 @@ export const materialTypes = mysqlTable("materialTypes", {
   description: text("description"),
   isActive: boolean("isActive").default(true).notNull(),
   displayOrder: int("displayOrder").default(0).notNull(),
+  qtyEnabled: boolean("qtyEnabled").default(false).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
