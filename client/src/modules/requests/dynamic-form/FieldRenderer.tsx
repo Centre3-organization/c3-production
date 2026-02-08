@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/utils/useAuth";
-import { Upload, X, FileText, User, Search, Loader2, Activity, AlertTriangle, FileCheck, ClipboardList, MapPin as RoomIcon } from "lucide-react";
+import { Upload, X, FileText, User, Users, Search, Loader2, Activity, AlertTriangle, FileCheck, ClipboardList, MapPin as RoomIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -440,6 +440,187 @@ function UserLookupField({
         </div>
       )}
       
+      {getHelpText() && (
+        <p className="text-xs text-gray-500">{getHelpText()}</p>
+      )}
+      {error && <p className="text-xs text-red-600">{error}</p>}
+    </div>
+  );
+}
+
+// Multi-User Lookup Field Component - allows selecting multiple users
+function MultiUserLookupField({
+  field,
+  value,
+  onChange,
+  disabled,
+  error,
+  isRTL,
+  getLabel,
+  getPlaceholder,
+  getHelpText,
+}: {
+  field: FormField;
+  value: any;
+  onChange: (value: any) => void;
+  disabled: boolean;
+  error?: string;
+  isRTL: boolean;
+  getLabel: () => string;
+  getPlaceholder: () => string | undefined;
+  getHelpText: () => string | undefined;
+}) {
+  const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+
+  // Ensure value is always an array
+  const selectedUsers: Array<{ id: string; name: string; email?: string }> = Array.isArray(value) ? value : [];
+
+  // Debounced search
+  useEffect(() => {
+    if (!searchQuery || searchQuery.length < 2) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const input = {
+          "0": {
+            json: {
+              source: "users",
+              search: searchQuery,
+            }
+          }
+        };
+        const response = await fetch(
+          `/api/trpc/requestConfig.fields.getDataSourceOptions?batch=1&input=${encodeURIComponent(JSON.stringify(input))}`,
+          { credentials: 'include' }
+        );
+        const result = await response.json();
+        if (result[0]?.result?.data?.json) {
+          // Filter out already selected users
+          const selectedIds = selectedUsers.map(u => u.id);
+          const filtered = result[0].result.data.json.filter(
+            (u: any) => !selectedIds.includes(u.value)
+          );
+          setSearchResults(filtered);
+          setShowResults(true);
+        }
+      } catch (error) {
+        console.error("User search failed:", error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, selectedUsers.length]);
+
+  const handleSelectUser = (user: any) => {
+    const newUser = {
+      id: user.value,
+      name: user.label,
+      email: user.email || "",
+    };
+    onChange([...selectedUsers, newUser]);
+    setSearchQuery("");
+    setShowResults(false);
+  };
+
+  const handleRemoveUser = (userId: string) => {
+    onChange(selectedUsers.filter(u => u.id !== userId));
+  };
+
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-xs font-bold text-gray-600 uppercase flex items-center gap-1">
+        {getLabel()}
+        {Boolean(field.isRequired) && <span className="text-red-600">*</span>}
+      </Label>
+
+      {/* Selected users as badges */}
+      {selectedUsers.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          {selectedUsers.map((u) => (
+            <Badge
+              key={u.id}
+              variant="secondary"
+              className="text-xs flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200 px-2 py-1"
+            >
+              <User className="h-3 w-3" />
+              {u.name}
+              {!disabled && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveUser(u.id)}
+                  className="ml-0.5 hover:text-red-600"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              )}
+            </Badge>
+          ))}
+        </div>
+      )}
+
+      {/* Search input */}
+      {!disabled && (
+        <div className="relative">
+          <div className="relative">
+            <Input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={getPlaceholder() || t("common.searchUsers", "Search users by name or email...")}
+              className="pr-10"
+              onFocus={() => searchQuery.length >= 2 && setShowResults(true)}
+            />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+              {isSearching ? (
+                <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+              ) : (
+                <Search className="h-4 w-4 text-gray-400" />
+              )}
+            </div>
+          </div>
+
+          {/* Search results dropdown */}
+          {showResults && searchResults.length > 0 && (
+            <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto">
+              {searchResults.map((user) => (
+                <button
+                  key={user.value}
+                  type="button"
+                  className="w-full px-3 py-2 text-left hover:bg-gray-100 flex items-center gap-2 border-b last:border-b-0"
+                  onClick={() => handleSelectUser(user)}
+                >
+                  <User className="h-4 w-4 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium">{user.label}</p>
+                    {user.email && (
+                      <p className="text-xs text-gray-500">{user.email}</p>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {showResults && searchResults.length === 0 && searchQuery.length >= 2 && !isSearching && (
+            <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg p-3 text-center text-sm text-gray-500">
+              {t("common.noUsersFound", "No users found")}
+            </div>
+          )}
+        </div>
+      )}
+
       {getHelpText() && (
         <p className="text-xs text-gray-500">{getHelpText()}</p>
       )}
@@ -1295,6 +1476,21 @@ export function FieldRenderer({
           error={error}
           isRTL={isRTL}
           getLabel={getLabel}
+          getHelpText={getHelpText}
+        />
+      );
+
+    case "multi_user_lookup":
+      return (
+        <MultiUserLookupField
+          field={field}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          error={error}
+          isRTL={isRTL}
+          getLabel={getLabel}
+          getPlaceholder={getPlaceholder}
           getHelpText={getHelpText}
         />
       );

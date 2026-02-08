@@ -1701,3 +1701,10 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add Location section to MOP with fields: Country, Region, City, Site, Zone, Area (cascading dropdowns)
 - [x] Add Basic Information section to MHV with fields: Requestor Name, Company, Email, Department, Purpose of Entry, Description
 - [x] Add Location section to MHV with fields: Country, Region, City, Site, Zone, Area (cascading dropdowns)
+
+## MOP Stakeholders Multi-Select User Picker (Feb 8, 2026)
+- [x] Convert MOP Stakeholders field from textarea to multi-select user picker
+- [x] Add 'multi_user_lookup' field type support in FieldRenderer (MultiUserLookupField component)
+- [x] Reuses existing user search API (requestConfig.fields.getDataSourceOptions with source=users)
+- [x] Store selected users as JSON array [{id, name, email}] in form values
+- [x] Updated database fieldType enum and Stakeholders field to multi_user_lookup

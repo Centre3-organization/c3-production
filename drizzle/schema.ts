@@ -1284,7 +1284,12 @@ export const formFields = mysqlTable("formFields", {
     "file",
     "file_multi",
     "user_lookup",
-    "readonly"
+    "multi_user_lookup",
+    "readonly",
+    "site_type",
+    "zone_type",
+    "area_type",
+    "activity_selector"
   ]).notNull(),
   
   isRequired: boolean("isRequired").default(false).notNull(),

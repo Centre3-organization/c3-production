@@ -1,0 +1,1 @@
+ALTER TABLE `formFields` MODIFY COLUMN `fieldType` enum('text','textarea','number','email','phone','date','datetime','dropdown','dropdown_multi','radio','checkbox','checkbox_group','file','file_multi','user_lookup','multi_user_lookup','readonly','site_type','zone_type','area_type','activity_selector') NOT NULL;
