@@ -1874,3 +1874,43 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Standardize approval card layout across L1 and L2
 - [x] Action buttons must be consistently positioned
 - [x] Status badges must use exact same styling everywhere
+
+## UI/UX Consistency Fixes Round 3 (Feb 8, 2026)
+
+### Button Contrast Issues
+- [x] Fix ALL buttons with white/invisible text on light backgrounds
+- [x] Fix Close button - needs dark text, not invisible
+- [x] Fix Clarify button - needs visible text with proper contrast
+- [x] Fix Reject button - needs visible text with proper contrast
+- [x] Fix outline button variant - ensure text is always visible
+- [x] Audit every button across entire codebase for contrast
+
+### Page Header Issues
+- [x] Fix User Management duplicate subtitle
+- [x] Fix Sites & Facilities page alignment
+- [x] Fix Global Watch Security page alignment
+- [x] Fix Shift Management page alignment
+
+### Modal/Dialog Issues
+- [x] Fix thick borders in detail modals - should be subtle 1px
+- [x] Fix section dividers in modals - too prominent
+
+## User-Reported Issues (Feb 8, 2026)
+- [x] Remove Material Types from sidebar (already in Settings)
+- [x] Fix duplicate subtitle on Group Management page
+- [x] Fix Sites & Facilities page style to match My Approvals
+- [x] Fix Security Zones page header style to match My Approvals
+- [x] Fix light font colors on light backgrounds (Security Level badges, etc.)
+- [x] Ensure all pages have consistent headers and no contrast issues
+- [x] Fix Edit Zone/Site/Area standalone layout - should use sidebar layout not dark header
+- [x] Audit every page for consistency - headers, spacing, contrast, layout
+## SAP Fiori Design System Application (Feb 8, 2026)
+- [x] Save SAP Fiori design reference patterns
+- [x] Fix sidebar navigation to match SAP Fiori pattern (blue active indicator, clean icons)
+- [x] Standardize ALL page headers across every module
+- [x] Fix ALL form layouts - SAP Fiori Group Headers, label styling, input styling
+- [x] Fix ALL detail/read-only views to use SAP Fiori label:value pattern
+- [x] Fix ALL tables to match SAP Fiori table pattern
+- [x] Fix ALL dialogs, modals, and action buttons
+- [x] Fix ALL status badges, switches, and micro-components
+- [x] Final comprehensive audit pass

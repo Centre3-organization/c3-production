@@ -40,8 +40,8 @@ export default function McmDashboard() {
       title: t("mcm.stats.activeCards", "Active Cards"),
       value: stats?.activeCards || 0,
       icon: CreditCard,
-      color: "text-[#4ECDC4]",
-      bgColor: "bg-[#E8F9F8]/10",
+      color: "text-[#059669]",
+      bgColor: "bg-[#D1FAE5]/10",
     },
     {
       title: t("mcm.stats.pendingRequests", "Pending Requests"),
@@ -54,8 +54,8 @@ export default function McmDashboard() {
       title: t("mcm.stats.expiringSoon", "Expiring Soon"),
       value: stats?.expiringSoon || 0,
       icon: Clock,
-      color: "text-[#FFB84D]",
-      bgColor: "bg-[#FFF4E5]/10",
+      color: "text-[#D97706]",
+      bgColor: "bg-[#FEF3C7]/10",
     },
     {
       title: t("mcm.stats.blockedCards", "Blocked Cards"),
@@ -133,8 +133,8 @@ export default function McmDashboard() {
           <Card className="cursor-pointer hover:bg-[#E8DCF5]/50 transition-colors">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-[#FFF4E5]/10">
-                  <Building2 className="h-6 w-6 text-[#FFB84D]" />
+                <div className="p-3 rounded-full bg-[#FEF3C7]/10">
+                  <Building2 className="h-6 w-6 text-[#D97706]" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-medium">{t("mcm.companies", "Companies")}</h3>
@@ -195,7 +195,7 @@ export default function McmDashboard() {
                       <p className="text-sm text-[#6B6B6B]">{card.cardNumber}</p>
                     </div>
                     <div className="text-right">
-                      <Badge variant="outline" className="text-[#FFB84D] border-[#FFB84D]">
+                      <Badge variant="outline" className="text-[#D97706] border-[#D97706]">
                         {new Date(card.expiryDate!).toLocaleDateString()}
                       </Badge>
                     </div>

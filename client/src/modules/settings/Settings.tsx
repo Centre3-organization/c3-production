@@ -698,11 +698,11 @@ export default function Settings() {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>English</span>
-                        <span className="text-[#4ECDC4] font-medium">100% Complete</span>
+                        <span className="text-[#059669] font-medium">100% Complete</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Arabic</span>
-                        <span className="text-[#FFB84D] font-medium">~85% Complete</span>
+                        <span className="text-[#D97706] font-medium">~85% Complete</span>
                       </div>
                     </div>
                   </CardContent>
@@ -818,7 +818,7 @@ export default function Settings() {
                         <TableCell className="font-medium">{dept.name}</TableCell>
                         <TableCell>{dept.costCenter || "—"}</TableCell>
                         <TableCell>
-                          <span className={`px-2 py-1 rounded-full text-xs ${dept.isActive ? 'bg-[#E8F9F8] text-[#4ECDC4]' : 'bg-[#FFE5E5] text-[#FF6B6B]'}`}>
+                          <span className={`px-2 py-1 rounded-full text-xs ${dept.isActive ? 'bg-[#D1FAE5] text-[#059669]' : 'bg-[#FFE5E5] text-[#FF6B6B]'}`}>
                             {dept.isActive ? "Active" : "Inactive"}
                           </span>
                         </TableCell>
@@ -1133,7 +1133,7 @@ export default function Settings() {
                                   <TableCell className="text-[#6B6B6B] max-w-md truncate">{activity.description || "-"}</TableCell>
                                   <TableCell>{subCount}</TableCell>
                                   <TableCell>
-                                    <Badge variant={activity.isActive ? "default" : "secondary"} className={activity.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
+                                    <Badge variant={activity.isActive ? "default" : "secondary"} className={activity.isActive ? "bg-[#D1FAE5] text-[#059669]" : ""}>
                                       {activity.isActive ? "Active" : "Inactive"}
                                     </Badge>
                                   </TableCell>
@@ -1206,14 +1206,14 @@ export default function Settings() {
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {sub.needsMOP ? (
-                                      <Badge className="bg-[#FFF4E5] text-[#FFB84D] hover:bg-[#FFF4E5]">✓</Badge>
+                                      <Badge className="bg-[#FEF3C7] text-[#D97706] hover:bg-[#FEF3C7]">✓</Badge>
                                     ) : (
                                       <span className="text-[#6B6B6B]">-</span>
                                     )}
                                   </TableCell>
                                   <TableCell className="text-center">
                                     {sub.needsMHV ? (
-                                      <Badge className="bg-[#E8F9F8] text-[#4ECDC4] hover:bg-[#E8F9F8]">✓</Badge>
+                                      <Badge className="bg-[#D1FAE5] text-[#059669] hover:bg-[#D1FAE5]">✓</Badge>
                                     ) : (
                                       <span className="text-[#6B6B6B]">-</span>
                                     )}
@@ -1226,7 +1226,7 @@ export default function Settings() {
                                     )}
                                   </TableCell>
                                   <TableCell>
-                                    <Badge variant={sub.isActive ? "default" : "secondary"} className={sub.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
+                                    <Badge variant={sub.isActive ? "default" : "secondary"} className={sub.isActive ? "bg-[#D1FAE5] text-[#059669]" : ""}>
                                       {sub.isActive ? "Active" : "Inactive"}
                                     </Badge>
                                   </TableCell>
@@ -1370,7 +1370,7 @@ export default function Settings() {
                               <Badge variant="secondary" className="capitalize">{role.accessLevel}</Badge>
                             </TableCell>
                             <TableCell>
-                              <Badge variant={role.isActive ? "default" : "secondary"} className={role.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
+                              <Badge variant={role.isActive ? "default" : "secondary"} className={role.isActive ? "bg-[#D1FAE5] text-[#059669]" : ""}>
                                 {role.isActive ? "Active" : "Inactive"}
                               </Badge>
                             </TableCell>
@@ -1511,7 +1511,7 @@ export default function Settings() {
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge variant={approver.isActive ? "default" : "secondary"} className={approver.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
+                              <Badge variant={approver.isActive ? "default" : "secondary"} className={approver.isActive ? "bg-[#D1FAE5] text-[#059669]" : ""}>
                                 {approver.isActive ? "Active" : "Inactive"}
                               </Badge>
                             </TableCell>

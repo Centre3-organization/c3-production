@@ -589,7 +589,7 @@ export default function Users() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]";
+      case "active": return "bg-[#D1FAE5] text-[#059669] border-[#059669]";
       case "inactive": return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
       default: return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
     }
@@ -953,7 +953,7 @@ export default function Users() {
                             <DropdownMenuLabel className="text-xs text-[#6B6B6B] font-normal">Change Status</DropdownMenuLabel>
                             <DropdownMenuItem 
                               onClick={(e) => { e.stopPropagation(); handleActivateUser(user); }}
-                              className="text-[#4ECDC4]"
+                              className="text-[#059669]"
                               disabled={(user as any).status === "active"}
                             >
                               <CheckCircle2 className="h-4 w-4 mr-2" /> Activate

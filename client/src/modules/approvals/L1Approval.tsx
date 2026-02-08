@@ -49,10 +49,10 @@ const typeLabels: Record<string, string> = {
 const typeColors: Record<string, string> = {
   admin_visit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
   work_permit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
-  material_entry: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  material_entry: "bg-[#FEF3C7] text-[#D97706] border-[#D97706]",
   tep: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]/20",
   mop: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
-  escort: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
+  escort: "bg-[#D1FAE5] text-[#059669] border-[#059669]",
 };
 
 export default function L1Approval() {
@@ -150,8 +150,8 @@ export default function L1Approval() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight text-[#2C2C2C] flex items-center gap-2">
-            <Zap className="h-6 w-6 text-[#FFB84D]" />
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
+            <Zap className="h-6 w-6 text-[#D97706]" />
             L1 Approval Queue
           </h1>
           <p className="text-[#6B6B6B] mt-1">
@@ -172,15 +172,15 @@ export default function L1Approval() {
 
       {/* Stats Bar */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className="bg-[#FFF4E5] border-[#FFB84D]">
+        <Card className="bg-[#FEF3C7] border-[#D97706]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-[#FFB84D]">In L1 Queue</p>
-                <p className="text-3xl font-medium text-[#FFB84D]">{l1Tasks.length}</p>
+                <p className="text-sm font-medium text-[#D97706]">In L1 Queue</p>
+                <p className="text-3xl font-medium text-[#D97706]">{l1Tasks.length}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-[#FFF4E5] flex items-center justify-center">
-                <Clock className="h-6 w-6 text-[#FFB84D]" />
+              <div className="h-12 w-12 rounded-full bg-[#FEF3C7] flex items-center justify-center">
+                <Clock className="h-6 w-6 text-[#D97706]" />
               </div>
             </div>
           </CardContent>
@@ -200,15 +200,15 @@ export default function L1Approval() {
           </CardContent>
         </Card>
         
-        <Card className="bg-[#E8F9F8] border-[#4ECDC4]">
+        <Card className="bg-[#D1FAE5] border-[#059669]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-[#4ECDC4]">Approved</p>
-                <p className="text-3xl font-medium text-[#4ECDC4]">{stats?.approved || 0}</p>
+                <p className="text-sm font-medium text-[#059669]">Approved</p>
+                <p className="text-3xl font-medium text-[#059669]">{stats?.approved || 0}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-[#E8F9F8] flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-[#4ECDC4]" />
+              <div className="h-12 w-12 rounded-full bg-[#D1FAE5] flex items-center justify-center">
+                <CheckCircle2 className="h-6 w-6 text-[#059669]" />
               </div>
             </div>
           </CardContent>
@@ -253,8 +253,8 @@ export default function L1Approval() {
       ) : filteredTasks.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="h-16 w-16 rounded-full bg-[#E8F9F8] flex items-center justify-center mb-4">
-              <CheckCircle2 className="h-8 w-8 text-[#4ECDC4]" />
+            <div className="h-16 w-16 rounded-full bg-[#D1FAE5] flex items-center justify-center mb-4">
+              <CheckCircle2 className="h-8 w-8 text-[#059669]" />
             </div>
             <h3 className="text-lg font-medium text-[#2C2C2C]">All caught up!</h3>
             <p className="text-[#6B6B6B] mt-1">No pending L1 approvals at the moment</p>
@@ -265,7 +265,7 @@ export default function L1Approval() {
           {filteredTasks.map((task: any) => (
             <Card 
               key={task.taskId} 
-              className="hover:shadow-md transition-shadow border-l-4 border-l-[#FFB84D]"
+              className="hover:shadow-md transition-shadow border-l-4 border-l-[#D97706]"
             >
               <CardContent className="p-0">
                 <div className="flex items-stretch">
@@ -285,7 +285,7 @@ export default function L1Approval() {
                         </Badge>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]">
+                        <Badge variant="outline" className="bg-[#FEF3C7] text-[#D97706] border-[#D97706]">
                           Stage {task.stageOrder}: {task.stageName}
                         </Badge>
                         <span className="text-xs text-[#6B6B6B]">
@@ -319,8 +319,8 @@ export default function L1Approval() {
                       
                       {/* Date */}
                       <div className="flex items-start gap-3">
-                        <div className="h-10 w-10 rounded-full bg-[#E8F9F8] flex items-center justify-center shrink-0">
-                          <Calendar className="h-5 w-5 text-[#4ECDC4]" />
+                        <div className="h-10 w-10 rounded-full bg-[#D1FAE5] flex items-center justify-center shrink-0">
+                          <Calendar className="h-5 w-5 text-[#059669]" />
                         </div>
                         <div>
                           <p className="font-medium text-[#2C2C2C]">
@@ -349,7 +349,7 @@ export default function L1Approval() {
                   <div className="flex flex-col justify-center gap-2 px-5 py-4 bg-[#F5F5F5]/30 border-l min-w-[180px]">
                     <Button 
                       size="sm" 
-                      className="bg-[#4ECDC4] hover:bg-[#3DBDB4]"
+                      className="bg-[#059669] hover:bg-[#047857]"
                       onClick={() => handleApprove(task)}
                       disabled={processingId === task.taskId}
                     >
@@ -480,9 +480,9 @@ export default function L1Approval() {
               </div>
               
               {/* Workflow Information */}
-              <div className="border-l-4 border-[#4ECDC4] bg-[#F5F5F5] rounded-r-lg p-4 space-y-3">
+              <div className="border-l-4 border-[#059669] bg-[#F5F5F5] rounded-r-lg p-4 space-y-3">
                 <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
-                  <GitBranch className="h-4 w-4 text-[#4ECDC4]" />
+                  <GitBranch className="h-4 w-4 text-[#059669]" />
                   Workflow Information
                 </h4>
                 <div className="grid grid-cols-2 gap-4">
@@ -492,7 +492,7 @@ export default function L1Approval() {
                   </div>
                   <div>
                     <label className="text-sm font-medium text-[#2C2C2C]">Current Stage</label>
-                    <Badge variant="outline" className="bg-[#FFF4E5] text-[#FFB84D] mt-1">
+                    <Badge variant="outline" className="bg-[#FEF3C7] text-[#D97706] mt-1">
                       Stage {selectedRequest.stageOrder}: {selectedRequest.stageName}
                     </Badge>
                   </div>

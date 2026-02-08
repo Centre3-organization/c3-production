@@ -300,7 +300,7 @@ export function DynamicForm({
                 <Icon
                   className={cn(
                     "h-4 w-4 flex-shrink-0",
-                    isActive ? "text-[#5B2C93]" : "text-[#B0B0B0]"
+                    isActive ? "text-[#5B2C93]" : "text-[#9CA3AF]"
                   )}
                 />
                 <span className="flex-1 text-left truncate">{getSectionName(section)}</span>

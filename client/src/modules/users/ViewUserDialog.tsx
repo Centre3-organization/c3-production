@@ -127,7 +127,7 @@ export default function ViewUserDialog({ user, open, onOpenChange, onEdit }: Vie
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]";
+      case "active": return "bg-[#D1FAE5] text-[#059669] border-[#059669]";
       case "inactive": return "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0]";
       case "suspended": return "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]";
       default: return "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0]";

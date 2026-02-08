@@ -199,7 +199,7 @@ export function HierarchicalTypeSelector({
           {label}
         </Label>
         {isComplete && (
-          <Badge variant="outline" className="text-[#4ECDC4] border-[#4ECDC4]">
+          <Badge variant="outline" className="text-[#059669] border-[#059669]">
             <Check className="h-3 w-3 mr-1" />
             Selected
           </Badge>

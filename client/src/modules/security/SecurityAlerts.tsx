@@ -137,8 +137,8 @@ export default function SecurityAlerts() {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "Critical": return "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]";
-      case "High": return "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]";
-      case "Medium": return "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]";
+      case "High": return "bg-[#FEF3C7] text-[#D97706] border-[#D97706]";
+      case "Medium": return "bg-[#FEF3C7] text-[#D97706] border-[#D97706]";
       default: return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
     }
   };
@@ -147,7 +147,7 @@ export default function SecurityAlerts() {
     switch (status) {
       case "New": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] animate-pulse";
       case "Viewed": return "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]";
-      case "Action Taken": return "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]";
+      case "Action Taken": return "bg-[#D1FAE5] text-[#059669] border-[#059669]";
       case "Resolved": return "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]";
       default: return "bg-[#F5F5F5] text-[#6B6B6B]";
     }
@@ -208,13 +208,13 @@ export default function SecurityAlerts() {
             <p className="text-xs text-[#5B2C93] mt-1">Being processed</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#E8F9F8] border-[#4ECDC4]/20">
+        <Card className="bg-[#D1FAE5] border-[#059669]/20">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-[#4ECDC4]">Resolved Today</CardTitle>
+            <CardTitle className="text-sm font-medium text-[#059669]">Resolved Today</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-medium text-[#4ECDC4]">14</div>
-            <p className="text-xs text-[#4ECDC4] mt-1">Incidents closed</p>
+            <div className="text-3xl font-medium text-[#059669]">14</div>
+            <p className="text-xs text-[#059669] mt-1">Incidents closed</p>
           </CardContent>
         </Card>
       </div>

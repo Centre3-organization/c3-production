@@ -129,7 +129,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className={`absolute top-1/2 -translate-y-1/2 text-[#B0B0B0] hover:text-[#6B6B6B] ${isRTL ? 'left-4' : 'right-4'}`}
+                    className={`absolute top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#6B6B6B] ${isRTL ? 'left-4' : 'right-4'}`}
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Lock className="h-5 w-5" />}
                   </button>

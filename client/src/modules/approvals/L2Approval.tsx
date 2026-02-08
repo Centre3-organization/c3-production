@@ -57,9 +57,9 @@ const typeLabels: Record<string, string> = {
 };
 
 const securityLevelColors: Record<string, string> = {
-  low: "bg-[#E8F9F8] text-[#4ECDC4]",
+  low: "bg-[#D1FAE5] text-[#059669]",
   medium: "bg-[#E8DCF5] text-[#5B2C93]",
-  high: "bg-[#FFF4E5] text-[#FFB84D]",
+  high: "bg-[#FEF3C7] text-[#D97706]",
   critical: "bg-[#FFE5E5] text-[#FF6B6B]",
 };
 
@@ -186,7 +186,7 @@ export default function ManualApproval() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight text-[#2C2C2C] flex items-center gap-2">
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
             <Shield className="h-6 w-6 text-[#5B2C93]" />
             L2 Security Approval
           </h1>
@@ -222,15 +222,15 @@ export default function ManualApproval() {
           </CardContent>
         </Card>
         
-        <Card className="bg-[#E8F9F8] border-[#4ECDC4]">
+        <Card className="bg-[#D1FAE5] border-[#059669]">
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-[#4ECDC4]">Access Granted Today</p>
-                <p className="text-3xl font-medium text-[#4ECDC4]">{stats?.approved || 0}</p>
+                <p className="text-sm font-medium text-[#059669]">Access Granted Today</p>
+                <p className="text-3xl font-medium text-[#059669]">{stats?.approved || 0}</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-[#E8F9F8] flex items-center justify-center">
-                <BadgeCheck className="h-6 w-6 text-[#4ECDC4]" />
+              <div className="h-12 w-12 rounded-full bg-[#D1FAE5] flex items-center justify-center">
+                <BadgeCheck className="h-6 w-6 text-[#059669]" />
               </div>
             </div>
           </CardContent>

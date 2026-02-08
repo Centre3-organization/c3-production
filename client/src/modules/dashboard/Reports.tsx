@@ -42,7 +42,7 @@ const zoneData = [
   { name: "Zone D (Power)", value: 80 },
 ];
 
-const COLORS = ['#5B2C93', '#5B2C93', '#4ECDC4', '#FFB84D'];
+const COLORS = ['#5B2C93', '#5B2C93', '#059669', '#D97706'];
 
 export default function Reports() {
   return (
@@ -80,7 +80,7 @@ export default function Reports() {
           <CardContent>
             <div className="text-2xl font-medium">2,350</div>
             <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
-              <span className="text-[#4ECDC4] flex items-center font-medium">
+              <span className="text-[#059669] flex items-center font-medium">
                 <ArrowUpRight className="h-3 w-3 mr-1" />
                 +12.5%
               </span>
@@ -95,7 +95,7 @@ export default function Reports() {
           <CardContent>
             <div className="text-2xl font-medium">4h 12m</div>
             <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
-              <span className="text-[#4ECDC4] flex items-center font-medium">
+              <span className="text-[#059669] flex items-center font-medium">
                 <ArrowDownRight className="h-3 w-3 mr-1" />
                 -5%
               </span>
@@ -154,7 +154,7 @@ export default function Reports() {
                 <Legend />
                 <Bar dataKey="employees" name="Employees" stackId="a" fill="#5B2C93" radius={[0, 0, 4, 4]} />
                 <Bar dataKey="contractors" name="Contractors" stackId="a" fill="#5B2C93" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="visitors" name="Visitors" stackId="a" fill="#4ECDC4" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="visitors" name="Visitors" stackId="a" fill="#059669" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -204,7 +204,7 @@ export default function Reports() {
               <Tooltip />
               <Legend />
               <Line type="monotone" dataKey="visitors" name="Policy Violations" stroke="#FF6B6B" strokeWidth={2} dot={{ r: 4 }} />
-              <Line type="monotone" dataKey="contractors" name="Overstay Incidents" stroke="#FFB84D" strokeWidth={2} dot={{ r: 4 }} />
+              <Line type="monotone" dataKey="contractors" name="Overstay Incidents" stroke="#D97706" strokeWidth={2} dot={{ r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>

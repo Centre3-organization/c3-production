@@ -338,7 +338,7 @@ export function ShiftManagement() {
                                     <Badge variant="outline">{assignment.roleInShift}</Badge>
                                   </TableCell>
                                   <TableCell>
-                                    {assignment.isPrimary && <CheckCircle className="h-4 w-4 text-[#4ECDC4]" />}
+                                    {assignment.isPrimary && <CheckCircle className="h-4 w-4 text-[#059669]" />}
                                   </TableCell>
                                   <TableCell>
                                     <Button

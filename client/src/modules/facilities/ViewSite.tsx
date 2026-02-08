@@ -223,8 +223,8 @@ export default function ViewSite() {
   const getOccupancyColor = (current: number, max: number) => {
     const percentage = (current / max) * 100;
     if (percentage >= 90) return "bg-[#FF6B6B]";
-    if (percentage >= 75) return "bg-[#FFF4E5]";
-    return "bg-[#E8F9F8]";
+    if (percentage >= 75) return "bg-[#FEF3C7]";
+    return "bg-[#D1FAE5]";
   };
 
   return (
@@ -248,14 +248,13 @@ export default function ViewSite() {
       {/* Site Selector & Overview */}
       <div className="grid gap-6 md:grid-cols-12">
         <div className="md:col-span-4 space-y-4">
-          <Card className="h-full border-none shadow-lg bg-[#2C2C2C] text-white overflow-hidden relative">
-            <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+          <Card className="h-full border shadow-sm overflow-hidden relative">
             <CardHeader>
-              <CardTitle className="text-lg font-medium text-[#B0B0B0]">Select Facility</CardTitle>
+              <CardTitle className="text-lg font-medium text-[#2C2C2C]">Select Facility</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 relative z-10">
               <Select value={selectedSiteId} onValueChange={setSelectedSiteId}>
-                <SelectTrigger className="w-full bg-white/10 border-white/20 text-white h-12 text-lg">
+                <SelectTrigger className="w-full border-[#E0E0E0] h-12 text-lg">
                   <SelectValue placeholder="Select Site" />
                 </SelectTrigger>
                 <SelectContent>
@@ -271,39 +270,39 @@ export default function ViewSite() {
               </Select>
 
               <div className="pt-4 space-y-4">
-                <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/10">
+                <div className="flex justify-between items-center p-3 rounded-lg bg-[#F9FAFB] border border-[#E0E0E0]">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-[#E8F9F8]/20 text-[#4ECDC4]">
+                    <div className="p-2 rounded-full bg-[#D1FAE5]/20 text-[#059669]">
                       <Activity className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-[#B0B0B0]">System Status</p>
-                      <p className="font-medium">{selectedSite.status}</p>
+                      <p className="text-sm text-[#6B6B6B]">System Status</p>
+                      <p className="font-medium text-[#2C2C2C]">{selectedSite.status}</p>
                     </div>
                   </div>
-                  <div className={`h-2 w-2 rounded-full ${selectedSite.status === 'Normal' ? 'bg-[#E8F9F8]' : 'bg-[#FFF4E5]'} animate-pulse`}></div>
+                  <div className={`h-2 w-2 rounded-full ${selectedSite.status === 'Normal' ? 'bg-[#059669]' : 'bg-[#D97706]'} animate-pulse`}></div>
                 </div>
 
-                <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/10">
+                <div className="flex justify-between items-center p-3 rounded-lg bg-[#F9FAFB] border border-[#E0E0E0]">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-full bg-[#E8DCF5]/20 text-[#5B2C93]">
                       <Users className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-[#B0B0B0]">Total Personnel</p>
-                      <p className="font-medium">{selectedSite.totalOccupancy} / {selectedSite.maxCapacity}</p>
+                      <p className="text-sm text-[#6B6B6B]">Total Personnel</p>
+                      <p className="font-medium text-[#2C2C2C]">{selectedSite.totalOccupancy} / {selectedSite.maxCapacity}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/10">
+                <div className="flex justify-between items-center p-3 rounded-lg bg-[#F9FAFB] border border-[#E0E0E0]">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-full bg-[#E8DCF5]/20 text-[#5B2C93]">
                       <ShieldCheck className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-[#B0B0B0]">Security Level</p>
-                      <p className="font-medium">DEFCON 4</p>
+                      <p className="text-sm text-[#6B6B6B]">Security Level</p>
+                      <p className="font-medium text-[#2C2C2C]">DEFCON 4</p>
                     </div>
                   </div>
                 </div>
@@ -387,7 +386,7 @@ export default function ViewSite() {
                     <Button variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => openCCTV(zone.name)} title="View CCTV">
                       <Video className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-[#FFB84D] hover:text-[#FFB84D] hover:bg-[#FFF4E5]" onClick={() => handleBuzzer(zone.name)} title="Sound Buzzer">
+                    <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-[#D97706] hover:text-[#D97706] hover:bg-[#FEF3C7]" onClick={() => handleBuzzer(zone.name)} title="Sound Buzzer">
                       <Bell className="h-4 w-4" />
                     </Button>
                   </div>
@@ -486,7 +485,7 @@ export default function ViewSite() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-[#FFB84D]" />
+              <AlertTriangle className="h-5 w-5 text-[#D97706]" />
               Confirm {lockTarget?.locked ? "Unlock" : "Lockdown"}
             </DialogTitle>
             <DialogDescription>
@@ -501,7 +500,7 @@ export default function ViewSite() {
               </div>
             )}
             {lockTarget?.locked && (
-              <div className="bg-[#E8F9F8] border border-[#4ECDC4]/20 rounded-md p-3 text-sm text-[#4ECDC4]">
+              <div className="bg-[#D1FAE5] border border-[#059669]/20 rounded-md p-3 text-sm text-[#059669]">
                 <strong>Note:</strong> Unlocking will restore normal access control operations.
               </div>
             )}

@@ -209,7 +209,7 @@ export function RepeatableSection({
                   <CollapsibleTrigger asChild>
                     <CardHeader className="py-3 px-4 cursor-pointer hover:bg-[#F5F5F5] transition-colors">
                       <div className="flex items-center gap-3">
-                        <GripVertical className="h-4 w-4 text-[#B0B0B0] cursor-grab" />
+                        <GripVertical className="h-4 w-4 text-[#9CA3AF] cursor-grab" />
                         <div className="flex-1 flex items-center gap-2">
                           <Badge variant="secondary" className="text-xs">
                             #{index + 1}

@@ -88,8 +88,8 @@ export default function CardDirectory() {
       title: t("mcm.stats.activeCards", "Active Cards"),
       value: stats?.activeCards || 0,
       icon: CreditCard,
-      color: "text-[#4ECDC4]",
-      bgColor: "bg-[#E8F9F8]/10",
+      color: "text-[#059669]",
+      bgColor: "bg-[#D1FAE5]/10",
     },
     {
       title: t("mcm.stats.pendingRequests", "Pending Requests"),
@@ -102,8 +102,8 @@ export default function CardDirectory() {
       title: t("mcm.stats.expiringSoon", "Expiring Soon"),
       value: stats?.expiringSoon || 0,
       icon: Clock,
-      color: "text-[#FFB84D]",
-      bgColor: "bg-[#FFF4E5]/10",
+      color: "text-[#D97706]",
+      bgColor: "bg-[#FEF3C7]/10",
     },
     {
       title: t("mcm.stats.blockedCards", "Blocked Cards"),
@@ -128,9 +128,9 @@ export default function CardDirectory() {
   const getCompanyTypeBadge = (type: string) => {
     const colors: Record<string, string> = {
       centre3: "bg-[#E8DCF5]/10 text-[#5B2C93]",
-      contractor: "bg-[#FFF4E5]/10 text-[#FFB84D]",
+      contractor: "bg-[#FEF3C7]/10 text-[#D97706]",
       subcontractor: "bg-[#E8DCF5]/10 text-[#5B2C93]",
-      client: "bg-[#E8F9F8]/10 text-[#4ECDC4]",
+      client: "bg-[#D1FAE5]/10 text-[#059669]",
     };
     return (
       <span className={`px-2 py-1 rounded text-xs font-medium ${colors[type] || ""}`}>
@@ -296,7 +296,7 @@ export default function CardDirectory() {
                             size="icon"
                             onClick={() => handleUnblock(card.id)}
                           >
-                            <RefreshCw className="h-4 w-4 text-[#4ECDC4]" />
+                            <RefreshCw className="h-4 w-4 text-[#059669]" />
                           </Button>
                         )}
                       </div>

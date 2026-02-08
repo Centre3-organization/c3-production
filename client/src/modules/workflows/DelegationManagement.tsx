@@ -128,8 +128,8 @@ export function DelegationManagement() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-full bg-[#E8F9F8]">
-                <UserCheck className="h-6 w-6 text-[#4ECDC4]" />
+              <div className="p-3 rounded-full bg-[#D1FAE5]">
+                <UserCheck className="h-6 w-6 text-[#059669]" />
               </div>
               <div>
                 <p className="text-2xl font-medium">
@@ -143,8 +143,8 @@ export function DelegationManagement() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-full bg-[#FFF4E5]">
-                <Clock className="h-6 w-6 text-[#FFB84D]" />
+              <div className="p-3 rounded-full bg-[#FEF3C7]">
+                <Clock className="h-6 w-6 text-[#D97706]" />
               </div>
               <div>
                 <p className="text-2xl font-medium">
@@ -370,10 +370,10 @@ export function DelegationManagement() {
               />
             </div>
 
-            <div className="bg-[#FFF4E5] border border-[#FFB84D] rounded-lg p-3">
+            <div className="bg-[#FEF3C7] border border-[#D97706] rounded-lg p-3">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="h-5 w-5 text-[#FFB84D] shrink-0 mt-0.5" />
-                <div className="text-sm text-[#FFB84D]">
+                <AlertTriangle className="h-5 w-5 text-[#D97706] shrink-0 mt-0.5" />
+                <div className="text-sm text-[#D97706]">
                   <p className="font-medium">Important</p>
                   <p>The delegate will be able to approve or reject requests on your behalf during the specified period.</p>
                 </div>

@@ -18,9 +18,9 @@ const badgeVariants = cva(
         outline:
           "border-[#E0E0E0] text-[#2C2C2C] [a&]:hover:bg-[#F5F5F5]",
         pending:
-          "border-transparent bg-[#FFF4E5] text-[#FFB84D]",
+          "border-transparent bg-[#FEF3C7] text-[#D97706]",
         approved:
-          "border-transparent bg-[#E8F9F8] text-[#4ECDC4]",
+          "border-transparent bg-[#D1FAE5] text-[#059669]",
         rejected:
           "border-transparent bg-[#FFE5E5] text-[#FF6B6B]",
         inProgress:
@@ -28,9 +28,9 @@ const badgeVariants = cva(
         cancelled:
           "border-transparent bg-[#F5F5F5] text-[#6B6B6B]",
         success:
-          "border-transparent bg-[#E8F9F8] text-[#4ECDC4]",
+          "border-transparent bg-[#D1FAE5] text-[#059669]",
         warning:
-          "border-transparent bg-[#FFF4E5] text-[#FFB84D]",
+          "border-transparent bg-[#FEF3C7] text-[#D97706]",
         info:
           "border-transparent bg-[#E8DCF5] text-[#5B2C93]",
       },

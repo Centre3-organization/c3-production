@@ -418,7 +418,7 @@ export function RepeatableSectionWithYakeen({
                               className={cn(
                                 "min-w-[120px]",
                                 isValidated 
-                                  ? "bg-[#4ECDC4] hover:bg-[#4ECDC4]" 
+                                  ? "bg-[#059669] hover:bg-[#059669]" 
                                   : "bg-[#5B2C93] hover:bg-[#5B2C93]/90"
                               )}
                             >
@@ -446,12 +446,12 @@ export function RepeatableSectionWithYakeen({
                     
                     {/* Yakeen Failed Alert */}
                     {yakeenFailed && !manualEntry && (
-                      <Alert className="bg-[#FFF4E5] border-[#FFB84D]">
-                        <XCircle className="h-4 w-4 text-[#FFB84D]" />
-                        <AlertTitle className="text-[#FFB84D]">
+                      <Alert className="bg-[#FEF3C7] border-[#D97706]">
+                        <XCircle className="h-4 w-4 text-[#D97706]" />
+                        <AlertTitle className="text-[#D97706]">
                           {t("visitors.cannotIdentify", "Cannot identify through Yakeen")}
                         </AlertTitle>
-                        <AlertDescription className="text-[#FFB84D]">
+                        <AlertDescription className="text-[#D97706]">
                           <p className="mb-2">
                             {t("visitors.yakeenFailedDesc", "The ID could not be verified through Yakeen. You can enter the visitor details manually.")}
                           </p>
@@ -460,7 +460,7 @@ export function RepeatableSectionWithYakeen({
                             variant="outline" 
                             size="sm"
                             onClick={() => setManualEntry(true)}
-                            className="border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFF4E5]"
+                            className="border-[#D97706] text-[#D97706] hover:bg-[#FEF3C7]"
                           >
                             <Edit3 className="h-4 w-4 mr-2" />
                             {t("visitors.enterManually", "Enter Manually")}
@@ -484,12 +484,12 @@ export function RepeatableSectionWithYakeen({
                     
                     {/* Verified Success Alert */}
                     {isValidated && !manualEntry && (
-                      <Alert className="bg-[#E8F9F8] border-[#4ECDC4]">
-                        <CheckCircle2 className="h-4 w-4 text-[#4ECDC4]" />
-                        <AlertTitle className="text-[#4ECDC4]">
+                      <Alert className="bg-[#D1FAE5] border-[#059669]">
+                        <CheckCircle2 className="h-4 w-4 text-[#059669]" />
+                        <AlertTitle className="text-[#059669]">
                           {t("visitors.identityVerified", "Identity Verified")}
                         </AlertTitle>
-                        <AlertDescription className="text-[#4ECDC4]">
+                        <AlertDescription className="text-[#059669]">
                           {t("visitors.verifiedDesc", "Visitor identity has been verified via Yakeen.")}
                         </AlertDescription>
                       </Alert>
@@ -645,7 +645,7 @@ export function RepeatableSectionWithYakeen({
       {/* Items list */}
       {items.length === 0 ? (
         <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-8 text-center">
-          <User className="h-12 w-12 mx-auto text-[#B0B0B0] mb-3" />
+          <User className="h-12 w-12 mx-auto text-[#9CA3AF] mb-3" />
           <p className="text-[#6B6B6B] mb-4">
             {t("common.noItemsYet", "No {{item}} added yet", { item: getItemLabel().toLowerCase() })}
           </p>
@@ -678,12 +678,12 @@ export function RepeatableSectionWithYakeen({
                 <Card className={cn(
                   "transition-shadow",
                   isExpanded && "shadow-md border-[#5B2C93]/30",
-                  isVerified && "border-l-4 border-l-[#4ECDC4]"
+                  isVerified && "border-l-4 border-l-[#059669]"
                 )}>
                   <CollapsibleTrigger asChild>
                     <CardHeader className="py-3 px-4 cursor-pointer hover:bg-[#F5F5F5] transition-colors">
                       <div className="flex items-center gap-3">
-                        <GripVertical className="h-4 w-4 text-[#B0B0B0] cursor-grab" />
+                        <GripVertical className="h-4 w-4 text-[#9CA3AF] cursor-grab" />
                         <div className="flex-1 flex items-center gap-2">
                           <Badge variant="secondary" className="text-xs">
                             #{index + 1}
@@ -692,13 +692,13 @@ export function RepeatableSectionWithYakeen({
                             {summary}
                           </CardTitle>
                           {isVerified && (
-                            <Badge className="bg-[#E8F9F8] text-[#4ECDC4] text-xs">
+                            <Badge className="bg-[#D1FAE5] text-[#059669] text-xs">
                               <CheckCircle2 className="h-3 w-3 mr-1" />
                               {t("visitors.verified", "Verified")}
                             </Badge>
                           )}
                           {item.manualEntry && (
-                            <Badge variant="outline" className="text-xs text-[#FFB84D] border-[#FFB84D]">
+                            <Badge variant="outline" className="text-xs text-[#D97706] border-[#D97706]">
                               <Edit3 className="h-3 w-3 mr-1" />
                               {t("visitors.manual", "Manual")}
                             </Badge>

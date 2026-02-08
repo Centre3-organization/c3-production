@@ -302,7 +302,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onSuccess }: 
                         isActive 
                           ? "bg-[#5B2C93] text-white"
                           : isCompleted
-                            ? "bg-[#E8F9F8] text-white"
+                            ? "bg-[#D1FAE5] text-white"
                             : "bg-[#F5F5F5] text-[#6B6B6B]"
                       }`}>
                         {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}

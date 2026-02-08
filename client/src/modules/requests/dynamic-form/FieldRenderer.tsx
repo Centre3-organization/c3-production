@@ -403,9 +403,9 @@ function UserLookupField({
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2">
               {isSearching ? (
-                <Loader2 className="h-4 w-4 animate-spin text-[#B0B0B0]" />
+                <Loader2 className="h-4 w-4 animate-spin text-[#9CA3AF]" />
               ) : (
-                <Search className="h-4 w-4 text-[#B0B0B0]" />
+                <Search className="h-4 w-4 text-[#9CA3AF]" />
               )}
             </div>
           </div>
@@ -420,7 +420,7 @@ function UserLookupField({
                   className="w-full px-3 py-2 text-left hover:bg-[#F5F5F5] flex items-center gap-2 border-b last:border-b-0"
                   onClick={() => handleSelectUser(user)}
                 >
-                  <User className="h-4 w-4 text-[#B0B0B0]" />
+                  <User className="h-4 w-4 text-[#9CA3AF]" />
                   <div>
                     <p className="text-sm font-medium">{user.label}</p>
                     {user.email && (
@@ -584,9 +584,9 @@ function MultiUserLookupField({
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2">
               {isSearching ? (
-                <Loader2 className="h-4 w-4 animate-spin text-[#B0B0B0]" />
+                <Loader2 className="h-4 w-4 animate-spin text-[#9CA3AF]" />
               ) : (
-                <Search className="h-4 w-4 text-[#B0B0B0]" />
+                <Search className="h-4 w-4 text-[#9CA3AF]" />
               )}
             </div>
           </div>
@@ -601,7 +601,7 @@ function MultiUserLookupField({
                   className="w-full px-3 py-2 text-left hover:bg-[#F5F5F5] flex items-center gap-2 border-b last:border-b-0"
                   onClick={() => handleSelectUser(user)}
                 >
-                  <User className="h-4 w-4 text-[#B0B0B0]" />
+                  <User className="h-4 w-4 text-[#9CA3AF]" />
                   <div>
                     <p className="text-sm font-medium">{user.label}</p>
                     {user.email && (
@@ -808,13 +808,13 @@ function ActivitySelectorField({
               </Badge>
             )}
             {selectedSubActivity.needsMOP && (
-              <Badge className="bg-[#FFF4E5] text-[#FFB84D] hover:bg-[#FFF4E5]">
+              <Badge className="bg-[#FEF3C7] text-[#D97706] hover:bg-[#FEF3C7]">
                 <ClipboardList className="h-3 w-3 mr-1" />
                 MOP
               </Badge>
             )}
             {selectedSubActivity.needsMHV && (
-              <Badge className="bg-[#E8F9F8] text-[#4ECDC4] hover:bg-[#E8F9F8]">
+              <Badge className="bg-[#D1FAE5] text-[#059669] hover:bg-[#D1FAE5]">
                 <FileCheck className="h-3 w-3 mr-1" />
                 MHV
               </Badge>
@@ -1341,13 +1341,13 @@ export function FieldRenderer({
               htmlFor={field.code}
               className="cursor-pointer flex flex-col items-center gap-2"
             >
-              <Upload className="h-8 w-8 text-[#B0B0B0]" />
+              <Upload className="h-8 w-8 text-[#9CA3AF]" />
               <span className="text-sm text-[#6B6B6B]">
                 {t("common.clickToUpload", "Click to upload")}
                 {isMulti && ` (${files.length}/${maxFiles})`}
               </span>
               {field.validation?.accept && (
-                <span className="text-xs text-[#B0B0B0]">
+                <span className="text-xs text-[#9CA3AF]">
                   {field.validation.accept}
                 </span>
               )}
@@ -1373,7 +1373,7 @@ export function FieldRenderer({
                         onChange(null);
                       }
                     }}
-                    className="text-[#B0B0B0] hover:text-[#FF6B6B]"
+                    className="text-[#9CA3AF] hover:text-[#FF6B6B]"
                   >
                     <X className="h-4 w-4" />
                   </button>

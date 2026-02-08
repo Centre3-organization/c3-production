@@ -21,9 +21,9 @@ const buttonVariants = cva(
           "text-[#6B6B6B] hover:bg-[#F5F5F5] hover:text-[#2C2C2C] dark:hover:bg-white/10",
         link: "text-[#5B2C93] underline-offset-4 hover:underline",
         success:
-          "bg-[#4ECDC4] text-white hover:bg-[#3DBDB4] active:scale-[0.98]",
+          "bg-[#059669] text-white hover:bg-[#047857] active:scale-[0.98]",
         warning:
-          "bg-[#FFB84D] text-white hover:bg-[#FFB84D] active:scale-[0.98]",
+          "bg-[#D97706] text-white hover:bg-[#D97706] active:scale-[0.98]",
       },
       size: {
         default: "h-10 px-6 py-2 has-[>svg]:px-4",

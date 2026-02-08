@@ -69,23 +69,23 @@ const typeLabels: Record<string, string> = {
 const typeColors: Record<string, string> = {
   admin_visit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
   work_permit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
-  material_entry: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  material_entry: "bg-[#FEF3C7] text-[#D97706] border-[#D97706]",
   tep: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]/20",
   mop: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
-  escort: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
+  escort: "bg-[#D1FAE5] text-[#059669] border-[#059669]",
 };
 
 // Dynamic stage badge colors
 const stageColors = [
-  "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  "bg-[#FEF3C7] text-[#D97706] border-[#D97706]",
   "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
   "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
   "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
-  "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
+  "bg-[#D1FAE5] text-[#059669] border-[#059669]",
 ];
 
 const entryMethodConfig: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
-  qr_code: { label: "QR Code", icon: <Shield className="h-4 w-4" />, color: "text-[#4ECDC4] bg-[#E8F9F8]" },
+  qr_code: { label: "QR Code", icon: <Shield className="h-4 w-4" />, color: "text-[#059669] bg-[#D1FAE5]" },
   rfid: { label: "RFID Tag", icon: <Radio className="h-4 w-4" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
   card: { label: "Access Card", icon: <CreditCard className="h-4 w-4" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
 };
@@ -209,7 +209,7 @@ export default function ApprovalHistory() {
         <div
           key={i}
           className={`h-2 w-4 rounded-full ${
-            i < currentStage ? 'bg-[#E8F9F8]' : 'bg-[#E0E0E0]'
+            i < currentStage ? 'bg-[#D1FAE5]' : 'bg-[#E0E0E0]'
           }`}
         />
       ))}
@@ -224,7 +224,7 @@ export default function ApprovalHistory() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight text-[#2C2C2C] flex items-center gap-2">
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
             <History className="h-6 w-6 text-[#5B2C93]" />
             {t("approvals.history", "Approval History")}
           </h1>
@@ -272,7 +272,7 @@ export default function ApprovalHistory() {
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <div className="h-16 w-16 rounded-full bg-[#F5F5F5] flex items-center justify-center mb-4">
-              <History className="h-8 w-8 text-[#B0B0B0]" />
+              <History className="h-8 w-8 text-[#9CA3AF]" />
             </div>
             <h3 className="text-lg font-medium text-[#2C2C2C] mb-1">
               {t("approvals.noHistory", "No approval history")}
@@ -288,7 +288,7 @@ export default function ApprovalHistory() {
             <Card 
               key={task.taskId} 
               className={`hover:shadow-md transition-shadow cursor-pointer border-l-4 ${
-                task.taskStatus === 'approved' ? 'border-l-[#4ECDC4]' : 'border-l-[#FF6B6B]'
+                task.taskStatus === 'approved' ? 'border-l-[#059669]' : 'border-l-[#FF6B6B]'
               }`}
               onClick={() => handleViewDetails(task)}
             >
@@ -309,7 +309,7 @@ export default function ApprovalHistory() {
                       <Badge 
                         variant="outline" 
                         className={task.taskStatus === 'approved' 
-                          ? 'bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]' 
+                          ? 'bg-[#D1FAE5] text-[#059669] border-[#059669]' 
                           : 'bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]'
                         }
                       >
@@ -343,7 +343,7 @@ export default function ApprovalHistory() {
                         <Clock className="h-3 w-3" />
                         {t("approvals.decidedAt", "Decided")}: {task.taskCompletedAt ? format(new Date(task.taskCompletedAt), "MMM d, yyyy HH:mm") : "N/A"}
                       </span>
-                      <span className="text-[#B0B0B0]">|</span>
+                      <span className="text-[#9CA3AF]">|</span>
                       <span>
                         {t("approvals.workflow", "Workflow")}: {task.workflowName || "Default"}
                       </span>
@@ -423,7 +423,7 @@ export default function ApprovalHistory() {
                     <Badge 
                       variant="outline" 
                       className={selectedTask.taskStatus === 'approved' 
-                        ? 'bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]' 
+                        ? 'bg-[#D1FAE5] text-[#059669] border-[#059669]' 
                         : 'bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]'
                       }
                     >
@@ -436,9 +436,9 @@ export default function ApprovalHistory() {
                     {/* Overall request status */}
                     {selectedTask.request?.status && (
                       <Badge variant="outline" className={`text-xs ${
-                        selectedTask.request.status === 'approved' ? 'bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]' :
+                        selectedTask.request.status === 'approved' ? 'bg-[#D1FAE5] text-[#059669] border-[#059669]' :
                         selectedTask.request.status === 'rejected' ? 'bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]' :
-                        'bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]'
+                        'bg-[#FEF3C7] text-[#D97706] border-[#D97706]'
                       }`}>
                         Request: {selectedTask.request.status.replace(/_/g, ' ')}
                       </Badge>
@@ -453,10 +453,10 @@ export default function ApprovalHistory() {
               
               {/* Access Method - Compact, no QR image */}
               {selectedTask.taskStatus === 'approved' && selectedTask.accessMethod?.entryMethod && (
-                <div className="bg-[#E8F9F8] border border-[#4ECDC4] rounded-lg p-3">
+                <div className="bg-[#D1FAE5] border border-[#059669] rounded-lg p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <Shield className="h-4 w-4 text-[#4ECDC4]" />
+                      <Shield className="h-4 w-4 text-[#059669]" />
                       <Badge variant="secondary" className={`${entryMethodConfig[selectedTask.accessMethod.entryMethod]?.color} gap-2 text-sm px-3 py-1`}>
                         {entryMethodConfig[selectedTask.accessMethod.entryMethod]?.icon}
                         {entryMethodConfig[selectedTask.accessMethod.entryMethod]?.label}
@@ -580,9 +580,9 @@ export default function ApprovalHistory() {
                 </div>
                 
                 {/* Column 3: Location & Workflow */}
-                <div className="border-l-4 border-[#4ECDC4] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
+                <div className="border-l-4 border-[#059669] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
                   <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-[#4ECDC4]" />
+                    <Building2 className="h-4 w-4 text-[#059669]" />
                     Location & Workflow
                   </h4>
                   <div className="space-y-3">
@@ -615,9 +615,9 @@ export default function ApprovalHistory() {
               </div>
               
               {/* Approval Timeline */}
-              <div className="border-l-4 border-[#FFB84D] bg-[#F5F5F5] rounded-r-lg p-4">
+              <div className="border-l-4 border-[#D97706] bg-[#F5F5F5] rounded-r-lg p-4">
                 <h4 className="text-sm font-medium text-[#2C2C2C] mb-3 flex items-center gap-2">
-                  <History className="h-4 w-4 text-[#FFB84D]" />
+                  <History className="h-4 w-4 text-[#D97706]" />
                   Approval Timeline
                 </h4>
                 
@@ -627,9 +627,9 @@ export default function ApprovalHistory() {
                     <div key={idx} className="flex items-center">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
                         idx + 1 < (selectedTask.stageOrder || 1) 
-                          ? "bg-[#E8F9F8] text-[#4ECDC4] border-2 border-[#4ECDC4]" 
+                          ? "bg-[#D1FAE5] text-[#059669] border-2 border-[#059669]" 
                           : idx + 1 === (selectedTask.stageOrder || 1)
-                            ? selectedTask.taskStatus === 'approved' ? "bg-[#E8F9F8] text-[#4ECDC4] border-2 border-[#4ECDC4]" : "bg-[#FFE5E5] text-[#FF6B6B] border-2 border-[#FF6B6B]"
+                            ? selectedTask.taskStatus === 'approved' ? "bg-[#D1FAE5] text-[#059669] border-2 border-[#059669]" : "bg-[#FFE5E5] text-[#FF6B6B] border-2 border-[#FF6B6B]"
                             : "bg-[#F5F5F5] text-[#6B6B6B] border-2 border-[#E0E0E0]"
                       }`}>
                         {idx + 1 < (selectedTask.stageOrder || 1) || (idx + 1 === (selectedTask.stageOrder || 1) && selectedTask.taskStatus === 'approved') ? (
@@ -642,7 +642,7 @@ export default function ApprovalHistory() {
                       </div>
                       {idx < (selectedTask.totalStages || 1) - 1 && (
                         <div className={`w-8 h-0.5 ${
-                          idx + 1 < (selectedTask.stageOrder || 1) ? "bg-[#E8F9F8]" : "bg-[#E0E0E0]"
+                          idx + 1 < (selectedTask.stageOrder || 1) ? "bg-[#D1FAE5]" : "bg-[#E0E0E0]"
                         }`} />
                       )}
                     </div>
@@ -656,19 +656,19 @@ export default function ApprovalHistory() {
                     
                     {selectedTask.approvalHistory.map((history: any, idx: number) => {
                       const actionBgColors: Record<string, string> = {
-                        approved: "bg-[#E8F9F8]", rejected: "bg-[#FF6B6B]", decision_made: "bg-[#E8DCF5]",
-                        info_requested: "bg-[#FFF4E5]", submitted: "bg-[#E8DCF5]", escalated: "bg-[#E8DCF5]",
-                        workflow_started: "bg-[#F5F5F5]", workflow_completed: "bg-[#4ECDC4]",
-                        stage_completed: "bg-[#E8F9F8]", task_assigned: "bg-[#5B2C93]",
-                        sent_back: "bg-[#FFF4E5]", clarification_requested: "bg-[#FFF4E5]",
+                        approved: "bg-[#D1FAE5]", rejected: "bg-[#FF6B6B]", decision_made: "bg-[#E8DCF5]",
+                        info_requested: "bg-[#FEF3C7]", submitted: "bg-[#E8DCF5]", escalated: "bg-[#E8DCF5]",
+                        workflow_started: "bg-[#F5F5F5]", workflow_completed: "bg-[#059669]",
+                        stage_completed: "bg-[#D1FAE5]", task_assigned: "bg-[#5B2C93]",
+                        sent_back: "bg-[#FEF3C7]", clarification_requested: "bg-[#FEF3C7]",
                         clarification_provided: "bg-[#5B2C93]", task_reassigned: "bg-[#E8DCF5]",
                       };
                       const actionColors: Record<string, string> = {
-                        approved: "border-[#4ECDC4]", rejected: "border-[#FF6B6B]", decision_made: "border-[#5B2C93]",
-                        info_requested: "border-[#FFB84D]", submitted: "border-[#5B2C93]", escalated: "border-[#5B2C93]",
-                        workflow_started: "border-[#B0B0B0]", workflow_completed: "border-[#4ECDC4]",
-                        stage_completed: "border-[#4ECDC4]", task_assigned: "border-[#5B2C93]",
-                        sent_back: "border-[#FFB84D]", clarification_requested: "border-[#FFB84D]",
+                        approved: "border-[#059669]", rejected: "border-[#FF6B6B]", decision_made: "border-[#5B2C93]",
+                        info_requested: "border-[#D97706]", submitted: "border-[#5B2C93]", escalated: "border-[#5B2C93]",
+                        workflow_started: "border-[#B0B0B0]", workflow_completed: "border-[#059669]",
+                        stage_completed: "border-[#059669]", task_assigned: "border-[#5B2C93]",
+                        sent_back: "border-[#D97706]", clarification_requested: "border-[#D97706]",
                         clarification_provided: "border-[#5B2C93]", task_reassigned: "border-[#5B2C93]",
                       };
                       const actionLabels: Record<string, string> = {
@@ -708,7 +708,7 @@ export default function ApprovalHistory() {
                                 <Badge variant="outline" className="text-xs px-1.5 py-0">{stageName}</Badge>
                                 {decisionLabel && history.actionType === "decision_made" && (
                                   <Badge variant="outline" className={`text-xs px-1.5 py-0 ${
-                                    decision === "approved" ? "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]" :
+                                    decision === "approved" ? "bg-[#D1FAE5] text-[#059669] border-[#059669]" :
                                     decision === "rejected" ? "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]" :
                                     "bg-[#F5F5F5] text-[#2C2C2C]"
                                   }`}>{decisionLabel}</Badge>

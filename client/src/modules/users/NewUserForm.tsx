@@ -384,7 +384,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                       : isCompleted
                         ? "text-[#2C2C2C] hover:bg-[#F5F5F5]"
                         : isDisabled
-                          ? "text-[#B0B0B0] cursor-not-allowed"
+                          ? "text-[#9CA3AF] cursor-not-allowed"
                           : "text-[#2C2C2C] hover:bg-[#F5F5F5] hover:text-[#2C2C2C]"
                   }`}
                 >
@@ -392,7 +392,7 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                     isActive 
                       ? "bg-[#5B2C93] text-white"
                       : isCompleted
-                        ? "bg-[#E8F9F8] text-white"
+                        ? "bg-[#D1FAE5] text-white"
                         : "bg-[#F5F5F5] text-[#6B6B6B]"
                   }`}>
                     {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}
@@ -493,12 +493,12 @@ export default function NewUserForm({ onSuccess, onCancel }: NewUserFormProps) {
                         {(isVerified || verificationError) && (
                           <div className="mt-4">
                             {isVerified && (
-                              <Badge className="bg-[#E8F9F8] h-9 px-4">
+                              <Badge className="bg-[#D1FAE5] h-9 px-4">
                                 <CheckCircle className="h-4 w-4 mr-2" /> Verified
                               </Badge>
                             )}
                             {verificationError && (
-                              <div className="flex items-center gap-2 text-[#FFB84D] text-sm">
+                              <div className="flex items-center gap-2 text-[#D97706] text-sm">
                                 <AlertCircle className="h-4 w-4 shrink-0" />
                                 <span>{verificationError}</span>
                               </div>

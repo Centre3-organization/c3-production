@@ -93,7 +93,7 @@ export function RequestComments({ requestId, instanceId, taskId, context = "gene
   const visibilityConfig = {
     private: { icon: Lock, label: "Private", color: "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0]", description: "Only you can see this" },
     group: { icon: Users, label: "Group", color: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]", description: "Visible to group members" },
-    requestor: { icon: Eye, label: "Requestor", color: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]", description: "Visible to the requestor" },
+    requestor: { icon: Eye, label: "Requestor", color: "bg-[#D1FAE5] text-[#059669] border-[#059669]", description: "Visible to the requestor" },
   };
   
   const contextLabels: Record<string, string> = {

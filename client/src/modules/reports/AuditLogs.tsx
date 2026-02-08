@@ -69,8 +69,8 @@ export default function AuditLogs() {
     const colors: Record<string, string> = {
       user: "bg-[#E8DCF5] text-[#5B2C93]",
       role: "bg-[#E8DCF5] text-[#5B2C93]",
-      request: "bg-[#E8F9F8] text-[#4ECDC4]",
-      site: "bg-[#FFF4E5] text-[#FFB84D]",
+      request: "bg-[#D1FAE5] text-[#059669]",
+      site: "bg-[#FEF3C7] text-[#D97706]",
       settings: "bg-[#F5F5F5] text-[#2C2C2C]",
       workflow: "bg-[#E8DCF5] text-[#5B2C93]",
       security: "bg-[#FFE5E5] text-[#FF6B6B]",
@@ -100,7 +100,7 @@ export default function AuditLogs() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C]">Audit Logs</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Audit Logs</h1>
           <p className="text-[#6B6B6B] mt-1">Track all system activities and changes</p>
         </div>
         <div className="flex gap-3">
@@ -128,7 +128,7 @@ export default function AuditLogs() {
         <CardContent className="p-4">
           <div className="flex gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
               <Input 
                 placeholder="Search by user, action, or target..." 
                 className="pl-10"

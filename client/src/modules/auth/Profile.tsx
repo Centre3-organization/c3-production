@@ -122,7 +122,7 @@ export default function Profile() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight">Profile</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Profile</h1>
           <p className="text-[#6B6B6B]">Manage your account settings</p>
         </div>
         <div className="flex gap-2">

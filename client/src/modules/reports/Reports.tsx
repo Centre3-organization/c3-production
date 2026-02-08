@@ -118,7 +118,7 @@ export default function Reports() {
       {/* Search Bar - same pattern as Approvals/Requests */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
           <Input
             placeholder="Search reports..."
             value={searchQuery}
@@ -174,7 +174,7 @@ export default function Reports() {
                 </TableCell>
                 <TableCell>
                   <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <Star className="h-4 w-4 text-[#B0B0B0]" />
+                    <Star className="h-4 w-4 text-[#9CA3AF]" />
                   </Button>
                 </TableCell>
               </TableRow>

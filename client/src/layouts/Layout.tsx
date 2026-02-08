@@ -11,7 +11,6 @@ import {
   AlertTriangle, 
   Settings, 
   LogOut,
-  Package,
   ChevronDown,
   ChevronRight,
   Menu,
@@ -209,14 +208,7 @@ export default function Layout({ children }: LayoutProps) {
         { icon: BarChart3, labelKey: "nav.reports", label: "Reports", href: "/reports", requiredPermission: "reports.view" },
       ]
     },
-    {
-      titleKey: "nav.masterData",
-      title: "Master Data",
-      requiredPermission: "settings.view",
-      items: [
-        { icon: Package, labelKey: "nav.materialTypes", label: "Material Types", href: "/material-types", requiredPermission: "settings.view" },
-      ]
-    },
+
     {
       titleKey: "nav.administration",
       title: "Administration",
@@ -337,15 +329,18 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+        <div className="flex-1 overflow-y-auto py-4 px-2 space-y-0.5">
           {navSections.map((section, sectionIndex) => (
-            <div key={sectionIndex} className={section.title ? "mt-4 first:mt-0" : ""}>
+            <div key={sectionIndex} className={section.title ? "mt-5 first:mt-0" : ""}>
               {section.title && (sidebarOpen || isMobile) && (
                 <div className="px-3 mb-2">
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-white/50">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-white/40">
                     {section.titleKey ? getLabel(section.titleKey, section.title) : section.title}
                   </span>
                 </div>
+              )}
+              {!section.title && sectionIndex > 0 && (
+                <div className="mx-3 my-2 border-t border-white/10" />
               )}
               {section.items.map((item) => {
                 // Handle items with children (collapsible)
@@ -358,35 +353,41 @@ export default function Layout({ children }: LayoutProps) {
                       <CollapsibleTrigger asChild>
                         <div 
                           className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 cursor-pointer group",
+                            "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors duration-150 cursor-pointer group mx-1",
                             hasActiveChild 
-                              ? "bg-white/20 text-white" 
-                              : "text-white/80 hover:bg-white/10 hover:text-white"
+                              ? "bg-white/15 text-white" 
+                              : "text-white/75 hover:bg-white/10 hover:text-white"
                           )}
                         >
-                          <item.icon className="h-5 w-5 shrink-0 opacity-80" />
+                          <item.icon className="h-[18px] w-[18px] shrink-0" />
                           {(sidebarOpen || isMobile) && (
                             <>
                               <span className="flex-1">{getLabel(item.labelKey, item.label)}</span>
-                              {isOpen ? <ChevronDown className="h-4 w-4" /> : (isRTL ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />)}
+                              {isOpen ? <ChevronDown className="h-4 w-4 opacity-60" /> : (isRTL ? <ChevronLeft className="h-4 w-4 opacity-60" /> : <ChevronRight className="h-4 w-4 opacity-60" />)}
                             </>
                           )}
                         </div>
                       </CollapsibleTrigger>
-                      <CollapsibleContent className={cn("space-y-1 mt-1", isRTL ? "pr-8" : "pl-8")}>
+                      <CollapsibleContent className={cn("space-y-0.5 mt-0.5", isRTL ? "pr-7" : "pl-7")}>
                         {item.children.map((child) => {
                           const isChildActive = location === child.href;
                           return (
                             <Link key={child.href} href={child.href}>
                               <div 
                                 className={cn(
-                                  "px-3 py-2 rounded-md text-sm transition-colors cursor-pointer",
+                                  "flex items-center px-3 py-2 rounded-md text-sm transition-colors cursor-pointer mx-1 relative",
                                   isChildActive 
                                     ? "bg-white/20 text-white font-medium" 
-                                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                                    : "text-white/65 hover:bg-white/10 hover:text-white"
                                 )}
                                 onClick={() => isMobile && setSidebarOpen(false)}
                               >
+                                {isChildActive && (
+                                  <div className={cn(
+                                    "absolute top-1 bottom-1 w-[3px] rounded-full bg-white",
+                                    isRTL ? "right-0" : "left-0"
+                                  )} />
+                                )}
                                 {getLabel(child.labelKey, child.label)}
                               </div>
                             </Link>
@@ -404,14 +405,20 @@ export default function Layout({ children }: LayoutProps) {
                   <Link key={item.label} href={item.href || "#"}>
                     <div 
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 group relative cursor-pointer",
+                        "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors duration-150 group relative cursor-pointer mx-1",
                         isActive 
-                          ? "bg-white/20 text-white shadow-sm" 
-                          : "text-white/80 hover:bg-white/10 hover:text-white"
+                          ? "bg-white/20 text-white" 
+                          : "text-white/75 hover:bg-white/10 hover:text-white"
                       )}
                       onClick={() => isMobile && setSidebarOpen(false)}
                     >
-                      <item.icon className={cn("h-5 w-5 shrink-0", isActive ? "text-white" : "opacity-80 group-hover:opacity-100")} />
+                      {isActive && (
+                        <div className={cn(
+                          "absolute top-1 bottom-1 w-[3px] rounded-full bg-white",
+                          isRTL ? "right-0" : "left-0"
+                        )} />
+                      )}
+                      <item.icon className={cn("h-[18px] w-[18px] shrink-0", isActive ? "text-white" : "opacity-75 group-hover:opacity-100")} />
                       {(sidebarOpen || isMobile) && (
                         <div className="flex items-center justify-between flex-1">
                           <span>{getLabel(item.labelKey, item.label)}</span>
@@ -474,7 +481,7 @@ export default function Layout({ children }: LayoutProps) {
             </Button>
             
             <div className="relative max-w-md flex-1 hidden md:block">
-              <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]", isRTL ? "right-3" : "left-3")} />
+              <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]", isRTL ? "right-3" : "left-3")} />
               <Input 
                 placeholder={t('requests.searchPlaceholder', 'Search requests, visitors, zones...')}
                 className={cn("bg-[#F5F5F5] border-[#E0E0E0] focus-visible:ring-1", isRTL ? "pr-9" : "pl-9")}

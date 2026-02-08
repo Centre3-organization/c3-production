@@ -155,7 +155,7 @@ export default function MaterialTypes() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C] flex items-center gap-2">
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
             <Package className="h-7 w-7 text-[#5B2C93]" />
             Material Types
           </h1>
@@ -185,13 +185,13 @@ export default function MaterialTypes() {
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-medium text-[#4ECDC4]">{activeCount}</div>
+            <div className="text-2xl font-medium text-[#059669]">{activeCount}</div>
             <div className="text-xs text-[#6B6B6B]">Active</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-medium text-[#B0B0B0]">{totalCount - activeCount}</div>
+            <div className="text-2xl font-medium text-[#9CA3AF]">{totalCount - activeCount}</div>
             <div className="text-xs text-[#6B6B6B]">Inactive</div>
           </CardContent>
         </Card>
@@ -202,7 +202,7 @@ export default function MaterialTypes() {
         <CardContent className="pt-4">
           <div className="flex items-center gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
               <Input
                 placeholder="Search by name, code, or description..."
                 value={searchQuery}
@@ -230,7 +230,7 @@ export default function MaterialTypes() {
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-[#6B6B6B]">
-              <Package className="h-12 w-12 mb-3 text-[#B0B0B0]" />
+              <Package className="h-12 w-12 mb-3 text-[#9CA3AF]" />
               <p className="font-medium">No material types found</p>
               <p className="text-sm">Add a new material type to get started</p>
             </div>
@@ -260,7 +260,7 @@ export default function MaterialTypes() {
                     </TableCell>
                     <TableCell className="text-[#6B6B6B]">{item.displayOrder}</TableCell>
                     <TableCell>
-                      <Badge variant={item.isActive ? "default" : "secondary"} className={item.isActive ? "bg-[#E8F9F8] text-[#4ECDC4]" : ""}>
+                      <Badge variant={item.isActive ? "default" : "secondary"} className={item.isActive ? "bg-[#D1FAE5] text-[#059669]" : ""}>
                         {item.isActive ? "Active" : "Inactive"}
                       </Badge>
                     </TableCell>

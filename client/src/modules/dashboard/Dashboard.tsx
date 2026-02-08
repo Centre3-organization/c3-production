@@ -79,9 +79,9 @@ export default function Home() {
   // Enterprise muted status colors
   const statusColors: Record<string, string> = {
     draft: "bg-[#B0B0B0]",
-    pending_l1: "bg-[#FFB84D]",
+    pending_l1: "bg-[#D97706]",
     pending_manual: "bg-[#5B2C93]",
-    approved: "bg-[#E8F9F8]",
+    approved: "bg-[#D1FAE5]",
     rejected: "bg-[#FF6B6B]",
     expired: "bg-[#B0B0B0]",
     cancelled: "bg-[#F5F5F5]",
@@ -124,8 +124,8 @@ export default function Home() {
                 <>
                   <div className="text-2xl font-medium text-[#2C2C2C]">{stats?.activeVisitors || 0}</div>
                   <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
-                    <ArrowUpRight className="h-3 w-3 text-[#4ECDC4] mr-1" /> 
-                    <span className="text-[#4ECDC4]">+12%</span>
+                    <ArrowUpRight className="h-3 w-3 text-[#059669] mr-1" /> 
+                    <span className="text-[#059669]">+12%</span>
                     <span className="ml-1">{t('common.vsYesterday')}</span>
                   </p>
                 </>
@@ -137,13 +137,13 @@ export default function Home() {
         {/* Pending Approvals - Only show to users with approval permission */}
         {canViewApprovals && (
           <Card 
-            className="border border-[#FFB84D] bg-[#FFF4E5]/50 shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            className="border border-[#D97706] bg-[#FEF3C7]/50 shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
             onClick={() => navigate("/approvals/l1")}
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-medium text-[#FFB84D] uppercase tracking-wider">{t('dashboard.pendingApprovals')}</CardTitle>
-              <div className="p-2 bg-[#FFF4E5] rounded-lg">
-                <Clock className="h-4 w-4 text-[#FFB84D]" />
+              <CardTitle className="text-xs font-medium text-[#D97706] uppercase tracking-wider">{t('dashboard.pendingApprovals')}</CardTitle>
+              <div className="p-2 bg-[#FEF3C7] rounded-lg">
+                <Clock className="h-4 w-4 text-[#D97706]" />
               </div>
             </CardHeader>
             <CardContent>
@@ -151,8 +151,8 @@ export default function Home() {
                 <Skeleton className="h-8 w-16" />
               ) : (
                 <>
-                  <div className="text-2xl font-medium text-[#FFB84D]">{stats?.pendingApprovals || 0}</div>
-                  <p className="text-xs text-[#FFB84D] mt-1 flex items-center">
+                  <div className="text-2xl font-medium text-[#D97706]">{stats?.pendingApprovals || 0}</div>
+                  <p className="text-xs text-[#D97706] mt-1 flex items-center">
                     <AlertTriangle className="h-3 w-3 mr-1" /> 
                     {t('common.actionRequired')}
                   </p>
@@ -198,7 +198,7 @@ export default function Home() {
               <>
                 <div className="text-2xl font-medium text-[#2C2C2C]">{stats?.approvalRate || 0}%</div>
                 <p className="text-xs text-[#6B6B6B] mt-1 flex items-center">
-                  <TrendingUp className="h-3 w-3 text-[#4ECDC4] mr-1" />
+                  <TrendingUp className="h-3 w-3 text-[#059669] mr-1" />
                   {t('common.vsLastMonth')}
                 </p>
               </>
@@ -363,8 +363,8 @@ export default function Home() {
                     const colors = [
                       "bg-[#6B6B6B]",
                       "bg-[#F5F5F5]",
-                      "bg-[#4ECDC4]",
-                      "bg-[#FFF4E5]",
+                      "bg-[#059669]",
+                      "bg-[#FEF3C7]",
                       "bg-[#E8DCF5]",
                     ];
                     return (
@@ -438,7 +438,7 @@ export default function Home() {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-base font-medium flex items-center gap-2">
-                <Clock className="h-4 w-4 text-[#FFB84D]" />
+                <Clock className="h-4 w-4 text-[#D97706]" />
                 {t('dashboard.pendingL1')}
               </CardTitle>
               <p className="text-xs text-[#6B6B6B]">{t('dashboard.awaitingInitialReview')}</p>
@@ -454,7 +454,7 @@ export default function Home() {
               </div>
             ) : pendingItems?.pendingL1.length === 0 ? (
               <div className="h-[150px] flex flex-col items-center justify-center text-[#6B6B6B]">
-                <CheckCircle2 className="h-10 w-10 mb-2 text-[#4ECDC4]" />
+                <CheckCircle2 className="h-10 w-10 mb-2 text-[#059669]" />
                 <p className="text-sm">{t('common.allCaughtUp')}</p>
               </div>
             ) : (
@@ -504,7 +504,7 @@ export default function Home() {
               </div>
             ) : pendingItems?.pendingManual.length === 0 ? (
               <div className="h-[150px] flex flex-col items-center justify-center text-[#6B6B6B]">
-                <CheckCircle2 className="h-10 w-10 mb-2 text-[#4ECDC4]" />
+                <CheckCircle2 className="h-10 w-10 mb-2 text-[#059669]" />
                 <p className="text-sm">{t('common.allCaughtUp')}</p>
               </div>
             ) : (
@@ -571,7 +571,7 @@ export default function Home() {
                       </div>
                       <div className={cn(
                         "w-2 h-2 rounded-full mt-1.5 flex-shrink-0",
-                        site.status === "active" ? "bg-[#E8F9F8]" : "bg-[#FFF4E5]"
+                        site.status === "active" ? "bg-[#D1FAE5]" : "bg-[#FEF3C7]"
                       )} />
                     </div>
                     <div className="flex items-center gap-3 text-xs text-[#6B6B6B]">
@@ -620,15 +620,15 @@ export default function Home() {
                   <div key={activity.id} className="flex items-start gap-3">
                     <div className={cn(
                       "p-1.5 rounded",
-                      activity.status === "approved" ? "bg-[#E8F9F8]" :
+                      activity.status === "approved" ? "bg-[#D1FAE5]" :
                       activity.status === "rejected" ? "bg-[#FFE5E5]" :
-                      activity.status === "pending_l1" ? "bg-[#FFF4E5]" :
+                      activity.status === "pending_l1" ? "bg-[#FEF3C7]" :
                       activity.status === "pending_manual" ? "bg-[#E8DCF5]" :
                       "bg-[#F5F5F5]"
                     )}>
-                      {activity.status === "approved" ? <CheckCircle2 className="h-3.5 w-3.5 text-[#4ECDC4]" /> :
+                      {activity.status === "approved" ? <CheckCircle2 className="h-3.5 w-3.5 text-[#059669]" /> :
                        activity.status === "rejected" ? <AlertTriangle className="h-3.5 w-3.5 text-[#FF6B6B]" /> :
-                       activity.status === "pending_l1" ? <Clock className="h-3.5 w-3.5 text-[#FFB84D]" /> :
+                       activity.status === "pending_l1" ? <Clock className="h-3.5 w-3.5 text-[#D97706]" /> :
                        activity.status === "pending_manual" ? <Shield className="h-3.5 w-3.5 text-[#5B2C93]" /> :
                        <FileText className="h-3.5 w-3.5 text-[#6B6B6B]" />}
                     </div>
@@ -698,9 +698,9 @@ export default function Home() {
                         variant="outline" 
                         className={cn(
                           "text-xs",
-                          row.status === "approved" ? "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]" :
+                          row.status === "approved" ? "bg-[#D1FAE5] text-[#059669] border-[#059669]" :
                           row.status === "rejected" ? "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]" :
-                          row.status === "pending_l1" ? "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]" :
+                          row.status === "pending_l1" ? "bg-[#FEF3C7] text-[#D97706] border-[#D97706]" :
                           row.status === "pending_manual" ? "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]" :
                           "bg-[#F5F5F5] text-[#2C2C2C] border-[#E0E0E0]"
                         )}

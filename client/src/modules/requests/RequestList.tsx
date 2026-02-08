@@ -84,17 +84,17 @@ const typeLabels: Record<string, string> = {
 
 const statusConfig: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
   draft: { label: "Draft", icon: <FileText className="h-3 w-3" />, color: "text-[#6B6B6B] bg-[#F5F5F5]" },
-  pending_l1: { label: "Pending L1", icon: <Clock className="h-3 w-3" />, color: "text-[#FFB84D] bg-[#FFF4E5]" },
+  pending_l1: { label: "Pending L1", icon: <Clock className="h-3 w-3" />, color: "text-[#D97706] bg-[#FEF3C7]" },
   pending_manual: { label: "Pending Manual", icon: <AlertCircle className="h-3 w-3" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
-  pending_approval: { label: "Pending Approval", icon: <Clock className="h-3 w-3" />, color: "text-[#FFB84D] bg-[#FFF4E5]" },
-  approved: { label: "Approved", icon: <CheckCircle2 className="h-3 w-3" />, color: "text-[#4ECDC4] bg-[#E8F9F8]" },
+  pending_approval: { label: "Pending Approval", icon: <Clock className="h-3 w-3" />, color: "text-[#D97706] bg-[#FEF3C7]" },
+  approved: { label: "Approved", icon: <CheckCircle2 className="h-3 w-3" />, color: "text-[#059669] bg-[#D1FAE5]" },
   rejected: { label: "Rejected", icon: <XCircle className="h-3 w-3" />, color: "text-[#FF6B6B] bg-[#FFE5E5]" },
   cancelled: { label: "Cancelled", icon: <XCircle className="h-3 w-3" />, color: "text-[#2C2C2C] bg-[#F5F5F5]" },
   expired: { label: "Expired", icon: <Clock className="h-3 w-3" />, color: "text-[#2C2C2C] bg-[#F5F5F5]" },
 };
 
 const entryMethodConfig: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
-  qr_code: { label: "QR Code", icon: <QrCode className="h-4 w-4" />, color: "text-[#4ECDC4] bg-[#E8F9F8]" },
+  qr_code: { label: "QR Code", icon: <QrCode className="h-4 w-4" />, color: "text-[#059669] bg-[#D1FAE5]" },
   rfid: { label: "RFID Tag", icon: <Radio className="h-4 w-4" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
   card: { label: "Access Card", icon: <CreditCard className="h-4 w-4" />, color: "text-[#5B2C93] bg-[#E8DCF5]" },
 };
@@ -476,9 +476,9 @@ export default function Requests() {
               
               {/* Access Method Section - Only for approved requests */}
               {requestDetail.status === "approved" && (
-                <div className="bg-[#E8F9F8] border border-[#4ECDC4] rounded-lg p-4 space-y-4">
+                <div className="bg-[#D1FAE5] border border-[#059669] rounded-lg p-4 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium flex items-center gap-2 text-[#4ECDC4]">
+                    <h4 className="font-medium flex items-center gap-2 text-[#059669]">
                       <Shield className="h-4 w-4" />
                       Access Method
                     </h4>
@@ -545,9 +545,9 @@ export default function Requests() {
                       )}
                       
                       {/* Resend Credentials Button */}
-                      <div className="pt-3 border-t border-[#4ECDC4]">
+                      <div className="pt-3 border-t border-[#059669]">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-[#4ECDC4]">Send access credentials to visitor</span>
+                          <span className="text-sm text-[#059669]">Send access credentials to visitor</span>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant="outline" size="sm" className="gap-2" disabled={!!resendingChannel}>
@@ -685,9 +685,9 @@ export default function Requests() {
                         <Badge 
                           variant="secondary" 
                           className={
-                            approval.status === "approved" ? "text-[#4ECDC4] bg-[#E8F9F8]" :
+                            approval.status === "approved" ? "text-[#059669] bg-[#D1FAE5]" :
                             approval.status === "rejected" ? "text-[#FF6B6B] bg-[#FFE5E5]" :
-                            "text-[#FFB84D] bg-[#FFF4E5]"
+                            "text-[#D97706] bg-[#FEF3C7]"
                           }
                         >
                           {approval.status}
@@ -720,11 +720,11 @@ export default function Requests() {
             <div className="space-y-3">
               <Label className="text-sm font-medium">Select Entry Method</Label>
               <RadioGroup value={newEntryMethod} onValueChange={(v) => setNewEntryMethod(v as any)} className="grid gap-3">
-                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "qr_code" ? "border-[#4ECDC4] bg-[#E8F9F8]" : "hover:bg-[#F5F5F5]"}`}>
+                <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${newEntryMethod === "qr_code" ? "border-[#059669] bg-[#D1FAE5]" : "hover:bg-[#F5F5F5]"}`}>
                   <RadioGroupItem value="qr_code" id="edit_qr_code" />
                   <Label htmlFor="edit_qr_code" className="flex items-center gap-3 cursor-pointer flex-1">
-                    <div className="p-2 bg-[#E8F9F8] rounded-lg">
-                      <QrCode className="h-5 w-5 text-[#4ECDC4]" />
+                    <div className="p-2 bg-[#D1FAE5] rounded-lg">
+                      <QrCode className="h-5 w-5 text-[#059669]" />
                     </div>
                     <div>
                       <p className="font-medium">QR Code</p>

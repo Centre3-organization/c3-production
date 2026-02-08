@@ -336,11 +336,11 @@ export default function TranslationManagement() {
               <div 
                 className={`h-full transition-all duration-500 rounded-full ${
                   completionPercentage === 100 
-                    ? 'bg-[#E8F9F8]' 
+                    ? 'bg-[#D1FAE5]' 
                     : completionPercentage >= 80 
                       ? 'bg-[#E8DCF5]' 
                       : completionPercentage >= 50 
-                        ? 'bg-[#FFF4E5]' 
+                        ? 'bg-[#FEF3C7]' 
                         : 'bg-[#FF6B6B]'
                 }`}
                 style={{ width: `${completionPercentage}%` }}
@@ -348,11 +348,11 @@ export default function TranslationManagement() {
             </div>
             <div className="flex justify-between text-xs text-[#6B6B6B]">
               <span className="flex items-center gap-1">
-                <CheckCircle2 className="h-3 w-3 text-[#4ECDC4]" />
+                <CheckCircle2 className="h-3 w-3 text-[#059669]" />
                 {isRTL ? 'مترجم' : 'Translated'}: {stats.translated}
               </span>
               <span className="flex items-center gap-1">
-                <AlertCircle className="h-3 w-3 text-[#FFB84D]" />
+                <AlertCircle className="h-3 w-3 text-[#D97706]" />
                 {isRTL ? 'مفقود' : 'Missing'}: {stats.missing}
               </span>
             </div>
@@ -379,7 +379,7 @@ export default function TranslationManagement() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-medium text-[#4ECDC4]">{stats.translated}</div>
+            <div className="text-2xl font-medium text-[#059669]">{stats.translated}</div>
           </CardContent>
         </Card>
         <Card>
@@ -389,7 +389,7 @@ export default function TranslationManagement() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-medium text-[#FFB84D]">{stats.missing}</div>
+            <div className="text-2xl font-medium text-[#D97706]">{stats.missing}</div>
           </CardContent>
         </Card>
         <Card>
@@ -506,12 +506,12 @@ export default function TranslationManagement() {
                               {isRTL ? 'معدل' : 'Modified'}
                             </Badge>
                           ) : entry.ar && entry.ar !== entry.en ? (
-                            <Badge className="bg-[#E8F9F8] text-[#4ECDC4]">
+                            <Badge className="bg-[#D1FAE5] text-[#059669]">
                               <CheckCircle2 className="h-3 w-3 mr-1" />
                               {isRTL ? 'مترجم' : 'Done'}
                             </Badge>
                           ) : (
-                            <Badge className="bg-[#FFF4E5] text-[#FFB84D]">
+                            <Badge className="bg-[#FEF3C7] text-[#D97706]">
                               <AlertCircle className="h-3 w-3 mr-1" />
                               {isRTL ? 'مفقود' : 'Missing'}
                             </Badge>
@@ -521,7 +521,7 @@ export default function TranslationManagement() {
                           {editingKey === entry.key ? (
                             <div className="flex gap-1">
                               <Button size="icon" variant="ghost" onClick={saveEdit}>
-                                <Save className="h-4 w-4 text-[#4ECDC4]" />
+                                <Save className="h-4 w-4 text-[#059669]" />
                               </Button>
                               <Button size="icon" variant="ghost" onClick={cancelEdit}>
                                 <X className="h-4 w-4 text-[#FF6B6B]" />

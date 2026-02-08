@@ -113,16 +113,16 @@ export default function GlobalOverwatch() {
 
   const severityColors: Record<string, { bg: string; text: string; border: string }> = {
     critical: { bg: "bg-[#FFE5E5]", text: "text-[#FF6B6B]", border: "border-[#FF6B6B]" },
-    high: { bg: "bg-[#FFF4E5]", text: "text-[#FFB84D]", border: "border-[#FFB84D]" },
-    medium: { bg: "bg-[#FFF4E5]", text: "text-[#FFB84D]", border: "border-[#FFB84D]" },
+    high: { bg: "bg-[#FEF3C7]", text: "text-[#D97706]", border: "border-[#D97706]" },
+    medium: { bg: "bg-[#FEF3C7]", text: "text-[#D97706]", border: "border-[#D97706]" },
     low: { bg: "bg-[#F5F5F5]", text: "text-[#2C2C2C]", border: "border-[#E0E0E0]" },
   };
 
   const statusColors: Record<string, { bg: string; text: string }> = {
     active: { bg: "bg-[#FFE5E5]", text: "text-[#FF6B6B]" },
-    acknowledged: { bg: "bg-[#FFF4E5]", text: "text-[#FFB84D]" },
+    acknowledged: { bg: "bg-[#FEF3C7]", text: "text-[#D97706]" },
     investigating: { bg: "bg-[#E8DCF5]", text: "text-[#5B2C93]" },
-    resolved: { bg: "bg-[#E8F9F8]", text: "text-[#4ECDC4]" },
+    resolved: { bg: "bg-[#D1FAE5]", text: "text-[#059669]" },
     false_alarm: { bg: "bg-[#F5F5F5]", text: "text-[#2C2C2C]" },
   };
 
@@ -184,34 +184,34 @@ export default function GlobalOverwatch() {
           </CardContent>
         </Card>
 
-        <Card className="border border-[#FFB84D] bg-[#FFF4E5]/50 shadow-sm">
+        <Card className="border border-[#D97706] bg-[#FEF3C7]/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#FFB84D] uppercase tracking-wider">High</CardTitle>
-            <div className="p-2 bg-[#FFF4E5] rounded-lg">
-              <AlertTriangle className="h-4 w-4 text-[#FFB84D]" />
+            <CardTitle className="text-xs font-medium text-[#D97706] uppercase tracking-wider">High</CardTitle>
+            <div className="p-2 bg-[#FEF3C7] rounded-lg">
+              <AlertTriangle className="h-4 w-4 text-[#D97706]" />
             </div>
           </CardHeader>
           <CardContent>
             {alertCountsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-medium text-[#FFB84D]">{alertCounts?.high || 0}</div>
+              <div className="text-2xl font-medium text-[#D97706]">{alertCounts?.high || 0}</div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border border-[#FFB84D] bg-[#FFF4E5]/50 shadow-sm">
+        <Card className="border border-[#D97706] bg-[#FEF3C7]/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#FFB84D] uppercase tracking-wider">Medium</CardTitle>
-            <div className="p-2 bg-[#FFF4E5] rounded-lg">
-              <Bell className="h-4 w-4 text-[#FFB84D]" />
+            <CardTitle className="text-xs font-medium text-[#D97706] uppercase tracking-wider">Medium</CardTitle>
+            <div className="p-2 bg-[#FEF3C7] rounded-lg">
+              <Bell className="h-4 w-4 text-[#D97706]" />
             </div>
           </CardHeader>
           <CardContent>
             {alertCountsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-medium text-[#FFB84D]">{alertCounts?.medium || 0}</div>
+              <div className="text-2xl font-medium text-[#D97706]">{alertCounts?.medium || 0}</div>
             )}
           </CardContent>
         </Card>
@@ -232,18 +232,18 @@ export default function GlobalOverwatch() {
           </CardContent>
         </Card>
 
-        <Card className="border border-[#4ECDC4] bg-[#E8F9F8]/50 shadow-sm">
+        <Card className="border border-[#059669] bg-[#D1FAE5]/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium text-[#4ECDC4] uppercase tracking-wider">Total Active</CardTitle>
-            <div className="p-2 bg-[#E8F9F8] rounded-lg">
-              <Shield className="h-4 w-4 text-[#4ECDC4]" />
+            <CardTitle className="text-xs font-medium text-[#059669] uppercase tracking-wider">Total Active</CardTitle>
+            <div className="p-2 bg-[#D1FAE5] rounded-lg">
+              <Shield className="h-4 w-4 text-[#059669]" />
             </div>
           </CardHeader>
           <CardContent>
             {alertCountsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-medium text-[#4ECDC4]">{alertCounts?.total || 0}</div>
+              <div className="text-2xl font-medium text-[#059669]">{alertCounts?.total || 0}</div>
             )}
           </CardContent>
         </Card>
@@ -295,7 +295,7 @@ export default function GlobalOverwatch() {
                 </div>
               ) : alertsData?.alerts.length === 0 ? (
                 <div className="h-[300px] flex flex-col items-center justify-center text-[#6B6B6B]">
-                  <CheckCircle2 className="h-12 w-12 mb-3 text-[#4ECDC4]" />
+                  <CheckCircle2 className="h-12 w-12 mb-3 text-[#059669]" />
                   <p className="text-sm font-medium">No alerts found</p>
                   <p className="text-xs">All systems operating normally</p>
                 </div>
@@ -378,7 +378,7 @@ export default function GlobalOverwatch() {
                             <Button 
                               size="sm" 
                               variant="default" 
-                              className="h-7 text-xs bg-[#4ECDC4] hover:bg-[#3DBDB4]"
+                              className="h-7 text-xs bg-[#059669] hover:bg-[#047857]"
                               onClick={() => {
                                 setSelectedAlert(alert);
                                 setResolveDialogOpen(true);
@@ -430,7 +430,7 @@ export default function GlobalOverwatch() {
                             <p className="font-medium text-sm truncate text-[#2C2C2C]">{site.name}</p>
                             <div className={cn(
                               "w-2 h-2 rounded-full flex-shrink-0",
-                              site.status === "active" ? "bg-[#E8F9F8]" : "bg-[#FFF4E5]"
+                              site.status === "active" ? "bg-[#D1FAE5]" : "bg-[#FEF3C7]"
                             )} />
                           </div>
                           <p className="text-xs text-[#6B6B6B]">{site.code}</p>
@@ -472,7 +472,7 @@ export default function GlobalOverwatch() {
                 </div>
                 <div className="flex items-center justify-between p-3 bg-[#F5F5F5] rounded-lg">
                   <span className="text-sm text-[#6B6B6B]">Pending L1</span>
-                  <span className="font-medium text-[#FFB84D]">{stats?.pendingL1 || 0}</span>
+                  <span className="font-medium text-[#D97706]">{stats?.pendingL1 || 0}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-[#F5F5F5] rounded-lg">
                   <span className="text-sm text-[#6B6B6B]">Pending L2</span>
@@ -524,7 +524,7 @@ export default function GlobalOverwatch() {
             <Button
               onClick={() => handleResolve(false)}
               disabled={resolveMutation.isPending}
-              className="bg-[#4ECDC4] hover:bg-[#3DBDB4]"
+              className="bg-[#059669] hover:bg-[#047857]"
             >
               Resolve Alert
             </Button>

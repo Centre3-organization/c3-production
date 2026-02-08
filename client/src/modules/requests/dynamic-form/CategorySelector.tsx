@@ -71,7 +71,7 @@ export function CategorySelector({
               className={cn(
                 "relative flex items-start gap-4 p-5 rounded-lg border-2 transition-all duration-200 text-left",
                 isSelected
-                  ? "border-[#5B2C93] bg-[#E8F9F8] shadow-md"
+                  ? "border-[#5B2C93] bg-[#D1FAE5] shadow-md"
                   : "border-[#E0E0E0] bg-white hover:border-[#5B2C93]/50 hover:shadow-sm",
                 disabled && "opacity-50 cursor-not-allowed"
               )}
@@ -145,7 +145,7 @@ export function CategorySelector({
               <ChevronRight
                 className={cn(
                   "flex-shrink-0 h-5 w-5 transition-transform",
-                  isSelected ? "text-[#5B2C93] translate-x-1" : "text-[#B0B0B0]",
+                  isSelected ? "text-[#5B2C93] translate-x-1" : "text-[#9CA3AF]",
                   isRTL && "rotate-180"
                 )}
               />

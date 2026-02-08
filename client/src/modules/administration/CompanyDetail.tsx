@@ -17,15 +17,15 @@ import {
 import { format } from "date-fns";
 
 const statusColors: Record<string, string> = {
-  active: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
+  active: "bg-[#D1FAE5] text-[#059669] border-[#059669]",
   inactive: "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]",
   suspended: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
-  pending: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  pending: "bg-[#FEF3C7] text-[#D97706] border-[#D97706]",
   blocked: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
-  expired: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
-  approved: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
+  expired: "bg-[#FEF3C7] text-[#D97706] border-[#D97706]",
+  approved: "bg-[#D1FAE5] text-[#059669] border-[#059669]",
   rejected: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
-  pending_approval: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  pending_approval: "bg-[#FEF3C7] text-[#D97706] border-[#D97706]",
   draft: "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]",
   cancelled: "bg-[#F5F5F5] text-[#6B6B6B] border-[#E0E0E0]",
 };
@@ -90,7 +90,7 @@ export default function CompanyDetail() {
           </Button>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-medium">{company.name}</h1>
+              <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{company.name}</h1>
               {company.nameAr && (
                 <span className="text-lg text-[#6B6B6B] font-arabic">{company.nameAr}</span>
               )}
@@ -115,7 +115,7 @@ export default function CompanyDetail() {
                 </Badge>
               )}
               {isContractExpiring && (
-                <Badge className="bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D] border">
+                <Badge className="bg-[#FEF3C7] text-[#D97706] border-[#D97706] border">
                   <AlertTriangle className="h-3 w-3 mr-1" />
                   Contract Expiring Soon
                 </Badge>
@@ -149,7 +149,7 @@ export default function CompanyDetail() {
         <Card>
           <CardContent className="pt-4 pb-3 px-4">
             <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-[#4ECDC4]" />
+              <FileText className="h-4 w-4 text-[#059669]" />
               <span className="text-xs text-[#6B6B6B]">Active Requests</span>
             </div>
             <p className="text-2xl font-medium mt-1">{company.stats.activeRequests}</p>
@@ -167,7 +167,7 @@ export default function CompanyDetail() {
         <Card>
           <CardContent className="pt-4 pb-3 px-4">
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-[#FFB84D]" />
+              <Calendar className="h-4 w-4 text-[#D97706]" />
               <span className="text-xs text-[#6B6B6B]">Contract End</span>
             </div>
             <p className="text-lg font-medium mt-1">
@@ -253,7 +253,7 @@ export default function CompanyDetail() {
                     <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="End Date" 
                       value={company.contractEndDate ? format(new Date(company.contractEndDate), "MMM d, yyyy") : "—"} />
                     {isContractExpiring && (
-                      <p className="text-xs text-[#FFB84D] mt-1 flex items-center gap-1">
+                      <p className="text-xs text-[#D97706] mt-1 flex items-center gap-1">
                         <AlertTriangle className="h-3 w-3" /> Expiring within 30 days
                       </p>
                     )}

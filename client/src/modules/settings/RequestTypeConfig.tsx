@@ -669,7 +669,7 @@ export default function RequestTypeConfig() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium">{t("settings.requestTypes", "Request Type Configuration")}</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{t("settings.requestTypes", "Request Type Configuration")}</h1>
           <p className="text-[#6B6B6B]">
             {t("settings.requestTypesDesc", "Configure request categories, types, form sections, and fields")}
           </p>
@@ -1477,8 +1477,8 @@ export default function RequestTypeConfig() {
                   {selectedDataSource && (
                     <div className={`rounded-lg p-3 border-2 ${
                       selectedDataSource === "static" 
-                        ? "border-[#FFB84D] bg-[#FFF4E5]" 
-                        : "border-[#4ECDC4] bg-[#E8F9F8]"
+                        ? "border-[#D97706] bg-[#FEF3C7]" 
+                        : "border-[#059669] bg-[#D1FAE5]"
                     }`}>
                       <div className="flex items-start gap-3">
                         <span className="text-2xl">
@@ -1492,7 +1492,7 @@ export default function RequestTypeConfig() {
                             {dataSourceOptions.find(o => o.value === selectedDataSource)?.description}
                           </p>
                           {selectedDataSource !== "static" && (
-                            <p className="text-xs text-[#4ECDC4] mt-1 font-medium">
+                            <p className="text-xs text-[#059669] mt-1 font-medium">
                               ✓ Options will be loaded dynamically from the system
                             </p>
                           )}

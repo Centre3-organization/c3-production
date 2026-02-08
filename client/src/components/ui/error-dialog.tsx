@@ -37,10 +37,10 @@ const colorMap = {
     button: "bg-[#FF6B6B] hover:bg-[#FF6B6B] text-white",
   },
   warning: {
-    bg: "bg-[#FFF4E5]",
-    icon: "text-[#FFB84D]",
-    border: "border-[#FFB84D]",
-    button: "bg-[#FFB84D] hover:bg-[#E5A544] text-white",
+    bg: "bg-[#FEF3C7]",
+    icon: "text-[#D97706]",
+    border: "border-[#D97706]",
+    button: "bg-[#D97706] hover:bg-[#B45309] text-white",
   },
   info: {
     bg: "bg-[#E8DCF5]",

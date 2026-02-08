@@ -61,16 +61,16 @@ export default function SecurityReports() {
       value: highCount, 
       icon: Shield, 
       trend: "-10%",
-      color: "text-[#FFB84D]",
-      bgColor: "bg-[#FFF4E5]"
+      color: "text-[#D97706]",
+      bgColor: "bg-[#FEF3C7]"
     },
     { 
       title: "Resolved", 
       value: resolvedCount, 
       icon: ShieldCheck, 
       trend: "+25%",
-      color: "text-[#4ECDC4]",
-      bgColor: "bg-[#E8F9F8]"
+      color: "text-[#059669]",
+      bgColor: "bg-[#D1FAE5]"
     },
   ];
 
@@ -88,9 +88,9 @@ export default function SecurityReports() {
       case "critical":
         return <Badge className="bg-[#FFE5E5] text-[#FF6B6B] hover:bg-[#FFE5E5]">Critical</Badge>;
       case "high":
-        return <Badge className="bg-[#FFF4E5] text-[#FFB84D] hover:bg-[#FFF4E5]">High</Badge>;
+        return <Badge className="bg-[#FEF3C7] text-[#D97706] hover:bg-[#FEF3C7]">High</Badge>;
       case "medium":
-        return <Badge className="bg-[#FFF4E5] text-[#FFB84D] hover:bg-[#FFF4E5]">Medium</Badge>;
+        return <Badge className="bg-[#FEF3C7] text-[#D97706] hover:bg-[#FEF3C7]">Medium</Badge>;
       case "low":
         return <Badge className="bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]">Low</Badge>;
       default:
@@ -101,7 +101,7 @@ export default function SecurityReports() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "resolved":
-        return <Badge className="bg-[#E8F9F8] text-[#4ECDC4] hover:bg-[#E8F9F8]">Resolved</Badge>;
+        return <Badge className="bg-[#D1FAE5] text-[#059669] hover:bg-[#D1FAE5]">Resolved</Badge>;
       case "investigating":
         return <Badge className="bg-[#E8DCF5] text-[#5B2C93] hover:bg-[#E8DCF5]">Investigating</Badge>;
       default:
@@ -114,7 +114,7 @@ export default function SecurityReports() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C]">Security Reports</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Security Reports</h1>
           <p className="text-[#6B6B6B] mt-1">Monitor security incidents and alerts</p>
         </div>
         <div className="flex gap-3">
@@ -151,8 +151,8 @@ export default function SecurityReports() {
                   <p className="text-sm text-[#6B6B6B]">{stat.title}</p>
                   <p className="text-3xl font-medium mt-1">{stat.value}</p>
                   <div className="flex items-center mt-2">
-                    <TrendingUp className={`h-4 w-4 mr-1 ${stat.trend.startsWith('+') ? 'text-[#4ECDC4]' : 'text-[#FF6B6B]'}`} />
-                    <span className={`text-sm ${stat.trend.startsWith('+') ? 'text-[#4ECDC4]' : 'text-[#FF6B6B]'}`}>
+                    <TrendingUp className={`h-4 w-4 mr-1 ${stat.trend.startsWith('+') ? 'text-[#059669]' : 'text-[#FF6B6B]'}`} />
+                    <span className={`text-sm ${stat.trend.startsWith('+') ? 'text-[#059669]' : 'text-[#FF6B6B]'}`}>
                       {stat.trend} vs last period
                     </span>
                   </div>
@@ -174,7 +174,7 @@ export default function SecurityReports() {
             <CardDescription>Security incidents distribution across sites</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-center justify-center text-[#B0B0B0]">
+            <div className="h-64 flex items-center justify-center text-[#9CA3AF]">
               <div className="text-center">
                 <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
                 <p>Chart visualization coming soon</p>
@@ -189,7 +189,7 @@ export default function SecurityReports() {
             <CardDescription>Security incidents over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-center justify-center text-[#B0B0B0]">
+            <div className="h-64 flex items-center justify-center text-[#9CA3AF]">
               <div className="text-center">
                 <TrendingUp className="h-12 w-12 mx-auto mb-2 opacity-50" />
                 <p>Chart visualization coming soon</p>

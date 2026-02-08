@@ -62,11 +62,11 @@ export default function ActivityHistory() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "success":
-        return <CheckCircle2 className="h-4 w-4 text-[#4ECDC4]" />;
+        return <CheckCircle2 className="h-4 w-4 text-[#059669]" />;
       case "error":
         return <XCircle className="h-4 w-4 text-[#FF6B6B]" />;
       case "warning":
-        return <AlertCircle className="h-4 w-4 text-[#FFB84D]" />;
+        return <AlertCircle className="h-4 w-4 text-[#D97706]" />;
       default:
         return <FileText className="h-4 w-4 text-[#5B2C93]" />;
     }
@@ -74,10 +74,10 @@ export default function ActivityHistory() {
 
   const getActionBadge = (action: string) => {
     const colors: Record<string, string> = {
-      approved: "bg-[#E8F9F8] text-[#4ECDC4]",
+      approved: "bg-[#D1FAE5] text-[#059669]",
       rejected: "bg-[#FFE5E5] text-[#FF6B6B]",
       created: "bg-[#E8DCF5] text-[#5B2C93]",
-      updated: "bg-[#FFF4E5] text-[#FFB84D]",
+      updated: "bg-[#FEF3C7] text-[#D97706]",
       resolved: "bg-[#E8DCF5] text-[#5B2C93]",
       deleted: "bg-[#F5F5F5] text-[#2C2C2C]",
     };
@@ -93,7 +93,7 @@ export default function ActivityHistory() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium text-[#2C2C2C]">Activity History</h1>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Activity History</h1>
           <p className="text-[#6B6B6B] mt-1">View timeline of all user activities</p>
         </div>
         <div className="flex gap-3">
@@ -121,7 +121,7 @@ export default function ActivityHistory() {
         <CardContent className="p-4">
           <div className="flex gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
               <Input 
                 placeholder="Search activities..." 
                 className="pl-10"
@@ -157,7 +157,7 @@ export default function ActivityHistory() {
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="font-medium text-[#2C2C2C]">{activity.user}</span>
                             {getActionBadge(activity.action)}
-                            <ArrowRight className="h-3 w-3 text-[#B0B0B0]" />
+                            <ArrowRight className="h-3 w-3 text-[#9CA3AF]" />
                             <span className="text-[#6B6B6B]">{activity.target}</span>
                           </div>
                           <div className="flex items-center gap-2 mt-1 text-sm text-[#6B6B6B]">

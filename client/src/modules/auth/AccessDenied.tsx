@@ -11,14 +11,14 @@ export default function AccessDenied() {
             <ShieldX className="w-8 h-8 text-[#FF6B6B]" />
           </div>
           <CardTitle className="text-2xl font-medium">Access Denied</CardTitle>
-          <CardDescription className="text-[#B0B0B0]">
+          <CardDescription className="text-[#9CA3AF]">
             Your account is not authorized to access Centre3 Security Operations Platform.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="bg-white/5 rounded-lg p-4 text-sm text-[#B0B0B0]">
+          <div className="bg-white/5 rounded-lg p-4 text-sm text-[#9CA3AF]">
             <p className="mb-2">This could mean:</p>
-            <ul className="list-disc list-inside space-y-1 text-[#B0B0B0]">
+            <ul className="list-disc list-inside space-y-1 text-[#9CA3AF]">
               <li>Your account has not been created by an administrator</li>
               <li>Your account has been deactivated</li>
               <li>You're using a different email than registered</li>
@@ -37,7 +37,7 @@ export default function AccessDenied() {
             
             <Button 
               variant="ghost" 
-              className="w-full text-[#B0B0B0] hover:text-white hover:bg-white/10"
+              className="w-full text-[#9CA3AF] hover:text-white hover:bg-white/10"
               onClick={() => window.location.href = "/"}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

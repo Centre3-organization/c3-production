@@ -74,21 +74,21 @@ const typeLabels: Record<string, string> = {
 const typeColors: Record<string, string> = {
   admin_visit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
   work_permit: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
-  material_entry: "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  material_entry: "bg-[#FEF3C7] text-[#D97706] border-[#D97706]",
   tep: "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]/20",
   mop: "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
-  escort: "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
+  escort: "bg-[#D1FAE5] text-[#059669] border-[#059669]",
 };
 
 // Dynamic stage badge colors - cycles through for any number of stages
 const stageColors = [
-  "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  "bg-[#FEF3C7] text-[#D97706] border-[#D97706]",
   "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
   "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
   "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]",
-  "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]",
+  "bg-[#D1FAE5] text-[#059669] border-[#059669]",
   "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]/30",
-  "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]",
+  "bg-[#FEF3C7] text-[#D97706] border-[#D97706]",
   "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]",
 ];
 
@@ -368,7 +368,7 @@ export default function Approvals() {
           <div
             key={i}
             className={`w-2 h-2 rounded-full ${
-              i < currentStage ? "bg-[#E8F9F8]" : i === currentStage - 1 ? "bg-[#FFF4E5]" : "bg-[#E0E0E0]"
+              i < currentStage ? "bg-[#D1FAE5]" : i === currentStage - 1 ? "bg-[#FEF3C7]" : "bg-[#E0E0E0]"
             }`}
           />
         ))}
@@ -410,15 +410,15 @@ export default function Approvals() {
         </Card>
         
         {uniqueStages.slice(0, 3).map((stage, index) => (
-          <Card key={stage.name} className={`border-l-4 ${index === 0 ? "border-l-[#FFB84D]" : index === 1 ? "border-l-[#5B2C93]" : "border-l-[#4ECDC4]"}`}>
+          <Card key={stage.name} className={`border-l-4 ${index === 0 ? "border-l-[#D97706]" : index === 1 ? "border-l-[#5B2C93]" : "border-l-[#059669]"}`}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-[#2C2C2C]">{stage.name}</p>
                   <p className="text-2xl font-medium">{stage.count}</p>
                 </div>
-                <div className={`p-2 rounded-lg ${index === 0 ? "bg-[#FFF4E5]" : index === 1 ? "bg-[#E8DCF5]" : "bg-[#E8F9F8]"}`}>
-                  <GitBranch className={`h-5 w-5 ${index === 0 ? "text-[#FFB84D]" : index === 1 ? "text-[#5B2C93]" : "text-[#4ECDC4]"}`} />
+                <div className={`p-2 rounded-lg ${index === 0 ? "bg-[#FEF3C7]" : index === 1 ? "bg-[#E8DCF5]" : "bg-[#D1FAE5]"}`}>
+                  <GitBranch className={`h-5 w-5 ${index === 0 ? "text-[#D97706]" : index === 1 ? "text-[#5B2C93]" : "text-[#059669]"}`} />
                 </div>
               </div>
             </CardContent>
@@ -489,7 +489,7 @@ export default function Approvals() {
       ) : filteredTasks.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <CheckCheck className="h-12 w-12 text-[#4ECDC4] mb-4" />
+            <CheckCheck className="h-12 w-12 text-[#059669] mb-4" />
             <h3 className="text-lg font-medium">{t("approvals.noPending", "No Pending Approvals")}</h3>
             <p className="text-sm text-[#6B6B6B]">{t("approvals.noPendingDesc", "You're all caught up! Check back later for new requests.")}</p>
           </CardContent>
@@ -551,7 +551,7 @@ export default function Approvals() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-[#FFB84D] hover:text-[#FFB84D] hover:bg-[#FFF4E5]"
+                      className="text-[#D97706] hover:text-[#D97706] hover:bg-[#FEF3C7]"
                       onClick={(e) => {
                         e.stopPropagation();
                         openActionDialog(task, "clarification");
@@ -576,7 +576,7 @@ export default function Approvals() {
                     </Button>
                     <Button
                       size="sm"
-                      className="bg-[#4ECDC4] hover:bg-[#3DBDB4] text-white"
+                      className="bg-[#059669] hover:bg-[#047857] text-white"
                       onClick={(e) => {
                         e.stopPropagation();
                         openActionDialog(task, "approve");
@@ -606,9 +606,9 @@ export default function Approvals() {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className={`flex items-center gap-2 ${
-              actionType === "approve" ? "text-[#4ECDC4]" : 
+              actionType === "approve" ? "text-[#059669]" : 
               actionType === "reject" ? "text-[#FF6B6B]" : 
-              "text-[#FFB84D]"
+              "text-[#D97706]"
             }`}>
               {actionType === "approve" && <CheckCircle2 className="h-5 w-5" />}
               {actionType === "reject" && <XCircle className="h-5 w-5" />}
@@ -644,11 +644,11 @@ export default function Approvals() {
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">{t("approvals.sendClarificationTo", "Send clarification request to:")}</Label>
                   <RadioGroup value={clarificationTarget} onValueChange={(v) => setClarificationTarget(v as any)} className="grid gap-3">
-                    <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${clarificationTarget === "requestor" ? "border-[#FFB84D] bg-[#FFF4E5]" : "hover:bg-[#F5F5F5]"}`}>
+                    <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${clarificationTarget === "requestor" ? "border-[#D97706] bg-[#FEF3C7]" : "hover:bg-[#F5F5F5]"}`}>
                       <RadioGroupItem value="requestor" id="requestor" />
                       <Label htmlFor="requestor" className="flex items-center gap-3 cursor-pointer flex-1">
-                        <div className="p-2 bg-[#FFF4E5] rounded-lg">
-                          <User className="h-5 w-5 text-[#FFB84D]" />
+                        <div className="p-2 bg-[#FEF3C7] rounded-lg">
+                          <User className="h-5 w-5 text-[#D97706]" />
                         </div>
                         <div>
                           <p className="font-medium">{t("approvals.requestor", "Requestor")}</p>
@@ -704,9 +704,9 @@ export default function Approvals() {
             </Button>
             <Button 
               className={
-                actionType === "approve" ? "bg-[#4ECDC4] hover:bg-[#3DBDB4] text-white" :
+                actionType === "approve" ? "bg-[#059669] hover:bg-[#047857] text-white" :
                 actionType === "reject" ? "bg-[#FF6B6B] hover:bg-[#FF6B6B] text-white" :
-                "bg-[#FFB84D] hover:bg-[#FFB84D] text-white"
+                "bg-[#D97706] hover:bg-[#D97706] text-white"
               }
               onClick={handleActionConfirm}
               disabled={processingId !== null || (actionType !== "approve" && !actionComments.trim())}
@@ -735,7 +735,7 @@ export default function Approvals() {
       }}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-[#4ECDC4]">
+            <DialogTitle className="flex items-center gap-2 text-[#059669]">
               <Shield className="h-5 w-5" />
               {t("approvals.grantAccessTitle", "Grant Access")}
             </DialogTitle>
@@ -750,7 +750,7 @@ export default function Approvals() {
               <div className="p-3 bg-[#F5F5F5] rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="font-mono text-sm font-medium">{selectedRequest.request?.requestNumber}</span>
-                  <Badge variant="outline" className="bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]">
+                  <Badge variant="outline" className="bg-[#D1FAE5] text-[#059669] border-[#059669]">
                     Final Stage
                   </Badge>
                 </div>
@@ -766,11 +766,11 @@ export default function Approvals() {
               <div className="space-y-3">
                 <Label className="text-sm font-medium">{t("approvals.selectEntryMethod", "Select Entry Method")}</Label>
                 <RadioGroup value={entryMethod} onValueChange={(v) => setEntryMethod(v as any)} className="grid gap-3">
-                  <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${entryMethod === "qr_code" ? "border-[#4ECDC4] bg-[#E8F9F8]" : "hover:bg-[#F5F5F5]"}`}>
+                  <div className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${entryMethod === "qr_code" ? "border-[#059669] bg-[#D1FAE5]" : "hover:bg-[#F5F5F5]"}`}>
                     <RadioGroupItem value="qr_code" id="qr_code" />
                     <Label htmlFor="qr_code" className="flex items-center gap-3 cursor-pointer flex-1">
-                      <div className="p-2 bg-[#E8F9F8] rounded-lg">
-                        <QrCode className="h-5 w-5 text-[#4ECDC4]" />
+                      <div className="p-2 bg-[#D1FAE5] rounded-lg">
+                        <QrCode className="h-5 w-5 text-[#059669]" />
                       </div>
                       <div>
                         <p className="font-medium">{t("approvals.qrCode", "QR Code")}</p>
@@ -851,7 +851,7 @@ export default function Approvals() {
               {t("common.cancel", "Cancel")}
             </Button>
             <Button 
-              className="bg-[#4ECDC4] hover:bg-[#3DBDB4] text-white"
+              className="bg-[#059669] hover:bg-[#047857] text-white"
               onClick={handleFinalApprove}
               disabled={processingId !== null}
             >
@@ -870,7 +870,7 @@ export default function Approvals() {
       <Dialog open={qrResultDialogOpen} onOpenChange={setQrResultDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-[#4ECDC4]">
+            <DialogTitle className="flex items-center gap-2 text-[#059669]">
               <CheckCircle2 className="h-5 w-5" />
               {t("approvals.accessGranted", "Access Granted")}
             </DialogTitle>
@@ -880,8 +880,8 @@ export default function Approvals() {
           </DialogHeader>
           
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-20 h-20 rounded-full bg-[#E8F9F8] flex items-center justify-center">
-              <CheckCircle2 className="h-10 w-10 text-[#4ECDC4]" />
+            <div className="w-20 h-20 rounded-full bg-[#D1FAE5] flex items-center justify-center">
+              <CheckCircle2 className="h-10 w-10 text-[#059669]" />
             </div>
             <div className="text-center">
               <p className="text-sm font-medium text-[#2C2C2C]">{t("approvals.accessCredentialsReady", "Access credentials have been generated successfully.")}</p>
@@ -1032,9 +1032,9 @@ export default function Approvals() {
                 </div>
                 
                 {/* Column 3: Location & Workflow */}
-                <div className="border-l-4 border-[#4ECDC4] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
+                <div className="border-l-4 border-[#059669] bg-[#F5F5F5] rounded-r-lg p-4 space-y-4">
                   <h4 className="text-sm font-medium text-[#2C2C2C] flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-[#4ECDC4]" />
+                    <MapPin className="h-4 w-4 text-[#059669]" />
                     {t("approvals.locationWorkflow", "Location & Workflow")}
                   </h4>
                   <div className="space-y-3">
@@ -1069,7 +1069,7 @@ export default function Approvals() {
               {/* Approval Timeline with Comments */}
               <div className="border-t pt-4">
                 <h4 className="text-sm font-medium text-[#2C2C2C] mb-3 flex items-center gap-2">
-                  <History className="h-4 w-4 text-[#FFB84D]" />
+                  <History className="h-4 w-4 text-[#D97706]" />
                   {t("approvals.approvalTimeline", "Approval Timeline")}
                 </h4>
                 
@@ -1079,9 +1079,9 @@ export default function Approvals() {
                     <div key={idx} className="flex items-center">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
                         idx + 1 < (selectedRequest.stageOrder || 1) 
-                          ? "bg-[#E8F9F8] text-[#4ECDC4] border-2 border-[#4ECDC4]" 
+                          ? "bg-[#D1FAE5] text-[#059669] border-2 border-[#059669]" 
                           : idx + 1 === (selectedRequest.stageOrder || 1)
-                            ? "bg-[#FFF4E5] text-[#FFB84D] border-2 border-[#FFB84D]"
+                            ? "bg-[#FEF3C7] text-[#D97706] border-2 border-[#D97706]"
                             : "bg-[#F5F5F5] text-[#6B6B6B] border-2 border-[#E0E0E0]"
                       }`}>
                         {idx + 1 < (selectedRequest.stageOrder || 1) ? (
@@ -1092,7 +1092,7 @@ export default function Approvals() {
                       </div>
                       {idx < (selectedRequest.totalStages || 1) - 1 && (
                         <div className={`w-8 h-0.5 ${
-                          idx + 1 < (selectedRequest.stageOrder || 1) ? "bg-[#E8F9F8]" : "bg-[#E0E0E0]"
+                          idx + 1 < (selectedRequest.stageOrder || 1) ? "bg-[#D1FAE5]" : "bg-[#E0E0E0]"
                         }`} />
                       )}
                     </div>
@@ -1107,34 +1107,34 @@ export default function Approvals() {
                     
                     {selectedRequest.approvalHistory.map((history: any, idx: number) => {
                       const actionColors: Record<string, string> = {
-                        approved: "border-[#4ECDC4]",
+                        approved: "border-[#059669]",
                         rejected: "border-[#FF6B6B]",
                         decision_made: "border-[#5B2C93]",
-                        info_requested: "border-[#FFB84D]",
+                        info_requested: "border-[#D97706]",
                         submitted: "border-[#5B2C93]",
                         escalated: "border-[#5B2C93]",
                         workflow_started: "border-[#B0B0B0]",
-                        workflow_completed: "border-[#4ECDC4]",
-                        stage_completed: "border-[#4ECDC4]",
+                        workflow_completed: "border-[#059669]",
+                        stage_completed: "border-[#059669]",
                         task_assigned: "border-[#5B2C93]",
-                        sent_back: "border-[#FFB84D]",
-                        clarification_requested: "border-[#FFB84D]",
+                        sent_back: "border-[#D97706]",
+                        clarification_requested: "border-[#D97706]",
                         clarification_provided: "border-[#5B2C93]",
                         task_reassigned: "border-[#5B2C93]",
                       };
                       const actionBgColors: Record<string, string> = {
-                        approved: "bg-[#E8F9F8]",
+                        approved: "bg-[#D1FAE5]",
                         rejected: "bg-[#FF6B6B]",
                         decision_made: "bg-[#E8DCF5]",
-                        info_requested: "bg-[#FFF4E5]",
+                        info_requested: "bg-[#FEF3C7]",
                         submitted: "bg-[#E8DCF5]",
                         escalated: "bg-[#E8DCF5]",
                         workflow_started: "bg-[#F5F5F5]",
-                        workflow_completed: "bg-[#4ECDC4]",
-                        stage_completed: "bg-[#E8F9F8]",
+                        workflow_completed: "bg-[#059669]",
+                        stage_completed: "bg-[#D1FAE5]",
                         task_assigned: "bg-[#5B2C93]",
-                        sent_back: "bg-[#FFF4E5]",
-                        clarification_requested: "bg-[#FFF4E5]",
+                        sent_back: "bg-[#FEF3C7]",
+                        clarification_requested: "bg-[#FEF3C7]",
                         clarification_provided: "bg-[#5B2C93]",
                         task_reassigned: "bg-[#E8DCF5]",
                       };
@@ -1205,7 +1205,7 @@ export default function Approvals() {
                                   <Badge 
                                     variant="outline" 
                                     className={`text-xs px-1.5 py-0 ${
-                                      decision === "approved" ? "bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]" :
+                                      decision === "approved" ? "bg-[#D1FAE5] text-[#059669] border-[#059669]" :
                                       decision === "rejected" ? "bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]" :
                                       "bg-[#F5F5F5] text-[#2C2C2C]"
                                     }`}
@@ -1269,7 +1269,7 @@ export default function Approvals() {
             )}
             <Button
               variant="outline"
-              className="text-[#FFB84D] hover:text-[#FFB84D] hover:bg-[#FFF4E5]"
+              className="text-[#D97706] hover:text-[#D97706] hover:bg-[#FEF3C7]"
               onClick={() => {
                 setDetailsDialogOpen(false);
                 openActionDialog(selectedRequest, "clarification");
@@ -1290,7 +1290,7 @@ export default function Approvals() {
               {t("common.reject", "Reject")}
             </Button>
             <Button
-              className="bg-[#4ECDC4] hover:bg-[#3DBDB4] text-white"
+              className="bg-[#059669] hover:bg-[#047857] text-white"
               onClick={() => {
                 setDetailsDialogOpen(false);
                 openActionDialog(selectedRequest, "approve");

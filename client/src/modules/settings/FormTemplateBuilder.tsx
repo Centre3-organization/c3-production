@@ -128,11 +128,11 @@ const DEFAULT_INFO_SECTIONS: InfoSection[] = [
 
 const DEFAULT_SAFETY_RULES: SafetyRule[] = [
   { icon: "shield", iconColor: "#FF6B6B", title: "Safety First", titleAr: "السلامة أولاً", subtitle: "Follow all safety instructions", subtitleAr: "اتبع جميع تعليمات السلامة", isActive: true, sortOrder: 1 },
-  { icon: "hardhat", iconColor: "#FFB84D", title: "PPE Required", titleAr: "معدات الحماية مطلوبة", subtitle: "Wear required protective equipment", subtitleAr: "ارتد معدات الحماية المطلوبة", isActive: true, sortOrder: 2 },
+  { icon: "hardhat", iconColor: "#D97706", title: "PPE Required", titleAr: "معدات الحماية مطلوبة", subtitle: "Wear required protective equipment", subtitleAr: "ارتد معدات الحماية المطلوبة", isActive: true, sortOrder: 2 },
   { icon: "cigarette", iconColor: "#FF6B6B", title: "No Smoking", titleAr: "ممنوع التدخين", subtitle: "Smoking is strictly prohibited", subtitleAr: "التدخين ممنوع منعاً باتاً", isActive: true, sortOrder: 3 },
   { icon: "camera", iconColor: "#5B2C93", title: "No Photography", titleAr: "ممنوع التصوير", subtitle: "Photography is not allowed", subtitleAr: "التصوير غير مسموح", isActive: true, sortOrder: 4 },
   { icon: "phone", iconColor: "#5B2C93", title: "Emergency", titleAr: "الطوارئ", subtitle: "Call 911 for emergencies", subtitleAr: "اتصل 911 للطوارئ", isActive: true, sortOrder: 5 },
-  { icon: "footprints", iconColor: "#4ECDC4", title: "Restricted Areas", titleAr: "مناطق محظورة", subtitle: "Stay in authorized areas only", subtitleAr: "ابق في المناطق المصرح بها فقط", isActive: true, sortOrder: 6 },
+  { icon: "footprints", iconColor: "#059669", title: "Restricted Areas", titleAr: "مناطق محظورة", subtitle: "Stay in authorized areas only", subtitleAr: "ابق في المناطق المصرح بها فقط", isActive: true, sortOrder: 6 },
 ];
 
 const getDefaultTemplate = (): FormTemplateData => ({
@@ -240,7 +240,7 @@ function FormPreview({ template }: { template: FormTemplateData }) {
             <div key={field.key} className="border-b border-[#E0E0E0] pb-2">
               <div className="flex justify-between">
                 <span className="text-xs text-[#6B6B6B] uppercase tracking-wide">{field.label}</span>
-                {field.labelAr && <span className="text-xs text-[#B0B0B0]" dir="rtl">{field.labelAr}</span>}
+                {field.labelAr && <span className="text-xs text-[#9CA3AF]" dir="rtl">{field.labelAr}</span>}
               </div>
               <p className="text-sm font-medium text-[#2C2C2C] mt-0.5">
                 {sampleData[field.key] || "—"}
@@ -281,7 +281,7 @@ function FormPreview({ template }: { template: FormTemplateData }) {
                 </div>
                 <div>
                   <p className="text-xs font-medium text-[#2C2C2C] leading-tight">{rule.title}</p>
-                  {rule.subtitle && <p className="text-[10px] text-[#B0B0B0] leading-tight">{rule.subtitle}</p>}
+                  {rule.subtitle && <p className="text-[10px] text-[#9CA3AF] leading-tight">{rule.subtitle}</p>}
                 </div>
               </div>
             ))}
@@ -291,10 +291,10 @@ function FormPreview({ template }: { template: FormTemplateData }) {
 
       {/* Disclaimer */}
       {template.disclaimerText && (
-        <div className="px-6 py-2 bg-[#FFF4E5] border-t border-[#FFB84D]">
-          <p className="text-[10px] text-[#FFB84D] leading-relaxed">{template.disclaimerText}</p>
+        <div className="px-6 py-2 bg-[#FEF3C7] border-t border-[#D97706]">
+          <p className="text-[10px] text-[#D97706] leading-relaxed">{template.disclaimerText}</p>
           {template.disclaimerTextAr && (
-            <p className="text-[10px] text-[#FFB84D] leading-relaxed mt-1" dir="rtl">{template.disclaimerTextAr}</p>
+            <p className="text-[10px] text-[#D97706] leading-relaxed mt-1" dir="rtl">{template.disclaimerTextAr}</p>
           )}
         </div>
       )}
@@ -304,8 +304,8 @@ function FormPreview({ template }: { template: FormTemplateData }) {
         <div className="flex justify-between items-center">
           <div>
             <p className="text-xs font-medium text-[#6B6B6B]">{template.footerDepartment}</p>
-            {template.footerPhone && <p className="text-[10px] text-[#B0B0B0]">{template.footerPhone}</p>}
-            {template.footerEmail && <p className="text-[10px] text-[#B0B0B0]">{template.footerEmail}</p>}
+            {template.footerPhone && <p className="text-[10px] text-[#9CA3AF]">{template.footerPhone}</p>}
+            {template.footerEmail && <p className="text-[10px] text-[#9CA3AF]">{template.footerEmail}</p>}
           </div>
           <div className="text-right" dir="rtl">
             {template.footerDepartmentAr && <p className="text-xs font-medium text-[#6B6B6B]">{template.footerDepartmentAr}</p>}
@@ -491,7 +491,7 @@ export default function FormTemplateBuilder() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-medium">Form Templates</h3>
+            <h3 className="text-lg font-medium text-[#2C2C2C]">Form Templates</h3>
             <p className="text-sm text-[#6B6B6B]">
               Customize the visit permission forms that are generated with approved requests.
             </p>
@@ -512,7 +512,7 @@ export default function FormTemplateBuilder() {
           <Card>
             <CardContent className="py-12 text-center">
               <FileText className="h-12 w-12 mx-auto text-[#6B6B6B] mb-4" />
-              <h3 className="text-lg font-medium mb-2">No Form Templates</h3>
+              <h3 className="text-lg font-medium text-[#2C2C2C] mb-2">No Form Templates</h3>
               <p className="text-[#6B6B6B] mb-4">Create your first form template to generate visit permission forms.</p>
               <Button
                 className="bg-[#5B2C93] hover:bg-[#5B2C93]"

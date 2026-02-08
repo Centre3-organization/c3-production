@@ -271,7 +271,7 @@ export default function Groups() {
                 className={`p-2 rounded-lg ${
                   group.groupType === "internal"
                     ? "bg-[#5B2C93]/10 text-[#5B2C93]"
-                    : "bg-[#FFF4E5] text-[#FFB84D]"
+                    : "bg-[#FEF3C7] text-[#D97706]"
                 }`}
               >
                 {group.groupType === "internal" ? (
@@ -376,9 +376,6 @@ export default function Groups() {
         <div>
           <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Group Management</h1>
           <p className="text-sm text-[#6B6B6B]">Manage organizational groups and access hierarchies</p>
-          <p className="text-[#6B6B6B]">
-            Manage organizational groups and access hierarchies
-          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => refetchGroups()}>
@@ -425,8 +422,8 @@ export default function Groups() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-[#FFF4E5] rounded-lg">
-                <Globe className="h-6 w-6 text-[#FFB84D]" />
+              <div className="p-3 bg-[#FEF3C7] rounded-lg">
+                <Globe className="h-6 w-6 text-[#D97706]" />
               </div>
               <div>
                 <p className="text-sm text-[#6B6B6B]">Contractor Groups</p>
@@ -438,8 +435,8 @@ export default function Groups() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-[#E8F9F8] rounded-lg">
-                <Users className="h-6 w-6 text-[#4ECDC4]" />
+              <div className="p-3 bg-[#D1FAE5] rounded-lg">
+                <Users className="h-6 w-6 text-[#059669]" />
               </div>
               <div>
                 <p className="text-sm text-[#6B6B6B]">Total Members</p>

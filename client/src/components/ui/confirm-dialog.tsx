@@ -34,16 +34,16 @@ const variantConfig = {
     confirmButton: "bg-[#FF6B6B] hover:bg-[#FF6B6B] text-white",
   },
   warning: {
-    bg: "bg-[#FFF4E5]",
+    bg: "bg-[#FEF3C7]",
     icon: AlertTriangle,
-    iconColor: "text-[#FFB84D]",
-    confirmButton: "bg-[#FFB84D] hover:bg-[#E5A544] text-white",
+    iconColor: "text-[#D97706]",
+    confirmButton: "bg-[#D97706] hover:bg-[#B45309] text-white",
   },
   success: {
-    bg: "bg-[#E8F9F8]",
+    bg: "bg-[#D1FAE5]",
     icon: CheckCircle,
-    iconColor: "text-[#4ECDC4]",
-    confirmButton: "bg-[#4ECDC4] hover:bg-[#3DBDB4] text-white",
+    iconColor: "text-[#059669]",
+    confirmButton: "bg-[#059669] hover:bg-[#047857] text-white",
   },
   default: {
     bg: "bg-[#E8DCF5]",

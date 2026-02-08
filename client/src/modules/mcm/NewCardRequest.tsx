@@ -389,9 +389,9 @@ export default function NewCardRequest() {
                   {t("mcm.photo", "Photo")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-6 text-center hover:border-[#5B2C93] transition-colors cursor-pointer">
-                  <Upload className="h-8 w-8 mx-auto text-[#B0B0B0] mb-2" />
+                  <Upload className="h-8 w-8 mx-auto text-[#9CA3AF] mb-2" />
                   <p className="text-sm text-[#6B6B6B]">{t("mcm.uploadPhoto", "Click to upload photo")}</p>
-                  <p className="text-xs text-[#B0B0B0] mt-1">PNG, JPG up to 5MB</p>
+                  <p className="text-xs text-[#9CA3AF] mt-1">PNG, JPG up to 5MB</p>
                 </div>
               </div>
 
@@ -400,9 +400,9 @@ export default function NewCardRequest() {
                   {t("mcm.idDocument", "ID Document")} <span className="text-[#FF6B6B]">*</span>
                 </Label>
                 <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-6 text-center hover:border-[#5B2C93] transition-colors cursor-pointer">
-                  <Upload className="h-8 w-8 mx-auto text-[#B0B0B0] mb-2" />
+                  <Upload className="h-8 w-8 mx-auto text-[#9CA3AF] mb-2" />
                   <p className="text-sm text-[#6B6B6B]">{t("mcm.uploadIdDocument", "Click to upload ID document")}</p>
-                  <p className="text-xs text-[#B0B0B0] mt-1">PDF, PNG, JPG up to 10MB</p>
+                  <p className="text-xs text-[#9CA3AF] mt-1">PDF, PNG, JPG up to 10MB</p>
                 </div>
               </div>
 
@@ -411,9 +411,9 @@ export default function NewCardRequest() {
                   {t("mcm.contract", "Contract/Letter")}
                 </Label>
                 <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-6 text-center hover:border-[#5B2C93] transition-colors cursor-pointer">
-                  <Upload className="h-8 w-8 mx-auto text-[#B0B0B0] mb-2" />
+                  <Upload className="h-8 w-8 mx-auto text-[#9CA3AF] mb-2" />
                   <p className="text-sm text-[#6B6B6B]">{t("mcm.uploadContract", "Click to upload contract")}</p>
-                  <p className="text-xs text-[#B0B0B0] mt-1">PDF up to 10MB</p>
+                  <p className="text-xs text-[#9CA3AF] mt-1">PDF up to 10MB</p>
                 </div>
               </div>
             </div>
@@ -441,7 +441,7 @@ export default function NewCardRequest() {
 
             {formData.accessLevels.length === 0 ? (
               <div className="text-center py-12 bg-[#F5F5F5] rounded-lg border-2 border-dashed border-[#E0E0E0]">
-                <Shield className="h-12 w-12 mx-auto text-[#B0B0B0] mb-4" />
+                <Shield className="h-12 w-12 mx-auto text-[#9CA3AF] mb-4" />
                 <p className="text-[#6B6B6B] mb-4">{t("mcm.noAccessLevels", "No access levels added yet")}</p>
                 <Button variant="outline" onClick={addAccessLevel} className="gap-2">
                   <Plus className="h-4 w-4" />
@@ -626,81 +626,29 @@ export default function NewCardRequest() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#F5F5F5]">
-      {/* Top Toolbar - IBM Maximo Style */}
-      <div className="bg-[#2C2C2C] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
-        <div className="flex items-center gap-6">
-          <span className="font-medium tracking-wide text-white uppercase">
-            {t("mcm.createNewCardRequest", "CREATE NEW CARD REQUEST")}
-          </span>
-          <div className="h-5 w-px bg-[#6B6B6B]" />
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-            >
-              <Search className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-              onClick={() => handleSubmit(true)}
-              disabled={createMutation.isPending}
-            >
-              <Save className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-            >
-              <RotateCcw className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-            >
-              <Printer className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-[#B0B0B0]">
-          <span className="uppercase tracking-wider text-[10px] font-medium text-[#B0B0B0]">
-            {t("common.loggedInAs", "LOGGED IN AS:")}
-          </span>
-          <span className="font-medium text-white flex items-center gap-1 text-xs">
-            {user?.name?.toUpperCase() || "USER"} <User className="h-3 w-3" />
-          </span>
-        </div>
-      </div>
-
-      {/* Secondary Toolbar */}
-      <div className="bg-white border-b px-4 py-3 flex items-center gap-4 text-sm shadow-sm">
+    <div className="flex flex-col h-[calc(100vh-6rem)]">
+      {/* Header Toolbar */}
+      <div className="bg-white border-b px-6 py-4 flex items-center gap-4 shadow-sm">
         <Link href="/mcm">
           <Button
             variant="ghost"
-            size="sm"
-            className="text-[#5B2C93] hover:bg-[#5B2C93]/10 gap-2 font-medium h-8"
+            size="icon"
+            className="h-8 w-8"
           >
-            <ArrowLeft className="h-4 w-4" />
-            {t("common.returnToList", "Return to List")}
+            <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
-        <div className="h-6 w-px bg-[#E0E0E0]" />
+        <div>
+          <h1 className="text-xl font-medium text-[#2C2C2C] leading-7">
+            {t("mcm.createNewCardRequest", "Create New Card Request")}
+          </h1>
+          <p className="text-sm text-[#6B6B6B]">{t("mcm.fillDetails", "Fill in the card request details")}</p>
+        </div>
+        <div className="h-6 w-px bg-[#E0E0E0] ml-2" />
 
         <div className="ml-auto flex items-center gap-6 text-[#6B6B6B]">
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase font-medium text-[#B0B0B0]">
+            <span className="text-xs uppercase font-medium text-[#9CA3AF]">
               {t("mcm.requestType", "Request Type")}
             </span>
             <Badge
@@ -712,7 +660,7 @@ export default function NewCardRequest() {
             </Badge>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase font-medium text-[#B0B0B0]">
+            <span className="text-xs uppercase font-medium text-[#9CA3AF]">
               {t("common.status", "Status")}
             </span>
             <Badge
@@ -747,14 +695,14 @@ export default function NewCardRequest() {
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-colors",
                     isActive
-                      ? "bg-[#E8F9F8] text-[#3D1C5E] border-l-4 border-[#5B2C93]"
+                      ? "bg-[#D1FAE5] text-[#3D1C5E] border-l-4 border-[#5B2C93]"
                       : "text-[#6B6B6B] hover:bg-[#F5F5F5] border-l-4 border-transparent"
                   )}
                 >
                   <Icon
                     className={cn(
                       "h-4 w-4 flex-shrink-0",
-                      isActive ? "text-[#5B2C93]" : "text-[#B0B0B0]"
+                      isActive ? "text-[#5B2C93]" : "text-[#9CA3AF]"
                     )}
                   />
                   <span className="flex-1 text-left truncate">{getSectionName(section)}</span>

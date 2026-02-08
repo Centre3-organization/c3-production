@@ -390,59 +390,25 @@ export default function NewRequest() {
     if (value && value.trim()) {
       return <span className="font-medium text-[#2C2C2C]">{value}</span>;
     }
-    return <span className="text-[#B0B0B0] italic">{emptyText}</span>;
+    return <span className="text-[#9CA3AF] italic">{emptyText}</span>;
   };
 
   return (
     <>
     <ErrorDialogComponent />
-    <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#F5F5F5]">
-      {/* Top Toolbar - IBM Maximo Style */}
-      <div className="bg-[#2C2C2C] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
-        <div className="flex items-center gap-6">
-          <span className="font-medium tracking-wide text-white uppercase">CREATE NEW REQUEST</span>
-          <div className="h-5 w-px bg-[#6B6B6B]" />
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20 rounded-none">
-              <Search className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20 rounded-none">
-              <Plus className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-              onClick={() => handleSubmit(true)}
-              disabled={createRequest.isPending}
-            >
-              <Save className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20 rounded-none">
-              <RotateCcw className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20 rounded-none">
-              <Printer className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-[#B0B0B0]">
-          <span className="uppercase tracking-wider text-[10px] font-medium text-[#B0B0B0]">LOGGED IN AS:</span>
-          <span className="font-medium text-white flex items-center gap-1 text-xs">
-            {user?.name?.toUpperCase() || "USER"} <User className="h-3 w-3" />
-          </span>
-        </div>
-      </div>
-
-      {/* Secondary Toolbar */}
-      <div className="bg-white border-b px-4 py-3 flex items-center gap-4 text-sm shadow-sm">
+    <div className="flex flex-col h-[calc(100vh-6rem)]">
+      {/* Header Toolbar */}
+      <div className="bg-white border-b px-6 py-4 flex items-center gap-4 shadow-sm">
         <Link href="/requests">
-          <Button variant="ghost" size="sm" className="text-[#5B2C93] hover:bg-[#5B2C93]/10 gap-2 font-medium h-8">
-            <ArrowLeft className="h-4 w-4" />
-            Return to List
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
-        <div className="h-6 w-px bg-[#E0E0E0]" />
+        <div>
+          <h1 className="text-xl font-medium text-[#2C2C2C] leading-7">Create New Request</h1>
+          <p className="text-sm text-[#6B6B6B]">Fill in the request details below</p>
+        </div>
+        <div className="h-6 w-px bg-[#E0E0E0] ml-2" />
         <div className="flex items-center gap-2">
           <span className="text-[#FF6B6B] font-medium">*</span>
           <span className="font-medium text-[#2C2C2C]">Request Type:</span>
@@ -461,11 +427,11 @@ export default function NewRequest() {
         </div>
         <div className="ml-auto flex items-center gap-6 text-[#6B6B6B]">
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase font-medium text-[#B0B0B0]">Status</span>
+            <span className="text-xs uppercase font-medium text-[#9CA3AF]">Status</span>
             <Badge variant="outline" className="bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93] rounded-sm px-2 py-0.5">NEW</Badge>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase font-medium text-[#B0B0B0]">Request ID</span>
+            <span className="text-xs uppercase font-medium text-[#9CA3AF]">Request ID</span>
             <span className="font-mono text-black font-medium">REQ-DRAFT</span>
           </div>
         </div>
@@ -493,11 +459,11 @@ export default function NewRequest() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-colors ${
                   activeTab === tab.id 
-                    ? "bg-[#E8F9F8] text-[#3D1C5E] border-l-4 border-[#5B2C93]" 
+                    ? "bg-[#D1FAE5] text-[#3D1C5E] border-l-4 border-[#5B2C93]" 
                     : "text-[#6B6B6B] hover:bg-[#F5F5F5] border-l-4 border-transparent"
                 }`}
               >
-                <tab.icon className={`h-4 w-4 ${activeTab === tab.id ? "text-[#5B2C93]" : "text-[#B0B0B0]"}`} />
+                <tab.icon className={`h-4 w-4 ${activeTab === tab.id ? "text-[#5B2C93]" : "text-[#9CA3AF]"}`} />
                 {tab.label}
               </button>
             ))}
@@ -676,9 +642,9 @@ export default function NewRequest() {
                             <div className="flex items-center">
                               <Badge className={`
                                 ${selectedZone.securityLevel === 'critical' ? 'bg-[#FFE5E5] text-[#FF6B6B] border-[#FF6B6B]' : ''}
-                                ${selectedZone.securityLevel === 'high' ? 'bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]' : ''}
-                                ${selectedZone.securityLevel === 'medium' ? 'bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]' : ''}
-                                ${selectedZone.securityLevel === 'low' ? 'bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]' : ''}
+                                ${selectedZone.securityLevel === 'high' ? 'bg-[#FEF3C7] text-[#D97706] border-[#D97706]' : ''}
+                                ${selectedZone.securityLevel === 'medium' ? 'bg-[#FEF3C7] text-[#D97706] border-[#D97706]' : ''}
+                                ${selectedZone.securityLevel === 'low' ? 'bg-[#D1FAE5] text-[#059669] border-[#059669]' : ''}
                               `}>
                                 Security Level: {selectedZone.securityLevel?.toUpperCase()}
                               </Badge>
@@ -728,12 +694,12 @@ export default function NewRequest() {
                   {siteId && (
                     <>
                       <Separator />
-                      <div className="bg-[#E8F9F8] border border-[#4ECDC4] rounded-md p-4">
-                        <h4 className="font-medium text-[#4ECDC4] text-sm mb-2 flex items-center gap-2">
+                      <div className="bg-[#D1FAE5] border border-[#059669] rounded-md p-4">
+                        <h4 className="font-medium text-[#059669] text-sm mb-2 flex items-center gap-2">
                           <CheckCircle2 className="h-4 w-4" />
                           Access Scope
                         </h4>
-                        <p className="text-sm text-[#4ECDC4]">
+                        <p className="text-sm text-[#059669]">
                           {selectedArea ? (
                             <>Requesting access to <strong>{selectedArea.name}</strong> in <strong>{selectedZone?.name}</strong> at <strong>{selectedSite?.name}</strong></>
                           ) : selectedZone ? (
@@ -917,7 +883,7 @@ export default function NewRequest() {
                                         type="button"
                                         onClick={handleYakeenValidate}
                                         disabled={!visitorIdNumber || isValidating || isValidated}
-                                        className={isValidated ? "bg-[#4ECDC4] hover:bg-[#4ECDC4]" : "bg-[#5B2C93]"}
+                                        className={isValidated ? "bg-[#059669] hover:bg-[#059669]" : "bg-[#5B2C93]"}
                                       >
                                         {isValidating ? (
                                           <Loader2 className="h-4 w-4 animate-spin" />
@@ -934,17 +900,17 @@ export default function NewRequest() {
                               
                               {/* Yakeen Failed - Show manual entry option */}
                               {yakeenFailed && !manualEntry && (
-                                <Alert className="bg-[#FFF4E5] border-[#FFB84D]">
-                                  <XCircle className="h-4 w-4 text-[#FFB84D]" />
-                                  <AlertTitle className="text-[#FFB84D]">Cannot identify through Yakeen</AlertTitle>
-                                  <AlertDescription className="text-[#FFB84D]">
+                                <Alert className="bg-[#FEF3C7] border-[#D97706]">
+                                  <XCircle className="h-4 w-4 text-[#D97706]" />
+                                  <AlertTitle className="text-[#D97706]">Cannot identify through Yakeen</AlertTitle>
+                                  <AlertDescription className="text-[#D97706]">
                                     <p className="mb-2">The ID could not be verified through Yakeen. You can enter the visitor details manually.</p>
                                     <Button 
                                       type="button" 
                                       variant="outline" 
                                       size="sm"
                                       onClick={() => setManualEntry(true)}
-                                      className="border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFF4E5]"
+                                      className="border-[#D97706] text-[#D97706] hover:bg-[#FEF3C7]"
                                     >
                                       <Edit3 className="h-4 w-4 mr-2" />
                                       Enter Manually
@@ -965,10 +931,10 @@ export default function NewRequest() {
                               )}
                               
                               {isValidated && !manualEntry && (
-                                <Alert className="bg-[#E8F9F8] border-[#4ECDC4]">
-                                  <CheckCircle2 className="h-4 w-4 text-[#4ECDC4]" />
-                                  <AlertTitle className="text-[#4ECDC4]">Identity Verified</AlertTitle>
-                                  <AlertDescription className="text-[#4ECDC4]">
+                                <Alert className="bg-[#D1FAE5] border-[#059669]">
+                                  <CheckCircle2 className="h-4 w-4 text-[#059669]" />
+                                  <AlertTitle className="text-[#059669]">Identity Verified</AlertTitle>
+                                  <AlertDescription className="text-[#059669]">
                                     Visitor identity has been verified via Yakeen.
                                   </AlertDescription>
                                 </Alert>
@@ -1082,7 +1048,7 @@ export default function NewRequest() {
 
                   {visitors.length === 0 ? (
                     <div className="border-2 border-dashed border-[#E0E0E0] rounded-lg p-8 text-center">
-                      <Users className="h-12 w-12 text-[#B0B0B0] mx-auto mb-4" />
+                      <Users className="h-12 w-12 text-[#9CA3AF] mx-auto mb-4" />
                       <h4 className="font-medium text-[#6B6B6B] mb-2">No Visitors Added</h4>
                       <p className="text-sm text-[#6B6B6B]">Click "Add Visitor" to verify and add visitors to this request.</p>
                     </div>
@@ -1110,12 +1076,12 @@ export default function NewRequest() {
                               <td className="p-3">{visitor.company || "-"}</td>
                               <td className="p-3">
                                 {visitor.verified ? (
-                                  <Badge className="bg-[#E8F9F8] text-[#4ECDC4] border-[#4ECDC4]">
+                                  <Badge className="bg-[#D1FAE5] text-[#059669] border-[#059669]">
                                     <CheckCircle2 className="h-3 w-3 mr-1" />
                                     Verified
                                   </Badge>
                                 ) : (
-                                  <Badge className="bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]">
+                                  <Badge className="bg-[#FEF3C7] text-[#D97706] border-[#D97706]">
                                     <Edit3 className="h-3 w-3 mr-1" />
                                     Manual
                                   </Badge>
@@ -1155,10 +1121,10 @@ export default function NewRequest() {
 
                   {requestType === "TEP" && (
                     <div className="space-y-6">
-                      <Alert className="bg-[#FFF4E5] border-[#FFB84D]">
-                        <AlertTriangle className="h-4 w-4 text-[#FFB84D]" />
-                        <AlertTitle className="text-[#FFB84D]">Temporary Entry Permit</AlertTitle>
-                        <AlertDescription className="text-[#FFB84D]">
+                      <Alert className="bg-[#FEF3C7] border-[#D97706]">
+                        <AlertTriangle className="h-4 w-4 text-[#D97706]" />
+                        <AlertTitle className="text-[#D97706]">Temporary Entry Permit</AlertTitle>
+                        <AlertDescription className="text-[#D97706]">
                           TEP requires zone-level access approval. Select zone in the Location tab if needed.
                         </AlertDescription>
                       </Alert>
@@ -1187,10 +1153,10 @@ export default function NewRequest() {
 
                   {requestType === "WP" && (
                     <div className="space-y-6">
-                      <Alert className="bg-[#FFF4E5] border-[#FFB84D]">
-                        <HardHat className="h-4 w-4 text-[#FFB84D]" />
-                        <AlertTitle className="text-[#FFB84D]">Work Permit</AlertTitle>
-                        <AlertDescription className="text-[#FFB84D]">
+                      <Alert className="bg-[#FEF3C7] border-[#D97706]">
+                        <HardHat className="h-4 w-4 text-[#D97706]" />
+                        <AlertTitle className="text-[#D97706]">Work Permit</AlertTitle>
+                        <AlertDescription className="text-[#D97706]">
                           Work permits require detailed safety documentation and risk assessment.
                         </AlertDescription>
                       </Alert>
@@ -1258,10 +1224,10 @@ export default function NewRequest() {
 
                   {requestType === "MVP" && (
                     <div className="space-y-6">
-                      <Alert className="bg-[#E8F9F8] border-[#4ECDC4]">
-                        <Truck className="h-4 w-4 text-[#4ECDC4]" />
-                        <AlertTitle className="text-[#4ECDC4]">Material Entry Permit</AlertTitle>
-                        <AlertDescription className="text-[#4ECDC4]">
+                      <Alert className="bg-[#D1FAE5] border-[#059669]">
+                        <Truck className="h-4 w-4 text-[#059669]" />
+                        <AlertTitle className="text-[#059669]">Material Entry Permit</AlertTitle>
+                        <AlertDescription className="text-[#059669]">
                           List all materials to be brought into the facility.
                         </AlertDescription>
                       </Alert>
@@ -1386,19 +1352,19 @@ export default function NewRequest() {
               {activeTab === "review" && (
                 <div className="space-y-8">
                   {validateForm() ? (
-                    <div className="bg-[#FFF4E5] border border-[#FFB84D] p-4 rounded-md flex items-start gap-3">
-                      <AlertTriangle className="h-5 w-5 text-[#FFB84D] mt-0.5" />
+                    <div className="bg-[#FEF3C7] border border-[#D97706] p-4 rounded-md flex items-start gap-3">
+                      <AlertTriangle className="h-5 w-5 text-[#D97706] mt-0.5" />
                       <div>
-                        <h4 className="font-medium text-[#FFB84D]">Missing Information</h4>
-                        <p className="text-sm text-[#FFB84D]">{validateForm()}</p>
+                        <h4 className="font-medium text-[#D97706]">Missing Information</h4>
+                        <p className="text-sm text-[#D97706]">{validateForm()}</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-[#E8F9F8] border border-[#4ECDC4] p-4 rounded-md flex items-start gap-3">
-                      <CheckSquare className="h-5 w-5 text-[#4ECDC4] mt-0.5" />
+                    <div className="bg-[#D1FAE5] border border-[#059669] p-4 rounded-md flex items-start gap-3">
+                      <CheckSquare className="h-5 w-5 text-[#059669] mt-0.5" />
                       <div>
-                        <h4 className="font-medium text-[#4ECDC4]">Ready to Submit</h4>
-                        <p className="text-sm text-[#4ECDC4]">
+                        <h4 className="font-medium text-[#059669]">Ready to Submit</h4>
+                        <p className="text-sm text-[#059669]">
                           All mandatory fields have been filled. Please review the complete summary below before submitting.
                         </p>
                       </div>
@@ -1527,16 +1493,16 @@ export default function NewRequest() {
                         </div>
                         <div className="flex justify-between py-2 border-b">
                           <span className="text-[#6B6B6B]">After-Hours</span>
-                          <span className={afterHours ? "text-[#4ECDC4] font-medium" : "text-[#B0B0B0]"}>{afterHours ? "Yes" : "No"}</span>
+                          <span className={afterHours ? "text-[#059669] font-medium" : "text-[#9CA3AF]"}>{afterHours ? "Yes" : "No"}</span>
                         </div>
                         <div className="flex justify-between py-2 border-b">
                           <span className="text-[#6B6B6B]">Weekend Access</span>
-                          <span className={weekend ? "text-[#4ECDC4] font-medium" : "text-[#B0B0B0]"}>{weekend ? "Yes" : "No"}</span>
+                          <span className={weekend ? "text-[#059669] font-medium" : "text-[#9CA3AF]"}>{weekend ? "Yes" : "No"}</span>
                         </div>
                         {requestType === "TEP" && (
                           <div className="flex justify-between py-2">
                             <span className="text-[#6B6B6B]">Recurring</span>
-                            <span className={recurring ? "text-[#4ECDC4] font-medium" : "text-[#B0B0B0]"}>{recurring ? "Yes" : "No"}</span>
+                            <span className={recurring ? "text-[#059669] font-medium" : "text-[#9CA3AF]"}>{recurring ? "Yes" : "No"}</span>
                           </div>
                         )}
                       </div>
@@ -1553,7 +1519,7 @@ export default function NewRequest() {
                     </div>
                     <div className="p-4">
                       {visitors.length === 0 ? (
-                        <p className="text-[#B0B0B0] italic text-sm">No visitors added</p>
+                        <p className="text-[#9CA3AF] italic text-sm">No visitors added</p>
                       ) : (
                         <div className="space-y-3">
                           {visitors.map((v, i) => (
@@ -1562,7 +1528,7 @@ export default function NewRequest() {
                                 <span className="font-medium">{v.name}</span>
                                 <span className="text-[#6B6B6B] text-sm ml-2">({v.idType.replace("_", " ")} - {v.idNumber})</span>
                               </div>
-                              <Badge className={v.verified ? "bg-[#E8F9F8] text-[#4ECDC4]" : "bg-[#FFF4E5] text-[#FFB84D]"}>
+                              <Badge className={v.verified ? "bg-[#D1FAE5] text-[#059669]" : "bg-[#FEF3C7] text-[#D97706]"}>
                                 {v.verified ? "Verified" : "Manual"}
                               </Badge>
                             </div>
@@ -1635,12 +1601,12 @@ export default function NewRequest() {
                       </div>
                       <div className="p-4">
                         {materials.length === 0 ? (
-                          <p className="text-[#B0B0B0] italic text-sm">No materials added</p>
+                          <p className="text-[#9CA3AF] italic text-sm">No materials added</p>
                         ) : (
                           <div className="space-y-2">
                             {materials.map((m, i) => (
                               <div key={i} className="flex items-center justify-between py-2 border-b last:border-b-0 text-sm">
-                                <span>{m.description || <span className="text-[#B0B0B0] italic">No description</span>}</span>
+                                <span>{m.description || <span className="text-[#9CA3AF] italic">No description</span>}</span>
                                 <span className="text-[#6B6B6B]">Qty: {m.quantity} {m.serialNumber && `| S/N: ${m.serialNumber}`}</span>
                               </div>
                             ))}
@@ -1661,7 +1627,7 @@ export default function NewRequest() {
                     <div className="p-4">
                       <div className="space-y-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-6 h-6 rounded-full bg-[#E8F9F8] text-[#4ECDC4] flex items-center justify-center text-xs font-medium">1</div>
+                          <div className="w-6 h-6 rounded-full bg-[#D1FAE5] text-[#059669] flex items-center justify-center text-xs font-medium">1</div>
                           <span className="text-sm font-medium">L1 Approval (Security Supervisor)</span>
                         </div>
                         <div className="flex items-center gap-3">

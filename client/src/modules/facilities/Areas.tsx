@@ -3,24 +3,11 @@ import {
   Search, 
   Plus, 
   Save, 
-  RotateCcw, 
-  Printer, 
-  User, 
   ArrowLeft, 
   Grid3X3, 
   Server, 
-  Zap, 
-  Wind,
-  Edit,
   Trash2,
-  Filter,
-  Download,
-  Settings,
-  Maximize2,
-  ChevronDown,
-  Calendar,
-  Copy,
-  ArrowRight,
+  RefreshCw,
   Loader2,
   Users
 } from "lucide-react";
@@ -28,10 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { trpc } from "@/lib/trpc";
@@ -61,8 +45,7 @@ type Area = {
 };
 
 export default function Areas() {
-  // Permission checks
-  const { canCreate, canUpdate, canDelete, canRead } = usePermissions('areas');
+  const { canCreate, canUpdate, canDelete } = usePermissions('areas');
   
   const [view, setView] = useState<"list" | "form">("list");
   const [selectedArea, setSelectedArea] = useState<Area | null>(null);
@@ -70,7 +53,6 @@ export default function Areas() {
   const [siteFilter, setSiteFilter] = useState<string>("all");
   const [zoneFilter, setZoneFilter] = useState<string>("all");
   
-  // Form state
   const [formData, setFormData] = useState({
     zoneId: "",
     code: "",
@@ -89,7 +71,6 @@ export default function Areas() {
     status: "active" as "active" | "inactive" | "maintenance",
   });
 
-  // Queries
   const { data: areas = [], isLoading, refetch } = trpc.areas.getAll.useQuery(
     zoneFilter !== "all" 
       ? { zoneId: parseInt(zoneFilter) } 
@@ -103,7 +84,6 @@ export default function Areas() {
   );
   const { data: areaTypes = [] } = trpc.masterData.getAreaTypes.useQuery();
 
-  // Mutations
   const createMutation = trpc.areas.create.useMutation({
     onSuccess: () => {
       toast.success("Area created successfully");
@@ -219,7 +199,6 @@ export default function Areas() {
     }
   };
 
-  // Filter areas
   const filteredAreas = areas.filter((area) => {
     const matchesSearch = 
       area.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -239,247 +218,37 @@ export default function Areas() {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      active: "bg-[#E8F9F8] text-[#4ECDC4]",
-      inactive: "bg-[#F5F5F5] text-[#2C2C2C]",
-      maintenance: "bg-[#FFF4E5] text-[#FFB84D]",
+      active: "bg-[#DCFCE7] text-[#166534]",
+      inactive: "bg-[#F3F4F6] text-[#374151]",
+      maintenance: "bg-[#FEF3C7] text-[#92400E]",
     };
-    return styles[status] || "bg-[#F5F5F5] text-[#2C2C2C]";
+    return styles[status] || "bg-[#F3F4F6] text-[#374151]";
   };
 
-  return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#F5F5F5]">
-      {view === "list" ? (
-        <div className="flex flex-col h-full p-4 space-y-4">
-          {/* SAP Fiori Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8 -ml-2">
-                <ArrowLeft className="h-5 w-5 text-[#6B6B6B]" />
-              </Button>
-              <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Area Management</h1>
-              <p className="text-sm text-[#6B6B6B]">Manage areas within security zones</p>
-              <ChevronDown className="h-5 w-5 text-[#5B2C93]" />
-            </div>
-            <div className="flex items-center gap-2">
-              {canCreate && (
-                <Button onClick={handleCreate} className="h-9 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white px-4 flex items-center gap-2">
-                  <Plus className="h-4 w-4" /> Add Area
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Filter Bar */}
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-[#E0E0E0] space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="font-medium text-lg text-[#2C2C2C]">Standard</h2>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-[#5B2C93]">
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#B0B0B0]" />
-                <Input 
-                  placeholder="Search" 
-                  className="pl-9 h-9 bg-[#F5F5F5] border-[#E0E0E0]"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <Select value={siteFilter} onValueChange={(value) => { setSiteFilter(value); setZoneFilter("all"); }}>
-                <SelectTrigger className="h-9 bg-[#F5F5F5] border-[#E0E0E0]">
-                  <SelectValue placeholder="Site: All" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sites</SelectItem>
-                  {sites.map((site) => (
-                    <SelectItem key={site.id} value={site.id.toString()}>{site.code} - {site.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={zoneFilter} onValueChange={setZoneFilter} disabled={siteFilter === "all"}>
-                <SelectTrigger className="h-9 bg-[#F5F5F5] border-[#E0E0E0]">
-                  <SelectValue placeholder={siteFilter === "all" ? "Select site first" : "Zone: All"} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Zones</SelectItem>
-                  {zones.map((zone) => (
-                    <SelectItem key={zone.id} value={zone.id.toString()}>{zone.code} - {zone.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select>
-                <SelectTrigger className="h-9 bg-[#F5F5F5] border-[#E0E0E0]">
-                  <SelectValue placeholder="Area Type: All" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  {areaTypes.map((type) => (
-                    <SelectItem key={type.id} value={type.code || type.id.toString()}>{type.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="flex gap-2">
-                <Button className="h-9 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white px-4">Go</Button>
-                <Button variant="ghost" className="h-9 text-[#5B2C93] font-medium" onClick={() => { setSearchTerm(""); setSiteFilter("all"); setZoneFilter("all"); }}>Clear</Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Data Table */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#E0E0E0] flex-1 flex flex-col overflow-hidden">
-            <div className="p-2 border-b border-[#E0E0E0] flex items-center justify-between bg-[#F5F5F5]/50">
-              <div className="flex items-center gap-2">
-                <h3 className="font-medium text-[#2C2C2C] text-sm ml-2">Areas ({filteredAreas.length})</h3>
-                <Separator orientation="vertical" className="h-4 mx-2" />
-                <div className="relative w-48">
-                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-[#B0B0B0]" />
-                  <Input 
-                    placeholder="Quick search" 
-                    className="pl-7 h-7 text-xs bg-white border-[#E0E0E0]"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="flex items-center gap-1">
-                {canCreate && <Button variant="ghost" size="sm" className="h-7 text-[#5B2C93] font-medium hover:bg-[#E8DCF5]" onClick={handleCreate}>Create</Button>}
-                <Separator orientation="vertical" className="h-4 mx-1" />
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#5B2C93]"><Download className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#5B2C93]"><Filter className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#5B2C93]"><Settings className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-[#5B2C93]"><Maximize2 className="h-4 w-4" /></Button>
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-auto">
-              {isLoading ? (
-                <div className="flex items-center justify-center h-full">
-                  <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent border-b border-[#E0E0E0]">
-                      <TableHead className="w-[40px]"><Checkbox /></TableHead>
-                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Area Code</TableHead>
-                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Area Name</TableHead>
-                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Zone</TableHead>
-                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Site</TableHead>
-                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Type</TableHead>
-                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Floor</TableHead>
-                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Racks</TableHead>
-                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Status</TableHead>
-                      <TableHead className="font-medium text-[#2C2C2C] text-xs uppercase tracking-wider">Created</TableHead>
-                      <TableHead className="w-[80px]">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredAreas.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={11} className="text-center py-8 text-[#6B6B6B]">
-                          No areas found. Click "Add Area" to create one.
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      filteredAreas.map((area) => (
-                        <TableRow 
-                          key={area.id} 
-                          className={`hover:bg-[#E8DCF5]/50 border-b border-[#E0E0E0] ${canUpdate ? 'cursor-pointer' : ''} group`} 
-                          onClick={() => canUpdate && handleEdit(area)}
-                        >
-                          <TableCell onClick={(e) => e.stopPropagation()}><Checkbox /></TableCell>
-                          <TableCell className="font-medium text-[#5B2C93]">{area.code}</TableCell>
-                          <TableCell className="text-[#2C2C2C]">{area.name}</TableCell>
-                          <TableCell className="text-[#6B6B6B]">{area.zoneCode || "-"}</TableCell>
-                          <TableCell className="text-[#6B6B6B]">{area.siteCode || "-"}</TableCell>
-                          <TableCell className="text-[#6B6B6B]">{area.areaTypeName || "-"}</TableCell>
-                          <TableCell className="text-[#6B6B6B]">{area.floor || "-"}</TableCell>
-                          <TableCell className="text-[#6B6B6B]">{area.rackCount || 0}</TableCell>
-                          <TableCell>
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium capitalize ${getStatusBadge(area.status)}`}>
-                              {area.status}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-[#6B6B6B] text-xs">{formatDate(area.createdAt)}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1">
-                              {canDelete && (
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="h-7 w-7 text-[#B0B0B0] hover:text-[#FF6B6B]"
-                                  onClick={(e) => handleDelete(area.id, e)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              )}
-                              {canUpdate && <ArrowRight className="h-4 w-4 text-[#B0B0B0] group-hover:text-[#5B2C93]" />}
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              )}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col h-full">
-          {/* IBM Maximo Style Header for Form */}
-          <div className="bg-[#2C2C2C] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
-            <div className="flex items-center gap-6">
-              <span className="font-medium tracking-wide text-white uppercase">
-                {selectedArea ? "EDIT AREA" : "CREATE NEW AREA"}
-              </span>
-              <div className="h-5 w-px bg-[#6B6B6B]" />
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20 rounded-none">
-                  <Search className="h-4 w-4" />
-                </Button>
-                <Button 
-                  onClick={handleSave} 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-                  disabled={createMutation.isPending || updateMutation.isPending}
-                >
-                  {(createMutation.isPending || updateMutation.isPending) ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Save className="h-4 w-4" />
-                  )}
-                </Button>
-                <Button onClick={() => { setView("list"); resetForm(); }} variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20 rounded-none">
-                  <RotateCcw className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20 rounded-none">
-                  <Printer className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-[#B0B0B0]">
-              <span className="uppercase tracking-wider text-[10px] font-medium text-[#B0B0B0]">LOGGED IN AS:</span>
-              <span className="font-medium text-white flex items-center gap-1 text-xs">
-                ADMIN USER <User className="h-3 w-3" />
-              </span>
-            </div>
-          </div>
-
-          {/* Secondary Toolbar */}
-          <div className="bg-white border-b px-4 py-3 flex items-center gap-4 text-sm shadow-sm">
-            <Button onClick={() => { setView("list"); resetForm(); }} variant="ghost" size="sm" className="text-[#5B2C93] hover:bg-[#5B2C93]/10 gap-2 font-medium h-8">
-              <ArrowLeft className="h-4 w-4" />
-              Return to List
+  if (view === "form") {
+    return (
+      <div className="p-6 space-y-6">
+        {/* Form Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setView("list"); resetForm(); }}>
+              <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div className="flex-1" />
+            <div>
+              <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">
+                {selectedArea ? "Edit Area" : "Create New Area"}
+              </h1>
+              <p className="text-sm text-[#6B6B6B]">
+                {selectedArea ? `Editing ${selectedArea.name}` : "Add a new area within a security zone"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => { setView("list"); resetForm(); }}>
+              Cancel
+            </Button>
             <Button 
               onClick={handleSave}
-              className="bg-[#5B2C93] hover:bg-[#3D1C5E] text-white px-4 h-8"
               disabled={createMutation.isPending || updateMutation.isPending}
             >
               {(createMutation.isPending || updateMutation.isPending) ? (
@@ -489,203 +258,327 @@ export default function Areas() {
               )}
             </Button>
           </div>
+        </div>
 
-          {/* Form Content */}
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="max-w-5xl mx-auto space-y-6">
-              {/* Basic Information */}
-              <div className="bg-white border shadow-sm rounded-sm">
-                <div className="px-6 py-4 border-b bg-[#F5F5F5] flex justify-between items-center">
-                  <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
-                    <Grid3X3 className="h-5 w-5 text-[#5B2C93]" /> Area Details
-                  </h2>
-                  <span className="text-xs text-[#6B6B6B] italic">* Indicates mandatory field</span>
-                </div>
-                
-                <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Parent Zone <span className="text-[#FF6B6B]">*</span></Label>
-                    <Select 
-                      value={formData.zoneId}
-                      onValueChange={(value) => setFormData({ ...formData, zoneId: value })}
-                    >
-                      <SelectTrigger><SelectValue placeholder="Select Zone" /></SelectTrigger>
-                      <SelectContent>
-                        {zones.map((zone) => (
-                          <SelectItem key={zone.id} value={zone.id.toString()}>{zone.code} - {zone.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Area Type</Label>
-                    <Select 
-                      value={formData.areaTypeId}
-                      onValueChange={(value) => setFormData({ ...formData, areaTypeId: value })}
-                    >
-                      <SelectTrigger><SelectValue placeholder="Select Type" /></SelectTrigger>
-                      <SelectContent>
-                        {areaTypes.map((type) => (
-                          <SelectItem key={type.id} value={type.id.toString()}>{type.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Area Code <span className="text-[#FF6B6B]">*</span></Label>
-                    <Input 
-                      value={formData.code}
-                      onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                      placeholder="e.g. AREA-001" 
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Area Name <span className="text-[#FF6B6B]">*</span></Label>
-                    <Input 
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="e.g. Rack Row A" 
-                    />
-                  </div>
-                  
-                  <div className="space-y-1 md:col-span-2">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Description</Label>
-                    <Textarea 
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Area description..." 
-                      rows={3}
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Floor</Label>
-                    <Input 
-                      value={formData.floor}
-                      onChange={(e) => setFormData({ ...formData, floor: e.target.value })}
-                      placeholder="e.g. 1, B1, G" 
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Max Capacity</Label>
-                    <Input 
-                      type="number"
-                      value={formData.maxCapacity}
-                      onChange={(e) => setFormData({ ...formData, maxCapacity: parseInt(e.target.value) || 0 })}
-                      placeholder="Maximum capacity" 
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Rack Count</Label>
-                    <Input 
-                      type="number"
-                      value={formData.rackCount}
-                      onChange={(e) => setFormData({ ...formData, rackCount: parseInt(e.target.value) || 0 })}
-                      placeholder="Number of racks" 
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Status</Label>
-                    <Select 
-                      value={formData.status}
-                      onValueChange={(value: "active" | "inactive" | "maintenance") => setFormData({ ...formData, status: value })}
-                    >
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                        <SelectItem value="maintenance">Maintenance</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+        {/* Form Content */}
+        <div className="max-w-4xl space-y-6">
+          {/* Area Details */}
+          <div className="bg-white border rounded-lg shadow-sm">
+            <div className="px-6 py-4 border-b flex justify-between items-center">
+              <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
+                <Grid3X3 className="h-5 w-5 text-[#5B2C93]" /> Area Details
+              </h2>
+              <span className="text-xs text-[#6B6B6B] italic">* Indicates mandatory field</span>
+            </div>
+            
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Parent Zone <span className="text-[#DC2626]">*</span></Label>
+                <Select 
+                  value={formData.zoneId}
+                  onValueChange={(value) => setFormData({ ...formData, zoneId: value })}
+                >
+                  <SelectTrigger><SelectValue placeholder="Select Zone" /></SelectTrigger>
+                  <SelectContent>
+                    {zones.map((zone) => (
+                      <SelectItem key={zone.id} value={zone.id.toString()}>{zone.code} - {zone.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Area Type</Label>
+                <Select 
+                  value={formData.areaTypeId}
+                  onValueChange={(value) => setFormData({ ...formData, areaTypeId: value })}
+                >
+                  <SelectTrigger><SelectValue placeholder="Select Type" /></SelectTrigger>
+                  <SelectContent>
+                    {areaTypes.map((type) => (
+                      <SelectItem key={type.id} value={type.id.toString()}>{type.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Area Code <span className="text-[#DC2626]">*</span></Label>
+                <Input 
+                  value={formData.code}
+                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                  placeholder="e.g. AREA-001" 
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Area Name <span className="text-[#DC2626]">*</span></Label>
+                <Input 
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="e.g. Rack Row A" 
+                />
+              </div>
+              
+              <div className="space-y-1 md:col-span-2">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Description</Label>
+                <Textarea 
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="Area description..." 
+                  rows={3}
+                />
               </div>
 
-              {/* Infrastructure Specifications */}
-              <div className="bg-white border shadow-sm rounded-sm">
-                <div className="px-6 py-4 border-b bg-[#F5F5F5]">
-                  <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
-                    <Server className="h-5 w-5 text-[#5B2C93]" /> Infrastructure Specifications
-                  </h2>
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Floor</Label>
+                <Input 
+                  value={formData.floor}
+                  onChange={(e) => setFormData({ ...formData, floor: e.target.value })}
+                  placeholder="e.g. 1, B1, G" 
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Max Capacity</Label>
+                <Input 
+                  type="number"
+                  value={formData.maxCapacity}
+                  onChange={(e) => setFormData({ ...formData, maxCapacity: parseInt(e.target.value) || 0 })}
+                  placeholder="Maximum capacity" 
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Rack Count</Label>
+                <Input 
+                  type="number"
+                  value={formData.rackCount}
+                  onChange={(e) => setFormData({ ...formData, rackCount: parseInt(e.target.value) || 0 })}
+                  placeholder="Number of racks" 
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Status</Label>
+                <Select 
+                  value={formData.status}
+                  onValueChange={(value: "active" | "inactive" | "maintenance") => setFormData({ ...formData, status: value })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="maintenance">Maintenance</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          {/* Infrastructure Specifications */}
+          <div className="bg-white border rounded-lg shadow-sm">
+            <div className="px-6 py-4 border-b">
+              <h2 className="text-lg font-medium text-[#2C2C2C] flex items-center gap-2">
+                <Server className="h-5 w-5 text-[#5B2C93]" /> Infrastructure Specifications
+              </h2>
+            </div>
+            
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Power Type</Label>
+                <Select 
+                  value={formData.infrastructureSpecs.powerType}
+                  onValueChange={(value: "AC" | "DC" | "Both") => setFormData({ 
+                    ...formData, 
+                    infrastructureSpecs: { ...formData.infrastructureSpecs, powerType: value } 
+                  })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="AC">AC Power</SelectItem>
+                    <SelectItem value="DC">DC Power</SelectItem>
+                    <SelectItem value="Both">Both AC & DC</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-sm font-medium text-[#2C2C2C]">Cooling Type</Label>
+                <Select 
+                  value={formData.infrastructureSpecs.coolingType}
+                  onValueChange={(value: "Air" | "Liquid" | "Immersion") => setFormData({ 
+                    ...formData, 
+                    infrastructureSpecs: { ...formData.infrastructureSpecs, coolingType: value } 
+                  })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Air">Air Cooling</SelectItem>
+                    <SelectItem value="Liquid">Liquid Cooling</SelectItem>
+                    <SelectItem value="Immersion">Immersion Cooling</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Users className="h-5 w-5 text-[#6B6B6B]" />
+                  <div>
+                    <p className="font-medium text-[#2C2C2C]">Escort Required</p>
+                    <p className="text-xs text-[#6B6B6B]">Visitors need escort</p>
+                  </div>
                 </div>
-                
-                <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Power Type</Label>
-                    <Select 
-                      value={formData.infrastructureSpecs.powerType}
-                      onValueChange={(value: "AC" | "DC" | "Both") => setFormData({ 
-                        ...formData, 
-                        infrastructureSpecs: { ...formData.infrastructureSpecs, powerType: value } 
-                      })}
-                    >
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="AC">AC Power</SelectItem>
-                        <SelectItem value="DC">DC Power</SelectItem>
-                        <SelectItem value="Both">Both AC & DC</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-[#2C2C2C]">Cooling Type</Label>
-                    <Select 
-                      value={formData.infrastructureSpecs.coolingType}
-                      onValueChange={(value: "Air" | "Liquid" | "Immersion") => setFormData({ 
-                        ...formData, 
-                        infrastructureSpecs: { ...formData.infrastructureSpecs, coolingType: value } 
-                      })}
-                    >
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Air">Air Cooling</SelectItem>
-                        <SelectItem value="Liquid">Liquid Cooling</SelectItem>
-                        <SelectItem value="Immersion">Immersion Cooling</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Users className="h-5 w-5 text-[#6B6B6B]" />
-                      <div>
-                        <p className="font-medium text-[#2C2C2C]">Escort Required</p>
-                        <p className="text-xs text-[#6B6B6B]">Visitors need escort</p>
-                      </div>
-                    </div>
-                    <Switch 
-                      checked={formData.infrastructureSpecs.escortRequired}
-                      onCheckedChange={(checked) => setFormData({ 
-                        ...formData, 
-                        infrastructureSpecs: { ...formData.infrastructureSpecs, escortRequired: checked } 
-                      })}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Grid3X3 className="h-5 w-5 text-[#6B6B6B]" />
-                      <div>
-                        <p className="font-medium text-[#2C2C2C]">Caged Area</p>
-                        <p className="text-xs text-[#6B6B6B]">Physical cage enclosure</p>
-                      </div>
-                    </div>
-                    <Switch 
-                      checked={formData.infrastructureSpecs.cagedArea}
-                      onCheckedChange={(checked) => setFormData({ 
-                        ...formData, 
-                        infrastructureSpecs: { ...formData.infrastructureSpecs, cagedArea: checked } 
-                      })}
-                    />
+                <Switch 
+                  checked={formData.infrastructureSpecs.escortRequired}
+                  onCheckedChange={(checked) => setFormData({ 
+                    ...formData, 
+                    infrastructureSpecs: { ...formData.infrastructureSpecs, escortRequired: checked } 
+                  })}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Grid3X3 className="h-5 w-5 text-[#6B6B6B]" />
+                  <div>
+                    <p className="font-medium text-[#2C2C2C]">Caged Area</p>
+                    <p className="text-xs text-[#6B6B6B]">Physical cage enclosure</p>
                   </div>
                 </div>
+                <Switch 
+                  checked={formData.infrastructureSpecs.cagedArea}
+                  onCheckedChange={(checked) => setFormData({ 
+                    ...formData, 
+                    infrastructureSpecs: { ...formData.infrastructureSpecs, cagedArea: checked } 
+                  })}
+                />
               </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">Area Management</h1>
+          <p className="text-sm text-[#6B6B6B]">Manage areas within security zones</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
+            <RefreshCw className="h-4 w-4" /> Refresh
+          </Button>
+          {canCreate && (
+            <Button onClick={handleCreate} className="gap-2">
+              <Plus className="h-4 w-4" /> Add Area
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6B6B]" />
+          <Input 
+            placeholder="Search areas..." 
+            className="pl-9"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Select value={siteFilter} onValueChange={(value) => { setSiteFilter(value); setZoneFilter("all"); }}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="All Sites" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Sites</SelectItem>
+            {sites.map((site) => (
+              <SelectItem key={site.id} value={site.id.toString()}>{site.code} - {site.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={zoneFilter} onValueChange={setZoneFilter} disabled={siteFilter === "all"}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder={siteFilter === "all" ? "Select site first" : "All Zones"} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Zones</SelectItem>
+            {zones.map((zone) => (
+              <SelectItem key={zone.id} value={zone.id.toString()}>{zone.code} - {zone.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Data Table */}
+      <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="h-8 w-8 animate-spin text-[#5B2C93]" />
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="font-medium text-xs uppercase tracking-wider">Area Code</TableHead>
+                <TableHead className="font-medium text-xs uppercase tracking-wider">Area Name</TableHead>
+                <TableHead className="font-medium text-xs uppercase tracking-wider">Zone</TableHead>
+                <TableHead className="font-medium text-xs uppercase tracking-wider">Site</TableHead>
+                <TableHead className="font-medium text-xs uppercase tracking-wider">Type</TableHead>
+                <TableHead className="font-medium text-xs uppercase tracking-wider">Floor</TableHead>
+                <TableHead className="font-medium text-xs uppercase tracking-wider">Racks</TableHead>
+                <TableHead className="font-medium text-xs uppercase tracking-wider">Status</TableHead>
+                <TableHead className="font-medium text-xs uppercase tracking-wider">Created</TableHead>
+                <TableHead className="w-[80px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredAreas.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={10} className="text-center py-8 text-[#6B6B6B]">
+                    No areas found. Click "Add Area" to create one.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredAreas.map((area) => (
+                  <TableRow 
+                    key={area.id} 
+                    className={`${canUpdate ? 'cursor-pointer hover:bg-[#F9FAFB]' : ''}`} 
+                    onClick={() => canUpdate && handleEdit(area)}
+                  >
+                    <TableCell className="font-medium text-[#5B2C93]">{area.code}</TableCell>
+                    <TableCell className="text-[#2C2C2C]">{area.name}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{area.zoneCode || "-"}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{area.siteCode || "-"}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{area.areaTypeName || "-"}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{area.floor || "-"}</TableCell>
+                    <TableCell className="text-[#6B6B6B]">{area.rackCount || 0}</TableCell>
+                    <TableCell>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium capitalize ${getStatusBadge(area.status)}`}>
+                        {area.status}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-[#6B6B6B] text-xs">{formatDate(area.createdAt)}</TableCell>
+                    <TableCell>
+                      {canDelete && (
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-7 w-7 text-[#6B6B6B] hover:text-[#DC2626]"
+                          onClick={(e) => handleDelete(area.id, e)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        )}
+      </div>
     </div>
   );
 }

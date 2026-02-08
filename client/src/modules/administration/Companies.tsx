@@ -149,7 +149,7 @@ export default function Companies() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-medium tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8 flex items-center gap-2">
             <Building2 className="h-6 w-6 text-[#5B2C93]" />
             {t("companies.title", "Companies")}
           </h1>
@@ -184,13 +184,13 @@ export default function Companies() {
         </Card>
         <Card className="cursor-pointer" onClick={() => setCompaniesFilter("client")}>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-medium text-[#4ECDC4]">{stats.clients}</div>
+            <div className="text-2xl font-medium text-[#059669]">{stats.clients}</div>
             <p className="text-xs text-[#6B6B6B]">{t("companies.clients", "Clients")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 pb-3">
-            <div className="text-2xl font-medium text-[#4ECDC4]">{stats.active}</div>
+            <div className="text-2xl font-medium text-[#059669]">{stats.active}</div>
             <p className="text-xs text-[#6B6B6B]">{t("companies.activeCompanies", "Active")}</p>
           </CardContent>
         </Card>

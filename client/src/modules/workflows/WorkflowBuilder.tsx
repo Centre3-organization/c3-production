@@ -604,7 +604,7 @@ export function WorkflowBuilder() {
                             <Badge variant="default" className="text-xs">Default</Badge>
                           )}
                           {!workflow.isActive && (
-                            <Badge variant="outline" className="text-xs text-[#FFB84D]">Inactive</Badge>
+                            <Badge variant="outline" className="text-xs text-[#D97706]">Inactive</Badge>
                           )}
                         </div>
                       </div>
@@ -622,7 +622,7 @@ export function WorkflowBuilder() {
         <div className="flex-1 p-6 overflow-y-auto">
           <div className="flex items-start justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-medium">{workflowDetails.workflow.name}</h1>
+              <h1 className="text-2xl font-medium text-[#2C2C2C] leading-8">{workflowDetails.workflow.name}</h1>
               <p className="text-[#6B6B6B] mt-1">
                 {workflowDetails.workflow.description || "Default workflow for all access requests with L1 (Initial Review) and L2 (Security Approval) stages"}
               </p>

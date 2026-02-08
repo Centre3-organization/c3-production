@@ -339,89 +339,34 @@ export default function DynamicRequestForm() {
         initialTypeIds={selectedTypeIds}
       />
 
-      <div className="flex flex-col h-[calc(100vh-6rem)] bg-[#F5F5F5]">
-        {/* Top Toolbar - IBM Maximo Style */}
-        <div className="bg-[#2C2C2C] text-white px-4 h-12 flex items-center justify-between text-sm shadow-md z-10">
-          <div className="flex items-center gap-6">
-            <span className="font-medium tracking-wide text-white uppercase">
-              {isEditMode 
-                ? t("requests.editRequest", "EDIT REQUEST") 
-                : t("requests.createNew", "CREATE NEW REQUEST")}
-            </span>
-            {isEditMode && existingRequest && (
-              <Badge variant="outline" className="bg-[#FFF4E5]/20 text-[#FFB84D] border-[#FFB84D]/50">
-                {existingRequest.requestNumber}
-              </Badge>
-            )}
-            <div className="h-5 w-px bg-[#6B6B6B]" />
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-              >
-                <Search className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-                onClick={() => handleSubmit(true)}
-                disabled={isPending || !isFormReady}
-              >
-                <Save className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-              >
-                <RotateCcw className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-white hover:bg-white/20 rounded-none"
-              >
-                <Printer className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-[#B0B0B0]">
-            <span className="uppercase tracking-wider text-[10px] font-medium text-[#B0B0B0]">
-              {t("common.loggedInAs", "LOGGED IN AS:")}
-            </span>
-            <span className="font-medium text-white flex items-center gap-1 text-xs">
-              {user?.name?.toUpperCase() || "USER"} <User className="h-3 w-3" />
-            </span>
-          </div>
-        </div>
-
-        {/* Secondary Toolbar */}
-        <div className="bg-white border-b px-4 py-3 flex items-center gap-4 text-sm shadow-sm">
+      <div className="flex flex-col h-[calc(100vh-6rem)]">
+        {/* Header Toolbar */}
+        <div className="bg-white border-b px-6 py-4 flex items-center gap-4 shadow-sm">
           <Link href="/requests">
             <Button
               variant="ghost"
-              size="sm"
-              className="text-[#5B2C93] hover:bg-[#5B2C93]/10 gap-2 font-medium h-8"
+              size="icon"
+              className="h-8 w-8"
             >
-              <ArrowLeft className="h-4 w-4" />
-              {t("common.returnToList", "Return to List")}
+              <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <div className="h-6 w-px bg-[#E0E0E0]" />
+          <div>
+            <h1 className="text-xl font-medium text-[#2C2C2C] leading-7">
+              {isEditMode 
+                ? t("requests.editRequest", "Edit Request") 
+                : t("requests.createNew", "Create New Request")}
+            </h1>
+            {isEditMode && existingRequest && (
+              <p className="text-sm text-[#6B6B6B]">{existingRequest.requestNumber}</p>
+            )}
+          </div>
+          <div className="h-6 w-px bg-[#E0E0E0] ml-2" />
 
           <div className="ml-auto flex items-center gap-6 text-[#6B6B6B]">
             {selectedCategory && (
               <div className="flex items-center gap-2">
-                <span className="text-xs uppercase font-medium text-[#B0B0B0]">
+                <span className="text-xs uppercase font-medium text-[#9CA3AF]">
                   {t("requests.category", "Category")}
                 </span>
                 <Badge
@@ -436,7 +381,7 @@ export default function DynamicRequestForm() {
             )}
             {selectedTypes.length > 0 && (
               <div className="flex items-center gap-2">
-                <span className="text-xs uppercase font-medium text-[#B0B0B0]">
+                <span className="text-xs uppercase font-medium text-[#9CA3AF]">
                   {t("requests.typesLabel", "Types")}
                 </span>
                 <div className="flex gap-1">
@@ -463,7 +408,7 @@ export default function DynamicRequestForm() {
               </Button>
             )}
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-medium text-[#B0B0B0]">
+              <span className="text-xs uppercase font-medium text-[#9CA3AF]">
                 {t("common.status", "Status")}
               </span>
               <Badge
@@ -471,7 +416,7 @@ export default function DynamicRequestForm() {
                 className={cn(
                   "rounded-sm px-2 py-0.5",
                   isEditMode 
-                    ? "bg-[#FFF4E5] text-[#FFB84D] border-[#FFB84D]" 
+                    ? "bg-[#FEF3C7] text-[#D97706] border-[#D97706]" 
                     : "bg-[#E8DCF5] text-[#5B2C93] border-[#5B2C93]"
                 )}
               >
@@ -486,7 +431,7 @@ export default function DynamicRequestForm() {
           {!isFormReady ? (
             <div className="h-full flex items-center justify-center text-[#6B6B6B]">
               <div className="text-center">
-                <AlertCircle className="h-12 w-12 mx-auto mb-4 text-[#B0B0B0]" />
+                <AlertCircle className="h-12 w-12 mx-auto mb-4 text-[#9CA3AF]" />
                 <p className="text-lg font-medium mb-2">
                   {t("requests.selectCategoryFirst", "Select a category and type to begin")}
                 </p>
@@ -554,11 +499,11 @@ export default function DynamicRequestForm() {
           ) : (
             <div className="h-full flex items-center justify-center text-[#6B6B6B]">
               <div className="text-center">
-                <AlertCircle className="h-12 w-12 mx-auto mb-4 text-[#B0B0B0]" />
+                <AlertCircle className="h-12 w-12 mx-auto mb-4 text-[#9CA3AF]" />
                 <p className="text-lg font-medium mb-2">
                   {t("requests.noFormDefinition", "No form definition found for this request type")}
                 </p>
-                <p className="text-sm text-[#B0B0B0] mb-4">
+                <p className="text-sm text-[#9CA3AF] mb-4">
                   {t("requests.contactAdmin", "Please contact an administrator to configure the form")}
                 </p>
               </div>

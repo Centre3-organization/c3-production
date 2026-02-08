@@ -283,7 +283,7 @@ export function CategoryTypeDialog({
                         {/* Arrow indicator */}
                         <ChevronRight
                           className={cn(
-                            "flex-shrink-0 h-5 w-5 text-[#B0B0B0]",
+                            "flex-shrink-0 h-5 w-5 text-[#9CA3AF]",
                             isRTL && "rotate-180"
                           )}
                         />
@@ -293,7 +293,7 @@ export function CategoryTypeDialog({
                 </div>
               ) : (
                 <div className="text-center py-12 text-[#6B6B6B]">
-                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-[#B0B0B0]" />
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-[#9CA3AF]" />
                   <p>{t("requests.noCategories", "No categories available")}</p>
                 </div>
               )}
@@ -327,7 +327,7 @@ export function CategoryTypeDialog({
                         "relative flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200",
                         "min-h-[100px] text-center",
                         isSelected
-                          ? "border-[#5B2C93] bg-[#E8F9F8] shadow-md"
+                          ? "border-[#5B2C93] bg-[#D1FAE5] shadow-md"
                           : isDisabled
                           ? "border-[#E0E0E0] bg-[#F5F5F5] opacity-50 cursor-not-allowed"
                           : "border-[#E0E0E0] bg-white hover:border-[#5B2C93]/50 hover:shadow-sm cursor-pointer"
@@ -369,7 +369,7 @@ export function CategoryTypeDialog({
 
                       {/* Exclusive indicator */}
                       {(type.isExclusive || combinationRules?.[type.code]?.exclusive) && (
-                        <span className="text-xs text-[#FFB84D] mt-1 flex items-center gap-1">
+                        <span className="text-xs text-[#D97706] mt-1 flex items-center gap-1">
                           <AlertCircle className="h-3 w-3" />
                           {t("requests.exclusiveType", "Exclusive")}
                         </span>
