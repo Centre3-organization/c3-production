@@ -551,8 +551,7 @@ export default function Approvals() {
                 <RadioGroup value={entryMethod} onValueChange={(v) => setEntryMethod(v as any)} className="grid gap-3">
                   {[
                     { value: "qr_code", label: t("approvals.qrCode", "QR Code"), desc: t("approvals.qrCodeDesc", "Generate a unique QR code"), icon: <QrCode className="h-5 w-5 text-[#0D9488]" />, bg: "bg-[#E8F9F8]", active: "border-[#4ECDC4] bg-[#E8F9F8]" },
-                    { value: "rfid", label: t("approvals.rfid", "RFID Tag"), desc: t("approvals.rfidDesc", "Assign an RFID tag"), icon: <Radio className="h-5 w-5 text-[#5B2C93]" />, bg: "bg-[#E8DCF5]", active: "border-[#5B2C93] bg-[#E8DCF5]" },
-                    { value: "card", label: t("approvals.accessCard", "Access Card"), desc: t("approvals.accessCardDesc", "Issue a physical card"), icon: <CreditCard className="h-5 w-5 text-[#5B2C93]" />, bg: "bg-[#E8DCF5]", active: "border-[#5B2C93] bg-[#E8DCF5]" },
+                    /* RFID Tag and Access Card options hidden from UI - backend support retained for later */
                   ].map((m) => (
                     <div key={m.value} className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer ${entryMethod === m.value ? m.active : "border-[#E0E0E0] hover:bg-[#FAFAFA]"}`}>
                       <RadioGroupItem value={m.value} id={m.value} />
@@ -565,18 +564,7 @@ export default function Approvals() {
                 </RadioGroup>
               </div>
               
-              {entryMethod === "rfid" && (
-                <div className="space-y-1.5">
-                  <Label htmlFor="rfidTag" className="text-sm">{t("approvals.rfidTagNumber", "RFID Tag Number")}</Label>
-                  <Input id="rfidTag" placeholder={t("approvals.rfidTagPlaceholder", "Enter RFID tag number...")} value={rfidTag} onChange={(e) => setRfidTag(e.target.value)} />
-                </div>
-              )}
-              {entryMethod === "card" && (
-                <div className="space-y-1.5">
-                  <Label htmlFor="cardNumber" className="text-sm">{t("approvals.cardNumber", "Card Number")}</Label>
-                  <Input id="cardNumber" placeholder={t("approvals.cardNumberPlaceholder", "Enter access card number...")} value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} />
-                </div>
-              )}
+              {/* RFID and Access Card input fields hidden - backend support retained for later */}
               
               <div className="space-y-1.5">
                 <Label htmlFor="comments" className="text-sm">{t("approvals.comments", "Comments")} ({t("common.optional", "Optional")})</Label>

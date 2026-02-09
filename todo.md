@@ -2013,3 +2013,4 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix view eye icon overlapping date column in approvals table
 - [x] Add missing "Add Area" button to Areas page header (was hidden due to missing 'areas' module in permissions map)
 - [x] Fix Download Form PDF button - removed from approvals details dialog, added server-side status check to block PDF generation for non-approved requests
+- [x] Remove RFID Tag and Access Card options from Grant Access dialog UI (keep backend for later)
