@@ -867,6 +867,28 @@ export function FieldRenderer({
     }
   }, [field.fieldType, user]);
 
+  // Auto-populate readonly fields from user profile and sync to formData
+  useEffect(() => {
+    if (field.fieldType === "readonly" && field.optionsSource === "user_profile" && user) {
+      let autoValue = "";
+      const fieldCode = field.code;
+      if (fieldCode === "requestor_name") {
+        autoValue = user.name || user.email || "";
+      } else if (fieldCode === "email") {
+        autoValue = user.email || "";
+      } else if (fieldCode === "company") {
+        autoValue = (user as any).companyName || (user as any).subContractorCompany || "Centre3";
+      } else if (fieldCode === "mobile") {
+        autoValue = (user as any).phone || "";
+      } else if (fieldCode === "department") {
+        autoValue = (user as any).departmentName || "";
+      }
+      if (autoValue && autoValue !== value) {
+        onChange(autoValue);
+      }
+    }
+  }, [field.fieldType, field.optionsSource, field.code, user]);
+
   // Get localized text
   const getLabel = () => (isRTL && field.nameAr ? field.nameAr : field.name);
   const getPlaceholder = () =>
@@ -1404,22 +1426,20 @@ export function FieldRenderer({
       );
 
     case "readonly": {
-      // Auto-populate from user profile if optionsSource is user_profile
+      // Display value: prefer formData value (synced by useEffect above), then user profile, then default
       let displayValue = value || field.defaultValue || "";
       if (field.optionsSource === "user_profile" && user) {
         const fieldCode = field.code;
         if (fieldCode === "requestor_name") {
-          displayValue = user.name || user.email || "";
+          displayValue = value || user.name || user.email || "";
         } else if (fieldCode === "email") {
-          displayValue = user.email || "";
+          displayValue = value || user.email || "";
         } else if (fieldCode === "company") {
-          // Company comes from auth.me enriched companyName
-          displayValue = (user as any).companyName || (user as any).subContractorCompany || "Centre3";
+          displayValue = value || (user as any).companyName || (user as any).subContractorCompany || "Centre3";
         } else if (fieldCode === "mobile") {
-          displayValue = (user as any).phone || "";
+          displayValue = value || (user as any).phone || "";
         } else if (fieldCode === "department") {
-          // Department needs to be fetched separately - show department name if available
-          displayValue = (user as any).departmentName || "";
+          displayValue = value || (user as any).departmentName || "";
         }
       }
       return (

@@ -1,0 +1,226 @@
+{
+  "query": "SELECT rt.code as type_code, fs.code as section_code, ff.code as field_code, ff.name as field_name, ff.isRequired, ff.fieldType, ff.displayOrder\nFROM formFields ff\nJOIN formSections fs ON ff.sectionId = fs.id\nJOIN requestTypes rt ON fs.requestTypeId = rt.id\nWHERE fs.code = 'basic_info' AND fs.isActive = true AND ff.isActive = true\nORDER BY rt.code, ff.displayOrder",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT rt.code as type_code, fs.code as section_code, ff.code as field_code, ff.name as field_name, ff.isRequired, ff.fieldType, ff.displayOrder\nFROM formFields ff\nJOIN formSections fs ON ff.sectionId = fs.id\nJOIN requestTypes rt ON fs.requestTypeId = rt.id\nWHERE fs.code = 'basic_info' AND fs.isActive = true AND ff.isActive = true\nORDER BY rt.code, ff.displayOrder",
+  "rows": [
+    {
+      "type_code": "admin_visit",
+      "section_code": "basic_info",
+      "field_code": "requestor_name",
+      "field_name": "Requestor Name",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "1"
+    },
+    {
+      "type_code": "admin_visit",
+      "section_code": "basic_info",
+      "field_code": "company",
+      "field_name": "Company",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "2"
+    },
+    {
+      "type_code": "admin_visit",
+      "section_code": "basic_info",
+      "field_code": "email",
+      "field_name": "Email",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "3"
+    },
+    {
+      "type_code": "admin_visit",
+      "section_code": "basic_info",
+      "field_code": "department",
+      "field_name": "Department",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "5"
+    },
+    {
+      "type_code": "admin_visit",
+      "section_code": "basic_info",
+      "field_code": "sub_type",
+      "field_name": "Purpose of Entry",
+      "isRequired": "1",
+      "fieldType": "dropdown",
+      "displayOrder": "6"
+    },
+    {
+      "type_code": "admin_visit",
+      "section_code": "basic_info",
+      "field_code": "vip_visit",
+      "field_name": "VIP Visit",
+      "isRequired": "1",
+      "fieldType": "dropdown",
+      "displayOrder": "7"
+    },
+    {
+      "type_code": "admin_visit",
+      "section_code": "basic_info",
+      "field_code": "purpose",
+      "field_name": "Visit description",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "displayOrder": "8"
+    },
+    {
+      "type_code": "admin_visit",
+      "section_code": "basic_info",
+      "field_code": "notes",
+      "field_name": "Additional Notes",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "displayOrder": "9"
+    },
+    {
+      "type_code": "mhv",
+      "section_code": "basic_info",
+      "field_code": "requestor_name",
+      "field_name": "Requestor Name",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "1"
+    },
+    {
+      "type_code": "mhv",
+      "section_code": "basic_info",
+      "field_code": "company",
+      "field_name": "Company",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "2"
+    },
+    {
+      "type_code": "mhv",
+      "section_code": "basic_info",
+      "field_code": "email",
+      "field_name": "Email",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "3"
+    },
+    {
+      "type_code": "mhv",
+      "section_code": "basic_info",
+      "field_code": "department",
+      "field_name": "Department",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "4"
+    },
+    {
+      "type_code": "mhv",
+      "section_code": "basic_info",
+      "field_code": "purpose",
+      "field_name": "Purpose of Entry",
+      "isRequired": "1",
+      "fieldType": "dropdown",
+      "displayOrder": "5"
+    },
+    {
+      "type_code": "mhv",
+      "section_code": "basic_info",
+      "field_code": "description",
+      "field_name": "Description",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "displayOrder": "6"
+    },
+    {
+      "type_code": "mop",
+      "section_code": "basic_info",
+      "field_code": "requestor_name",
+      "field_name": "Requestor Name",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "1"
+    },
+    {
+      "type_code": "mop",
+      "section_code": "basic_info",
+      "field_code": "company",
+      "field_name": "Company",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "2"
+    },
+    {
+      "type_code": "mop",
+      "section_code": "basic_info",
+      "field_code": "email",
+      "field_name": "Email",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "3"
+    },
+    {
+      "type_code": "mop",
+      "section_code": "basic_info",
+      "field_code": "department",
+      "field_name": "Department",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "4"
+    },
+    {
+      "type_code": "mop",
+      "section_code": "basic_info",
+      "field_code": "description",
+      "field_name": "Description",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "displayOrder": "6"
+    },
+    {
+      "type_code": "wp",
+      "section_code": "basic_info",
+      "field_code": "requestor_name",
+      "field_name": "Requestor Name",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "1"
+    },
+    {
+      "type_code": "wp",
+      "section_code": "basic_info",
+      "field_code": "company",
+      "field_name": "Company",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "2"
+    },
+    {
+      "type_code": "wp",
+      "section_code": "basic_info",
+      "field_code": "email",
+      "field_name": "Email",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "3"
+    },
+    {
+      "type_code": "wp",
+      "section_code": "basic_info",
+      "field_code": "department",
+      "field_name": "Department",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "displayOrder": "4"
+    },
+    {
+      "type_code": "wp",
+      "section_code": "basic_info",
+      "field_code": "description",
+      "field_name": "Description",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "displayOrder": "6"
+    }
+  ],
+  "messages": [],
+  "stdout": "type_code\tsection_code\tfield_code\tfield_name\tisRequired\tfieldType\tdisplayOrder\nadmin_visit\tbasic_info\trequestor_name\tRequestor Name\t1\treadonly\t1\nadmin_visit\tbasic_info\tcompany\tCompany\t1\treadonly\t2\nadmin_visit\tbasic_info\temail\tEmail\t1\treadonly\t3\nadmin_visit\tbasic_info\tdepartment\tDepartment\t1\treadonly\t5\nadmin_visit\tbasic_info\tsub_type\tPurpose of Entry\t1\tdropdown\t6\nadmin_visit\tbasic_info\tvip_visit\tVIP Visit\t1\tdropdown\t7\nadmin_visit\tbasic_info\tpurpose\tVisit description\t0\ttextarea\t8\nadmin_visit\tbasic_info\tnotes\tAdditional Notes\t0\ttextarea\t9\nmhv\tbasic_info\trequestor_name\tRequestor Name\t1\treadonly\t1\nmhv\tbasic_info\tcompany\tCompany\t1\treadonly\t2\nmhv\tbasic_info\temail\tEmail\t1\treadonly\t3\nmhv\tbasic_info\tdepartment\tDepartment\t1\treadonly\t4\nmhv\tbasic_info\tpurpose\tPurpose of Entry\t1\tdropdown\t5\nmhv\tbasic_info\tdescription\tDescription\t0\ttextarea\t6\nmop\tbasic_info\trequestor_name\tRequestor Name\t1\treadonly\t1\nmop\tbasic_info\tcompany\tCompany\t1\treadonly\t2\nmop\tbasic_info\temail\tEmail\t1\treadonly\t3\nmop\tbasic_info\tdepartment\tDepartment\t1\treadonly\t4\nmop\tbasic_info\tdescription\tDescription\t0\ttextarea\t6\nwp\tbasic_info\trequestor_name\tRequestor Name\t1\treadonly\t1\nwp\tbasic_info\tcompany\tCompany\t1\treadonly\t2\nwp\tbasic_info\temail\tEmail\t1\treadonly\t3\nwp\tbasic_info\tdepartment\tDepartment\t1\treadonly\t4\nwp\tbasic_info\tdescription\tDescription\t0\ttextarea\t6\n",
+  "stderr": "",
+  "execution_time_ms": 1617
+}

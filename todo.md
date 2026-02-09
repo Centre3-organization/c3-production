@@ -2018,3 +2018,7 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix systemic production error: all tRPC mutations (create area, post comment, etc.) return HTML instead of JSON - fixed SPA fallback to only handle GET requests and skip /api routes
 - [x] Fix multi-request form: deduplicate shared sections (Basic Information, Location) when 2+ request types are selected
 - [x] Fix multi-request form section ordering: group type-specific sections by type (all MOP sections together, then WP, then MHV)
+- [x] Fix validation error on shared Basic Information section showing error badge even when all fields are filled
+  - Added useEffect in FieldRenderer to sync readonly user_profile fields to formData
+  - Skip validation for readonly fields with user_profile optionsSource
+  - Ensure submission payload includes user profile data as fallback

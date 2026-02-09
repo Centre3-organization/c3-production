@@ -1,0 +1,8 @@
+{
+  "query": "SELECT s.code as section_code, s.name as section_name, f.code as field_code, f.label, f.isRequired, f.fieldType, f.defaultValue FROM formSections s JOIN formFields f ON f.sectionId = s.id WHERE s.code = 'basic_info' ORDER BY s.requestTypeId, f.displayOrder LIMIT 50;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT s.code as section_code, s.name as section_name, f.code as field_code, f.label, f.isRequired, f.fieldType, f.defaultValue FROM formSections s JOIN formFields f ON f.sectionId = s.id WHERE s.code = 'basic_info' ORDER BY s.requestTypeId, f.displayOrder LIMIT 50;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'f.label' in 'field list'"
+  ]
+}

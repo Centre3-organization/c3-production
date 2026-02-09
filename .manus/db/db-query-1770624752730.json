@@ -1,0 +1,253 @@
+{
+  "query": "SELECT s.code as section_code, s.name as section_name, f.code as field_code, f.name as field_name, f.isRequired, f.fieldType, f.defaultValue FROM formSections s JOIN formFields f ON f.sectionId = s.id WHERE s.code = 'basic_info' ORDER BY s.requestTypeId, f.displayOrder LIMIT 50;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT s.code as section_code, s.name as section_name, f.code as field_code, f.name as field_name, f.isRequired, f.fieldType, f.defaultValue FROM formSections s JOIN formFields f ON f.sectionId = s.id WHERE s.code = 'basic_info' ORDER BY s.requestTypeId, f.displayOrder LIMIT 50;",
+  "rows": [
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "requestor_name",
+      "field_name": "Requestor Name",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "company",
+      "field_name": "Company",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "email",
+      "field_name": "Email",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "mobile",
+      "field_name": "Mobile",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "department",
+      "field_name": "Department",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "sub_type",
+      "field_name": "Purpose of Entry",
+      "isRequired": "1",
+      "fieldType": "dropdown",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "vip_visit",
+      "field_name": "VIP Visit",
+      "isRequired": "1",
+      "fieldType": "dropdown",
+      "defaultValue": "no"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "purpose",
+      "field_name": "Visit description",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "notes",
+      "field_name": "Additional Notes",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "requestor_name",
+      "field_name": "Requestor Name",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "company",
+      "field_name": "Company",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "email",
+      "field_name": "Email",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "department",
+      "field_name": "Department",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "purpose",
+      "field_name": "Purpose of Entry",
+      "isRequired": "0",
+      "fieldType": "dropdown",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "description",
+      "field_name": "Description",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "requestor_name",
+      "field_name": "Requestor Name",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "company",
+      "field_name": "Company",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "email",
+      "field_name": "Email",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "department",
+      "field_name": "Department",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "purpose",
+      "field_name": "Purpose of Entry",
+      "isRequired": "1",
+      "fieldType": "dropdown",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "description",
+      "field_name": "Description",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "requestor_name",
+      "field_name": "Requestor Name",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "company",
+      "field_name": "Company",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "email",
+      "field_name": "Email",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "department",
+      "field_name": "Department",
+      "isRequired": "1",
+      "fieldType": "readonly",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "purpose",
+      "field_name": "Purpose of Entry",
+      "isRequired": "1",
+      "fieldType": "dropdown",
+      "defaultValue": "NULL"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "field_code": "description",
+      "field_name": "Description",
+      "isRequired": "0",
+      "fieldType": "textarea",
+      "defaultValue": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "section_code\tsection_name\tfield_code\tfield_name\tisRequired\tfieldType\tdefaultValue\nbasic_info\tBasic Information\trequestor_name\tRequestor Name\t1\treadonly\tNULL\nbasic_info\tBasic Information\tcompany\tCompany\t1\treadonly\tNULL\nbasic_info\tBasic Information\temail\tEmail\t1\treadonly\tNULL\nbasic_info\tBasic Information\tmobile\tMobile\t1\treadonly\tNULL\nbasic_info\tBasic Information\tdepartment\tDepartment\t1\treadonly\tNULL\nbasic_info\tBasic Information\tsub_type\tPurpose of Entry\t1\tdropdown\tNULL\nbasic_info\tBasic Information\tvip_visit\tVIP Visit\t1\tdropdown\tno\nbasic_info\tBasic Information\tpurpose\tVisit description\t0\ttextarea\tNULL\nbasic_info\tBasic Information\tnotes\tAdditional Notes\t0\ttextarea\tNULL\nbasic_info\tBasic Information\trequestor_name\tRequestor Name\t1\treadonly\tNULL\nbasic_info\tBasic Information\tcompany\tCompany\t1\treadonly\tNULL\nbasic_info\tBasic Information\temail\tEmail\t1\treadonly\tNULL\nbasic_info\tBasic Information\tdepartment\tDepartment\t1\treadonly\tNULL\nbasic_info\tBasic Information\tpurpose\tPurpose of Entry\t0\tdropdown\tNULL\nbasic_info\tBasic Information\tdescription\tDescription\t0\ttextarea\tNULL\nbasic_info\tBasic Information\trequestor_name\tRequestor Name\t1\treadonly\tNULL\nbasic_info\tBasic Information\tcompany\tCompany\t1\treadonly\tNULL\nbasic_info\tBasic Information\temail\tEmail\t1\treadonly\tNULL\nbasic_info\tBasic Information\tdepartment\tDepartment\t1\treadonly\tNULL\nbasic_info\tBasic Information\tpurpose\tPurpose of Entry\t1\tdropdown\tNULL\nbasic_info\tBasic Information\tdescription\tDescription\t0\ttextarea\tNULL\nbasic_info\tBasic Information\trequestor_name\tRequestor Name\t1\treadonly\tNULL\nbasic_info\tBasic Information\tcompany\tCompany\t1\treadonly\tNULL\nbasic_info\tBasic Information\temail\tEmail\t1\treadonly\tNULL\nbasic_info\tBasic Information\tdepartment\tDepartment\t1\treadonly\tNULL\nbasic_info\tBasic Information\tpurpose\tPurpose of Entry\t1\tdropdown\tNULL\nbasic_info\tBasic Information\tdescription\tDescription\t0\ttextarea\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1586
+}

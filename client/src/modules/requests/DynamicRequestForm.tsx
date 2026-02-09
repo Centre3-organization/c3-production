@@ -186,11 +186,13 @@ export default function DynamicRequestForm() {
       setFormData((prev) => ({
         ...prev,
         requestor_name: user.name || "",
-        requestor_email: user.email || "",
-        requestor_company: "Centre3",
+        email: user.email || "",
+        company: (user as any).companyName || "Centre3",
+        department: (user as any).departmentName || "",
+        mobile: (user as any).phone || "",
       }));
     }
-  }, [user, isEditMode]);
+  }, [user, isEditMode, formDefinition]);
 
   // Handle category/type selection from dialog
   const handleCategoryTypeConfirm = (categoryId: number, typeIds: number[]) => {
@@ -236,6 +238,10 @@ export default function DynamicRequestForm() {
         });
       } else {
         section.fields.forEach((field: any) => {
+          // Skip validation for readonly fields with user_profile source - they are auto-populated from user profile
+          if (field.fieldType === "readonly" && field.optionsSource === "user_profile") {
+            return;
+          }
           if (field.isRequired && !formData[field.code]) {
             newErrors[field.code] = t("validation.required", "This field is required");
           }
@@ -254,7 +260,17 @@ export default function DynamicRequestForm() {
       return;
     }
 
-    const visitors = formData.visitors || [];
+    // Ensure user profile readonly fields are included in formData for submission
+    const submissionData = { ...formData };
+    if (user) {
+      if (!submissionData.requestor_name) submissionData.requestor_name = user.name || user.email || "";
+      if (!submissionData.email) submissionData.email = user.email || "";
+      if (!submissionData.company) submissionData.company = (user as any).companyName || "Centre3";
+      if (!submissionData.department) submissionData.department = (user as any).departmentName || "";
+      if (!submissionData.mobile) submissionData.mobile = (user as any).phone || "";
+    }
+
+    const visitors = submissionData.visitors || [];
     const mainVisitor = visitors[0] || {
       full_name: user?.name || "Unknown",
       id_type: "national_id",
@@ -264,19 +280,19 @@ export default function DynamicRequestForm() {
     const requestData = {
       categoryId: selectedCategoryId!,
       selectedTypeIds,
-      formData,
+      formData: submissionData,
       visitorName: mainVisitor.full_name || mainVisitor.name,
       visitorIdType: mainVisitor.id_type || "national_id",
       visitorIdNumber: mainVisitor.id_number || "N/A",
       visitorCompany: mainVisitor.company,
       visitorPhone: mainVisitor.phone,
       visitorEmail: mainVisitor.email,
-      siteId: parseInt(formData.site_id) || 1,
-      purpose: formData.purpose || formData.visit_purpose || "Request",
-      startDate: formData.start_date || new Date().toISOString().split("T")[0],
-      endDate: formData.end_date || new Date().toISOString().split("T")[0],
-      startTime: formData.start_time,
-      endTime: formData.end_time,
+      siteId: parseInt(submissionData.site_id) || 1,
+      purpose: submissionData.purpose || submissionData.visit_purpose || "Request",
+      startDate: submissionData.start_date || new Date().toISOString().split("T")[0],
+      endDate: submissionData.end_date || new Date().toISOString().split("T")[0],
+      startTime: submissionData.start_time,
+      endTime: submissionData.end_time,
       visitors: visitors.map((v: any) => ({
         fullName: v.full_name || v.name,
         idType: v.id_type || "national_id",
@@ -287,14 +303,14 @@ export default function DynamicRequestForm() {
         email: v.email,
         isVerified: v.verified || false,
       })),
-      materials: (formData.materials || []).map((m: any) => ({
+      materials: (submissionData.materials || []).map((m: any) => ({
         materialType: m.material_type,
         description: m.description,
         quantity: parseInt(m.quantity) || 1,
         serialNumber: m.serial_number,
         unit: m.unit,
       })),
-      vehicles: (formData.vehicles || []).map((v: any) => ({
+      vehicles: (submissionData.vehicles || []).map((v: any) => ({
         vehicleType: v.vehicle_type,
         plateNumber: v.plate_number,
         driverName: v.driver_name,

@@ -1,0 +1,8 @@
+{
+  "query": "SELECT s.code as section_code, s.name as section_name, f.code as field_code, f.label, f.is_required, f.field_type, f.default_value FROM request_type_sections s JOIN request_type_fields f ON f.section_id = s.id WHERE s.code = 'basic_info' ORDER BY s.request_type_id, f.display_order LIMIT 50;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT s.code as section_code, s.name as section_name, f.code as field_code, f.label, f.is_required, f.field_type, f.default_value FROM request_type_sections s JOIN request_type_fields f ON f.section_id = s.id WHERE s.code = 'basic_info' ORDER BY s.request_type_id, f.display_order LIMIT 50;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'wqxabcmrq5aefj4qyeefun.request_type_sections' doesn't exist"
+  ]
+}
