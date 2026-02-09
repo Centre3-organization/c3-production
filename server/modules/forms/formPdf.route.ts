@@ -317,6 +317,11 @@ router.get("/pdf/:requestId", async (req, res) => {
       return res.status(404).json({ error: "Request not found" });
     }
 
+    // Only allow PDF generation for fully approved requests
+    if (request.status !== "approved") {
+      return res.status(403).json({ error: "PDF can only be generated for fully approved requests" });
+    }
+
     // Get site info
     let siteName = "";
     if (request.siteId) {

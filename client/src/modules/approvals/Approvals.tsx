@@ -855,11 +855,7 @@ export default function Approvals() {
           
           <DialogFooter className="border-t border-[#E0E0E0] pt-4">
             <Button variant="outline" onClick={() => setDetailsDialogOpen(false)} className="border-[#E0E0E0]">{t("common.close", "Close")}</Button>
-            {selectedRequest?.request?.id && selectedRequest?.request?.status === 'approved' && (
-              <Button variant="outline" className="text-[#5B2C93] hover:bg-[#E8DCF5] border-[#E0E0E0]" onClick={() => handleDownloadPdf(selectedRequest.request.id)}>
-                <FileText className="h-4 w-4 mr-2" /> {t("approvals.downloadPdf", "Download Form PDF")}
-              </Button>
-            )}
+            {/* Download Form PDF is only available on the All Requests page for fully approved requests */}
             <Button variant="outline" className="text-[#D97706] hover:bg-[#FEF3C7] border-[#E0E0E0]"
               onClick={() => { setDetailsDialogOpen(false); openActionDialog(selectedRequest, "clarification"); }}>
               <HelpCircle className="h-4 w-4 mr-2" /> {t("approvals.needClarification", "Clarify")}
