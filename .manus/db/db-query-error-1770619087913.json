@@ -1,0 +1,8 @@
+{
+  "query": "SELECT id, email, name FROM users LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, email, name FROM users LIMIT 1;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1105 (HY000) at line 1: no available peers, region: {id:633881 region_epoch:<conf_ver:14 version:147518 > peers:<id:633882 store_id:2001 > peers:<id:633883 store_id:2020 > peers:<id:1085149 store_id:2192 > }"
+  ]
+}

@@ -77,8 +77,51 @@ async function startServer() {
   // ============================================================================
   
   // Health check endpoint (excluded from rate limiting)
-  app.get('/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  app.get('/health', async (req, res) => {
+    const healthStatus: Record<string, any> = {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      services: {
+        server: { status: 'healthy' },
+        database: { status: 'unknown' },
+      },
+    };
+
+    try {
+      // Probe database with a lightweight query
+      const { getDb } = await import('../infra/db/connection');
+      const db = await getDb();
+      if (db) {
+        const { sql } = await import('drizzle-orm');
+        const start = Date.now();
+        await db.execute(sql`SELECT 1`);
+        const latencyMs = Date.now() - start;
+        healthStatus.services.database = {
+          status: 'healthy',
+          latencyMs,
+        };
+      } else {
+        healthStatus.services.database = { status: 'unavailable', reason: 'No DATABASE_URL configured' };
+        healthStatus.status = 'degraded';
+      }
+    } catch (error: any) {
+      healthStatus.services.database = {
+        status: 'unhealthy',
+        reason: error.message?.includes('no available peers')
+          ? 'TiDB peers unavailable (transient)'
+          : 'Connection failed',
+      };
+      healthStatus.status = 'degraded';
+    }
+
+    const httpCode = healthStatus.status === 'ok' ? 200 : 503;
+    res.status(httpCode).json(healthStatus);
+  });
+
+  // Lightweight liveness probe (always returns 200)
+  app.get('/health/live', (_req, res) => {
+    res.json({ status: 'alive', timestamp: new Date().toISOString() });
   });
   
   // OAuth callback under /api/oauth/callback

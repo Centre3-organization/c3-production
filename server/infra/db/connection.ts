@@ -25,6 +25,56 @@ import { ENV } from '../../_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
+// ============================================================================
+// RETRY LOGIC WITH EXPONENTIAL BACKOFF
+// ============================================================================
+
+const RETRY_CONFIG = {
+  maxRetries: 3,
+  baseDelayMs: 500,    // 500ms, 1000ms, 2000ms
+  maxDelayMs: 5000,
+};
+
+async function withRetry<T>(
+  operation: () => Promise<T>,
+  context: string,
+  retries = RETRY_CONFIG.maxRetries
+): Promise<T> {
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await operation();
+    } catch (error: any) {
+      lastError = error;
+      // Check both the error message and the cause (Drizzle wraps DB errors)
+      const errorText = [error.message, error.cause?.message, error.sqlMessage].filter(Boolean).join(' ');
+      const isRetryable = 
+        errorText.includes('no available peers') ||
+        errorText.includes('ECONNREFUSED') ||
+        errorText.includes('ETIMEDOUT') ||
+        errorText.includes('ECONNRESET') ||
+        errorText.includes('Connection lost') ||
+        errorText.includes('Failed query') ||
+        error.code === 'PROTOCOL_CONNECTION_LOST' ||
+        error.code === 'ER_LOCK_DEADLOCK' ||
+        error.code === 'ER_UNKNOWN_ERROR';
+
+      if (!isRetryable || attempt === retries) {
+        console.error(`[DB] ${context} failed after ${attempt + 1} attempt(s):`, error.message);
+        throw new Error('Database service is temporarily unavailable. Please try again in a few moments.');
+      }
+
+      const delay = Math.min(
+        RETRY_CONFIG.baseDelayMs * Math.pow(2, attempt),
+        RETRY_CONFIG.maxDelayMs
+      );
+      console.warn(`[DB] ${context} attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  throw lastError;
+}
+
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
@@ -105,39 +155,30 @@ export async function getUserById(id: number): Promise<User | undefined> {
   const db = await getDb();
   if (!db) return undefined;
 
-  try {
+  return withRetry(async () => {
     const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
     return result.length > 0 ? result[0] : undefined;
-  } catch (error: any) {
-    console.error('[DB] getUserById failed:', error.message);
-    throw new Error('Database service is temporarily unavailable. Please try again in a few moments.');
-  }
+  }, 'getUserById');
 }
 
 export async function getUserByOpenId(openId: string): Promise<User | undefined> {
   const db = await getDb();
   if (!db) return undefined;
 
-  try {
+  return withRetry(async () => {
     const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
     return result.length > 0 ? result[0] : undefined;
-  } catch (error: any) {
-    console.error('[DB] getUserByOpenId failed:', error.message);
-    throw new Error('Database service is temporarily unavailable. Please try again in a few moments.');
-  }
+  }, 'getUserByOpenId');
 }
 
 export async function getUserByEmail(email: string): Promise<User | undefined> {
   const db = await getDb();
   if (!db) return undefined;
 
-  try {
+  return withRetry(async () => {
     const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
     return result.length > 0 ? result[0] : undefined;
-  } catch (error: any) {
-    console.error('[DB] getUserByEmail failed:', error.message);
-    throw new Error('Database service is temporarily unavailable. Please try again in a few moments.');
-  }
+  }, 'getUserByEmail');
 }
 
 export async function listUsers(options?: {

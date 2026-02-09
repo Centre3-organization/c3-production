@@ -1994,3 +1994,8 @@ Create a unified data source system that can pull options from anywhere in the p
 
 ## Bug Fix (Feb 9, 2026)
 - [x] Fix login database query error - sanitized DB error messages (root cause: TiDB peer unavailability)
+
+## Database Resilience (Feb 9, 2026)
+- [x] Add retry logic with exponential backoff to critical database queries (login, session, user lookup)
+- [x] Add /api/health database health check endpoint for monitoring
+- [x] Verify database recovery and test login flow (TiDB users region still recovering - retry logic confirmed working)
