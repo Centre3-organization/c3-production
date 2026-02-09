@@ -54,6 +54,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { trpc } from "@/lib/trpc";
 import { format } from "date-fns";
+import { FormDataDisplay } from "@/modules/requests/FormDataDisplay";
 import { toast } from "sonner";
 // QR code image removed from dialog
 
@@ -613,6 +614,16 @@ export default function ApprovalHistory() {
                   </div>
                 </div>
               </div>
+              
+              {/* Dynamic Form Data */}
+              {selectedTask.request?.formData && selectedTask.request?.selectedTypeIds && (
+                <FormDataDisplay
+                  formData={selectedTask.request.formData as Record<string, any>}
+                  selectedTypeIds={selectedTask.request.selectedTypeIds as number[]}
+                  categoryId={selectedTask.request.categoryId}
+                  compact={false}
+                />
+              )}
               
               {/* Approval Timeline */}
               <div className="border-l-4 border-[#D97706] bg-[#F5F5F5] rounded-r-lg p-4">

@@ -1,4 +1,7 @@
 import { useState, useMemo } from "react";
+import { useAuth } from "@/utils/useAuth";
+import { RequestComments } from "@/modules/approvals/RequestComments";
+import { FormDataDisplay } from "@/modules/requests/FormDataDisplay";
 import { 
   Download, 
   ChevronDown, 
@@ -92,6 +95,8 @@ const entryMethodConfig: Record<string, { label: string; icon: React.ReactNode; 
 };
 
 export default function Requests() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
@@ -411,9 +416,11 @@ export default function Requests() {
                     <h4 className="font-medium flex items-center gap-2 text-[#0D9488]">
                       <Shield className="h-4 w-4" /> Access Method
                     </h4>
-                    <Button variant="outline" size="sm" onClick={handleOpenAccessMethodEdit} className="border-[#4ECDC4] text-[#0D9488]">
-                      <Settings className="h-4 w-4 mr-2" /> Change Method
-                    </Button>
+                    {isAdmin && (
+                      <Button variant="outline" size="sm" onClick={handleOpenAccessMethodEdit} className="border-[#4ECDC4] text-[#0D9488]">
+                        <Settings className="h-4 w-4 mr-2" /> Change Method
+                      </Button>
+                    )}
                   </div>
                   
                   {requestDetail.accessMethod?.entryMethod ? (
@@ -439,9 +446,11 @@ export default function Requests() {
                                 <Button variant="ghost" size="sm" onClick={handleCopyQrData}><Copy className="h-4 w-4" /></Button>
                               </div>
                             </div>
-                            <Button variant="outline" size="sm" onClick={handleRegenerateQr} className="border-[#E0E0E0]">
-                              <RotateCcw className="h-4 w-4 mr-2" /> Regenerate QR
-                            </Button>
+                            {isAdmin && (
+                              <Button variant="outline" size="sm" onClick={handleRegenerateQr} className="border-[#E0E0E0]">
+                                <RotateCcw className="h-4 w-4 mr-2" /> Regenerate QR
+                              </Button>
+                            )}
                           </div>
                         </div>
                       )}
@@ -539,6 +548,41 @@ export default function Requests() {
                       </Badge>
                     ))}
                   </div>
+                </div>
+              )}
+              
+              {/* Dynamic Form Data */}
+              {requestDetail.formData && requestDetail.selectedTypeIds && (
+                <FormDataDisplay
+                  formData={requestDetail.formData as Record<string, any>}
+                  selectedTypeIds={requestDetail.selectedTypeIds as number[]}
+                  categoryId={requestDetail.categoryId}
+                  compact={true}
+                />
+              )}
+              
+              {/* Download Form PDF (only for approved requests) */}
+              {requestDetail.status === "approved" && (
+                <div className="flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 text-[#5B2C93] hover:bg-[#E8DCF5] border-[#E0E0E0]"
+                    onClick={() => {
+                      const token = localStorage.getItem("centre3_token");
+                      const url = `/api/forms/pdf/${requestDetail.id}${token ? `?token=${encodeURIComponent(token)}` : ''}`;
+                      window.open(url, '_blank');
+                    }}
+                  >
+                    <FileText className="h-4 w-4" /> Download Form PDF
+                  </Button>
+                </div>
+              )}
+              
+              {/* Comments Section */}
+              {requestDetail.id && (
+                <div className="pt-2">
+                  <RequestComments requestId={requestDetail.id} />
                 </div>
               )}
               

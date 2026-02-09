@@ -1,0 +1,54 @@
+{
+  "query": "SELECT t.id as taskId, t.instanceId, t.stageId, t.status as taskStatus, t.assignedTo, i.status as instanceStatus, i.requestId, r.status as requestStatus, r.requestNumber FROM approvalTasks t INNER JOIN approvalInstances i ON t.instanceId = i.id INNER JOIN requests r ON i.requestId = r.id WHERE t.status = 'pending' AND i.status != 'in_progress' ORDER BY t.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT t.id as taskId, t.instanceId, t.stageId, t.status as taskStatus, t.assignedTo, i.status as instanceStatus, i.requestId, r.status as requestStatus, r.requestNumber FROM approvalTasks t INNER JOIN approvalInstances i ON t.instanceId = i.id INNER JOIN requests r ON i.requestId = r.id WHERE t.status = 'pending' AND i.status != 'in_progress' ORDER BY t.id;",
+  "rows": [
+    {
+      "taskId": "30052",
+      "instanceId": "30041",
+      "stageId": "30001",
+      "taskStatus": "pending",
+      "assignedTo": "3",
+      "instanceStatus": "approved",
+      "requestId": "90036",
+      "requestStatus": "approved",
+      "requestNumber": "REQ-20260131-TEP002-1769896215705"
+    },
+    {
+      "taskId": "30053",
+      "instanceId": "30041",
+      "stageId": "30001",
+      "taskStatus": "pending",
+      "assignedTo": "150011",
+      "instanceStatus": "approved",
+      "requestId": "90036",
+      "requestStatus": "approved",
+      "requestNumber": "REQ-20260131-TEP002-1769896215705"
+    },
+    {
+      "taskId": "30054",
+      "instanceId": "30041",
+      "stageId": "30001",
+      "taskStatus": "pending",
+      "assignedTo": "150010",
+      "instanceStatus": "approved",
+      "requestId": "90036",
+      "requestStatus": "approved",
+      "requestNumber": "REQ-20260131-TEP002-1769896215705"
+    },
+    {
+      "taskId": "30055",
+      "instanceId": "30041",
+      "stageId": "30001",
+      "taskStatus": "pending",
+      "assignedTo": "150006",
+      "instanceStatus": "approved",
+      "requestId": "90036",
+      "requestStatus": "approved",
+      "requestNumber": "REQ-20260131-TEP002-1769896215705"
+    }
+  ],
+  "messages": [],
+  "stdout": "taskId\tinstanceId\tstageId\ttaskStatus\tassignedTo\tinstanceStatus\trequestId\trequestStatus\trequestNumber\n30052\t30041\t30001\tpending\t3\tapproved\t90036\tapproved\tREQ-20260131-TEP002-1769896215705\n30053\t30041\t30001\tpending\t150011\tapproved\t90036\tapproved\tREQ-20260131-TEP002-1769896215705\n30054\t30041\t30001\tpending\t150010\tapproved\t90036\tapproved\tREQ-20260131-TEP002-1769896215705\n30055\t30041\t30001\tpending\t150006\tapproved\t90036\tapproved\tREQ-20260131-TEP002-1769896215705\n",
+  "stderr": "",
+  "execution_time_ms": 1573
+}

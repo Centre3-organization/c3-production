@@ -310,6 +310,9 @@ export const requestsRouter = router({
         startTime: requests.startTime,
         endTime: requests.endTime,
         createdAt: requests.createdAt,
+        formData: requests.formData,
+        selectedTypeIds: requests.selectedTypeIds,
+        categoryId: requests.categoryId,
       })
       .from(requests)
       .leftJoin(sites, eq(requests.siteId, sites.id))
@@ -431,6 +434,9 @@ export const requestsRouter = router({
           endDate: requests.endDate,
           startTime: requests.startTime,
           endTime: requests.endTime,
+          formData: requests.formData,
+          selectedTypeIds: requests.selectedTypeIds,
+          categoryId: requests.categoryId,
         })
         .from(requests)
         .leftJoin(sites, eq(requests.siteId, sites.id))

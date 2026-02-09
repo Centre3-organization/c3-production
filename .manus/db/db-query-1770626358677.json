@@ -1,0 +1,18 @@
+{
+  "query": "SELECT i.status as instanceStatus, COUNT(t.id) as pendingTaskCount FROM approvalTasks t INNER JOIN approvalInstances i ON t.instanceId = i.id WHERE t.status = 'pending' GROUP BY i.status;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT i.status as instanceStatus, COUNT(t.id) as pendingTaskCount FROM approvalTasks t INNER JOIN approvalInstances i ON t.instanceId = i.id WHERE t.status = 'pending' GROUP BY i.status;",
+  "rows": [
+    {
+      "instanceStatus": "in_progress",
+      "pendingTaskCount": "43"
+    },
+    {
+      "instanceStatus": "approved",
+      "pendingTaskCount": "6"
+    }
+  ],
+  "messages": [],
+  "stdout": "instanceStatus\tpendingTaskCount\nin_progress\t43\napproved\t6\n",
+  "stderr": "",
+  "execution_time_ms": 1587
+}

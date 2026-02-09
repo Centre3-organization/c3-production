@@ -2030,3 +2030,18 @@ Create a unified data source system that can pull options from anywhere in the p
   - getMyPendingApprovals query now filters by approvalInstances.status = 'in_progress'
   - Dashboard pendingApprovals count now includes 'pending_approval' status
 - [x] Verify count goes to 0 after rejecting all requests
+
+## Data Cleanup: Orphaned pending tasks (Feb 9, 2026)
+- [x] Identify orphaned pending tasks belonging to non-in_progress instances
+- [x] Mark orphaned pending tasks as "skipped" in the database (6 tasks cleaned up)
+- [x] Verify no orphaned pending tasks remain (confirmed: 0 orphans)
+
+## Bug Fixes: Requestor View & Approval View (Feb 9, 2026)
+- [x] Remove "Regenerate QR" button for requestor users (QR is secure, only admin should regenerate)
+- [x] Hide "Change Method" button for non-admin users
+- [x] Show Download Form PDF button to requestor once request is approved
+- [x] Show clarification/rejection comments in request detail view (added RequestComments component)
+- [x] Ensure all form data from combined request types (MOP/MHV/WP) is fully displayed in approval view
+  - Created reusable FormDataDisplay component that fetches form definition and renders structured data
+  - Added formData, selectedTypeIds, categoryId to getMyPendingApprovals and getMyApprovalHistory queries
+  - Added FormDataDisplay to Approvals, ApprovalHistory, and RequestList detail dialogs

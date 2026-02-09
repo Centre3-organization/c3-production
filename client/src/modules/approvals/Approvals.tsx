@@ -55,6 +55,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { RequestComments } from "./RequestComments";
+import { FormDataDisplay } from "@/modules/requests/FormDataDisplay";
 import { format } from "date-fns";
 import QRCode from "qrcode";
 import {
@@ -718,6 +719,16 @@ export default function Approvals() {
                   </div>
                 </div>
               </div>
+              
+              {/* Dynamic Form Data */}
+              {selectedRequest.request?.formData && selectedRequest.request?.selectedTypeIds && (
+                <FormDataDisplay
+                  formData={selectedRequest.request.formData as Record<string, any>}
+                  selectedTypeIds={selectedRequest.request.selectedTypeIds as number[]}
+                  categoryId={selectedRequest.request.categoryId}
+                  compact={false}
+                />
+              )}
               
               {/* Approval Timeline */}
               <div className="bg-[#FAFAFA] border border-[#E0E0E0] rounded-lg overflow-hidden">
