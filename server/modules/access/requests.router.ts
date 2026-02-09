@@ -2206,20 +2206,46 @@ async function startWorkflowForRequest(
   }
   
   if (!selectedWorkflow) {
-    // Create a default workflow instance with basic L1 -> L2 flow
-    // For now, just create legacy approval records
-    await db.insert(approvals).values({
-      requestId,
-      stage: "l1",
-      status: "pending",
-    });
+    // No process-type-specific workflow found - try to use any default workflow
+    const defaultWorkflows = await db
+      .select()
+      .from(approvalWorkflows)
+      .where(and(
+        eq(approvalWorkflows.isActive, true),
+        eq(approvalWorkflows.isDefault, true)
+      ))
+      .orderBy(desc(approvalWorkflows.priority))
+      .limit(1);
     
-    // Update request to use legacy status
-    await db.update(requests)
-      .set({ status: "pending_l1" })
-      .where(eq(requests.id, requestId));
-    
-    return;
+    if (defaultWorkflows.length > 0) {
+      selectedWorkflow = defaultWorkflows[0];
+    } else {
+      // Absolute fallback: use ANY active workflow
+      const anyWorkflow = await db
+        .select()
+        .from(approvalWorkflows)
+        .where(eq(approvalWorkflows.isActive, true))
+        .orderBy(desc(approvalWorkflows.priority))
+        .limit(1);
+      
+      if (anyWorkflow.length > 0) {
+        selectedWorkflow = anyWorkflow[0];
+      } else {
+        // No workflows exist at all - create legacy approval records
+        await db.insert(approvals).values({
+          requestId,
+          stage: "l1",
+          status: "pending",
+        });
+        
+        // Update request to use legacy status
+        await db.update(requests)
+          .set({ status: "pending_l1" })
+          .where(eq(requests.id, requestId));
+        
+        return;
+      }
+    }
   }
   
   // Get first stage
@@ -2321,9 +2347,10 @@ async function resolveApprover(db: any, approverConfig: any, requestId: number):
   const userIds: number[] = [];
   
   switch (approverConfig.approverType) {
+    case "user":
     case "individual":
-      if (approverConfig.approverValue) {
-        userIds.push(parseInt(approverConfig.approverValue));
+      if (approverConfig.approverReference) {
+        userIds.push(parseInt(approverConfig.approverReference));
       }
       break;
       
@@ -2331,7 +2358,7 @@ async function resolveApprover(db: any, approverConfig: any, requestId: number):
       const roleUsers = await db
         .select({ id: users.id })
         .from(users)
-        .where(eq(users.role, approverConfig.approverValue || "admin"));
+        .where(eq(users.role, approverConfig.approverReference || "admin"));
       userIds.push(...roleUsers.map((u: any) => u.id));
       break;
       
@@ -2341,7 +2368,7 @@ async function resolveApprover(db: any, approverConfig: any, requestId: number):
       const roleAssignments = await db
         .select({ userId: userApprovalRoles.userId })
         .from(userApprovalRoles)
-        .where(eq(userApprovalRoles.approvalRoleId, parseInt(approverConfig.approverValue || "0")));
+        .where(eq(userApprovalRoles.approvalRoleId, parseInt(approverConfig.approverReference || "0")));
       userIds.push(...roleAssignments.map((r: any) => r.userId));
       break;
       

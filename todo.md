@@ -2045,3 +2045,11 @@ Create a unified data source system that can pull options from anywhere in the p
   - Created reusable FormDataDisplay component that fetches form definition and renders structured data
   - Added formData, selectedTypeIds, categoryId to getMyPendingApprovals and getMyApprovalHistory queries
   - Added FormDataDisplay to Approvals, ApprovalHistory, and RequestList detail dialogs
+
+## Bug Fix: Super-admin cannot see new request in approvals (Feb 9, 2026)
+- [x] Investigate REQ-20260209-D2D19Q - pending L1 but not visible to super-admin in approvals
+  - Root cause: All workflows had processType='admin_visit', but request was 'work_permit' → no workflow matched → fell back to legacy pending_l1 with no approval instance/tasks
+- [x] Fix root cause: startWorkflowForRequest now falls back to default workflow when no type-specific match found
+- [x] Fix resolveApprover: corrected approverValue → approverReference, added 'user' case alongside 'individual'
+- [x] Created approval instance + 2 tasks for REQ-20260209-D2D19Q (now pending_approval)
+- [x] Verify super-admin can see all pending requests

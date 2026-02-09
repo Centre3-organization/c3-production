@@ -1,0 +1,37 @@
+{
+  "query": "SHOW TABLES LIKE '%pproval%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SHOW TABLES LIKE '%pproval%';",
+  "rows": [
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)": "approvalDelegations"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)": "approvalHistory"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)": "approvalInstances"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)": "approvalRoles"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)": "approvalStages"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)": "approvalTasks"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)": "approvalWorkflows"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)": "approvals"
+    },
+    {
+      "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)": "userApprovalRoles"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_WqXabcMRQ5aEFJ4QyeefuN (%pproval%)\napprovalDelegations\napprovalHistory\napprovalInstances\napprovalRoles\napprovalStages\napprovalTasks\napprovalWorkflows\napprovals\nuserApprovalRoles\n",
+  "stderr": "",
+  "execution_time_ms": 1571
+}

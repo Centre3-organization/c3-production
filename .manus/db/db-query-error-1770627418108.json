@@ -1,0 +1,8 @@
+{
+  "query": "SELECT r.id, r.requestNumber, r.status, r.type, r.categoryId, r.createdAt,\n  ai.id as instanceId, ai.status as instanceStatus, ai.currentStageId, ai.workflowId,\n  at2.id as taskId, at2.status as taskStatus, at2.assignedTo, at2.stageId\nFROM requests r\nLEFT JOIN approval_instances ai ON ai.requestId = r.id\nLEFT JOIN approval_tasks at2 ON at2.instanceId = ai.id\nWHERE r.requestNumber = 'REQ-20260209-D2D19Q';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT r.id, r.requestNumber, r.status, r.type, r.categoryId, r.createdAt,\n  ai.id as instanceId, ai.status as instanceStatus, ai.currentStageId, ai.workflowId,\n  at2.id as taskId, at2.status as taskStatus, at2.assignedTo, at2.stageId\nFROM requests r\nLEFT JOIN approval_instances ai ON ai.requestId = r.id\nLEFT JOIN approval_tasks at2 ON at2.instanceId = ai.id\nWHERE r.requestNumber = 'REQ-20260209-D2D19Q';",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'wqxabcmrq5aefj4qyeefun.approval_instances' doesn't exist"
+  ]
+}

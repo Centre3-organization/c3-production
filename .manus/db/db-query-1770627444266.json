@@ -1,0 +1,26 @@
+{
+  "query": "SELECT r.id, r.requestNumber, r.status, r.type, r.categoryId, r.createdAt,\n  ai.id as instanceId, ai.status as instanceStatus, ai.currentStageId, ai.workflowId,\n  at2.id as taskId, at2.status as taskStatus, at2.assignedTo, at2.stageId\nFROM requests r\nLEFT JOIN approvalInstances ai ON ai.requestId = r.id\nLEFT JOIN approvalTasks at2 ON at2.instanceId = ai.id\nWHERE r.requestNumber = 'REQ-20260209-D2D19Q';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT r.id, r.requestNumber, r.status, r.type, r.categoryId, r.createdAt,\n  ai.id as instanceId, ai.status as instanceStatus, ai.currentStageId, ai.workflowId,\n  at2.id as taskId, at2.status as taskStatus, at2.assignedTo, at2.stageId\nFROM requests r\nLEFT JOIN approvalInstances ai ON ai.requestId = r.id\nLEFT JOIN approvalTasks at2 ON at2.instanceId = ai.id\nWHERE r.requestNumber = 'REQ-20260209-D2D19Q';",
+  "rows": [
+    {
+      "id": "210013",
+      "requestNumber": "REQ-20260209-D2D19Q",
+      "status": "pending_l1",
+      "type": "work_permit",
+      "categoryId": "2",
+      "createdAt": "2026-02-09 08:49:31",
+      "instanceId": "NULL",
+      "instanceStatus": "NULL",
+      "currentStageId": "NULL",
+      "workflowId": "NULL",
+      "taskId": "NULL",
+      "taskStatus": "NULL",
+      "assignedTo": "NULL",
+      "stageId": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\trequestNumber\tstatus\ttype\tcategoryId\tcreatedAt\tinstanceId\tinstanceStatus\tcurrentStageId\tworkflowId\ttaskId\ttaskStatus\tassignedTo\tstageId\n210013\tREQ-20260209-D2D19Q\tpending_l1\twork_permit\t2\t2026-02-09 08:49:31\tNULL\tNULL\tNULL\tNULL\tNULL\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1615
+}
