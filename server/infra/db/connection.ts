@@ -101,32 +101,43 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   }
 }
 
-export async function getUserByOpenId(openId: string) {
-  const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot get user: database not available");
-    return undefined;
-  }
-
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-
-  return result.length > 0 ? result[0] : undefined;
-}
-
 export async function getUserById(id: number): Promise<User | undefined> {
   const db = await getDb();
   if (!db) return undefined;
 
-  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
-  return result.length > 0 ? result[0] : undefined;
+  try {
+    const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+    return result.length > 0 ? result[0] : undefined;
+  } catch (error: any) {
+    console.error('[DB] getUserById failed:', error.message);
+    throw new Error('Database service is temporarily unavailable. Please try again in a few moments.');
+  }
+}
+
+export async function getUserByOpenId(openId: string): Promise<User | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  try {
+    const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+    return result.length > 0 ? result[0] : undefined;
+  } catch (error: any) {
+    console.error('[DB] getUserByOpenId failed:', error.message);
+    throw new Error('Database service is temporarily unavailable. Please try again in a few moments.');
+  }
 }
 
 export async function getUserByEmail(email: string): Promise<User | undefined> {
   const db = await getDb();
   if (!db) return undefined;
 
-  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
-  return result.length > 0 ? result[0] : undefined;
+  try {
+    const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    return result.length > 0 ? result[0] : undefined;
+  } catch (error: any) {
+    console.error('[DB] getUserByEmail failed:', error.message);
+    throw new Error('Database service is temporarily unavailable. Please try again in a few moments.');
+  }
 }
 
 export async function listUsers(options?: {

@@ -1,0 +1,124 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'users' ORDER BY ORDINAL_POSITION;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'users' ORDER BY ORDINAL_POSITION;",
+  "rows": [
+    {
+      "COLUMN_NAME": "id"
+    },
+    {
+      "COLUMN_NAME": "openId"
+    },
+    {
+      "COLUMN_NAME": "name"
+    },
+    {
+      "COLUMN_NAME": "email"
+    },
+    {
+      "COLUMN_NAME": "loginMethod"
+    },
+    {
+      "COLUMN_NAME": "role"
+    },
+    {
+      "COLUMN_NAME": "status"
+    },
+    {
+      "COLUMN_NAME": "createdAt"
+    },
+    {
+      "COLUMN_NAME": "updatedAt"
+    },
+    {
+      "COLUMN_NAME": "lastSignedIn"
+    },
+    {
+      "COLUMN_NAME": "passwordHash"
+    },
+    {
+      "COLUMN_NAME": "firstName"
+    },
+    {
+      "COLUMN_NAME": "lastName"
+    },
+    {
+      "COLUMN_NAME": "phone"
+    },
+    {
+      "COLUMN_NAME": "departmentId"
+    },
+    {
+      "COLUMN_NAME": "managerId"
+    },
+    {
+      "COLUMN_NAME": "alternateManagerId"
+    },
+    {
+      "COLUMN_NAME": "employeeType"
+    },
+    {
+      "COLUMN_NAME": "workScheduleId"
+    },
+    {
+      "COLUMN_NAME": "defaultSiteId"
+    },
+    {
+      "COLUMN_NAME": "canDelegate"
+    },
+    {
+      "COLUMN_NAME": "maxDelegationDays"
+    },
+    {
+      "COLUMN_NAME": "approvalAuthorityLevel"
+    },
+    {
+      "COLUMN_NAME": "outOfOfficeUntil"
+    },
+    {
+      "COLUMN_NAME": "outOfOfficeDelegateId"
+    },
+    {
+      "COLUMN_NAME": "userType"
+    },
+    {
+      "COLUMN_NAME": "employeeId"
+    },
+    {
+      "COLUMN_NAME": "jobTitle"
+    },
+    {
+      "COLUMN_NAME": "contractorCompanyId"
+    },
+    {
+      "COLUMN_NAME": "parentContractorId"
+    },
+    {
+      "COLUMN_NAME": "subContractorCompany"
+    },
+    {
+      "COLUMN_NAME": "clientCompanyId"
+    },
+    {
+      "COLUMN_NAME": "contractReference"
+    },
+    {
+      "COLUMN_NAME": "contractExpiry"
+    },
+    {
+      "COLUMN_NAME": "reportingToId"
+    },
+    {
+      "COLUMN_NAME": "accountManagerId"
+    },
+    {
+      "COLUMN_NAME": "profilePhotoUrl"
+    },
+    {
+      "COLUMN_NAME": "roleId"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\nid\nopenId\nname\nemail\nloginMethod\nrole\nstatus\ncreatedAt\nupdatedAt\nlastSignedIn\npasswordHash\nfirstName\nlastName\nphone\ndepartmentId\nmanagerId\nalternateManagerId\nemployeeType\nworkScheduleId\ndefaultSiteId\ncanDelegate\nmaxDelegationDays\napprovalAuthorityLevel\noutOfOfficeUntil\noutOfOfficeDelegateId\nuserType\nemployeeId\njobTitle\ncontractorCompanyId\nparentContractorId\nsubContractorCompany\nclientCompanyId\ncontractReference\ncontractExpiry\nreportingToId\naccountManagerId\nprofilePhotoUrl\nroleId\n",
+  "stderr": "",
+  "execution_time_ms": 1613
+}

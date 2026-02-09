@@ -1991,3 +1991,6 @@ Create a unified data source system that can pull options from anywhere in the p
 ## Brand Color Fixes (Feb 9, 2026)
 - [x] Dashboard: Increase purple brand color presence (too much white/grey after sidebar change)
 - [x] Approvals: Change green buttons to purple brand color (#5B2C93)
+
+## Bug Fix (Feb 9, 2026)
+- [x] Fix login database query error - sanitized DB error messages (root cause: TiDB peer unavailability)

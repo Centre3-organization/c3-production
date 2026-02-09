@@ -1,0 +1,314 @@
+{
+  "query": "DESCRIBE users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute DESCRIBE users;",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "openId",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "name",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "email",
+      "Type": "varchar(320)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "loginMethod",
+      "Type": "varchar(64)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "role",
+      "Type": "enum('user','admin')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "user",
+      "Extra": ""
+    },
+    {
+      "Field": "status",
+      "Type": "enum('active','inactive')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "active",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    },
+    {
+      "Field": "lastSignedIn",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "passwordHash",
+      "Type": "varchar(255)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "firstName",
+      "Type": "varchar(100)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "lastName",
+      "Type": "varchar(100)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "phone",
+      "Type": "varchar(50)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "departmentId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "managerId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "alternateManagerId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "employeeType",
+      "Type": "enum('internal','external','contractor')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "internal",
+      "Extra": ""
+    },
+    {
+      "Field": "workScheduleId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "defaultSiteId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "canDelegate",
+      "Type": "tinyint(1)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "maxDelegationDays",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "30",
+      "Extra": ""
+    },
+    {
+      "Field": "approvalAuthorityLevel",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "outOfOfficeUntil",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "outOfOfficeDelegateId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "userType",
+      "Type": "enum('centre3_employee','contractor','sub_contractor','client')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "centre3_employee",
+      "Extra": ""
+    },
+    {
+      "Field": "employeeId",
+      "Type": "varchar(50)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "jobTitle",
+      "Type": "varchar(100)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "contractorCompanyId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "parentContractorId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "subContractorCompany",
+      "Type": "varchar(255)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "clientCompanyId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "contractReference",
+      "Type": "varchar(100)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "contractExpiry",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "reportingToId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "accountManagerId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "profilePhotoUrl",
+      "Type": "varchar(500)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "roleId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint(11)\tNO\tPRI\tNULL\tauto_increment\nopenId\tvarchar(64)\tNO\t\tNULL\t\nname\ttext\tYES\t\tNULL\t\nemail\tvarchar(320)\tYES\t\tNULL\t\nloginMethod\tvarchar(64)\tYES\t\tNULL\t\nrole\tenum('user','admin')\tNO\t\tuser\t\nstatus\tenum('active','inactive')\tNO\t\tactive\t\ncreatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\nlastSignedIn\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\npasswordHash\tvarchar(255)\tYES\t\tNULL\t\nfirstName\tvarchar(100)\tYES\t\tNULL\t\nlastName\tvarchar(100)\tYES\t\tNULL\t\nphone\tvarchar(50)\tYES\t\tNULL\t\ndepartmentId\tint(11)\tYES\t\tNULL\t\nmanagerId\tint(11)\tYES\t\tNULL\t\nalternateManagerId\tint(11)\tYES\t\tNULL\t\nemployeeType\tenum('internal','external','contractor')\tYES\t\tinternal\t\nworkScheduleId\tint(11)\tYES\t\tNULL\t\ndefaultSiteId\tint(11)\tYES\t\tNULL\t\ncanDelegate\ttinyint(1)\tYES\t\t0\t\nmaxDelegationDays\tint(11)\tYES\t\t30\t\napprovalAuthorityLevel\tint(11)\tYES\t\t0\t\noutOfOfficeUntil\ttimestamp\tYES\t\tNULL\t\noutOfOfficeDelegateId\tint(11)\tYES\t\tNULL\t\nuserType\tenum('centre3_employee','contractor','sub_contractor','client')\tYES\t\tcentre3_employee\t\nemployeeId\tvarchar(50)\tYES\t\tNULL\t\njobTitle\tvarchar(100)\tYES\t\tNULL\t\ncontractorCompanyId\tint(11)\tYES\t\tNULL\t\nparentContractorId\tint(11)\tYES\t\tNULL\t\nsubContractorCompany\tvarchar(255)\tYES\t\tNULL\t\nclientCompanyId\tint(11)\tYES\t\tNULL\t\ncontractReference\tvarchar(100)\tYES\t\tNULL\t\ncontractExpiry\ttimestamp\tYES\t\tNULL\t\nreportingToId\tint(11)\tYES\t\tNULL\t\naccountManagerId\tint(11)\tYES\t\tNULL\t\nprofilePhotoUrl\tvarchar(500)\tYES\t\tNULL\t\nroleId\tint(11)\tYES\t\tNULL\t\n",
+  "stderr": "",
+  "execution_time_ms": 2501
+}
