@@ -2187,15 +2187,24 @@ async function startWorkflowForRequest(
       // Evaluate conditions
       let allMatch = true;
       for (const condition of conditions) {
-        if (condition.conditionType === "processType" && condition.conditionValue !== processType) {
+        const condType = condition.conditionType;
+        const condValue = String(condition.conditionValue);
+        
+        // Process type conditions
+        if ((condType === "process_type" || condType === "processType") && condValue !== processType) {
           allMatch = false;
           break;
         }
-        if (condition.conditionType === "siteId" && siteId && condition.conditionValue !== String(siteId)) {
+        // Site ID conditions
+        if ((condType === "site_id" || condType === "siteId") && siteId && condValue !== String(siteId)) {
           allMatch = false;
           break;
         }
-        // Add more condition types as needed
+        // Skip non-matching site conditions when no siteId provided
+        if ((condType === "site_id" || condType === "siteId") && !siteId) {
+          allMatch = false;
+          break;
+        }
       }
       
       if (allMatch) {

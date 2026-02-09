@@ -2053,3 +2053,28 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix resolveApprover: corrected approverValue → approverReference, added 'user' case alongside 'individual'
 - [x] Created approval instance + 2 tasks for REQ-20260209-D2D19Q (now pending_approval)
 - [x] Verify super-admin can see all pending requests
+
+## Bahrain Data Centre Workflow (Feb 9, 2026)
+
+### User Accounts
+- [x] Create Ahmed (ahmed@c3.com) - Security Officer, shift 08:00 AM - 08:00 PM (id=180001)
+- [x] Create George (george@c3.com) - Security Officer, shift 08:00 PM - 08:00 AM (id=180002)
+- [x] Create Alica (security@bahrainc3.com) - Security Manager (id=180003)
+- [x] Create Head of Admin (admin@c3bahrain.com) - Final approver for Admin Requests (id=180004)
+- [x] Create Head of Security (hos@bahrainc3.com) - Final approver for all other requests (id=180005)
+
+### Bahrain Workflow Configuration
+- [x] Create "Bahrain Workflow" with 3 stages (id=90001)
+- [x] Stage 1: Security Officer Review (Ahmed + George) - approval mode "any"
+- [x] Stage 2: Security Manager Approval (Alica)
+- [x] Stage 3: Final Approval (Head of Admin + Head of Security) - mode "any"
+- [x] Added site_id condition for Bahrain Data Centre (site id=30001)
+- [x] Fixed condition evaluation to support site_id enum values
+- [x] Verify workflow is active and correctly configured
+
+## Bug Fix: Need Clarification flow (Feb 9, 2026)
+- [ ] Request sent back for clarification changes to "draft" instead of "need_clarification"
+- [ ] Requestor (Lisa) should see the request with "Need Clarification" status and have option to re-submit
+- [ ] Fix the clarification mutation to set correct status
+- [ ] Add re-submit UI for requestor on need_clarification requests
+- [ ] Fix REQ-20260209-D2D19Q data to correct status
