@@ -1,0 +1,106 @@
+{
+  "query": "SELECT fs.code as section_code, fs.name as section_name, rt.code as type_code, \n       GROUP_CONCAT(ff.code ORDER BY ff.displayOrder) as field_codes\nFROM formSections fs\nJOIN requestTypes rt ON fs.requestTypeId = rt.id\nLEFT JOIN formFields ff ON ff.sectionId = fs.id AND ff.isActive = true\nWHERE fs.isActive = true\nAND fs.code IN (\n  SELECT code FROM formSections WHERE isActive = true GROUP BY code HAVING COUNT(DISTINCT requestTypeId) > 1\n)\nGROUP BY fs.id, fs.code, fs.name, rt.code\nORDER BY fs.code, rt.code",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT fs.code as section_code, fs.name as section_name, rt.code as type_code, \n       GROUP_CONCAT(ff.code ORDER BY ff.displayOrder) as field_codes\nFROM formSections fs\nJOIN requestTypes rt ON fs.requestTypeId = rt.id\nLEFT JOIN formFields ff ON ff.sectionId = fs.id AND ff.isActive = true\nWHERE fs.isActive = true\nAND fs.code IN (\n  SELECT code FROM formSections WHERE isActive = true GROUP BY code HAVING COUNT(DISTINCT requestTypeId) > 1\n)\nGROUP BY fs.id, fs.code, fs.name, rt.code\nORDER BY fs.code, rt.code",
+  "rows": [
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "type_code": "admin_visit",
+      "field_codes": "requestor_name,company,email,department,sub_type,vip_visit,purpose,notes"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "type_code": "mhv",
+      "field_codes": "requestor_name,company,email,department,purpose,description"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "type_code": "mop",
+      "field_codes": "requestor_name,company,email,department,description"
+    },
+    {
+      "section_code": "basic_info",
+      "section_name": "Basic Information",
+      "type_code": "wp",
+      "field_codes": "requestor_name,company,email,department,description"
+    },
+    {
+      "section_code": "host",
+      "section_name": "Host",
+      "type_code": "admin_visit",
+      "field_codes": "host_user"
+    },
+    {
+      "section_code": "host",
+      "section_name": "Host",
+      "type_code": "tep",
+      "field_codes": "host_user"
+    },
+    {
+      "section_code": "location",
+      "section_name": "Location",
+      "type_code": "admin_visit",
+      "field_codes": "country,region,city,site,zone,area"
+    },
+    {
+      "section_code": "location",
+      "section_name": "Location",
+      "type_code": "mhv",
+      "field_codes": "country,region,city,site,Zone,area"
+    },
+    {
+      "section_code": "location",
+      "section_name": "Location",
+      "type_code": "mop",
+      "field_codes": "country,region,city,site,Zone,area,white_space,facility_space,outdoor,stakeholders"
+    },
+    {
+      "section_code": "location",
+      "section_name": "Location",
+      "type_code": "tep",
+      "field_codes": "country,region,city,site,Zone,area"
+    },
+    {
+      "section_code": "location",
+      "section_name": "Location",
+      "type_code": "wp",
+      "field_codes": "country,region,city,site,Zone,area"
+    },
+    {
+      "section_code": "schedule",
+      "section_name": "Schedule",
+      "type_code": "admin_visit",
+      "field_codes": "start_date,end_date,start_time,end_time"
+    },
+    {
+      "section_code": "schedule",
+      "section_name": "Schedule",
+      "type_code": "tep",
+      "field_codes": "start_date,end_date"
+    },
+    {
+      "section_code": "visitors",
+      "section_name": "Visitors",
+      "type_code": "admin_visit",
+      "field_codes": "full_name,nationality,id_type,id_number,company,job_title,mobile,email,id_attachment"
+    },
+    {
+      "section_code": "visitors",
+      "section_name": "Visitors",
+      "type_code": "tep",
+      "field_codes": "full_name,nationality,id_type,id_number,company,job_title,mobile,email,id_attachment"
+    },
+    {
+      "section_code": "visitors",
+      "section_name": "Visitors",
+      "type_code": "wp",
+      "field_codes": "full_name,nationality,id_type,id_number,company,job_title,mobile,email,id_attachment"
+    }
+  ],
+  "messages": [],
+  "stdout": "section_code\tsection_name\ttype_code\tfield_codes\nbasic_info\tBasic Information\tadmin_visit\trequestor_name,company,email,department,sub_type,vip_visit,purpose,notes\nbasic_info\tBasic Information\tmhv\trequestor_name,company,email,department,purpose,description\nbasic_info\tBasic Information\tmop\trequestor_name,company,email,department,description\nbasic_info\tBasic Information\twp\trequestor_name,company,email,department,description\nhost\tHost\tadmin_visit\thost_user\nhost\tHost\ttep\thost_user\nlocation\tLocation\tadmin_visit\tcountry,region,city,site,zone,area\nlocation\tLocation\tmhv\tcountry,region,city,site,Zone,area\nlocation\tLocation\tmop\tcountry,region,city,site,Zone,area,white_space,facility_space,outdoor,stakeholders\nlocation\tLocation\ttep\tcountry,region,city,site,Zone,area\nlocation\tLocation\twp\tcountry,region,city,site,Zone,area\nschedule\tSchedule\tadmin_visit\tstart_date,end_date,start_time,end_time\nschedule\tSchedule\ttep\tstart_date,end_date\nvisitors\tVisitors\tadmin_visit\tfull_name,nationality,id_type,id_number,company,job_title,mobile,email,id_attachment\nvisitors\tVisitors\ttep\tfull_name,nationality,id_type,id_number,company,job_title,mobile,email,id_attachment\nvisitors\tVisitors\twp\tfull_name,nationality,id_type,id_number,company,job_title,mobile,email,id_attachment\n",
+  "stderr": "",
+  "execution_time_ms": 1601
+}

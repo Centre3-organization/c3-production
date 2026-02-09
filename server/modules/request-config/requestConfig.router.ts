@@ -410,8 +410,9 @@ export const formDefinitionRouter = router({
         }
         
         // Collect all sections from all types
-        const allSections: any[] = [];
-        const sectionMap = new Map<string, any>();
+        // Track which section codes appear in multiple types (shared sections)
+        const sectionCodeCount = new Map<string, number>();
+        const typeSections = new Map<string, any[]>(); // typeCode -> sections
         
         for (const type of types) {
           const [sections] = await connection.execute(`
@@ -420,6 +421,7 @@ export const formDefinitionRouter = router({
             ORDER BY displayOrder ASC
           `, [type.id]) as any;
           
+          const processedSections: any[] = [];
           for (const section of sections) {
             // Get fields for this section
             const [fields] = await connection.execute(`
@@ -437,20 +439,62 @@ export const formDefinitionRouter = router({
             }));
             section.showCondition = typeof section.showCondition === 'string' ? JSON.parse(section.showCondition) : section.showCondition;
             
-            // Use section code as key to avoid duplicates
-            const key = `${type.code}_${section.code}`;
-            if (!sectionMap.has(key)) {
-              sectionMap.set(key, {
-                ...section,
-                typeCode: type.code,
-                typeName: type.name,
-              });
+            processedSections.push({
+              ...section,
+              typeCode: type.code,
+              typeName: type.name,
+            });
+            
+            // Count how many types have this section code
+            sectionCodeCount.set(section.code, (sectionCodeCount.get(section.code) || 0) + 1);
+          }
+          typeSections.set(type.code, processedSections);
+        }
+        
+        const isMultiType = types.length > 1;
+        
+        // Build final sections list:
+        // - Shared sections (appearing in 2+ types) are included only once, without type badge
+        // - Type-specific sections keep their type badge
+        const finalSections: any[] = [];
+        const addedSharedCodes = new Set<string>();
+        
+        // First pass: add shared sections (from the first type that has them)
+        if (isMultiType) {
+          for (const type of types) {
+            const sections = typeSections.get(type.code) || [];
+            for (const section of sections) {
+              if (sectionCodeCount.get(section.code)! > 1 && !addedSharedCodes.has(section.code)) {
+                addedSharedCodes.add(section.code);
+                finalSections.push({
+                  ...section,
+                  typeCode: null, // null = shared section, no type badge
+                  typeName: null,
+                  isShared: true,
+                });
+              }
             }
           }
         }
         
-        // Convert map to array and sort by display order
-        const sections = Array.from(sectionMap.values()).sort((a, b) => a.displayOrder - b.displayOrder);
+        // Second pass: add type-specific sections
+        for (const type of types) {
+          const sections = typeSections.get(type.code) || [];
+          for (const section of sections) {
+            if (!isMultiType || sectionCodeCount.get(section.code)! === 1) {
+              finalSections.push(section);
+            }
+          }
+        }
+        
+        // Sort: shared sections first (by display order), then type-specific (by display order)
+        const sections = finalSections.sort((a, b) => {
+          // Shared sections come first
+          if (a.isShared && !b.isShared) return -1;
+          if (!a.isShared && b.isShared) return 1;
+          // Within same group, sort by display order
+          return a.displayOrder - b.displayOrder;
+        });
         
         return {
           types: types.map((t: any) => ({
