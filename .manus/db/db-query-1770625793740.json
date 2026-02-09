@@ -1,0 +1,26 @@
+{
+  "query": "SELECT status, COUNT(*) as cnt FROM approvalTasks GROUP BY status;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT status, COUNT(*) as cnt FROM approvalTasks GROUP BY status;",
+  "rows": [
+    {
+      "status": "approved",
+      "cnt": "43"
+    },
+    {
+      "status": "rejected",
+      "cnt": "163"
+    },
+    {
+      "status": "need_clarification",
+      "cnt": "8"
+    },
+    {
+      "status": "pending",
+      "cnt": "43"
+    }
+  ],
+  "messages": [],
+  "stdout": "status\tcnt\napproved\t43\nrejected\t163\nneed_clarification\t8\npending\t43\n",
+  "stderr": "",
+  "execution_time_ms": 1562
+}

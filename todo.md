@@ -2022,3 +2022,11 @@ Create a unified data source system that can pull options from anywhere in the p
   - Added useEffect in FieldRenderer to sync readonly user_profile fields to formData
   - Skip validation for readonly fields with user_profile optionsSource
   - Ensure submission payload includes user profile data as fallback
+
+## Bug Fix: Rejected requests still showing in approvals (Feb 9, 2026)
+- [x] Investigate why rejected requests still appear in approvals list (count stays at 12 after rejecting all)
+- [x] Fix the approvals query or rejection mutation to properly remove rejected requests from pending list
+  - Admin rejection now cascades: skips all other pending tasks and rejects instance+request immediately
+  - getMyPendingApprovals query now filters by approvalInstances.status = 'in_progress'
+  - Dashboard pendingApprovals count now includes 'pending_approval' status
+- [x] Verify count goes to 0 after rejecting all requests

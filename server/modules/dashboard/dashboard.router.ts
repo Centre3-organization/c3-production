@@ -35,10 +35,11 @@ export const dashboardRouter = router({
       .from(requests)
       .where(and(gte(requests.createdAt, startOfLastMonth), lte(requests.createdAt, endOfLastMonth)));
     
-    // Get pending approvals count
+    // Get pending approvals count (includes all pending statuses)
     const pendingL1 = requestStats.find(r => r.status === "pending_l1")?.count || 0;
     const pendingManual = requestStats.find(r => r.status === "pending_manual")?.count || 0;
-    const pendingApprovals = pendingL1 + pendingManual;
+    const pendingApproval = requestStats.find(r => r.status === "pending_approval")?.count || 0;
+    const pendingApprovals = pendingL1 + pendingManual + pendingApproval;
     
     // Get approved requests (active visitors)
     const approvedCount = requestStats.find(r => r.status === "approved")?.count || 0;

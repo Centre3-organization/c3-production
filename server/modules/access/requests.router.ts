@@ -231,7 +231,10 @@ export const requestsRouter = router({
         .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
         .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
         .innerJoin(approvalWorkflows, eq(approvalInstances.workflowId, approvalWorkflows.id))
-        .where(eq(approvalTasks.status, "pending"))
+        .where(and(
+          eq(approvalTasks.status, "pending"),
+          eq(approvalInstances.status, "in_progress")
+        ))
         .groupBy(
           approvalTasks.instanceId,
           approvalTasks.stageId,
@@ -263,7 +266,8 @@ export const requestsRouter = router({
         .innerJoin(approvalWorkflows, eq(approvalInstances.workflowId, approvalWorkflows.id))
         .where(and(
           eq(approvalTasks.assignedTo, ctx.user.id),
-          eq(approvalTasks.status, "pending")
+          eq(approvalTasks.status, "pending"),
+          eq(approvalInstances.status, "in_progress")
         ))
         .orderBy(desc(approvalTasks.createdAt));
     }
@@ -1488,16 +1492,53 @@ export const requestsRouter = router({
       await db.update(approvalTasks)
         .set({
           status: "rejected",
-          comments: input.comments
+          comments: input.comments,
+          decidedAt: new Date(),
         })
         .where(eq(approvalTasks.id, task.id));
       
-      // For "any" mode rejection doesn't immediately reject the request
+      // Admin/Super Admin rejection is authoritative - immediately reject the entire request
+      // regardless of approval mode (any/all)
+      if (isAdminOrSuperAdmin) {
+        // Cancel all other pending tasks for this stage
+        await db.update(approvalTasks)
+          .set({ status: "skipped", decidedAt: new Date() })
+          .where(and(
+            eq(approvalTasks.instanceId, instance.id),
+            eq(approvalTasks.stageId, stage.id),
+            eq(approvalTasks.status, "pending")
+          ));
+        
+        // Reject the entire instance and request
+        await db.update(approvalInstances)
+          .set({ status: "rejected" })
+          .where(eq(approvalInstances.id, instance.id));
+        
+        await db.update(requests)
+          .set({ status: "rejected" })
+          .where(eq(requests.id, instance.requestId));
+        
+        // Record history
+        await db.insert(approvalHistory).values({
+          instanceId: instance.id,
+          taskId: task.id,
+          actionType: "workflow_completed",
+          actionBy: ctx.user.id,
+          details: {
+            stageName: stage.stageName,
+            comments: input.comments,
+            reason: "Admin override rejection",
+          },
+        });
+        
+        return { success: true, message: "Request rejected by admin" };
+      }
+      
       // For "all" mode, any rejection rejects the request
       if (stage.approvalMode === "all") {
         // Cancel all other pending tasks for this stage
         await db.update(approvalTasks)
-          .set({ status: "skipped" })
+          .set({ status: "skipped", decidedAt: new Date() })
           .where(and(
             eq(approvalTasks.instanceId, instance.id),
             eq(approvalTasks.stageId, stage.id),
@@ -1506,9 +1547,7 @@ export const requestsRouter = router({
         
         // Reject the entire request
         await db.update(approvalInstances)
-          .set({ 
-            status: "rejected"
-          })
+          .set({ status: "rejected" })
           .where(eq(approvalInstances.id, instance.id));
         
         await db.update(requests)
