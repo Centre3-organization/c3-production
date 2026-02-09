@@ -1987,3 +1987,7 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Approvals page: Clean up overall layout - reduce clutter
 - [x] Workflow Builder: Fix "Select a workflow" empty state positioning (should be centered, not overlapping left panel)
 - [x] Card Control: Add "Internal User" as company type for card issuance
+
+## Brand Color Fixes (Feb 9, 2026)
+- [x] Dashboard: Increase purple brand color presence (too much white/grey after sidebar change)
+- [x] Approvals: Change green buttons to purple brand color (#5B2C93)

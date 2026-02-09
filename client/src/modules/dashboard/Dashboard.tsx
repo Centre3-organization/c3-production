@@ -90,7 +90,7 @@ function KPICard({
         <>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">{label}</span>
-            <div className="p-1.5 rounded" style={{ backgroundColor: `${accentColor}10` }}>
+            <div className="p-2 rounded-lg" style={{ backgroundColor: `${accentColor}18` }}>
               <Icon className="h-4 w-4" style={{ color: accentColor }} />
             </div>
           </div>
@@ -228,40 +228,43 @@ export default function Home() {
   return (
     <div className="space-y-5">
       {/* ─── Command Centre Header ──────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-[#1A1A2E] tracking-tight">
-            Command Centre
-          </h1>
-          <p className="text-xs text-[#8C8C8C] mt-0.5">
-            Last synced: {lastUpdated} &middot; {user?.name || "Operator"}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="gap-1.5 h-8 px-3 text-xs border-[#D0D0D0]"
-          >
-            <RefreshCw className={cn("h-3.5 w-3.5", isRefreshing && "animate-spin")} />
-            Refresh Data
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => window.print()}
-            className="gap-1.5 h-8 px-3 text-xs border-[#D0D0D0]"
-          >
-            <Printer className="h-3.5 w-3.5" />
-            Print
-          </Button>
+      <div className="rounded-xl p-5 mb-1" style={{ background: "linear-gradient(135deg, #5B2C93 0%, #7B4DB5 50%, #9B6DD7 100%)" }}>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-semibold text-white tracking-tight flex items-center gap-2">
+              <Target className="h-5 w-5 text-white/80" />
+              Command Centre
+            </h1>
+            <p className="text-xs text-white/70 mt-0.5">
+              Last synced: {lastUpdated} &middot; {user?.name || "Operator"}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="gap-1.5 h-8 px-3 text-xs border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white"
+            >
+              <RefreshCw className={cn("h-3.5 w-3.5", isRefreshing && "animate-spin")} />
+              Refresh Data
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => window.print()}
+              className="gap-1.5 h-8 px-3 text-xs border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white"
+            >
+              <Printer className="h-3.5 w-3.5" />
+              Print
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* ─── KPI Strip ──────────────────────────────────────────────────── */}
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mt-4">
         <KPICard
           label="Active Requests"
           value={stats?.totalRequestsThisMonth || 0}
@@ -316,7 +319,7 @@ export default function Home() {
 
       {/* ─── Tabbed Views ───────────────────────────────────────────────── */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex items-center justify-between border-b border-[#E8E8E8]">
+        <div className="flex items-center justify-between border-b-2 border-[#E8DCF5]">
           <TabsList className="bg-transparent h-auto p-0 gap-0">
             <TabsTrigger 
               value="operational" 
@@ -385,11 +388,11 @@ export default function Home() {
           <div className="grid gap-4 lg:grid-cols-5">
             {/* Pending Items */}
             {canViewApprovals && (
-              <Card className="lg:col-span-2 border border-[#E8E8E8] shadow-none">
-                <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <Card className="lg:col-span-2 border border-[#E8DCF5] shadow-none">
+                <CardHeader className="pb-3 flex flex-row items-center justify-between bg-[#F8F6FC] rounded-t-lg">
                   <div>
-                    <CardTitle className="text-sm font-medium text-[#1A1A2E] flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-[#D97706]" />
+                    <CardTitle className="text-sm font-medium text-[#5B2C93] flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-[#5B2C93]" />
                       Pending Queue
                     </CardTitle>
                     <p className="text-[11px] text-[#8C8C8C] mt-0.5">Awaiting review & approval</p>
@@ -443,11 +446,11 @@ export default function Home() {
             )}
 
             {/* Recent Activity Feed */}
-            <Card className={cn("border border-[#E8E8E8] shadow-none", canViewApprovals ? "lg:col-span-3" : "lg:col-span-5")}>
-              <CardHeader className="pb-3 flex flex-row items-center justify-between">
+            <Card className={cn("border border-[#E8DCF5] shadow-none", canViewApprovals ? "lg:col-span-3" : "lg:col-span-5")}>
+              <CardHeader className="pb-3 flex flex-row items-center justify-between bg-[#F8F6FC] rounded-t-lg">
                 <div>
-                  <CardTitle className="text-sm font-medium text-[#1A1A2E] flex items-center gap-2">
-                    <Activity className="h-4 w-4 text-[#6B6B6B]" />
+                  <CardTitle className="text-sm font-medium text-[#5B2C93] flex items-center gap-2">
+                    <Activity className="h-4 w-4 text-[#5B2C93]" />
                     Activity Stream
                   </CardTitle>
                   <p className="text-[11px] text-[#8C8C8C] mt-0.5">Latest system events</p>
@@ -507,10 +510,10 @@ export default function Home() {
         {canViewAnalytics && (
         <TabsContent value="analytics" className="mt-4 space-y-4">
           {/* Request Trend Chart */}
-          <Card className="border border-[#E8E8E8] shadow-none">
-            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+          <Card className="border border-[#E8DCF5] shadow-none">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between bg-[#F8F6FC] rounded-t-lg">
               <div>
-                <CardTitle className="text-sm font-medium text-[#1A1A2E] flex items-center gap-2">
+                <CardTitle className="text-sm font-medium text-[#5B2C93] flex items-center gap-2">
                   <BarChart3 className="h-4 w-4 text-[#5B2C93]" />
                   Request Volume Trend
                 </CardTitle>
@@ -572,9 +575,9 @@ export default function Home() {
           {/* Distribution Charts Row */}
           <div className="grid gap-4 lg:grid-cols-3">
             {/* Request Status Distribution */}
-            <Card className="border border-[#E8E8E8] shadow-none">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-[#1A1A2E]">Status Distribution</CardTitle>
+            <Card className="border border-[#E8DCF5] shadow-none">
+              <CardHeader className="pb-3 bg-[#F8F6FC] rounded-t-lg">
+                <CardTitle className="text-sm font-medium text-[#5B2C93]">Status Distribution</CardTitle>
                 <p className="text-[11px] text-[#8C8C8C]">Current request pipeline</p>
               </CardHeader>
               <CardContent className="pt-0">
@@ -607,9 +610,9 @@ export default function Home() {
             </Card>
 
             {/* Request Type Distribution */}
-            <Card className="border border-[#E8E8E8] shadow-none">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-[#1A1A2E]">Request Categories</CardTitle>
+            <Card className="border border-[#E8DCF5] shadow-none">
+              <CardHeader className="pb-3 bg-[#F8F6FC] rounded-t-lg">
+                <CardTitle className="text-sm font-medium text-[#5B2C93]">Request Categories</CardTitle>
                 <p className="text-[11px] text-[#8C8C8C]">Volume by request type</p>
               </CardHeader>
               <CardContent className="pt-0">
@@ -640,9 +643,9 @@ export default function Home() {
 
             {/* Approval Performance */}
             {canViewApprovals && (
-              <Card className="border border-[#E8E8E8] shadow-none">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-[#1A1A2E]">Approval Throughput</CardTitle>
+              <Card className="border border-[#E8DCF5] shadow-none">
+                <CardHeader className="pb-3 bg-[#F8F6FC] rounded-t-lg">
+                  <CardTitle className="text-sm font-medium text-[#5B2C93]">Approval Throughput</CardTitle>
                   <p className="text-[11px] text-[#8C8C8C]">Workflow processing metrics</p>
                 </CardHeader>
                 <CardContent className="pt-0">
@@ -694,11 +697,11 @@ export default function Home() {
         <TabsContent value="compliance" className="mt-4 space-y-4">
           {/* Facilities Grid */}
           {canViewSites && (
-            <Card className="border border-[#E8E8E8] shadow-none">
-              <CardHeader className="pb-3 flex flex-row items-center justify-between">
+            <Card className="border border-[#E8DCF5] shadow-none">
+              <CardHeader className="pb-3 flex flex-row items-center justify-between bg-[#F8F6FC] rounded-t-lg">
                 <div>
-                  <CardTitle className="text-sm font-medium text-[#1A1A2E] flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-[#2563EB]" />
+                  <CardTitle className="text-sm font-medium text-[#5B2C93] flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-[#5B2C93]" />
                     Facility Portfolio
                   </CardTitle>
                   <p className="text-[11px] text-[#8C8C8C] mt-0.5">Site infrastructure & request distribution</p>
@@ -758,10 +761,10 @@ export default function Home() {
 
           {/* Zone Occupancy */}
           {canViewZones && (
-            <Card className="border border-[#E8E8E8] shadow-none">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-[#1A1A2E] flex items-center gap-2">
-                  <Layers className="h-4 w-4 text-[#059669]" />
+            <Card className="border border-[#E8DCF5] shadow-none">
+              <CardHeader className="pb-3 bg-[#F8F6FC] rounded-t-lg">
+                <CardTitle className="text-sm font-medium text-[#5B2C93] flex items-center gap-2">
+                  <Layers className="h-4 w-4 text-[#5B2C93]" />
                   Zone Capacity Utilization
                 </CardTitle>
                 <p className="text-[11px] text-[#8C8C8C] mt-0.5">Current headcount vs capacity</p>
@@ -809,10 +812,10 @@ export default function Home() {
           )}
 
           {/* System Health Summary */}
-          <Card className="border border-[#E8E8E8] shadow-none">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-[#1A1A2E] flex items-center gap-2">
-                <Gauge className="h-4 w-4 text-[#6B6B6B]" />
+          <Card className="border border-[#E8DCF5] shadow-none">
+            <CardHeader className="pb-3 bg-[#F8F6FC] rounded-t-lg">
+              <CardTitle className="text-sm font-medium text-[#5B2C93] flex items-center gap-2">
+                <Gauge className="h-4 w-4 text-[#5B2C93]" />
                 System Health
               </CardTitle>
               <p className="text-[11px] text-[#8C8C8C] mt-0.5">Infrastructure & service status</p>

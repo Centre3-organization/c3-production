@@ -425,7 +425,7 @@ export default function Approvals() {
                     onClick={(e) => { e.stopPropagation(); openActionDialog(task, "reject"); }} disabled={processingId === task.taskId}>
                     <XCircle className="h-3.5 w-3.5 mr-1" /> Reject
                   </Button>
-                  <Button size="sm" className="h-7 px-2 text-xs bg-[#059669] hover:bg-[#047857] text-white"
+                  <Button size="sm" className="h-7 px-2 text-xs bg-[#5B2C93] hover:bg-[#4A2378] text-white"
                     onClick={(e) => { e.stopPropagation(); openActionDialog(task, "approve"); }} disabled={processingId === task.taskId}>
                     {processingId === task.taskId ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" /> : <CheckCircle2 className="h-3.5 w-3.5 mr-1" />}
                     {isFinalStage(task) ? "Grant" : "Approve"}
@@ -447,7 +447,7 @@ export default function Approvals() {
       <Dialog open={actionDialogOpen} onOpenChange={(open) => { if (!open) resetAllDialogs(); else setActionDialogOpen(open); }}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle className={`flex items-center gap-2 ${actionType === "approve" ? "text-[#059669]" : actionType === "reject" ? "text-[#FF6B6B]" : "text-[#D97706]"}`}>
+            <DialogTitle className={`flex items-center gap-2 ${actionType === "approve" ? "text-[#5B2C93]" : actionType === "reject" ? "text-[#FF6B6B]" : "text-[#D97706]"}`}>
               {actionType === "approve" && <CheckCircle2 className="h-5 w-5" />}
               {actionType === "reject" && <XCircle className="h-5 w-5" />}
               {actionType === "clarification" && <HelpCircle className="h-5 w-5" />}
@@ -512,7 +512,7 @@ export default function Approvals() {
           <DialogFooter>
             <Button variant="outline" onClick={() => resetAllDialogs()} className="border-[#E0E0E0]">{t("common.cancel", "Cancel")}</Button>
             <Button
-              className={actionType === "approve" ? "bg-[#059669] hover:bg-[#047857] text-white" : actionType === "reject" ? "bg-[#FF6B6B] hover:bg-[#EF4444] text-white" : "bg-[#D97706] hover:bg-[#B45309] text-white"}
+              className={actionType === "approve" ? "bg-[#5B2C93] hover:bg-[#4A2378] text-white" : actionType === "reject" ? "bg-[#FF6B6B] hover:bg-[#EF4444] text-white" : "bg-[#D97706] hover:bg-[#B45309] text-white"}
               onClick={handleActionConfirm}
               disabled={processingId !== null || (actionType !== "approve" && !actionComments.trim())}
             >
@@ -587,7 +587,7 @@ export default function Approvals() {
           
           <DialogFooter>
             <Button variant="outline" onClick={() => resetAllDialogs()} className="border-[#E0E0E0]">{t("common.cancel", "Cancel")}</Button>
-            <Button className="bg-[#059669] hover:bg-[#047857] text-white" onClick={handleFinalApprove} disabled={processingId !== null}>
+            <Button className="bg-[#5B2C93] hover:bg-[#4A2378] text-white" onClick={handleFinalApprove} disabled={processingId !== null}>
               {processingId !== null ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
               {t("approvals.approveAndGrant", "Approve & Grant Access")}
             </Button>
@@ -599,7 +599,7 @@ export default function Approvals() {
       <Dialog open={qrResultDialogOpen} onOpenChange={setQrResultDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-[#059669]"><CheckCircle2 className="h-5 w-5" /> {t("approvals.accessGranted", "Access Granted")}</DialogTitle>
+            <DialogTitle className="flex items-center gap-2 text-[#5B2C93]"><CheckCircle2 className="h-5 w-5" /> {t("approvals.accessGranted", "Access Granted")}</DialogTitle>
             <DialogDescription>{t("approvals.accessGrantedDesc", "The request has been fully approved and access credentials have been generated.")}</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col items-center space-y-4">
@@ -868,7 +868,7 @@ export default function Approvals() {
               onClick={() => { setDetailsDialogOpen(false); openActionDialog(selectedRequest, "reject"); }}>
               <XCircle className="h-4 w-4 mr-2" /> {t("common.reject", "Reject")}
             </Button>
-            <Button className="bg-[#059669] hover:bg-[#047857] text-white"
+            <Button className="bg-[#5B2C93] hover:bg-[#4A2378] text-white"
               onClick={() => { setDetailsDialogOpen(false); openActionDialog(selectedRequest, "approve"); }}>
               <CheckCircle2 className="h-4 w-4 mr-2" />
               {isFinalStage(selectedRequest) ? t("approvals.grantAccess", "Grant Access") : t("common.approve", "Approve")}
