@@ -15,7 +15,7 @@ const infrastructureSpecsSchema = z.object({
 // Input validation schemas
 const createAreaSchema = z.object({
   zoneId: z.number(),
-  code: z.string().min(1).max(20),
+  code: z.string().min(1).max(100),
   name: z.string().min(1).max(100),
   description: z.string().optional(),
   areaTypeId: z.number().optional(),
@@ -29,7 +29,7 @@ const createAreaSchema = z.object({
 const updateAreaSchema = z.object({
   id: z.number(),
   zoneId: z.number().optional(),
-  code: z.string().min(1).max(20).optional(),
+  code: z.string().min(1).max(100).optional(),
   name: z.string().min(1).max(100).optional(),
   description: z.string().nullable().optional(),
   areaTypeId: z.number().nullable().optional(),

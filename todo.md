@@ -2014,3 +2014,5 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add missing "Add Area" button to Areas page header (was hidden due to missing 'areas' module in permissions map)
 - [x] Fix Download Form PDF button - removed from approvals details dialog, added server-side status check to block PDF generation for non-approved requests
 - [x] Remove RFID Tag and Access Card options from Grant Access dialog UI (keep backend for later)
+- [x] Fix create area error - API returning HTML instead of JSON (Unexpected token '<') - also increased code max length from 20 to 100
+- [x] Fix systemic production error: all tRPC mutations (create area, post comment, etc.) return HTML instead of JSON - fixed SPA fallback to only handle GET requests and skip /api routes
