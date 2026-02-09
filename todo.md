@@ -2073,8 +2073,14 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Verify workflow is active and correctly configured
 
 ## Bug Fix: Need Clarification flow (Feb 9, 2026)
-- [ ] Request sent back for clarification changes to "draft" instead of "need_clarification"
-- [ ] Requestor (Lisa) should see the request with "Need Clarification" status and have option to re-submit
-- [ ] Fix the clarification mutation to set correct status
-- [ ] Add re-submit UI for requestor on need_clarification requests
-- [ ] Fix REQ-20260209-D2D19Q data to correct status
+- [x] Request sent back for clarification changes to "draft" instead of "need_clarification"
+  - Root cause: FioriStatusBadge and RequestList statusConfig didn't include need_clarification → fell back to "Draft"
+  - Added need_clarification to FioriStatusBadge styles/labels (amber theme)
+  - Added need_clarification to RequestList statusConfig
+- [x] Requestor (Lisa) should see the request with "Need Clarification" status and have option to re-submit
+  - Added amber "Need Clarification" banner with re-submit button in request detail
+  - Created resubmitAfterClarification backend mutation (resets tasks, creates new pending tasks at same stage)
+  - Created re-submit dialog with comment field for requestor response
+- [x] Fix the clarification mutation to set correct status (was already correct in backend)
+- [x] Add re-submit UI for requestor on need_clarification requests
+- [x] Fix REQ-20260209-D2D19Q data - confirmed already in correct need_clarification status

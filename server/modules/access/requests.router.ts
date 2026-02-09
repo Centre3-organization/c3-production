@@ -18,7 +18,8 @@ import {
   stageApprovers,
   requestVisitors,
   requestMaterials,
-  requestVehicles
+  requestVehicles,
+  requestComments
 } from "../../../drizzle/schema";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "../../_core/trpc";
 import { getDataScopeFilter, hasPermission, getUserPermissions } from "../../services/enterprise-rbac.service";
@@ -1735,6 +1736,99 @@ export const requestsRouter = router({
       };
     }),
   
+  // Re-submit request after clarification (requestor action)
+  resubmitAfterClarification: protectedProcedure
+    .input(z.object({
+      requestId: z.number(),
+      comments: z.string().min(1, "Response is required"),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      // Get the request and verify the requestor
+      const request = await db
+        .select()
+        .from(requests)
+        .where(eq(requests.id, input.requestId))
+        .limit(1);
+      
+      if (request.length === 0) throw new Error("Request not found");
+      if (request[0].status !== "need_clarification") throw new Error("Request is not in clarification status");
+      if (request[0].requestorId !== ctx.user.id) throw new Error("Only the requestor can re-submit this request");
+      
+      // Get the approval instance
+      const instance = await db
+        .select()
+        .from(approvalInstances)
+        .where(eq(approvalInstances.requestId, input.requestId))
+        .limit(1);
+      
+      if (instance.length === 0) throw new Error("Approval instance not found");
+      
+      // Find the task that requested clarification to determine which stage to resume
+      const clarificationTask = await db
+        .select()
+        .from(approvalTasks)
+        .where(and(
+          eq(approvalTasks.instanceId, instance[0].id),
+          eq(approvalTasks.decision, "need_clarification")
+        ))
+        .orderBy(desc(approvalTasks.id))
+        .limit(1);
+      
+      const resumeStageId = clarificationTask.length > 0 ? clarificationTask[0].stageId : instance[0].currentStageId;
+      
+      // Reset all non-approved tasks for this instance to skipped (clean slate)
+      await db.update(approvalTasks)
+        .set({ status: "skipped" })
+        .where(and(
+          eq(approvalTasks.instanceId, instance[0].id),
+          inArray(approvalTasks.status, ["pending", "need_clarification"])
+        ));
+      
+      // Reset instance to in_progress at the same stage
+      await db.update(approvalInstances)
+        .set({
+          status: "in_progress",
+          currentStageId: resumeStageId,
+        })
+        .where(eq(approvalInstances.id, instance[0].id));
+      
+      // Reset request status to pending_approval
+      await db.update(requests)
+        .set({ status: "pending_approval" })
+        .where(eq(requests.id, input.requestId));
+      
+      // Create new pending tasks for the stage
+      await createTasksForStage(db, instance[0].id, resumeStageId!, input.requestId);
+      
+      // Add requestor's response as a comment
+      await db.insert(requestComments).values({
+        requestId: input.requestId,
+        authorId: ctx.user.id,
+        content: input.comments,
+        visibility: "requestor",
+        context: "clarification",
+        instanceId: instance[0].id,
+      });
+      
+      // Record history
+      await db.insert(approvalHistory).values({
+        instanceId: instance[0].id,
+        actionType: "clarification_provided",
+        actionBy: ctx.user.id,
+        details: {
+          comments: input.comments,
+          response: input.comments,
+          previousStatus: "need_clarification",
+          newStatus: "pending_approval",
+        },
+      });
+      
+      return { success: true, message: "Request re-submitted for approval" };
+    }),
+
   // Update access method for an approved request
   updateAccessMethod: protectedProcedure
     .input(z.object({

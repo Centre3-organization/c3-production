@@ -54,6 +54,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
@@ -84,6 +85,7 @@ const statusConfig: Record<string, { label: string; icon: React.ReactNode; color
   pending_approval: { label: "Pending Approval", icon: <Clock className="h-3 w-3" />, color: "text-[#D97706] bg-[#FEF3C7]" },
   approved: { label: "Approved", icon: <CheckCircle2 className="h-3 w-3" />, color: "text-[#059669] bg-[#D1FAE5]" },
   rejected: { label: "Rejected", icon: <XCircle className="h-3 w-3" />, color: "text-[#FF6B6B] bg-[#FFE5E5]" },
+  need_clarification: { label: "Need Clarification", icon: <MessageSquare className="h-3 w-3" />, color: "text-[#B45309] bg-[#FEF3C7]" },
   cancelled: { label: "Cancelled", icon: <XCircle className="h-3 w-3" />, color: "text-[#2C2C2C] bg-[#F5F5F5]" },
   expired: { label: "Expired", icon: <Clock className="h-3 w-3" />, color: "text-[#2C2C2C] bg-[#F5F5F5]" },
 };
@@ -108,6 +110,8 @@ export default function Requests() {
   const [newCardNumber, setNewCardNumber] = useState("");
   const [qrCodeImage, setQrCodeImage] = useState<string>("");
   const [resendingChannel, setResendingChannel] = useState<string | null>(null);
+  const [resubmitComment, setResubmitComment] = useState("");
+  const [resubmitDialogOpen, setResubmitDialogOpen] = useState(false);
   
   const { data, isLoading, refetch } = trpc.requests.getAll.useQuery({
     status: statusFilter !== "all" ? statusFilter as any : undefined,
@@ -120,6 +124,17 @@ export default function Requests() {
     { enabled: !!selectedRequest }
   );
   
+  const resubmitMutation = trpc.requests.resubmitAfterClarification.useMutation({
+    onSuccess: () => {
+      toast.success("Request re-submitted successfully");
+      setResubmitDialogOpen(false);
+      setResubmitComment("");
+      refetch();
+      refetchDetail();
+    },
+    onError: (error) => toast.error("Failed to re-submit", { description: error.message }),
+  });
+
   const updateAccessMethod = trpc.requests.updateAccessMethod.useMutation({
     onSuccess: async (result: any) => {
       toast.success("Access method updated");
@@ -407,7 +422,24 @@ export default function Requests() {
                     </Button>
                   </Link>
                 )}
+                {requestDetail.status === "need_clarification" && (
+                  <Button variant="outline" size="sm" className="gap-2 border-[#B45309] text-[#B45309]" onClick={() => setResubmitDialogOpen(true)}>
+                    <Send className="h-4 w-4" /> Respond & Re-submit
+                  </Button>
+                )}
               </div>
+
+              {/* Need Clarification Banner */}
+              {requestDetail.status === "need_clarification" && (
+                <div className="bg-[#FEF3C7] border border-[#F59E0B] rounded-lg p-4 space-y-2">
+                  <h4 className="font-medium flex items-center gap-2 text-[#B45309]">
+                    <MessageSquare className="h-4 w-4" /> Clarification Requested
+                  </h4>
+                  <p className="text-sm text-[#92400E]">
+                    An approver has requested clarification on this request. Please review the comments below and respond to re-submit your request.
+                  </p>
+                </div>
+              )}
               
               {/* Access Method Section */}
               {requestDetail.status === "approved" && (
@@ -663,6 +695,45 @@ export default function Requests() {
             <Button onClick={handleSaveAccessMethod} disabled={updateAccessMethod.isPending} className="bg-[#5B2C93] hover:bg-[#3D1C5E]">
               {updateAccessMethod.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
               Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Re-submit After Clarification Dialog */}
+      <Dialog open={resubmitDialogOpen} onOpenChange={setResubmitDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2"><Send className="h-5 w-5 text-[#B45309]" /> Respond & Re-submit</DialogTitle>
+            <DialogDescription>Provide your response to the clarification request and re-submit for approval</DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Your Response</Label>
+              <Textarea
+                placeholder="Provide your clarification response..."
+                value={resubmitComment}
+                onChange={(e) => setResubmitComment(e.target.value)}
+                rows={4}
+                className="resize-none"
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setResubmitDialogOpen(false); setResubmitComment(""); }} className="border-[#E0E0E0]">Cancel</Button>
+            <Button
+              onClick={() => {
+                if (!selectedRequest) return;
+                if (!resubmitComment.trim()) { toast.error("Please provide a response"); return; }
+                resubmitMutation.mutate({ requestId: selectedRequest, comments: resubmitComment });
+              }}
+              disabled={resubmitMutation.isPending || !resubmitComment.trim()}
+              className="bg-[#B45309] hover:bg-[#92400E] text-white"
+            >
+              {resubmitMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
+              Re-submit Request
             </Button>
           </DialogFooter>
         </DialogContent>

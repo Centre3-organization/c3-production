@@ -1,0 +1,30 @@
+{
+  "query": "SELECT r.id, r.requestNumber, r.status, ai.status as instanceStatus, at2.status as taskStatus, at2.decision, at2.clarificationTarget, at2.comments\nFROM requests r\nLEFT JOIN approvalInstances ai ON ai.requestId = r.id\nLEFT JOIN approvalTasks at2 ON at2.instanceId = ai.id\nWHERE r.requestNumber = 'REQ-20260209-D2D19Q'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT r.id, r.requestNumber, r.status, ai.status as instanceStatus, at2.status as taskStatus, at2.decision, at2.clarificationTarget, at2.comments\nFROM requests r\nLEFT JOIN approvalInstances ai ON ai.requestId = r.id\nLEFT JOIN approvalTasks at2 ON at2.instanceId = ai.id\nWHERE r.requestNumber = 'REQ-20260209-D2D19Q'",
+  "rows": [
+    {
+      "id": "210013",
+      "requestNumber": "REQ-20260209-D2D19Q",
+      "status": "need_clarification",
+      "instanceStatus": "need_clarification",
+      "taskStatus": "need_clarification",
+      "decision": "need_clarification",
+      "clarificationTarget": "requestor",
+      "comments": "fgegergegegegegg"
+    },
+    {
+      "id": "210013",
+      "requestNumber": "REQ-20260209-D2D19Q",
+      "status": "need_clarification",
+      "instanceStatus": "need_clarification",
+      "taskStatus": "pending",
+      "decision": "NULL",
+      "clarificationTarget": "NULL",
+      "comments": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\trequestNumber\tstatus\tinstanceStatus\ttaskStatus\tdecision\tclarificationTarget\tcomments\n210013\tREQ-20260209-D2D19Q\tneed_clarification\tneed_clarification\tneed_clarification\tneed_clarification\trequestor\tfgegergegegegegg\n210013\tREQ-20260209-D2D19Q\tneed_clarification\tneed_clarification\tpending\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1588
+}

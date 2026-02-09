@@ -50,6 +50,7 @@ const statusStyles: Record<string, { bg: string; text: string; dot: string }> = 
   rejected: { bg: "bg-[#FFE5E5]", text: "text-[#DC2626]", dot: "bg-[#FF6B6B]" },
   cancelled: { bg: "bg-[#F5F5F5]", text: "text-[#6B6B6B]", dot: "bg-[#B0B0B0]" },
   expired: { bg: "bg-[#F5F5F5]", text: "text-[#6B6B6B]", dot: "bg-[#B0B0B0]" },
+  need_clarification: { bg: "bg-[#FEF3C7]", text: "text-[#B45309]", dot: "bg-[#F59E0B]" },
 
   // Security levels
   low: { bg: "bg-[#E8F9F8]", text: "text-[#0D9488]", dot: "bg-[#4ECDC4]" },
@@ -87,6 +88,7 @@ const statusLabels: Record<string, string> = {
   rejected: "Rejected",
   cancelled: "Cancelled",
   expired: "Expired",
+  need_clarification: "Need Clarification",
   low: "Low",
   medium: "Medium",
   high: "High",
