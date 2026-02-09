@@ -2422,14 +2422,15 @@ async function createTasksForStage(db: any, instanceId: number, stageId: number,
     const resolvedUsers = await resolveApprover(db, approverConfig, requestId);
     
     for (const userId of resolvedUsers) {
-      // Check if task already exists for this user
+      // Check if an active (pending) task already exists for this user
       const existing = await db
         .select()
         .from(approvalTasks)
         .where(and(
           eq(approvalTasks.instanceId, instanceId),
           eq(approvalTasks.stageId, stageId),
-          eq(approvalTasks.assignedTo, userId)
+          eq(approvalTasks.assignedTo, userId),
+          eq(approvalTasks.status, "pending")
         ))
         .limit(1);
       

@@ -2084,3 +2084,15 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix the clarification mutation to set correct status (was already correct in backend)
 - [x] Add re-submit UI for requestor on need_clarification requests
 - [x] Fix REQ-20260209-D2D19Q data - confirmed already in correct need_clarification status
+
+## Bug Fix: Dashboard stats showing incorrect Pending Approvals count (Feb 9, 2026)
+- [x] Dashboard shows 19 Pending Approvals but there are no actual pending approvals
+  - Root cause: Dashboard counted by request status (pending_l1/pending_manual/pending_approval) instead of actual approval tasks
+- [x] Fix dashboard query to accurately count only real pending approvals
+  - getStats now counts based on approvalTasks.status='pending' + approvalInstances.status='in_progress'
+  - getPendingItems now joins with approval tasks for accurate pending queue
+- [x] Clean up stale/orphaned data causing incorrect counts
+  - 15 pending_manual → rejected, 2 pending_approval → need_clarification, 1 orphan → rejected
+- [x] Also verify Pending Queue list on dashboard shows correct data
+- [x] Fixed createTasksForStage: only skip if pending task exists (not skipped/rejected ones)
+- [x] Fixed stuck REQ-20260209-8HM8HM: created new pending task after resubmit

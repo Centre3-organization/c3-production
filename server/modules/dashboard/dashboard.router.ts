@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../../_core/trpc";
 import { getDb } from "../../infra/db/connection";
-import { requests, sites, zones, areas, approvals, users } from "../../../drizzle/schema";
+import { requests, sites, zones, areas, approvals, users, approvalTasks, approvalInstances } from "../../../drizzle/schema";
 import { eq, and, gte, lte, count, desc, sql, ne, isNotNull } from "drizzle-orm";
 
 export const dashboardRouter = router({
@@ -35,11 +35,20 @@ export const dashboardRouter = router({
       .from(requests)
       .where(and(gte(requests.createdAt, startOfLastMonth), lte(requests.createdAt, endOfLastMonth)));
     
-    // Get pending approvals count (includes all pending statuses)
+    // Get pending approvals count based on actual approval tasks (not request status)
+    const pendingTasksResult = await db
+      .select({ count: count() })
+      .from(approvalTasks)
+      .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
+      .where(and(
+        eq(approvalTasks.status, "pending"),
+        eq(approvalInstances.status, "in_progress")
+      ));
+    const pendingApprovals = pendingTasksResult[0]?.count || 0;
+    
+    // Legacy counts for backward compatibility
     const pendingL1 = requestStats.find(r => r.status === "pending_l1")?.count || 0;
     const pendingManual = requestStats.find(r => r.status === "pending_manual")?.count || 0;
-    const pendingApproval = requestStats.find(r => r.status === "pending_approval")?.count || 0;
-    const pendingApprovals = pendingL1 + pendingManual + pendingApproval;
     
     // Get approved requests (active visitors)
     const approvedCount = requestStats.find(r => r.status === "approved")?.count || 0;
@@ -299,36 +308,38 @@ export const dashboardRouter = router({
     }));
   }),
 
-  // Get pending items for quick action
+  // Get pending items for quick action - based on actual pending approval tasks
   getPendingItems: protectedProcedure.query(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     
-    const pendingL1Requests = await db
+    // Get requests that have actual pending approval tasks
+    const pendingRequests = await db
       .select({
         id: requests.id,
         requestNumber: requests.requestNumber,
         type: requests.type,
         visitorName: requests.visitorName,
         createdAt: requests.createdAt,
+        status: requests.status,
       })
       .from(requests)
-      .where(eq(requests.status, "pending_l1"))
+      .innerJoin(approvalInstances, eq(approvalInstances.requestId, requests.id))
+      .innerJoin(approvalTasks, eq(approvalTasks.instanceId, approvalInstances.id))
+      .where(and(
+        eq(approvalTasks.status, "pending"),
+        eq(approvalInstances.status, "in_progress")
+      ))
       .orderBy(requests.createdAt)
-      .limit(5);
+      .limit(10);
     
-    const pendingManualRequests = await db
-      .select({
-        id: requests.id,
-        requestNumber: requests.requestNumber,
-        type: requests.type,
-        visitorName: requests.visitorName,
-        createdAt: requests.createdAt,
-      })
-      .from(requests)
-      .where(eq(requests.status, "pending_manual"))
-      .orderBy(requests.createdAt)
-      .limit(5);
+    // Deduplicate by request id
+    const seen = new Set<number>();
+    const uniqueRequests = pendingRequests.filter(r => {
+      if (seen.has(r.id)) return false;
+      seen.add(r.id);
+      return true;
+    });
     
     const typeLabels: Record<string, string> = {
       admin_visit: "Admin Visit",
@@ -340,14 +351,11 @@ export const dashboardRouter = router({
     };
     
     return {
-      pendingL1: pendingL1Requests.map(r => ({
+      pendingL1: uniqueRequests.slice(0, 5).map(r => ({
         ...r,
         typeLabel: typeLabels[r.type] || r.type,
       })),
-      pendingManual: pendingManualRequests.map(r => ({
-        ...r,
-        typeLabel: typeLabels[r.type] || r.type,
-      })),
+      pendingManual: [] as any[],
     };
   }),
 
@@ -392,7 +400,7 @@ export const dashboardRouter = router({
           .from(requests)
           .where(and(
             eq(requests.siteId, site.id),
-            sql`${requests.status} IN ('pending_l1', 'pending_manual')`
+            sql`${requests.status} IN ('pending_l1', 'pending_manual', 'pending_approval')`
           ));
         
         return {
