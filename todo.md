@@ -2017,3 +2017,4 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix create area error - API returning HTML instead of JSON (Unexpected token '<') - also increased code max length from 20 to 100
 - [x] Fix systemic production error: all tRPC mutations (create area, post comment, etc.) return HTML instead of JSON - fixed SPA fallback to only handle GET requests and skip /api routes
 - [x] Fix multi-request form: deduplicate shared sections (Basic Information, Location) when 2+ request types are selected
+- [x] Fix multi-request form section ordering: group type-specific sections by type (all MOP sections together, then WP, then MHV)

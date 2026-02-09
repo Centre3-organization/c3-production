@@ -487,12 +487,21 @@ export const formDefinitionRouter = router({
           }
         }
         
-        // Sort: shared sections first (by display order), then type-specific (by display order)
+        // Sort: shared sections first (by display order), then type-specific grouped by type
+        // Build type order map from the original types array
+        const typeOrderMap = new Map<string, number>();
+        types.forEach((t: any, idx: number) => typeOrderMap.set(t.code, idx));
+        
         const sections = finalSections.sort((a, b) => {
           // Shared sections come first
           if (a.isShared && !b.isShared) return -1;
           if (!a.isShared && b.isShared) return 1;
-          // Within same group, sort by display order
+          // Within shared sections, sort by display order
+          if (a.isShared && b.isShared) return a.displayOrder - b.displayOrder;
+          // Within type-specific sections, group by type first, then by display order
+          const typeOrderA = typeOrderMap.get(a.typeCode) ?? 999;
+          const typeOrderB = typeOrderMap.get(b.typeCode) ?? 999;
+          if (typeOrderA !== typeOrderB) return typeOrderA - typeOrderB;
           return a.displayOrder - b.displayOrder;
         });
         
