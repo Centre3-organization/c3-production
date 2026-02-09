@@ -1,0 +1,1 @@
+ALTER TABLE `requests` MODIFY COLUMN `status` enum('draft','pending_l1','pending_manual','pending_approval','approved','rejected','cancelled','expired','need_clarification','pending_clarification') NOT NULL DEFAULT 'draft';

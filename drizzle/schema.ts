@@ -405,7 +405,9 @@ export const requests = mysqlTable("requests", {
     "approved", 
     "rejected", 
     "cancelled", 
-    "expired"
+    "expired",
+    "need_clarification",
+    "pending_clarification"
   ]).default("draft").notNull(),
   requestorId: int("requestorId").notNull(),
   visitorName: varchar("visitorName", { length: 100 }).notNull(),

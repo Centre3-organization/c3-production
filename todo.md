@@ -2006,3 +2006,9 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Standardize Zones add/edit dialog with multi-step wizard pattern
 - [x] Standardize Areas add/edit dialog with multi-step wizard pattern
 - [x] Standardize Card Control (NewCardRequest) wizard styling updated to match Create New User pattern
+
+## Approvals Page Bug Fixes (Feb 9, 2026)
+- [x] Fix Clarify button - SQL error when requesting clarification (Failed query on requests table)
+- [x] Fix Reject button - "Task is not pending" error
+- [x] Fix view eye icon overlapping date column in approvals table
+- [x] Add missing "Add Area" button to Areas page header (was hidden due to missing 'areas' module in permissions map)

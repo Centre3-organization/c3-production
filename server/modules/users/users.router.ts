@@ -420,6 +420,8 @@ export const usersRouter = router({
       sites: { create: false, read: false, update: false, delete: false },
       // Zone Management
       zones: { create: false, read: false, update: false, lock: false },
+      // Area Management
+      areas: { create: false, read: false, update: false, delete: false },
       // Security Alerts
       alerts: { view: false, resolve: false },
       // User Administration

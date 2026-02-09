@@ -372,7 +372,7 @@ export default function Approvals() {
         ) : (
           <div className="bg-white border border-[#E0E0E0] rounded-lg overflow-hidden">
             {/* Table Header */}
-            <div className="grid grid-cols-[1fr_120px_100px_140px_120px_100px_220px] gap-2 px-4 py-2.5 bg-[#FAFAFA] border-b border-[#E0E0E0] text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
+            <div className="grid grid-cols-[1fr_100px_90px_120px_100px_80px_310px] gap-2 px-4 py-2.5 bg-[#FAFAFA] border-b border-[#E0E0E0] text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
               <span>Request</span>
               <span>Type</span>
               <span>Stage</span>
@@ -385,7 +385,7 @@ export default function Approvals() {
             {filteredTasks.map((task: any) => (
               <div
                 key={task.taskId}
-                className="grid grid-cols-[1fr_120px_100px_140px_120px_100px_220px] gap-2 px-4 py-3 border-b border-[#F0F0F0] hover:bg-[#FAFAFA] cursor-pointer items-center"
+                className="grid grid-cols-[1fr_100px_90px_120px_100px_80px_310px] gap-2 px-4 py-3 border-b border-[#F0F0F0] hover:bg-[#FAFAFA] cursor-pointer items-center"
                 onClick={() => handleViewDetails(task)}
               >
                 <div className="flex items-center gap-2">

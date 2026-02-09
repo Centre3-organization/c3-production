@@ -24,6 +24,54 @@ import { adminProcedure, protectedProcedure, publicProcedure, router } from "../
 import { getDataScopeFilter, hasPermission, getUserPermissions } from "../../services/enterprise-rbac.service";
 // Workflow engine functions are defined locally
 
+// Helper: For admin users, if the given task is not pending, find another pending task
+// for the same instance+stage combination. This handles the MIN(id) dedup issue.
+async function resolvePendingTask(db: any, taskId: number) {
+  const taskData = await db
+    .select({
+      task: approvalTasks,
+      instance: approvalInstances,
+      stage: approvalStages,
+    })
+    .from(approvalTasks)
+    .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
+    .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
+    .where(eq(approvalTasks.id, taskId))
+    .limit(1);
+  
+  if (taskData.length === 0) throw new Error("Task not found");
+  
+  const { task, instance, stage } = taskData[0];
+  
+  // If the task is already pending, return it directly
+  if (task.status === "pending") {
+    return { task, instance, stage };
+  }
+  
+  // Task is not pending - try to find another pending task for the same instance+stage
+  const altTaskData = await db
+    .select({
+      task: approvalTasks,
+      instance: approvalInstances,
+      stage: approvalStages,
+    })
+    .from(approvalTasks)
+    .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
+    .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
+    .where(and(
+      eq(approvalTasks.instanceId, instance.id),
+      eq(approvalTasks.stageId, stage.id),
+      eq(approvalTasks.status, "pending")
+    ))
+    .limit(1);
+  
+  if (altTaskData.length === 0) {
+    throw new Error("This task has already been processed. Please refresh the page.");
+  }
+  
+  return { task: altTaskData[0].task, instance: altTaskData[0].instance, stage: altTaskData[0].stage };
+}
+
 // Generate request number: REQ-YYYYMMDD-XXXXXX (max 20 chars to fit column)
 function generateRequestNumber(): string {
   const date = new Date();
@@ -1289,33 +1337,15 @@ export const requestsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      // Get the task
-      const taskData = await db
-        .select({
-          task: approvalTasks,
-          instance: approvalInstances,
-          stage: approvalStages,
-        })
-        .from(approvalTasks)
-        .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
-        .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
-        .where(eq(approvalTasks.id, input.taskId))
-        .limit(1);
-      
-      if (taskData.length === 0) throw new Error("Task not found");
-      
-      const { task, instance, stage } = taskData[0];
-      
       // Check if user is Super Admin or Admin - they can approve ANY task
       const userPerms = await getUserPermissions(ctx.user.id);
       const isAdminOrSuperAdmin = userPerms?.roleCode === "super_admin" || userPerms?.roleCode === "admin";
       
+      // Resolve the correct pending task (handles MIN(id) dedup for admins)
+      const { task, instance, stage } = await resolvePendingTask(db, input.taskId);
+      
       if (!isAdminOrSuperAdmin && task.assignedTo !== ctx.user.id) {
         throw new Error("You are not authorized to approve this task");
-      }
-      
-      if (task.status !== "pending") {
-        throw new Error("Task is not pending");
       }
       
       // Update task status
@@ -1324,7 +1354,7 @@ export const requestsRouter = router({
           status: "approved",
           comments: input.comments
         })
-        .where(eq(approvalTasks.id, input.taskId));
+        .where(eq(approvalTasks.id, task.id));
       
       // Record history
       await db.insert(approvalHistory).values({
@@ -1443,33 +1473,15 @@ export const requestsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      // Get the task
-      const taskData = await db
-        .select({
-          task: approvalTasks,
-          instance: approvalInstances,
-          stage: approvalStages,
-        })
-        .from(approvalTasks)
-        .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
-        .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
-        .where(eq(approvalTasks.id, input.taskId))
-        .limit(1);
-      
-      if (taskData.length === 0) throw new Error("Task not found");
-      
-      const { task, instance, stage } = taskData[0];
-      
       // Check if user is Super Admin or Admin - they can reject ANY task
       const userPerms = await getUserPermissions(ctx.user.id);
       const isAdminOrSuperAdmin = userPerms?.roleCode === "super_admin" || userPerms?.roleCode === "admin";
       
+      // Resolve the correct pending task (handles MIN(id) dedup for admins)
+      const { task, instance, stage } = await resolvePendingTask(db, input.taskId);
+      
       if (!isAdminOrSuperAdmin && task.assignedTo !== ctx.user.id) {
         throw new Error("You are not authorized to reject this task");
-      }
-      
-      if (task.status !== "pending") {
-        throw new Error("Task is not pending");
       }
       
       // Update task status
@@ -1478,7 +1490,7 @@ export const requestsRouter = router({
           status: "rejected",
           comments: input.comments
         })
-        .where(eq(approvalTasks.id, input.taskId));
+        .where(eq(approvalTasks.id, task.id));
       
       // For "any" mode rejection doesn't immediately reject the request
       // For "all" mode, any rejection rejects the request
@@ -1590,33 +1602,15 @@ export const requestsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      // Get the task
-      const taskData = await db
-        .select({
-          task: approvalTasks,
-          instance: approvalInstances,
-          stage: approvalStages,
-        })
-        .from(approvalTasks)
-        .innerJoin(approvalInstances, eq(approvalTasks.instanceId, approvalInstances.id))
-        .innerJoin(approvalStages, eq(approvalTasks.stageId, approvalStages.id))
-        .where(eq(approvalTasks.id, input.taskId))
-        .limit(1);
-      
-      if (taskData.length === 0) throw new Error("Task not found");
-      
-      const { task, instance, stage } = taskData[0];
-      
       // Check if user is Super Admin or Admin - they can request clarification on ANY task
       const userPerms = await getUserPermissions(ctx.user.id);
       const isAdminOrSuperAdmin = userPerms?.roleCode === "super_admin" || userPerms?.roleCode === "admin";
       
+      // Resolve the correct pending task (handles MIN(id) dedup for admins)
+      const { task, instance, stage } = await resolvePendingTask(db, input.taskId);
+      
       if (!isAdminOrSuperAdmin && task.assignedTo !== ctx.user.id) {
         throw new Error("You are not authorized to request clarification on this task");
-      }
-      
-      if (task.status !== "pending") {
-        throw new Error("Task is not pending");
       }
       
       // Update task status
@@ -1627,7 +1621,7 @@ export const requestsRouter = router({
           comments: input.comments,
           clarificationTarget: input.target,
         })
-        .where(eq(approvalTasks.id, input.taskId));
+        .where(eq(approvalTasks.id, task.id));
       
       // Update instance status to indicate clarification needed
       await db.update(approvalInstances)
@@ -1638,7 +1632,7 @@ export const requestsRouter = router({
       
       // Update request status
       await db.update(requests)
-        .set({ status: "need_clarification" as any })
+        .set({ status: "need_clarification" })
         .where(eq(requests.id, instance.requestId));
       
       // Get target info for history
