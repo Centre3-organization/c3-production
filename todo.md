@@ -1999,3 +1999,10 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add retry logic with exponential backoff to critical database queries (login, session, user lookup)
 - [x] Add /api/health database health check endpoint for monitoring
 - [x] Verify database recovery and test login flow (TiDB users region still recovering - retry logic confirmed working)
+
+## Form Spacing & Wizard Dialog Standardization (Feb 9, 2026)
+- [x] Fix request form spacing - compact visitors/systems sections into tight 2-column grid
+- [x] Standardize Sites add/edit dialog with multi-step wizard pattern (like Create New User)
+- [x] Standardize Zones add/edit dialog with multi-step wizard pattern
+- [x] Standardize Areas add/edit dialog with multi-step wizard pattern
+- [x] Standardize Card Control (NewCardRequest) wizard styling updated to match Create New User pattern

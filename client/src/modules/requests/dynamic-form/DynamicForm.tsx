@@ -351,7 +351,7 @@ export function DynamicForm({
               </div>
 
               {/* Section Content */}
-              <div className="p-8">
+              <div className="p-6">
                 {currentSectionData.isRepeatable ? (
                   // Use Yakeen-enabled component for visitor sections
                   currentSectionData.code === "visitors" ? (
@@ -397,7 +397,7 @@ export function DynamicForm({
                     />
                   )
                 ) : (
-                  <div className="grid grid-cols-12 gap-x-6 gap-y-6">
+                  <div className="grid grid-cols-12 gap-x-4 gap-y-3">
                     {getSortedFields(currentSectionData.fields).map((field) => (
                       <div
                         key={field.id}

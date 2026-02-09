@@ -7,7 +7,11 @@ import {
   Trash2,
   Loader2,
   Download,
-  Users as UsersIcon
+  Users as UsersIcon,
+  ChevronRight,
+  ChevronLeft,
+  CheckCircle,
+  Settings2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +19,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -22,7 +28,6 @@ import {
   FioriPageHeader,
   FioriFilterBar,
   FioriTable,
-  FioriFormSection,
   FioriStatusBadge,
 } from "@/components/fiori";
 import type { FioriColumn } from "@/components/fiori";
@@ -49,11 +54,37 @@ type Area = {
   areaTypeName: string | null;
 };
 
+function FormField({ label, required, children, hint }: { label: string; required?: boolean; children: React.ReactNode; hint?: string }) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-[#2C2C2C]">
+        {label}{required && <span className="text-[#FF6B6B] ml-0.5">*</span>}:
+      </Label>
+      {children}
+      {hint && <p className="text-xs text-[#6B6B6B]">{hint}</p>}
+    </div>
+  );
+}
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <div className="border-l-4 border-[#5B2C93] pl-3 mb-4">
+      <h3 className="text-base font-medium text-[#5B2C93]">{title}</h3>
+    </div>
+  );
+}
+
+const wizardTabs = [
+  { id: "details", label: "Area Details", icon: Grid3X3 },
+  { id: "infrastructure", label: "Infrastructure", icon: Settings2 },
+];
+
 export default function Areas() {
   const { canCreate, canUpdate, canDelete } = usePermissions('areas');
   
-  const [view, setView] = useState<"list" | "form">("list");
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedArea, setSelectedArea] = useState<Area | null>(null);
+  const [activeTab, setActiveTab] = useState("details");
   const [searchTerm, setSearchTerm] = useState("");
   const [siteFilter, setSiteFilter] = useState<string>("all");
   const [zoneFilter, setZoneFilter] = useState<string>("all");
@@ -88,15 +119,16 @@ export default function Areas() {
   const { data: zones = [] } = trpc.zones.getForDropdown.useQuery(
     siteFilter !== "all" ? { siteId: parseInt(siteFilter) } : undefined
   );
+  const { data: allZones = [] } = trpc.zones.getForDropdown.useQuery();
   const { data: areaTypes = [] } = trpc.masterData.getAreaTypes.useQuery();
 
   const createMutation = trpc.areas.create.useMutation({
-    onSuccess: () => { toast.success("Area created successfully"); refetch(); setView("list"); resetForm(); },
+    onSuccess: () => { toast.success("Area created successfully"); refetch(); setDialogOpen(false); resetForm(); },
     onError: (error) => toast.error(error.message || "Failed to create area"),
   });
 
   const updateMutation = trpc.areas.update.useMutation({
-    onSuccess: () => { toast.success("Area updated successfully"); refetch(); setView("list"); resetForm(); },
+    onSuccess: () => { toast.success("Area updated successfully"); refetch(); setDialogOpen(false); resetForm(); },
     onError: (error) => toast.error(error.message || "Failed to update area"),
   });
 
@@ -113,9 +145,10 @@ export default function Areas() {
       status: "active",
     });
     setSelectedArea(null);
+    setActiveTab("details");
   };
 
-  const handleCreate = () => { resetForm(); setView("form"); };
+  const handleCreate = () => { resetForm(); setDialogOpen(true); };
 
   const handleEdit = (area: Area) => {
     setSelectedArea(area);
@@ -134,12 +167,14 @@ export default function Areas() {
       },
       status: area.status,
     });
-    setView("form");
+    setActiveTab("details");
+    setDialogOpen(true);
   };
 
   const handleSave = () => {
     if (!formData.zoneId || !formData.code || !formData.name) {
-      toast.error("Please fill in required fields");
+      toast.error("Please fill in required fields (Parent Zone, Area Code, Area Name)");
+      setActiveTab("details");
       return;
     }
     const payload = {
@@ -158,6 +193,12 @@ export default function Areas() {
     e.stopPropagation();
     if (confirm("Are you sure you want to delete this area?")) { deleteMutation.mutate({ id }); }
   };
+
+  const currentTabIndex = wizardTabs.findIndex(t => t.id === activeTab);
+  const isFirstTab = currentTabIndex === 0;
+  const isLastTab = currentTabIndex === wizardTabs.length - 1;
+  const goToNextTab = () => { if (currentTabIndex < wizardTabs.length - 1) setActiveTab(wizardTabs[currentTabIndex + 1].id); };
+  const goToPrevTab = () => { if (currentTabIndex > 0) setActiveTab(wizardTabs[currentTabIndex - 1].id); };
 
   const filteredAreas = useMemo(() => {
     return areas.filter((area) => {
@@ -233,132 +274,6 @@ export default function Areas() {
     },
   ];
 
-  // ─── FORM VIEW ───
-  if (view === "form") {
-    return (
-      <div className="space-y-0">
-        <FioriPageHeader
-          title={selectedArea ? "Edit Area" : "Create New Area"}
-          subtitle={selectedArea ? `Editing ${selectedArea.name}` : "Add a new area within a security zone"}
-          onBack={() => { setView("list"); resetForm(); }}
-          actions={
-            <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={() => { setView("list"); resetForm(); }} className="border-[#E0E0E0] text-[#6B6B6B]">Cancel</Button>
-              <Button onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending} className="bg-[#5B2C93] hover:bg-[#3D1C5E]">
-                {(createMutation.isPending || updateMutation.isPending) ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</> : <><Save className="h-4 w-4 mr-2" /> Save Area</>}
-              </Button>
-            </div>
-          }
-        />
-
-        <div className="max-w-4xl space-y-6">
-          <FioriFormSection title="Area Details" icon={<Grid3X3 className="h-4 w-4" />} showMandatory>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Parent Zone <span className="text-[#DC2626]">*</span></Label>
-                <Select value={formData.zoneId} onValueChange={(value) => setFormData({ ...formData, zoneId: value })}>
-                  <SelectTrigger><SelectValue placeholder="Select Zone" /></SelectTrigger>
-                  <SelectContent>{zones.map((zone) => <SelectItem key={zone.id} value={zone.id.toString()}>{zone.code} - {zone.name}</SelectItem>)}</SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Area Type</Label>
-                <Select value={formData.areaTypeId} onValueChange={(value) => setFormData({ ...formData, areaTypeId: value })}>
-                  <SelectTrigger><SelectValue placeholder="Select Type" /></SelectTrigger>
-                  <SelectContent>{areaTypes.map((type) => <SelectItem key={type.id} value={type.id.toString()}>{type.name}</SelectItem>)}</SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Area Code <span className="text-[#DC2626]">*</span></Label>
-                <Input value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} placeholder="e.g. AREA-001" />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Area Name <span className="text-[#DC2626]">*</span></Label>
-                <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Rack Row A" />
-              </div>
-              <div className="md:col-span-2 space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Description</Label>
-                <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Area description..." rows={2} />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Floor</Label>
-                <Input value={formData.floor} onChange={(e) => setFormData({ ...formData, floor: e.target.value })} placeholder="e.g. 1, B1, G" />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Max Capacity</Label>
-                <Input type="number" value={formData.maxCapacity} onChange={(e) => setFormData({ ...formData, maxCapacity: parseInt(e.target.value) || 0 })} />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Rack Count</Label>
-                <Input type="number" value={formData.rackCount} onChange={(e) => setFormData({ ...formData, rackCount: parseInt(e.target.value) || 0 })} />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Status</Label>
-                <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                    <SelectItem value="maintenance">Maintenance</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </FioriFormSection>
-
-          <FioriFormSection title="Infrastructure Specifications" icon={<Server className="h-4 w-4" />}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Power Type</Label>
-                <Select value={formData.infrastructureSpecs.powerType} onValueChange={(value: any) => setFormData({ ...formData, infrastructureSpecs: { ...formData.infrastructureSpecs, powerType: value } })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="AC">AC Power</SelectItem>
-                    <SelectItem value="DC">DC Power</SelectItem>
-                    <SelectItem value="Both">Both AC & DC</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Cooling Type</Label>
-                <Select value={formData.infrastructureSpecs.coolingType} onValueChange={(value: any) => setFormData({ ...formData, infrastructureSpecs: { ...formData.infrastructureSpecs, coolingType: value } })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Air">Air Cooling</SelectItem>
-                    <SelectItem value="Liquid">Liquid Cooling</SelectItem>
-                    <SelectItem value="Immersion">Immersion Cooling</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {[
-                { key: "escortRequired", label: "Escort Required", desc: "Visitors need escort", icon: <UsersIcon className="h-5 w-5 text-[#6B6B6B]" /> },
-                { key: "cagedArea", label: "Caged Area", desc: "Physical cage enclosure", icon: <Grid3X3 className="h-5 w-5 text-[#6B6B6B]" /> },
-              ].map((control) => (
-                <div key={control.key} className="flex items-center justify-between p-3 border border-[#E0E0E0] rounded-lg bg-[#FAFAFA]">
-                  <div className="flex items-center gap-3">
-                    {control.icon}
-                    <div>
-                      <p className="text-sm font-medium text-[#2C2C2C]">{control.label}</p>
-                      <p className="text-xs text-[#6B6B6B]">{control.desc}</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={(formData.infrastructureSpecs as any)[control.key]}
-                    onCheckedChange={(checked) => setFormData({
-                      ...formData,
-                      infrastructureSpecs: { ...formData.infrastructureSpecs, [control.key]: checked }
-                    })}
-                  />
-                </div>
-              ))}
-            </div>
-          </FioriFormSection>
-        </div>
-      </div>
-    );
-  }
-
-  // ─── LIST VIEW ───
   return (
     <div className="space-y-0">
       <FioriPageHeader
@@ -435,6 +350,222 @@ export default function Areas() {
           footerInfo={`Showing ${filteredAreas.length} of ${areas.length} areas`}
         />
       </div>
+
+      {/* ─── WIZARD DIALOG ─── */}
+      <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) { setDialogOpen(false); resetForm(); } }}>
+        <DialogContent className="sm:max-w-[900px] h-[80vh] p-0 overflow-hidden" showCloseButton={false}>
+          <div className="flex flex-col h-full bg-[#F5F5F5]">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b bg-white shrink-0">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-[#5B2C93] flex items-center justify-center">
+                  <Grid3X3 className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-medium text-[#5B2C93]">
+                    {selectedArea ? "Edit Area" : "Create New Area"}
+                  </h1>
+                  <p className="text-sm text-[#6B6B6B]">
+                    {selectedArea ? `Editing ${selectedArea.name}` : "Add a new area within a security zone"}
+                  </p>
+                </div>
+              </div>
+              <Button variant="outline" onClick={() => { setDialogOpen(false); resetForm(); }}>Cancel</Button>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex flex-1 overflow-hidden">
+              {/* Left Sidebar Steps */}
+              <div className="w-64 border-r bg-white flex flex-col">
+                <div className="p-4 border-b">
+                  <p className="text-sm font-medium text-[#2C2C2C] tracking-wider">Steps</p>
+                </div>
+                <nav className="flex-1 p-2">
+                  {wizardTabs.map((tab, index) => {
+                    const isActive = activeTab === tab.id;
+                    const isCompleted = index < currentTabIndex;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
+                          isActive ? "bg-[#E8DCF5] text-[#2C2C2C] border-l-4 border-[#5B2C93]" 
+                            : "text-[#2C2C2C] hover:bg-[#F5F5F5]"
+                        }`}
+                      >
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                          isActive ? "bg-[#5B2C93] text-white"
+                            : isCompleted ? "bg-[#D1FAE5] text-white" : "bg-[#F5F5F5] text-[#6B6B6B]"
+                        }`}>
+                          {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">{tab.label}</p>
+                        </div>
+                        {isActive && <ChevronRight className="h-4 w-4 text-[#5B2C93]" />}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Right Content */}
+              <div className="flex-1 flex flex-col min-h-0">
+                <ScrollArea className="flex-1 min-h-0">
+                  <div className="p-6">
+                    {/* Area Details Tab */}
+                    {activeTab === "details" && (
+                      <div className="space-y-6">
+                        <div className="bg-white rounded-lg border p-6">
+                          <SectionHeader title="Area Identification" />
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                            <FormField label="Parent Zone" required>
+                              <Select value={formData.zoneId} onValueChange={(value) => setFormData({ ...formData, zoneId: value })}>
+                                <SelectTrigger><SelectValue placeholder="Select Zone" /></SelectTrigger>
+                                <SelectContent>{allZones.map((zone) => <SelectItem key={zone.id} value={zone.id.toString()}>{zone.code} - {zone.name}</SelectItem>)}</SelectContent>
+                              </Select>
+                            </FormField>
+                            <FormField label="Area Type">
+                              <Select value={formData.areaTypeId} onValueChange={(value) => setFormData({ ...formData, areaTypeId: value })}>
+                                <SelectTrigger><SelectValue placeholder="Select Type" /></SelectTrigger>
+                                <SelectContent>{areaTypes.map((type) => <SelectItem key={type.id} value={type.id.toString()}>{type.name}</SelectItem>)}</SelectContent>
+                              </Select>
+                            </FormField>
+                            <FormField label="Area Code" required>
+                              <Input value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} placeholder="e.g. AREA-001" />
+                            </FormField>
+                            <FormField label="Area Name" required>
+                              <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Rack Row A" />
+                            </FormField>
+                            <FormField label="Floor">
+                              <Input value={formData.floor} onChange={(e) => setFormData({ ...formData, floor: e.target.value })} placeholder="e.g. 1, B1, G" />
+                            </FormField>
+                            <FormField label="Status">
+                              <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
+                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="active">Active</SelectItem>
+                                  <SelectItem value="inactive">Inactive</SelectItem>
+                                  <SelectItem value="maintenance">Maintenance</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormField>
+                            <div className="col-span-2">
+                              <FormField label="Description">
+                                <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Area description..." rows={2} />
+                              </FormField>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="bg-white rounded-lg border p-6">
+                          <SectionHeader title="Capacity" />
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                            <FormField label="Max Capacity">
+                              <Input type="number" value={formData.maxCapacity} onChange={(e) => setFormData({ ...formData, maxCapacity: parseInt(e.target.value) || 0 })} />
+                            </FormField>
+                            <FormField label="Rack Count">
+                              <Input type="number" value={formData.rackCount} onChange={(e) => setFormData({ ...formData, rackCount: parseInt(e.target.value) || 0 })} />
+                            </FormField>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Infrastructure Tab */}
+                    {activeTab === "infrastructure" && (
+                      <div className="space-y-6">
+                        <div className="bg-white rounded-lg border p-6">
+                          <SectionHeader title="Power & Cooling" />
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                            <FormField label="Power Type">
+                              <Select value={formData.infrastructureSpecs.powerType} onValueChange={(value: any) => setFormData({ ...formData, infrastructureSpecs: { ...formData.infrastructureSpecs, powerType: value } })}>
+                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="AC">AC Power</SelectItem>
+                                  <SelectItem value="DC">DC Power</SelectItem>
+                                  <SelectItem value="Both">Both AC & DC</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormField>
+                            <FormField label="Cooling Type">
+                              <Select value={formData.infrastructureSpecs.coolingType} onValueChange={(value: any) => setFormData({ ...formData, infrastructureSpecs: { ...formData.infrastructureSpecs, coolingType: value } })}>
+                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Air">Air Cooling</SelectItem>
+                                  <SelectItem value="Liquid">Liquid Cooling</SelectItem>
+                                  <SelectItem value="Immersion">Immersion Cooling</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormField>
+                          </div>
+                        </div>
+
+                        <div className="bg-white rounded-lg border p-6">
+                          <SectionHeader title="Access Controls" />
+                          <div className="grid grid-cols-2 gap-4">
+                            {[
+                              { key: "escortRequired", label: "Escort Required", desc: "Visitors need escort in this area", icon: <UsersIcon className="h-5 w-5 text-[#6B6B6B]" /> },
+                              { key: "cagedArea", label: "Caged Area", desc: "Physical cage enclosure present", icon: <Grid3X3 className="h-5 w-5 text-[#6B6B6B]" /> },
+                            ].map((control) => (
+                              <div key={control.key} className="flex items-center justify-between p-3 border border-[#E0E0E0] rounded-lg bg-[#FAFAFA]">
+                                <div className="flex items-center gap-3">
+                                  {control.icon}
+                                  <div>
+                                    <p className="text-sm font-medium text-[#2C2C2C]">{control.label}</p>
+                                    <p className="text-xs text-[#6B6B6B]">{control.desc}</p>
+                                  </div>
+                                </div>
+                                <Switch
+                                  checked={(formData.infrastructureSpecs as any)[control.key]}
+                                  onCheckedChange={(checked) => setFormData({
+                                    ...formData,
+                                    infrastructureSpecs: { ...formData.infrastructureSpecs, [control.key]: checked }
+                                  })}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </ScrollArea>
+
+                {/* Bottom Navigation */}
+                <div className="border-t bg-white px-6 py-4 flex items-center justify-between shrink-0">
+                  <div>
+                    {!isFirstTab && (
+                      <Button variant="outline" onClick={goToPrevTab} className="gap-2">
+                        <ChevronLeft className="h-4 w-4" /> Previous
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {!isLastTab ? (
+                      <Button onClick={goToNextTab} className="gap-2 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white">
+                        Next <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={handleSave}
+                        disabled={createMutation.isPending || updateMutation.isPending}
+                        className="gap-2 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white"
+                      >
+                        {(createMutation.isPending || updateMutation.isPending) ? (
+                          <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</>
+                        ) : (
+                          <><Save className="h-4 w-4" /> {selectedArea ? "Update Area" : "Create Area"}</>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

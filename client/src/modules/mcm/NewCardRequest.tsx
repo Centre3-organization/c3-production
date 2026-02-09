@@ -670,15 +670,14 @@ export default function NewCardRequest() {
       <div className="flex-1 overflow-hidden flex">
         {/* Left Navigation Tabs (Vertical) */}
         <div className="w-64 bg-white border-r flex flex-col overflow-y-auto">
-          <div className="p-4 border-b bg-[#F5F5F5]">
-            <h3 className="font-medium text-[#2C2C2C] text-sm uppercase">
-              {t("mcm.sections", "Sections")}
-            </h3>
+          <div className="p-4 border-b">
+            <p className="text-sm font-medium text-[#2C2C2C] tracking-wider">Steps</p>
           </div>
-          <nav className="flex-1 p-2 space-y-1">
-            {SECTIONS.map((section) => {
+          <nav className="flex-1 p-2">
+            {SECTIONS.map((section, index) => {
               const Icon = section.icon;
               const isActive = currentSection === section.code;
+              const isCompleted = index < currentSectionIndex;
 
               return (
                 <button
@@ -686,19 +685,23 @@ export default function NewCardRequest() {
                   type="button"
                   onClick={() => setCurrentSection(section.code)}
                   className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-colors",
+                    "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1",
                     isActive
-                      ? "bg-[#D1FAE5] text-[#3D1C5E] border-l-4 border-[#5B2C93]"
-                      : "text-[#6B6B6B] hover:bg-[#F5F5F5] border-l-4 border-transparent"
+                      ? "bg-[#E8DCF5] text-[#2C2C2C] border-l-4 border-[#5B2C93]"
+                      : "text-[#2C2C2C] hover:bg-[#F5F5F5]"
                   )}
                 >
-                  <Icon
-                    className={cn(
-                      "h-4 w-4 flex-shrink-0",
-                      isActive ? "text-[#5B2C93]" : "text-[#9CA3AF]"
-                    )}
-                  />
-                  <span className="flex-1 text-left truncate">{getSectionName(section)}</span>
+                  <div className={cn(
+                    "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
+                    isActive ? "bg-[#5B2C93] text-white"
+                      : isCompleted ? "bg-[#D1FAE5] text-[#059669]" : "bg-[#F5F5F5] text-[#6B6B6B]"
+                  )}>
+                    {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{getSectionName(section)}</p>
+                  </div>
+                  {isActive && <svg className="h-4 w-4 text-[#5B2C93]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>}
                 </button>
               );
             })}
@@ -715,7 +718,7 @@ export default function NewCardRequest() {
           </div>
 
           {/* Section Content */}
-          <div className="flex-1 overflow-y-auto p-6 bg-white">
+          <div className="flex-1 overflow-y-auto p-6 bg-[#F5F5F5]">
             {renderSectionContent()}
           </div>
 

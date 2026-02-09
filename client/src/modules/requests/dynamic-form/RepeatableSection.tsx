@@ -149,7 +149,7 @@ export function RepeatableSection({
   const sortedFields = [...fields].sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {/* Header with add button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -189,7 +189,7 @@ export function RepeatableSection({
           </Button>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {items.map((item, index) => {
             const isExpanded = expandedItems.has(index);
             const summary = getItemSummary
@@ -207,7 +207,7 @@ export function RepeatableSection({
                   isExpanded && "shadow-md border-[#5B2C93]/30"
                 )}>
                   <CollapsibleTrigger asChild>
-                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-[#F5F5F5] transition-colors">
+                    <CardHeader className="py-2 px-3 cursor-pointer hover:bg-[#F5F5F5] transition-colors">
                       <div className="flex items-center gap-3">
                         <GripVertical className="h-4 w-4 text-[#9CA3AF] cursor-grab" />
                         <div className="flex-1 flex items-center gap-2">
@@ -257,8 +257,8 @@ export function RepeatableSection({
                     </CardHeader>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
-                    <CardContent className="pt-0 pb-4 px-4">
-                      <div className="grid grid-cols-12 gap-x-6 gap-y-4">
+                    <CardContent className="pt-0 pb-3 px-3">
+                      <div className="grid grid-cols-12 gap-x-4 gap-y-2">
                         {sortedFields.map((field) => (
                           <div
                             key={field.id}

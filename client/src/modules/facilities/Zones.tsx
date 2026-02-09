@@ -11,7 +11,11 @@ import {
   Trash2,
   Loader2,
   Download,
-  Shield
+  Shield,
+  ChevronRight,
+  ChevronLeft,
+  CheckCircle,
+  Settings2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +23,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -26,7 +32,6 @@ import {
   FioriPageHeader,
   FioriFilterBar,
   FioriTable,
-  FioriFormSection,
   FioriStatusBadge,
 } from "@/components/fiori";
 import type { FioriColumn } from "@/components/fiori";
@@ -55,12 +60,39 @@ type Zone = {
   zoneTypeName: string | null;
 };
 
+function FormField({ label, required, children, hint }: { label: string; required?: boolean; children: React.ReactNode; hint?: string }) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-[#2C2C2C]">
+        {label}{required && <span className="text-[#FF6B6B] ml-0.5">*</span>}:
+      </Label>
+      {children}
+      {hint && <p className="text-xs text-[#6B6B6B]">{hint}</p>}
+    </div>
+  );
+}
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <div className="border-l-4 border-[#5B2C93] pl-3 mb-4">
+      <h3 className="text-base font-medium text-[#5B2C93]">{title}</h3>
+    </div>
+  );
+}
+
+const wizardTabs = [
+  { id: "details", label: "Zone Details", icon: ShieldAlert },
+  { id: "security", label: "Security Configuration", icon: Shield },
+  { id: "controls", label: "Security Controls", icon: Settings2 },
+];
+
 export default function Zones() {
   const { canCreate, canUpdate, canDelete, hasPermission } = usePermissions('zones');
   const canLock = hasPermission('zones.lock');
   
-  const [view, setView] = useState<"list" | "form">("list");
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
+  const [activeTab, setActiveTab] = useState("details");
   const [searchTerm, setSearchTerm] = useState("");
   const [siteFilter, setSiteFilter] = useState<string>("all");
   const [securityFilter, setSecurityFilter] = useState<string>("all");
@@ -93,12 +125,12 @@ export default function Zones() {
   const { data: zoneTypes = [] } = trpc.masterData.getZoneTypes.useQuery();
 
   const createMutation = trpc.zones.create.useMutation({
-    onSuccess: () => { toast.success("Zone created successfully"); refetch(); setView("list"); resetForm(); },
+    onSuccess: () => { toast.success("Zone created successfully"); refetch(); setDialogOpen(false); resetForm(); },
     onError: (error) => toast.error(error.message || "Failed to create zone"),
   });
 
   const updateMutation = trpc.zones.update.useMutation({
-    onSuccess: () => { toast.success("Zone updated successfully"); refetch(); setView("list"); resetForm(); },
+    onSuccess: () => { toast.success("Zone updated successfully"); refetch(); setDialogOpen(false); resetForm(); },
     onError: (error) => toast.error(error.message || "Failed to update zone"),
   });
 
@@ -125,9 +157,10 @@ export default function Zones() {
       status: "active",
     });
     setSelectedZone(null);
+    setActiveTab("details");
   };
 
-  const handleCreate = () => { resetForm(); setView("form"); };
+  const handleCreate = () => { resetForm(); setDialogOpen(true); };
 
   const handleEdit = (zone: Zone) => {
     setSelectedZone(zone);
@@ -148,12 +181,14 @@ export default function Zones() {
       },
       status: zone.status,
     });
-    setView("form");
+    setActiveTab("details");
+    setDialogOpen(true);
   };
 
   const handleSave = () => {
     if (!formData.siteId || !formData.code || !formData.name) {
-      toast.error("Please fill in required fields");
+      toast.error("Please fill in required fields (Parent Site, Zone Code, Zone Name)");
+      setActiveTab("details");
       return;
     }
     const payload = {
@@ -181,6 +216,12 @@ export default function Zones() {
       if (reason) { lockMutation.mutate({ id: zone.id, reason }); }
     }
   };
+
+  const currentTabIndex = wizardTabs.findIndex(t => t.id === activeTab);
+  const isFirstTab = currentTabIndex === 0;
+  const isLastTab = currentTabIndex === wizardTabs.length - 1;
+  const goToNextTab = () => { if (currentTabIndex < wizardTabs.length - 1) setActiveTab(wizardTabs[currentTabIndex + 1].id); };
+  const goToPrevTab = () => { if (currentTabIndex > 0) setActiveTab(wizardTabs[currentTabIndex - 1].id); };
 
   const filteredZones = useMemo(() => {
     return zones.filter((zone) => {
@@ -279,135 +320,6 @@ export default function Zones() {
     },
   ];
 
-  // ─── FORM VIEW ───
-  if (view === "form") {
-    return (
-      <div className="space-y-0">
-        <FioriPageHeader
-          title={selectedZone ? "Edit Zone" : "Create New Zone"}
-          subtitle={selectedZone ? `Editing ${selectedZone.name}` : "Add a new security zone"}
-          onBack={() => { setView("list"); resetForm(); }}
-          actions={
-            <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={() => { setView("list"); resetForm(); }} className="border-[#E0E0E0] text-[#6B6B6B]">Cancel</Button>
-              <Button onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending} className="bg-[#5B2C93] hover:bg-[#3D1C5E]">
-                {(createMutation.isPending || updateMutation.isPending) ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</> : <><Save className="h-4 w-4 mr-2" /> Save Zone</>}
-              </Button>
-            </div>
-          }
-        />
-
-        <div className="max-w-4xl space-y-6">
-          <FioriFormSection title="Zone Details" icon={<ShieldAlert className="h-4 w-4" />} showMandatory>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Parent Site <span className="text-[#DC2626]">*</span></Label>
-                <Select value={formData.siteId} onValueChange={(value) => setFormData({ ...formData, siteId: value })}>
-                  <SelectTrigger><SelectValue placeholder="Select Site" /></SelectTrigger>
-                  <SelectContent>{sites.map((site) => <SelectItem key={site.id} value={site.id.toString()}>{site.code} - {site.name}</SelectItem>)}</SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Zone Code <span className="text-[#DC2626]">*</span></Label>
-                <Input value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} placeholder="e.g. ZN-A01" />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Zone Name <span className="text-[#DC2626]">*</span></Label>
-                <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Server Hall Alpha" />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Zone Type</Label>
-                <Select value={formData.zoneTypeId} onValueChange={(value) => setFormData({ ...formData, zoneTypeId: value })}>
-                  <SelectTrigger><SelectValue placeholder="Select Type" /></SelectTrigger>
-                  <SelectContent>{zoneTypes.map((type) => <SelectItem key={type.id} value={type.id.toString()}>{type.name}</SelectItem>)}</SelectContent>
-                </Select>
-              </div>
-              <div className="md:col-span-2 space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Description</Label>
-                <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Zone description..." rows={2} />
-              </div>
-            </div>
-          </FioriFormSection>
-
-          <FioriFormSection title="Security Configuration" icon={<Shield className="h-4 w-4" />}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Security Level</Label>
-                <Select value={formData.securityLevel} onValueChange={(value: any) => setFormData({ ...formData, securityLevel: value })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="critical">Critical</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Access Policy</Label>
-                <Select value={formData.accessPolicy} onValueChange={(value: any) => setFormData({ ...formData, accessPolicy: value })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="open">Open</SelectItem>
-                    <SelectItem value="supervised">Supervised</SelectItem>
-                    <SelectItem value="restricted">Restricted</SelectItem>
-                    <SelectItem value="prohibited">Prohibited</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Max Capacity</Label>
-                <Input type="number" value={formData.maxCapacity} onChange={(e) => setFormData({ ...formData, maxCapacity: parseInt(e.target.value) || 0 })} />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm text-[#2C2C2C]">Status</Label>
-                <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                    <SelectItem value="maintenance">Maintenance</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </FioriFormSection>
-
-          <FioriFormSection title="Security Controls" icon={<Video className="h-4 w-4" />}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                { key: "cctvEnabled", label: "CCTV Monitoring", desc: "Video surveillance", icon: <Video className="h-5 w-5 text-[#6B6B6B]" /> },
-                { key: "biometricRequired", label: "Biometric Access", desc: "Fingerprint/iris scan", icon: <Fingerprint className="h-5 w-5 text-[#6B6B6B]" /> },
-                { key: "badgeRequired", label: "Badge Required", desc: "ID card access", icon: <Shield className="h-5 w-5 text-[#6B6B6B]" /> },
-                { key: "emergencyLock", label: "Emergency Lock", desc: "Auto-lockdown capable", icon: <Lock className="h-5 w-5 text-[#6B6B6B]" /> },
-                { key: "fireSuppress", label: "Fire Suppression", desc: "Auto fire system", icon: <ShieldAlert className="h-5 w-5 text-[#6B6B6B]" /> },
-                { key: "tempMonitor", label: "Temp Monitoring", desc: "Environmental sensors", icon: <Thermometer className="h-5 w-5 text-[#6B6B6B]" /> },
-              ].map((control) => (
-                <div key={control.key} className="flex items-center justify-between p-3 border border-[#E0E0E0] rounded-lg bg-[#FAFAFA]">
-                  <div className="flex items-center gap-3">
-                    {control.icon}
-                    <div>
-                      <p className="text-sm font-medium text-[#2C2C2C]">{control.label}</p>
-                      <p className="text-xs text-[#6B6B6B]">{control.desc}</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={(formData.securityControls as any)[control.key]}
-                    onCheckedChange={(checked) => setFormData({
-                      ...formData,
-                      securityControls: { ...formData.securityControls, [control.key]: checked }
-                    })}
-                  />
-                </div>
-              ))}
-            </div>
-          </FioriFormSection>
-        </div>
-      </div>
-    );
-  }
-
-  // ─── LIST VIEW ───
   return (
     <div className="space-y-0">
       <FioriPageHeader
@@ -487,6 +399,221 @@ export default function Zones() {
           footerInfo={`Showing ${filteredZones.length} of ${zones.length} zones`}
         />
       </div>
+
+      {/* ─── WIZARD DIALOG ─── */}
+      <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) { setDialogOpen(false); resetForm(); } }}>
+        <DialogContent className="sm:max-w-[900px] h-[80vh] p-0 overflow-hidden" showCloseButton={false}>
+          <div className="flex flex-col h-full bg-[#F5F5F5]">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b bg-white shrink-0">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-[#5B2C93] flex items-center justify-center">
+                  <ShieldAlert className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-medium text-[#5B2C93]">
+                    {selectedZone ? "Edit Zone" : "Create New Zone"}
+                  </h1>
+                  <p className="text-sm text-[#6B6B6B]">
+                    {selectedZone ? `Editing ${selectedZone.name}` : "Add a new security zone"}
+                  </p>
+                </div>
+              </div>
+              <Button variant="outline" onClick={() => { setDialogOpen(false); resetForm(); }}>Cancel</Button>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex flex-1 overflow-hidden">
+              {/* Left Sidebar Steps */}
+              <div className="w-64 border-r bg-white flex flex-col">
+                <div className="p-4 border-b">
+                  <p className="text-sm font-medium text-[#2C2C2C] tracking-wider">Steps</p>
+                </div>
+                <nav className="flex-1 p-2">
+                  {wizardTabs.map((tab, index) => {
+                    const isActive = activeTab === tab.id;
+                    const isCompleted = index < currentTabIndex;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors mb-1 ${
+                          isActive ? "bg-[#E8DCF5] text-[#2C2C2C] border-l-4 border-[#5B2C93]" 
+                            : "text-[#2C2C2C] hover:bg-[#F5F5F5]"
+                        }`}
+                      >
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                          isActive ? "bg-[#5B2C93] text-white"
+                            : isCompleted ? "bg-[#D1FAE5] text-white" : "bg-[#F5F5F5] text-[#6B6B6B]"
+                        }`}>
+                          {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">{tab.label}</p>
+                        </div>
+                        {isActive && <ChevronRight className="h-4 w-4 text-[#5B2C93]" />}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Right Content */}
+              <div className="flex-1 flex flex-col min-h-0">
+                <ScrollArea className="flex-1 min-h-0">
+                  <div className="p-6">
+                    {/* Zone Details Tab */}
+                    {activeTab === "details" && (
+                      <div className="space-y-6">
+                        <div className="bg-white rounded-lg border p-6">
+                          <SectionHeader title="Zone Identification" />
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                            <FormField label="Parent Site" required>
+                              <Select value={formData.siteId} onValueChange={(value) => setFormData({ ...formData, siteId: value })}>
+                                <SelectTrigger><SelectValue placeholder="Select Site" /></SelectTrigger>
+                                <SelectContent>{sites.map((site) => <SelectItem key={site.id} value={site.id.toString()}>{site.code} - {site.name}</SelectItem>)}</SelectContent>
+                              </Select>
+                            </FormField>
+                            <FormField label="Zone Code" required>
+                              <Input value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} placeholder="e.g. ZN-A01" />
+                            </FormField>
+                            <FormField label="Zone Name" required>
+                              <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Server Hall Alpha" />
+                            </FormField>
+                            <FormField label="Zone Type">
+                              <Select value={formData.zoneTypeId} onValueChange={(value) => setFormData({ ...formData, zoneTypeId: value })}>
+                                <SelectTrigger><SelectValue placeholder="Select Type" /></SelectTrigger>
+                                <SelectContent>{zoneTypes.map((type) => <SelectItem key={type.id} value={type.id.toString()}>{type.name}</SelectItem>)}</SelectContent>
+                              </Select>
+                            </FormField>
+                            <div className="col-span-2">
+                              <FormField label="Description">
+                                <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Zone description..." rows={2} />
+                              </FormField>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Security Configuration Tab */}
+                    {activeTab === "security" && (
+                      <div className="space-y-6">
+                        <div className="bg-white rounded-lg border p-6">
+                          <SectionHeader title="Security & Access" />
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                            <FormField label="Security Level">
+                              <Select value={formData.securityLevel} onValueChange={(value: any) => setFormData({ ...formData, securityLevel: value })}>
+                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="low">Low</SelectItem>
+                                  <SelectItem value="medium">Medium</SelectItem>
+                                  <SelectItem value="high">High</SelectItem>
+                                  <SelectItem value="critical">Critical</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormField>
+                            <FormField label="Access Policy">
+                              <Select value={formData.accessPolicy} onValueChange={(value: any) => setFormData({ ...formData, accessPolicy: value })}>
+                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="open">Open</SelectItem>
+                                  <SelectItem value="supervised">Supervised</SelectItem>
+                                  <SelectItem value="restricted">Restricted</SelectItem>
+                                  <SelectItem value="prohibited">Prohibited</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormField>
+                            <FormField label="Max Capacity">
+                              <Input type="number" value={formData.maxCapacity} onChange={(e) => setFormData({ ...formData, maxCapacity: parseInt(e.target.value) || 0 })} />
+                            </FormField>
+                            <FormField label="Status">
+                              <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
+                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="active">Active</SelectItem>
+                                  <SelectItem value="inactive">Inactive</SelectItem>
+                                  <SelectItem value="maintenance">Maintenance</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormField>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Security Controls Tab */}
+                    {activeTab === "controls" && (
+                      <div className="space-y-6">
+                        <div className="bg-white rounded-lg border p-6">
+                          <SectionHeader title="Security Controls" />
+                          <div className="grid grid-cols-2 gap-4">
+                            {[
+                              { key: "cctvEnabled", label: "CCTV Monitoring", desc: "Video surveillance", icon: <Video className="h-5 w-5 text-[#6B6B6B]" /> },
+                              { key: "biometricRequired", label: "Biometric Access", desc: "Fingerprint/iris scan", icon: <Fingerprint className="h-5 w-5 text-[#6B6B6B]" /> },
+                              { key: "badgeRequired", label: "Badge Required", desc: "ID card access", icon: <Shield className="h-5 w-5 text-[#6B6B6B]" /> },
+                              { key: "emergencyLock", label: "Emergency Lock", desc: "Auto-lockdown capable", icon: <Lock className="h-5 w-5 text-[#6B6B6B]" /> },
+                              { key: "fireSuppress", label: "Fire Suppression", desc: "Auto fire system", icon: <ShieldAlert className="h-5 w-5 text-[#6B6B6B]" /> },
+                              { key: "tempMonitor", label: "Temp Monitoring", desc: "Environmental sensors", icon: <Thermometer className="h-5 w-5 text-[#6B6B6B]" /> },
+                            ].map((control) => (
+                              <div key={control.key} className="flex items-center justify-between p-3 border border-[#E0E0E0] rounded-lg bg-[#FAFAFA]">
+                                <div className="flex items-center gap-3">
+                                  {control.icon}
+                                  <div>
+                                    <p className="text-sm font-medium text-[#2C2C2C]">{control.label}</p>
+                                    <p className="text-xs text-[#6B6B6B]">{control.desc}</p>
+                                  </div>
+                                </div>
+                                <Switch
+                                  checked={(formData.securityControls as any)[control.key]}
+                                  onCheckedChange={(checked) => setFormData({
+                                    ...formData,
+                                    securityControls: { ...formData.securityControls, [control.key]: checked }
+                                  })}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </ScrollArea>
+
+                {/* Bottom Navigation */}
+                <div className="border-t bg-white px-6 py-4 flex items-center justify-between shrink-0">
+                  <div>
+                    {!isFirstTab && (
+                      <Button variant="outline" onClick={goToPrevTab} className="gap-2">
+                        <ChevronLeft className="h-4 w-4" /> Previous
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {!isLastTab ? (
+                      <Button onClick={goToNextTab} className="gap-2 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white">
+                        Next <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={handleSave}
+                        disabled={createMutation.isPending || updateMutation.isPending}
+                        className="gap-2 bg-[#5B2C93] hover:bg-[#3D1C5E] text-white"
+                      >
+                        {(createMutation.isPending || updateMutation.isPending) ? (
+                          <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</>
+                        ) : (
+                          <><Save className="h-4 w-4" /> {selectedZone ? "Update Zone" : "Create Zone"}</>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
