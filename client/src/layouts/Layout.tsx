@@ -268,7 +268,7 @@ export default function Layout({ children }: LayoutProps) {
     );
   }
 
-  // Get user display info - prioritize currentUser from database over authUser from OAuth
+  // Get user display info - prioritize currentUser from database over authUser
   const userName = currentUser?.name || authUser?.name || "User";
   const userEmail = currentUser?.email || authUser?.email || "";
   // Use system role name if available, otherwise fall back to legacy role

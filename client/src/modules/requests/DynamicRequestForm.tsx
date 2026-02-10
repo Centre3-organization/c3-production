@@ -287,7 +287,7 @@ export default function DynamicRequestForm() {
       visitorCompany: mainVisitor.company,
       visitorPhone: mainVisitor.phone,
       visitorEmail: mainVisitor.email,
-      siteId: parseInt(submissionData.site_id) || 1,
+      siteId: parseInt(submissionData.site || submissionData.site_id || submissionData.loc_site) || 1,
       purpose: submissionData.purpose || submissionData.visit_purpose || "Request",
       startDate: submissionData.start_date || new Date().toISOString().split("T")[0],
       endDate: submissionData.end_date || new Date().toISOString().split("T")[0],

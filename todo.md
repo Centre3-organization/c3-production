@@ -2096,3 +2096,47 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Also verify Pending Queue list on dashboard shows correct data
 - [x] Fixed createTasksForStage: only skip if pending task exists (not skipped/rejected ones)
 - [x] Fixed stuck REQ-20260209-8HM8HM: created new pending task after resubmit
+
+## Group Structure: Bahrain subgroups (Feb 10, 2026)
+- [x] Create "Bahrain" subgroup under Centre3 Internal (id=90001)
+- [x] Create "White Space Group" under Bahrain (id=90002)
+- [x] Create "Safety & Security Group" under Bahrain (id=90003)
+
+## Bahrain Workflow Update (Feb 10, 2026)
+### User Accounts
+- [x] Abdullah Alzakari (aalzakari@center3.com) - WS Regional Manager (id=150006, existing)
+- [x] Diwan Mohideen (dmohideen@center3.com) - WS Site Engineer (id=150008, existing)
+- [x] Rand A. Almaymuni (salshamrani@center3.com) - WS Site Engineer (id=150007, existing)
+- [x] Mohammed N. Alqahhat (malqahhat@center3.com) - WS Site Engineer (id=180006, created)
+- [x] Faisal A. Alquraini (falquraini@center3.com) - SAS Regional Manager (id=180007, created)
+
+### Group Assignments
+- [x] Abdullah, Diwan, Rand, Mohammed → White Space Group (id=90002)
+- [x] Faisal → Safety & Security Group (id=90003)
+
+### Workflow Update
+- [x] Updated Bahrain Workflow (id=90001) stages:
+  - Stage 1: Abdullah Alzakari (L1 - WS Regional Manager, mode=all)
+  - Stage 2: Diwan, Rand, Mohammed (L2 - mode=any, one can approve)
+  - Stage 3: Faisal A. Alquraini (Final approver, mode=all)
+- [x] Removed old approvers (Ahmed, George, Alica, admin@c3bahrain, hos@bahrainc3)
+- [x] Workflow applies to all request types at Bahrain DC (site_id condition = 30001)
+
+## Bug Fix: Bahrain workflow not matching (Feb 10, 2026)
+- [x] Fix Bahrain Workflow: set processType to match all types (or null with proper fallback)
+- [x] Fix workflow condition operator (showing undefined instead of equals)
+- [x] Fix workflow matching to properly evaluate site_id conditions
+- [x] Reassign REQ-20260210-QC1CT5 to Bahrain workflow (request siteId=1 needs to be corrected to Bahrain DC)
+- [x] Fix FormDataDisplay to show actual names for Country/City/Site instead of raw IDs
+- [x] Fix request submission to extract siteId from formData when site field is present
+- [x] Reassign REQ-20260210-QC1CT5 siteId to 30001 and move to Bahrain workflow
+- [x] Fix city/site dropdowns to filter by selected country (all cities/sites showing regardless of country selection)
+- [x] Set passwords for Mohammed N. Alqahhat (id=180006) and Faisal A. Alquraini (id=180007)
+
+## Password-Only Authentication (Feb 10, 2026)
+- [x] Remove Manus OAuth dependency from server-side auth
+- [x] Update login endpoint to use password-only authentication
+- [x] Update client-side auth to remove OAuth references
+- [x] Ensure all existing users have password hashes set (bcrypt, default: Centre3@2026)
+- [x] Test password login flow end-to-end
+- [x] Write vitest tests for password auth (10 tests passing)

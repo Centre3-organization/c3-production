@@ -1,70 +1,16 @@
-import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { COOKIE_NAME } from "@shared/const";
 import type { Express, Request, Response } from "express";
-import * as db from "../db";
 import { getSessionCookieOptions } from "./cookies";
-import { sdk } from "./sdk";
 
-function getQueryParam(req: Request, key: string): string | undefined {
-  const value = req.query[key];
-  return typeof value === "string" ? value : undefined;
-}
-
+/**
+ * Register auth-related Express routes.
+ * OAuth has been removed - all authentication is password-based via tRPC auth.login.
+ */
 export function registerOAuthRoutes(app: Express) {
   // Logout route - clears the session cookie and redirects to login
   app.get("/api/auth/logout", (req: Request, res: Response) => {
     const cookieOptions = getSessionCookieOptions(req);
     res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
     res.redirect(302, "/login");
-  });
-
-  app.get("/api/oauth/callback", async (req: Request, res: Response) => {
-    const code = getQueryParam(req, "code");
-    const state = getQueryParam(req, "state");
-
-    if (!code || !state) {
-      res.status(400).json({ error: "code and state are required" });
-      return;
-    }
-
-    try {
-      const tokenResponse = await sdk.exchangeCodeForToken(code, state);
-      const userInfo = await sdk.getUserInfo(tokenResponse.accessToken);
-
-      if (!userInfo.openId) {
-        res.status(400).json({ error: "openId missing from user info" });
-        return;
-      }
-
-      // Check if user already exists - only update existing users, don't create new ones
-      const existingUser = await db.getUserByOpenId(userInfo.openId);
-      
-      if (existingUser) {
-        // Update existing user's info
-        await db.upsertUser({
-          openId: userInfo.openId,
-          name: userInfo.name || null,
-          email: userInfo.email ?? null,
-          loginMethod: userInfo.loginMethod ?? userInfo.platform ?? null,
-          lastSignedIn: new Date(),
-        });
-
-        const sessionToken = await sdk.createSessionToken(userInfo.openId, {
-          name: userInfo.name || "",
-          expiresInMs: ONE_YEAR_MS,
-        });
-
-        const cookieOptions = getSessionCookieOptions(req);
-        res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-
-        res.redirect(302, "/");
-      } else {
-        // User doesn't exist - redirect to access denied page
-        console.log("[OAuth] User not found in system, access denied:", userInfo.openId);
-        res.redirect(302, "/access-denied?reason=not_registered");
-      }
-    } catch (error) {
-      console.error("[OAuth] Callback failed", error);
-      res.status(500).json({ error: "OAuth callback failed" });
-    }
   });
 }

@@ -21,7 +21,7 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
 
   if (!isUnauthorized) return;
 
-  // Redirect to local login page instead of OAuth
+  // Redirect to login page if not authenticated
   if (window.location.pathname !== "/login") {
     window.location.href = "/login";
   }

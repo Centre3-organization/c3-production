@@ -62,7 +62,7 @@ async function startServer() {
   
   // Apply stricter rate limiting to auth endpoints
   app.use('/api/auth', authLimiter);
-  app.use('/api/oauth', authLimiter);
+  // OAuth removed - password-only auth
   
   // ============================================================================
   // BODY PARSING
@@ -124,7 +124,7 @@ async function startServer() {
     res.json({ status: 'alive', timestamp: new Date().toISOString() });
   });
   
-  // OAuth callback under /api/oauth/callback
+  // Auth routes (logout only - OAuth removed, password-only auth)
   registerOAuthRoutes(app);
   
   // Form PDF generation route

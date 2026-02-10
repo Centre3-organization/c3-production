@@ -148,11 +148,12 @@ export const appRouter = router({
           lastSignedIn: new Date(),
         });
 
-        // Create a proper JWT session token using the SDK
+        // Create a proper JWT session token
         const { sdk } = await import("./_core/sdk");
         const expiresInMs = input.rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000; // 30 days or 1 day
-        const sessionToken = await sdk.createSessionToken(user.openId, {
+        const sessionToken = await sdk.createSessionToken(user.id, {
           expiresInMs,
+          email: user.email || "",
           name: user.name || user.email || "User",
         });
 
