@@ -1436,6 +1436,17 @@ export const requestsRouter = router({
         throw new Error("You are not authorized to approve this task");
       }
       
+      // Guard: Check if the instance has already moved past this stage
+      // This prevents duplicate stage advancement when multiple approvers approve in "any" mode
+      const currentInstance = await db.select().from(approvalInstances).where(eq(approvalInstances.id, instance.id)).limit(1);
+      if (currentInstance.length > 0 && currentInstance[0].currentStageId !== stage.id) {
+        // Stage already advanced - just mark this task as skipped since it's no longer relevant
+        await db.update(approvalTasks)
+          .set({ status: "skipped", comments: input.comments })
+          .where(eq(approvalTasks.id, task.id));
+        return { success: true, message: "This stage has already been completed by another approver." };
+      }
+      
       // Update task status
       await db.update(approvalTasks)
         .set({
@@ -1463,6 +1474,15 @@ export const requestsRouter = router({
       const stageComplete = await checkStageCompletion(db, instance.id, stage);
       
       if (stageComplete) {
+        // Skip remaining pending tasks for this stage (important for "any" mode)
+        await db.update(approvalTasks)
+          .set({ status: "skipped" })
+          .where(and(
+            eq(approvalTasks.instanceId, instance.id),
+            eq(approvalTasks.stageId, stage.id),
+            eq(approvalTasks.status, "pending")
+          ));
+        
         // Check if there's a next stage
         const nextStage = await db
           .select()
@@ -1570,6 +1590,15 @@ export const requestsRouter = router({
       
       if (!isAdminOrSuperAdmin && task.assignedTo !== ctx.user.id) {
         throw new Error("You are not authorized to reject this task");
+      }
+      
+      // Guard: Check if the instance has already moved past this stage
+      const currentInstance = await db.select().from(approvalInstances).where(eq(approvalInstances.id, instance.id)).limit(1);
+      if (currentInstance.length > 0 && currentInstance[0].currentStageId !== stage.id && currentInstance[0].status !== "pending") {
+        await db.update(approvalTasks)
+          .set({ status: "skipped", comments: input.comments })
+          .where(eq(approvalTasks.id, task.id));
+        return { success: true, message: "This stage has already been completed by another approver." };
       }
       
       // Update task status
@@ -2659,6 +2688,22 @@ async function approveTaskInternal(
   
   const { task, instance, stage } = taskData[0];
   
+  // Guard: Check if the instance has already moved past this stage
+  // This prevents duplicate stage advancement when multiple approvers approve in "any" mode
+  const currentInstance = await db.select().from(approvalInstances).where(eq(approvalInstances.id, instance.id)).limit(1);
+  if (currentInstance.length > 0 && currentInstance[0].currentStageId !== stage.id) {
+    // Stage already advanced - just mark this task as skipped since it's no longer relevant
+    await db.update(approvalTasks)
+      .set({ status: "skipped", comments })
+      .where(eq(approvalTasks.id, taskId));
+    return { success: true, message: "This stage has already been completed by another approver." };
+  }
+  
+  // Guard: If the task is no longer pending, skip it
+  if (task.status !== "pending") {
+    return { success: true, message: "This task has already been processed." };
+  }
+  
   // Update task status
   await db.update(approvalTasks)
     .set({
@@ -2686,6 +2731,15 @@ async function approveTaskInternal(
   const stageComplete = await checkStageCompletion(db, instance.id, stage);
   
   if (stageComplete) {
+    // Skip remaining pending tasks for this stage (important for "any" mode)
+    await db.update(approvalTasks)
+      .set({ status: "skipped" })
+      .where(and(
+        eq(approvalTasks.instanceId, instance.id),
+        eq(approvalTasks.stageId, stage.id),
+        eq(approvalTasks.status, "pending")
+      ));
+    
     // Check if there's a next stage
     const nextStage = await db
       .select()
@@ -2760,6 +2814,20 @@ async function rejectTaskInternal(db: any, taskId: number, userId: number, comme
   if (taskData.length === 0) throw new Error("Task not found");
   
   const { task, instance, stage } = taskData[0];
+  
+  // Guard: Check if the instance has already moved past this stage
+  const currentInstance = await db.select().from(approvalInstances).where(eq(approvalInstances.id, instance.id)).limit(1);
+  if (currentInstance.length > 0 && currentInstance[0].currentStageId !== stage.id && currentInstance[0].status !== "in_progress") {
+    await db.update(approvalTasks)
+      .set({ status: "skipped", comments })
+      .where(eq(approvalTasks.id, taskId));
+    return { success: true, message: "This stage has already been completed by another approver." };
+  }
+  
+  // Guard: If the task is no longer pending, skip it
+  if (task.status !== "pending") {
+    return { success: true, message: "This task has already been processed." };
+  }
   
   // Update task status
   await db.update(approvalTasks)

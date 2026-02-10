@@ -1,0 +1,26 @@
+{
+  "query": "SELECT at.id, at.instanceId, at.stageId, at.assignedTo, at.status, u.name as userName FROM approvalTasks at LEFT JOIN users u ON at.assignedTo = u.id WHERE (at.instanceId, at.stageId, at.assignedTo) IN (SELECT instanceId, stageId, assignedTo FROM approvalTasks GROUP BY instanceId, stageId, assignedTo HAVING COUNT(*) > 1) ORDER BY at.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT at.id, at.instanceId, at.stageId, at.assignedTo, at.status, u.name as userName FROM approvalTasks at LEFT JOIN users u ON at.assignedTo = u.id WHERE (at.instanceId, at.stageId, at.assignedTo) IN (SELECT instanceId, stageId, assignedTo FROM approvalTasks GROUP BY instanceId, stageId, assignedTo HAVING COUNT(*) > 1) ORDER BY at.id;",
+  "rows": [
+    {
+      "id": "150037",
+      "instanceId": "120008",
+      "stageId": "30012",
+      "assignedTo": "150020",
+      "status": "skipped",
+      "userName": "Saad Al-Duty"
+    },
+    {
+      "id": "150040",
+      "instanceId": "120008",
+      "stageId": "30012",
+      "assignedTo": "150020",
+      "status": "rejected",
+      "userName": "Saad Al-Duty"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tinstanceId\tstageId\tassignedTo\tstatus\tuserName\n150037\t120008\t30012\t150020\tskipped\tSaad Al-Duty\n150040\t120008\t30012\t150020\trejected\tSaad Al-Duty\n",
+  "stderr": "",
+  "execution_time_ms": 1568
+}

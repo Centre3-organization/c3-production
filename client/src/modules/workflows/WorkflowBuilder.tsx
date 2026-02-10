@@ -178,6 +178,8 @@ export function WorkflowBuilder() {
   const [selectedWorkflow, setSelectedWorkflow] = useState<number | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isStageDialogOpen, setIsStageDialogOpen] = useState(false);
+  const [isEditStageDialogOpen, setIsEditStageDialogOpen] = useState(false);
+  const [editingStage, setEditingStage] = useState<any>(null);
   const [isConditionDialogOpen, setIsConditionDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterProcessType, setFilterProcessType] = useState<string | null>(null);
@@ -248,6 +250,16 @@ export function WorkflowBuilder() {
       refetchDetails();
     },
     onError: (error) => showError(error.message || "Failed to delete stage", "Delete Failed"),
+  });
+
+  const updateStage = trpc.workflows.updateStage.useMutation({
+    onSuccess: () => {
+      toast.success("Stage updated successfully");
+      setIsEditStageDialogOpen(false);
+      setEditingStage(null);
+      refetchDetails();
+    },
+    onError: (error) => toast.error(error.message),
   });
 
   const addCondition = trpc.workflows.addCondition.useMutation({
@@ -369,6 +381,43 @@ export function WorkflowBuilder() {
       processType: newWorkflow.processType as any || undefined,
       priority: newWorkflow.priority,
       isDefault: newWorkflow.isDefault,
+    });
+  };
+
+  const handleEditStage = (stage: any) => {
+    setEditingStage({
+      id: stage.id,
+      stageName: stage.stageName,
+      stageType: stage.stageType || "role",
+      approvalMode: stage.approvalMode || "any",
+      requiredApprovals: stage.requiredApprovals || 1,
+      approvalPercentage: stage.approvalPercentage || 100,
+      canReject: stage.canReject ?? true,
+      canRequestInfo: stage.canRequestInfo ?? true,
+      slaHours: stage.slaHours || 24,
+      autoApproveOnSla: stage.autoApproveOnSla ?? false,
+      autoRejectOnSla: stage.autoRejectOnSla ?? false,
+    });
+    setIsEditStageDialogOpen(true);
+  };
+
+  const handleUpdateStage = () => {
+    if (!editingStage || !editingStage.stageName) {
+      toast.error("Stage name is required");
+      return;
+    }
+    updateStage.mutate({
+      id: editingStage.id,
+      stageName: editingStage.stageName,
+      stageType: editingStage.stageType as any,
+      approvalMode: editingStage.approvalMode as any,
+      requiredApprovals: editingStage.requiredApprovals,
+      approvalPercentage: editingStage.approvalPercentage,
+      canReject: editingStage.canReject,
+      canRequestInfo: editingStage.canRequestInfo,
+      slaHours: editingStage.slaHours,
+      autoApproveOnSla: editingStage.autoApproveOnSla,
+      autoRejectOnSla: editingStage.autoRejectOnSla,
     });
   };
 
@@ -744,7 +793,7 @@ export function WorkflowBuilder() {
                             </div>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" onClick={() => handleEditStage(stage)}>
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
@@ -1082,6 +1131,120 @@ export function WorkflowBuilder() {
           </Button>
           <Button onClick={handleAddStage} disabled={addStage.isPending}>
             {addStage.isPending ? "Adding..." : "Add Stage"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    {/* Edit Stage Dialog */}
+    <Dialog open={isEditStageDialogOpen} onOpenChange={setIsEditStageDialogOpen}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Edit Approval Stage</DialogTitle>
+          <DialogDescription>
+            Modify the settings for this approval stage
+          </DialogDescription>
+        </DialogHeader>
+        {editingStage && (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Stage Name *</Label>
+              <Input
+                placeholder="e.g., Manager Approval"
+                value={editingStage.stageName}
+                onChange={(e) => setEditingStage({ ...editingStage, stageName: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Stage Type *</Label>
+              <Select
+                value={editingStage.stageType}
+                onValueChange={(v) => setEditingStage({ ...editingStage, stageType: v as any })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {STAGE_TYPES.map((st) => (
+                    <SelectItem key={st.value} value={st.value}>{st.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Approval Mode</Label>
+              <Select
+                value={editingStage.approvalMode}
+                onValueChange={(v) => setEditingStage({ ...editingStage, approvalMode: v as any })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {APPROVAL_MODES.map((am) => (
+                    <SelectItem key={am.value} value={am.value}>{am.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>SLA Hours</Label>
+              <Input
+                type="number"
+                value={editingStage.slaHours}
+                onChange={(e) => setEditingStage({ ...editingStage, slaHours: parseInt(e.target.value) || 0 })}
+              />
+            </div>
+            {editingStage.approvalMode === "percentage" && (
+              <div className="space-y-2">
+                <Label>Required Percentage</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  max={100}
+                  value={editingStage.approvalPercentage}
+                  onChange={(e) => setEditingStage({ ...editingStage, approvalPercentage: parseInt(e.target.value) || 100 })}
+                />
+              </div>
+            )}
+            <div className="col-span-2 grid grid-cols-4 gap-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={editingStage.canReject}
+                  onCheckedChange={(checked) => setEditingStage({ ...editingStage, canReject: checked })}
+                />
+                <Label>Can Reject</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={editingStage.canRequestInfo}
+                  onCheckedChange={(checked) => setEditingStage({ ...editingStage, canRequestInfo: checked })}
+                />
+                <Label>Can Request Info</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={editingStage.autoApproveOnSla}
+                  onCheckedChange={(checked) => setEditingStage({ ...editingStage, autoApproveOnSla: checked })}
+                />
+                <Label>Auto-approve on SLA</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={editingStage.autoRejectOnSla}
+                  onCheckedChange={(checked) => setEditingStage({ ...editingStage, autoRejectOnSla: checked })}
+                />
+                <Label>Auto-reject on SLA</Label>
+              </div>
+            </div>
+          </div>
+        )}
+        <DialogFooter>
+          <Button variant="outline" onClick={() => { setIsEditStageDialogOpen(false); setEditingStage(null); }}>
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateStage} disabled={updateStage.isPending}>
+            {updateStage.isPending ? "Saving..." : "Save Changes"}
           </Button>
         </DialogFooter>
       </DialogContent>

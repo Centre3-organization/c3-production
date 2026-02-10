@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, name, code FROM requestTypes WHERE isActive = 1 ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, name, code FROM requestTypes WHERE isActive = 1 ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Admin Visit",
+      "code": "admin_visit"
+    },
+    {
+      "id": "2",
+      "name": "Temporary Entry Permission",
+      "code": "tep"
+    },
+    {
+      "id": "3",
+      "name": "Work Permission",
+      "code": "wp"
+    },
+    {
+      "id": "4",
+      "name": "Method of Procedure",
+      "code": "mop"
+    },
+    {
+      "id": "5",
+      "name": "Material/Vehicle Permit",
+      "code": "mhv"
+    },
+    {
+      "id": "6",
+      "name": "Visitor Registration",
+      "code": "VR01"
+    },
+    {
+      "id": "7",
+      "name": "BAsic",
+      "code": "TEPq"
+    },
+    {
+      "id": "8",
+      "name": "Location",
+      "code": "Lo139"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcode\n1\tAdmin Visit\tadmin_visit\n2\tTemporary Entry Permission\ttep\n3\tWork Permission\twp\n4\tMethod of Procedure\tmop\n5\tMaterial/Vehicle Permit\tmhv\n6\tVisitor Registration\tVR01\n7\tBAsic\tTEPq\n8\tLocation\tLo139\n",
+  "stderr": "",
+  "execution_time_ms": 1628
+}

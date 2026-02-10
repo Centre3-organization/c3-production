@@ -1,0 +1,18 @@
+{
+  "query": "SELECT at.instanceId, at.stageId, at.assignedTo, COUNT(*) as cnt, GROUP_CONCAT(at.id) as taskIds, GROUP_CONCAT(at.status) as statuses FROM approvalTasks at GROUP BY at.instanceId, at.stageId, at.assignedTo HAVING cnt > 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT at.instanceId, at.stageId, at.assignedTo, COUNT(*) as cnt, GROUP_CONCAT(at.id) as taskIds, GROUP_CONCAT(at.status) as statuses FROM approvalTasks at GROUP BY at.instanceId, at.stageId, at.assignedTo HAVING cnt > 1;",
+  "rows": [
+    {
+      "instanceId": "120008",
+      "stageId": "30012",
+      "assignedTo": "150020",
+      "cnt": "2",
+      "taskIds": "150037,150040",
+      "statuses": "skipped,rejected"
+    }
+  ],
+  "messages": [],
+  "stdout": "instanceId\tstageId\tassignedTo\tcnt\ttaskIds\tstatuses\n120008\t30012\t150020\t2\t150037,150040\tskipped,rejected\n",
+  "stderr": "",
+  "execution_time_ms": 1592
+}

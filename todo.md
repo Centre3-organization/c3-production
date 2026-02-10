@@ -2174,3 +2174,9 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix REQ-20260210-US6YLI Bahrain request - rerouted to Bahrain Workflow (assigned to Abdullah Alzakari)
 - [x] Root cause: siteId=1 from pre-fix submission + unknown conditions silently passing in evaluator
 - [x] Fixed condition evaluator to reject unknown condition types (working_hours, vip_visit, etc.)
+
+## Bug Fixes & Testing (Feb 10, 2026 - Batch 3)
+- [x] Fix approval stage progression bug: "Any" mode stage creates duplicate tasks when second approver also approves
+- [x] Fix edit button in Workflow Builder stages (not working)
+- [x] Create 20 test requests on Bahrain across all types to verify workflow (5 admin_visit, 5 tep, 5 work_permit, 5 material_entry)
+- [x] Verify all 20 requests route correctly through Bahrain Workflow (all assigned to Abdullah Alzakari)

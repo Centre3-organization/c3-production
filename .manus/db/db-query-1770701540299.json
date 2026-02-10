@@ -1,0 +1,90 @@
+{
+  "query": "SELECT at.id, at.instanceId, at.stageId, at.assignedTo, at.status, ai.currentStageId, ai.status as instanceStatus, u.name FROM approvalTasks at JOIN approvalInstances ai ON at.instanceId = ai.id LEFT JOIN users u ON at.assignedTo = u.id WHERE at.status = 'pending' ORDER BY at.instanceId, at.stageId;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT at.id, at.instanceId, at.stageId, at.assignedTo, at.status, ai.currentStageId, ai.status as instanceStatus, u.name FROM approvalTasks at JOIN approvalInstances ai ON at.instanceId = ai.id LEFT JOIN users u ON at.assignedTo = u.id WHERE at.status = 'pending' ORDER BY at.instanceId, at.stageId;",
+  "rows": [
+    {
+      "id": "30071",
+      "instanceId": "30043",
+      "stageId": "30001",
+      "assignedTo": "150006",
+      "status": "pending",
+      "currentStageId": "30001",
+      "instanceStatus": "approved",
+      "name": "Abdullah Alzakari"
+    },
+    {
+      "id": "150030",
+      "instanceId": "120002",
+      "stageId": "30013",
+      "assignedTo": "90183",
+      "status": "pending",
+      "currentStageId": "30013",
+      "instanceStatus": "need_clarification",
+      "name": "Ali Aarish"
+    },
+    {
+      "id": "150022",
+      "instanceId": "120003",
+      "stageId": "30012",
+      "assignedTo": "90183",
+      "status": "pending",
+      "currentStageId": "30013",
+      "instanceStatus": "rejected",
+      "name": "Ali Aarish"
+    },
+    {
+      "id": "150032",
+      "instanceId": "120005",
+      "stageId": "30001",
+      "assignedTo": "90183",
+      "status": "pending",
+      "currentStageId": "30001",
+      "instanceStatus": "need_clarification",
+      "name": "Ali Aarish"
+    },
+    {
+      "id": "150047",
+      "instanceId": "120013",
+      "stageId": "90005",
+      "assignedTo": "180006",
+      "status": "pending",
+      "currentStageId": "90006",
+      "instanceStatus": "approved",
+      "name": "Mohammed N. Alqahhat"
+    },
+    {
+      "id": "150058",
+      "instanceId": "120019",
+      "stageId": "90004",
+      "assignedTo": "150006",
+      "status": "pending",
+      "currentStageId": "90004",
+      "instanceStatus": "in_progress",
+      "name": "Abdullah Alzakari"
+    },
+    {
+      "id": "150059",
+      "instanceId": "120020",
+      "stageId": "30012",
+      "assignedTo": "150020",
+      "status": "pending",
+      "currentStageId": "30012",
+      "instanceStatus": "in_progress",
+      "name": "Saad Al-Duty"
+    },
+    {
+      "id": "150060",
+      "instanceId": "120022",
+      "stageId": "90004",
+      "assignedTo": "150006",
+      "status": "pending",
+      "currentStageId": "90004",
+      "instanceStatus": "in_progress",
+      "name": "Abdullah Alzakari"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tinstanceId\tstageId\tassignedTo\tstatus\tcurrentStageId\tinstanceStatus\tname\n30071\t30043\t30001\t150006\tpending\t30001\tapproved\tAbdullah Alzakari\n150030\t120002\t30013\t90183\tpending\t30013\tneed_clarification\tAli Aarish\n150022\t120003\t30012\t90183\tpending\t30013\trejected\tAli Aarish\n150032\t120005\t30001\t90183\tpending\t30001\tneed_clarification\tAli Aarish\n150047\t120013\t90005\t180006\tpending\t90006\tapproved\tMohammed N. Alqahhat\n150058\t120019\t90004\t150006\tpending\t90004\tin_progress\tAbdullah Alzakari\n150059\t120020\t30012\t150020\tpending\t30012\tin_progress\tSaad Al-Duty\n150060\t120022\t90004\t150006\tpending\t90004\tin_progress\tAbdullah Alzakari\n",
+  "stderr": "",
+  "execution_time_ms": 1627
+}
