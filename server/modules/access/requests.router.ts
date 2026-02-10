@@ -23,6 +23,7 @@ import {
 } from "../../../drizzle/schema";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "../../_core/trpc";
 import { getDataScopeFilter, hasPermission, getUserPermissions } from "../../services/enterprise-rbac.service";
+import { messagingService } from "../messaging/messaging.service";
 // Workflow engine functions are defined locally
 
 // Helper: For admin users, if the given task is not pending, find another pending task
@@ -1402,6 +1403,14 @@ export const requestsRouter = router({
       // Start the workflow
       await startWorkflowForRequest(db, input.id, request.type, request.siteId, ctx.user.id);
       
+      // Fire messaging event (non-blocking)
+      messagingService.fireEvent("request_submitted", {
+        requestId: input.id,
+        userId: ctx.user.id,
+        siteId: request.siteId ?? undefined,
+        requestType: request.type,
+      }).catch(err => console.error("[Messaging] request_submitted event error:", err.message));
+      
       return { success: true, message: "Request submitted for approval" };
     }),
   
@@ -1514,6 +1523,15 @@ export const requestsRouter = router({
             },
           });
           
+          // Fire messaging event for task_assigned on next stage (non-blocking)
+          messagingService.fireEvent("task_assigned", {
+            requestId: instance.requestId,
+            instanceId: instance.id,
+            userId: ctx.user.id,
+            siteId: undefined,
+            stageName: nextStage[0].stageName,
+          }).catch(err => console.error("[Messaging] task_assigned event error:", err.message));
+          
           return { success: true, message: `Approved. Request moved to ${nextStage[0].stageName}` };
         } else {
           // No more stages - request is fully approved
@@ -1556,6 +1574,20 @@ export const requestsRouter = router({
               cardNumber: input.cardNumber,
             },
           });
+          
+          // Fire messaging event for request_approved (non-blocking)
+          messagingService.fireEvent("request_approved", {
+            requestId: instance.requestId,
+            instanceId: instance.id,
+            userId: ctx.user.id,
+          }).catch(err => console.error("[Messaging] request_approved event error:", err.message));
+          
+          // Fire access_granted event for visitor notifications
+          messagingService.fireEvent("access_granted", {
+            requestId: instance.requestId,
+            instanceId: instance.id,
+            userId: ctx.user.id,
+          }).catch(err => console.error("[Messaging] access_granted event error:", err.message));
           
           return { 
             success: true, 
@@ -1644,6 +1676,14 @@ export const requestsRouter = router({
           },
         });
         
+        // Fire messaging event for request_rejected (non-blocking)
+        messagingService.fireEvent("request_rejected", {
+          requestId: instance.requestId,
+          instanceId: instance.id,
+          userId: ctx.user.id,
+          comment: input.comments,
+        }).catch(err => console.error("[Messaging] request_rejected event error:", err.message));
+        
         return { success: true, message: "Request rejected by admin" };
       }
       
@@ -1678,6 +1718,14 @@ export const requestsRouter = router({
             comments: input.comments,
           },
         });
+        
+        // Fire messaging event for request_rejected (non-blocking)
+        messagingService.fireEvent("request_rejected", {
+          requestId: instance.requestId,
+          instanceId: instance.id,
+          userId: ctx.user.id,
+          comment: input.comments,
+        }).catch(err => console.error("[Messaging] request_rejected event error:", err.message));
         
         return { success: true, message: "Request rejected" };
       }
@@ -1835,6 +1883,16 @@ export const requestsRouter = router({
           targetInfo: targetInfo,
         },
       });
+      
+      // Fire messaging event for clarification_requested (non-blocking)
+      messagingService.fireEvent("clarification_requested", {
+        requestId: instance.requestId,
+        instanceId: instance.id,
+        taskId: task.id,
+        userId: ctx.user.id,
+        comment: input.comments,
+        stageName: stage.stageName,
+      }).catch(err => console.error("[Messaging] clarification_requested event error:", err.message));
       
       return { 
         success: true, 
@@ -2295,6 +2353,12 @@ export const requestsRouter = router({
           ));
       }
       
+      // Fire messaging event for request_cancelled (non-blocking)
+      messagingService.fireEvent("request_cancelled", {
+        requestId: input.id,
+        userId: ctx.user.id,
+      }).catch(err => console.error("[Messaging] request_cancelled event error:", err.message));
+      
       return { success: true, message: "Request cancelled" };
     }),
   
@@ -2496,6 +2560,14 @@ async function startWorkflowForRequest(
   
   // Create tasks for first stage
   await createTasksForStage(db, instanceId, firstStage[0].id, requestId);
+  
+  // Fire messaging event for initial task assignment (non-blocking)
+  messagingService.fireEvent("task_assigned", {
+    requestId,
+    instanceId,
+    userId: requestorId,
+    stageName: firstStage[0].name || firstStage[0].stageName,
+  }).catch(err => console.error("[Messaging] task_assigned event error:", err.message));
   
   // Record history
   await db.insert(approvalHistory).values({
@@ -2771,6 +2843,14 @@ async function approveTaskInternal(
         },
       });
       
+      // Fire messaging event for task_assigned on next stage (non-blocking)
+      messagingService.fireEvent("task_assigned", {
+        requestId: instance.requestId,
+        instanceId: instance.id,
+        userId,
+        stageName: nextStage[0].stageName,
+      }).catch(err => console.error("[Messaging] task_assigned event error:", err.message));
+      
       return { success: true, message: `Approved. Request moved to ${nextStage[0].stageName}` };
     } else {
       // No more stages - request is fully approved
@@ -2789,6 +2869,19 @@ async function approveTaskInternal(
         actionBy: userId,
         details: { newStatus: "approved" },
       });
+      
+      // Fire messaging events for approval (non-blocking)
+      messagingService.fireEvent("request_approved", {
+        requestId: instance.requestId,
+        instanceId: instance.id,
+        userId,
+      }).catch(err => console.error("[Messaging] request_approved event error:", err.message));
+      
+      messagingService.fireEvent("access_granted", {
+        requestId: instance.requestId,
+        instanceId: instance.id,
+        userId,
+      }).catch(err => console.error("[Messaging] access_granted event error:", err.message));
       
       return { success: true, message: "Request fully approved" };
     }
@@ -2869,6 +2962,14 @@ async function rejectTaskInternal(db: any, taskId: number, userId: number, comme
       },
     });
     
+    // Fire messaging event for request_rejected (non-blocking)
+    messagingService.fireEvent("request_rejected", {
+      requestId: instance.requestId,
+      instanceId: instance.id,
+      userId,
+      comment: comments,
+    }).catch(err => console.error("[Messaging] request_rejected event error:", err.message));
+    
     return { success: true, message: "Request rejected" };
   }
   
@@ -2913,6 +3014,14 @@ async function rejectTaskInternal(db: any, taskId: number, userId: number, comme
           comments: "All approvers rejected",
         },
       });
+      
+      // Fire messaging event for request_rejected (non-blocking)
+      messagingService.fireEvent("request_rejected", {
+        requestId: instance.requestId,
+        instanceId: instance.id,
+        userId,
+        comment: comments,
+      }).catch(err => console.error("[Messaging] request_rejected event error:", err.message));
       
       return { success: true, message: "Request rejected (all approvers rejected)" };
     }

@@ -200,6 +200,11 @@ function Router() {
           <IntegrationHub />
         </Layout>
       </Route>
+      <Route path="/integration-hub/:tab">
+        <Layout>
+          <IntegrationHub />
+        </Layout>
+      </Route>
       
       {/* Protected Routes - Workflow Management */}
       <Route path="/workflows">

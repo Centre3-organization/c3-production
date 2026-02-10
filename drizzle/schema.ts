@@ -2146,3 +2146,184 @@ export const materialTypes = mysqlTable("materialTypes", {
 });
 export type MaterialType = typeof materialTypes.$inferSelect;
 export type InsertMaterialType = typeof materialTypes.$inferInsert;
+
+
+// ============================================================================
+// INTEGRATION HUB - MESSAGING SYSTEM
+// ============================================================================
+
+/**
+ * integrations — Provider registry. Each row is a configured provider instance
+ * (e.g. "Twilio Production", "Vonage Backup"). Credentials are stored encrypted.
+ * Only one provider per type can be active at a time.
+ */
+export const integrations = mysqlTable("integrations", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Provider identity
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),           // e.g. "twilio", "vonage"
+  providerType: varchar("providerType", { length: 50 }).notNull(),     // "twilio" | "vonage" | "custom"
+  description: text("description"),
+  logoUrl: varchar("logoUrl", { length: 500 }),
+  
+  // Capabilities
+  supportsSms: boolean("supportsSms").default(false).notNull(),
+  supportsWhatsapp: boolean("supportsWhatsapp").default(false).notNull(),
+  supportsEmail: boolean("supportsEmail").default(false).notNull(),
+  
+  // Status
+  isEnabled: boolean("isEnabled").default(false).notNull(),
+  isDefault: boolean("isDefault").default(false).notNull(),            // default provider for messaging
+  
+  // Credentials (stored as encrypted JSON)
+  credentials: text("credentials"),  // JSON: { accountSid, authToken, fromNumber, whatsappNumber, ... }
+  
+  // Configuration
+  config: text("config"),            // JSON: { region, retryAttempts, timeoutMs, ... }
+  
+  // Metadata
+  lastTestedAt: timestamp("lastTestedAt"),
+  lastTestStatus: varchar("lastTestStatus", { length: 50 }),           // "success" | "failed"
+  lastTestError: text("lastTestError"),
+  
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Integration = typeof integrations.$inferSelect;
+export type InsertIntegration = typeof integrations.$inferInsert;
+
+/**
+ * messageTemplates — Reusable message templates with {{variable}} placeholders.
+ * Each template targets a specific channel (sms, whatsapp, email).
+ */
+export const messageTemplates = mysqlTable("messageTemplates", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  description: text("description"),
+  
+  // Channel
+  channel: mysqlEnum("channel", ["sms", "whatsapp", "email"]).notNull(),
+  
+  // Content
+  subject: varchar("subject", { length: 500 }),                        // for email only
+  body: text("body").notNull(),                                        // supports {{requestId}}, {{requesterName}}, etc.
+  bodyAr: text("bodyAr"),                                              // Arabic version
+  
+  // Variables metadata (JSON array of available variables for this template)
+  variables: text("variables"),                                        // JSON: ["requestId", "requesterName", "siteName", ...]
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MessageTemplate = typeof messageTemplates.$inferSelect;
+export type InsertMessageTemplate = typeof messageTemplates.$inferInsert;
+
+/**
+ * messageTriggerRules — Maps system events to message templates.
+ * Each rule says: "When event X happens, send template Y via channel Z to recipient R."
+ * Rules can be toggled on/off individually.
+ */
+export const messageTriggerRules = mysqlTable("messageTriggerRules", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Trigger event
+  eventType: varchar("eventType", { length: 100 }).notNull(),          // e.g. "request_created", "task_assigned", "request_approved", "access_granted"
+  
+  // Which template to use
+  templateId: int("templateId").notNull(),
+  
+  // Which provider to use (null = use default provider)
+  integrationId: int("integrationId"),
+  
+  // Recipient resolution
+  recipientType: mysqlEnum("recipientType", [
+    "requester",           // the person who created the request
+    "approver",            // the assigned approver(s) for current stage
+    "host",                // the host user for the visit
+    "visitor",             // visitor(s) on the request
+    "site_manager",        // site manager for the request's site
+    "custom_field",        // value from a specific form field
+    "specific_user",       // a specific user ID
+    "specific_number",     // a hardcoded phone number
+  ]).notNull(),
+  recipientConfig: text("recipientConfig"),                            // JSON: { fieldCode, userId, phoneNumber } depending on recipientType
+  
+  // Conditions (optional — only fire when conditions match)
+  conditions: text("conditions"),                                      // JSON: [{ field, operator, value }]
+  
+  // Status
+  isEnabled: boolean("isEnabled").default(true).notNull(),
+  
+  // Scope
+  siteId: int("siteId"),                                               // null = all sites
+  requestTypeSlug: varchar("requestTypeSlug", { length: 100 }),        // null = all types
+  
+  // Priority (lower = higher priority, for dedup)
+  priority: int("priority").default(100).notNull(),
+  
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MessageTriggerRule = typeof messageTriggerRules.$inferSelect;
+export type InsertMessageTriggerRule = typeof messageTriggerRules.$inferInsert;
+
+/**
+ * messageLogs — Delivery log for every message sent. Used for audit trail,
+ * debugging, and retry logic.
+ */
+export const messageLogs = mysqlTable("messageLogs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // What triggered this message
+  triggerRuleId: int("triggerRuleId"),
+  eventType: varchar("eventType", { length: 100 }).notNull(),
+  
+  // Provider used
+  integrationId: int("integrationId"),
+  providerType: varchar("providerType", { length: 50 }),
+  
+  // Channel & content
+  channel: mysqlEnum("channel", ["sms", "whatsapp", "email"]).notNull(),
+  templateId: int("templateId"),
+  recipientPhone: varchar("recipientPhone", { length: 50 }),
+  recipientEmail: varchar("recipientEmail", { length: 255 }),
+  recipientName: varchar("recipientName", { length: 255 }),
+  messageBody: text("messageBody"),                                    // rendered body (after variable interpolation)
+  
+  // Context
+  requestId: int("requestId"),
+  taskId: int("taskId"),
+  userId: int("userId"),                                               // recipient user ID if applicable
+  
+  // Delivery status
+  status: mysqlEnum("status", ["pending", "sent", "delivered", "failed", "rejected"]).default("pending").notNull(),
+  providerMessageId: varchar("providerMessageId", { length: 255 }),    // Twilio SID, etc.
+  errorCode: varchar("errorCode", { length: 100 }),
+  errorMessage: text("errorMessage"),
+  
+  // Timing
+  sentAt: timestamp("sentAt"),
+  deliveredAt: timestamp("deliveredAt"),
+  
+  // Retry
+  retryCount: int("retryCount").default(0).notNull(),
+  maxRetries: int("maxRetries").default(3).notNull(),
+  nextRetryAt: timestamp("nextRetryAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MessageLog = typeof messageLogs.$inferSelect;
+export type InsertMessageLog = typeof messageLogs.$inferInsert;

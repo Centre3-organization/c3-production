@@ -46,6 +46,8 @@ import { formTemplatesRouter } from "./modules/forms/formTemplates.router";
 // Comments Module
 import { commentsRouter } from "./modules/comments/comments.router";
 
+import { messagingRouter } from "./modules/messaging/messaging.router";
+
 import { 
   seedDefaultRoles, 
   seedDefaultDepartments,
@@ -215,6 +217,9 @@ export const appRouter = router({
   
   // Comments Module
   comments: commentsRouter,
+
+  // Messaging Module (Integration Hub)
+  messaging: messagingRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -2180,3 +2180,44 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Fix edit button in Workflow Builder stages (not working)
 - [x] Create 20 test requests on Bahrain across all types to verify workflow (5 admin_visit, 5 tep, 5 work_permit, 5 material_entry)
 - [x] Verify all 20 requests route correctly through Bahrain Workflow (all assigned to Abdullah Alzakari)
+
+## Comprehensive Project Documentation (Feb 10, 2026)
+- [ ] Audit full codebase for documentation accuracy
+- [ ] Write complete technical and functional documentation
+- [ ] Cover architecture, security, database schema, API design, workflow engine, deployment
+
+## Messaging Integration System (SMS + WhatsApp) via Integration Hub (Feb 10, 2026)
+
+### Phase 1: Database Schema
+- [x] Create integrations table (provider registry with enable/disable, credentials, config)
+- [x] Create messageTemplates table (templates with variable interpolation, per-channel)
+- [x] Create messageTriggerRules table (event → template mapping with on/off toggle)
+- [x] Create messageLog table (delivery tracking, status, error details)
+- [x] Push migration
+
+### Phase 2: Provider Abstraction Layer
+- [x] Create MessagingProvider interface (send SMS, send WhatsApp, check status)
+- [x] Implement TwilioProvider adapter (SMS + WhatsApp via Twilio API)
+- [x] Create MessagingService orchestrator (provider selection, template rendering, logging)
+- [x] Create tRPC procedures for integration CRUD, template CRUD, trigger rule CRUD, message logs
+
+### Phase 3: Integration Hub Frontend
+- [x] Create Integration Hub page with tabbed interface (Providers, Templates, Trigger Rules, Message Logs)
+- [x] Create provider configuration dialog (API keys, sender number, enable/disable, test connection)
+- [x] Create message template editor (name, channel, body with {{variables}}, preview)
+- [x] Create trigger rule builder (event type → template → channel → recipient → on/off toggle)
+- [x] Create message log viewer (status, recipient, timestamp, error details)
+
+### Phase 4: Workflow & Request Lifecycle Triggers
+- [x] Wire triggers into workflow engine (task_assigned, request_approved, request_rejected, clarification_requested)
+- [x] Wire triggers into request lifecycle (request_submitted, request_approved, request_rejected, request_cancelled, access_granted)
+- [x] Implement variable resolution (requester name, request ID, site name, approver name, etc.)
+- [x] Wire into approveTaskInternal and rejectTaskInternal functions
+- [x] Wire into startWorkflowForRequest for initial task_assigned event
+
+### Phase 5: Testing & Verification
+- [x] Write vitest tests for provider abstraction and template rendering (20 tests passing)
+- [x] Add EN/AR translation keys for messaging module
+- [ ] Test end-to-end SMS delivery via Twilio (requires Twilio credentials)
+- [ ] Test end-to-end WhatsApp delivery via Twilio (requires Twilio credentials)
+- [x] Verify on/off toggles work correctly (built into trigger rules UI)
