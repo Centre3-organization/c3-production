@@ -78,6 +78,7 @@ interface RepeatableSectionWithYakeenProps {
   itemLabelAr?: string;
   getItemSummary?: (item: Record<string, any>, index: number) => string;
   enableYakeenVerification?: boolean;
+  maxDurationDays?: number;
 }
 
 export function RepeatableSectionWithYakeen({
@@ -94,6 +95,7 @@ export function RepeatableSectionWithYakeen({
   itemLabelAr,
   getItemSummary,
   enableYakeenVerification = false,
+  maxDurationDays,
 }: RepeatableSectionWithYakeenProps) {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -759,6 +761,7 @@ export function RepeatableSectionWithYakeen({
                               onChange={(value) => handleFieldChange(index, field.code, value)}
                               formValues={item}
                               disabled={disabled}
+                              maxDurationDays={maxDurationDays}
                             />
                           </div>
                         ))}

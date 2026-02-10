@@ -2146,3 +2146,13 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Make approver names clickable to show approver details (popover with full list)
 - [x] Support multiple approvers display with +N badge and scrollable popover
 - [x] Include approver info in backend approval queries (getMyPendingApprovals, getMyApprovalHistory)
+
+## Date/Time Picker Redesign & Validation (Feb 10, 2026)
+- [x] Build SAP/HANA-style date picker with calendar grid, week numbers, month/year navigation, and min/max date support
+- [x] Build clock-face time picker with AM/PM toggle, hour/minute selection, and OK/Cancel buttons
+- [x] Add past date/time validation - prevent selecting dates before today (minDate = today)
+- [x] Use existing maxDurationDays column in request_types table (already had defaults per type)
+- [x] Integrate new pickers into FieldRenderer replacing native date/time inputs
+- [x] Add 'time' to fieldType enum in schema (migration 0038)
+- [x] Show helper text with maximum days info below date fields
+- [x] Test date/time pickers with Admin Visit form (90 days max)

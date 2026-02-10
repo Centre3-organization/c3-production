@@ -53,6 +53,7 @@ interface RepeatableSectionProps {
   itemLabel?: string;
   itemLabelAr?: string;
   getItemSummary?: (item: Record<string, any>, index: number) => string;
+  maxDurationDays?: number;
 }
 
 export function RepeatableSection({
@@ -68,6 +69,7 @@ export function RepeatableSection({
   itemLabel,
   itemLabelAr,
   getItemSummary,
+  maxDurationDays,
 }: RepeatableSectionProps) {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -273,6 +275,7 @@ export function RepeatableSection({
                               onChange={(value) => handleFieldChange(index, field.code, value)}
                               formValues={item}
                               disabled={disabled}
+                              maxDurationDays={maxDurationDays}
                             />
                           </div>
                         ))}

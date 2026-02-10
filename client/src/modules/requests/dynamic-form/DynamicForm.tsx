@@ -101,6 +101,7 @@ interface DynamicFormProps {
   onActiveSectionChange?: (sectionCode: string) => void;
   disabled?: boolean;
   errors?: Record<string, string>;
+  maxDurationDays?: number;
 }
 
 export function DynamicForm({
@@ -111,6 +112,7 @@ export function DynamicForm({
   onActiveSectionChange,
   disabled = false,
   errors = {},
+  maxDurationDays,
 }: DynamicFormProps) {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -369,6 +371,7 @@ export function DynamicForm({
                       disabled={disabled}
                       itemLabel={t("requests.visitor", "Visitor")}
                       enableYakeenVerification={true}
+                      maxDurationDays={maxDurationDays}
                     />
                   ) : (
                     <RepeatableSection
@@ -394,6 +397,7 @@ export function DynamicForm({
                           ? t("requests.system", "System")
                           : t("common.item", "Item")
                       }
+                      maxDurationDays={maxDurationDays}
                     />
                   )
                 ) : (
@@ -413,6 +417,7 @@ export function DynamicForm({
                           formValues={formData}
                           disabled={disabled}
                           error={errors[field.code]}
+                          maxDurationDays={maxDurationDays}
                         />
                       </div>
                     ))}

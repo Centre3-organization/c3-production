@@ -1217,6 +1217,7 @@ export const formFields = mysqlTable("formFields", {
     "phone",
     "date",
     "datetime",
+    "time",
     "dropdown",
     "dropdown_multi",
     "radio",

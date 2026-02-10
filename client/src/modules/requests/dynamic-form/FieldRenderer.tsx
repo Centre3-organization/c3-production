@@ -19,6 +19,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
 import { HierarchicalTypeSelector } from "./HierarchicalTypeSelector";
+import { SapDatePicker } from "@/components/ui/sap-date-picker";
+import { SapTimePicker } from "@/components/ui/sap-time-picker";
 
 interface FieldOption {
   value: string;
@@ -79,6 +81,7 @@ interface FieldRendererProps {
   formValues: Record<string, any>;
   disabled?: boolean;
   error?: string;
+  maxDurationDays?: number;
 }
 
 // Site Type Field Component
@@ -849,6 +852,7 @@ export function FieldRenderer({
   formValues,
   disabled = false,
   error,
+  maxDurationDays,
 }: FieldRendererProps) {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -1097,40 +1101,102 @@ export function FieldRenderer({
         </div>
       );
 
-    case "date":
+    case "date": {
+      const today = new Date();
+      const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const maxDate = maxDurationDays
+        ? new Date(minDate.getTime() + maxDurationDays * 24 * 60 * 60 * 1000)
+        : undefined;
       return (
         <div className="space-y-1.5">
           <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
-          <Input
-            type="date"
+          <SapDatePicker
             value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={onChange}
+            placeholder={getPlaceholder() || "e.g. Dec 31, 2023"}
             disabled={disabled}
-            className={baseInputClass}
+            minDate={minDate}
+            maxDate={maxDate}
+            error={!!error}
           />
+          {maxDurationDays && (
+            <p className="text-xs text-[#9E9E9E]">Maximum {maxDurationDays} days from today</p>
+          )}
           {getHelpText() && (
             <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
           {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
+    }
 
-    case "datetime":
+    case "datetime": {
+      const todayDt = new Date();
+      const minDateDt = new Date(todayDt.getFullYear(), todayDt.getMonth(), todayDt.getDate());
+      const maxDateDt = maxDurationDays
+        ? new Date(minDateDt.getTime() + maxDurationDays * 24 * 60 * 60 * 1000)
+        : undefined;
+      // Split datetime value into date and time parts
+      const dtParts = (value || "").split("T");
+      const dateVal = dtParts[0] || "";
+      const timeVal = dtParts[1] ? dtParts[1].substring(0, 5) : "";
       return (
         <div className="space-y-1.5">
           <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
             {getLabel()}
             {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
           </Label>
-          <Input
-            type="datetime-local"
+          <div className="grid grid-cols-2 gap-2">
+            <SapDatePicker
+              value={dateVal}
+              onChange={(newDate) => {
+                const t = timeVal || "09:00";
+                onChange(`${newDate}T${t}`);
+              }}
+              placeholder="Select date"
+              disabled={disabled}
+              minDate={minDateDt}
+              maxDate={maxDateDt}
+              error={!!error}
+            />
+            <SapTimePicker
+              value={timeVal}
+              onChange={(newTime) => {
+                const d = dateVal || new Date().toISOString().split("T")[0];
+                onChange(`${d}T${newTime}`);
+              }}
+              placeholder="Select time"
+              disabled={disabled}
+              error={!!error}
+            />
+          </div>
+          {maxDurationDays && (
+            <p className="text-xs text-[#9E9E9E]">Maximum {maxDurationDays} days from today</p>
+          )}
+          {getHelpText() && (
+            <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
+          )}
+          {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
+        </div>
+      );
+    }
+
+    case "time": {
+      return (
+        <div className="space-y-1.5">
+          <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
+            {getLabel()}
+            {Boolean(field.isRequired) && <span className="text-[#FF6B6B]">*</span>}
+          </Label>
+          <SapTimePicker
             value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(newTime) => onChange(newTime)}
+            placeholder="Select time"
             disabled={disabled}
-            className={baseInputClass}
+            error={!!error}
           />
           {getHelpText() && (
             <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
@@ -1138,6 +1204,7 @@ export function FieldRenderer({
           {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}
         </div>
       );
+    }
 
     case "dropdown":
       return (

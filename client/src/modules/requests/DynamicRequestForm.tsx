@@ -474,6 +474,11 @@ export default function DynamicRequestForm() {
                   activeSection={activeSection}
                   onActiveSectionChange={setActiveSection}
                   errors={errors}
+                  maxDurationDays={
+                    selectedTypes.length > 0
+                      ? Math.max(...selectedTypes.map((t: any) => t.maxDurationDays || 180))
+                      : undefined
+                  }
                 />
               </div>
               {/* Bottom action bar */}

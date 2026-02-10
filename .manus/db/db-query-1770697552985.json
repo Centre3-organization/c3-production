@@ -1,0 +1,58 @@
+{
+  "query": "SELECT id, code, name, maxDurationDays FROM requestTypes WHERE isActive = 1 ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, code, name, maxDurationDays FROM requestTypes WHERE isActive = 1 ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "code": "admin_visit",
+      "name": "Admin Visit",
+      "maxDurationDays": "NULL"
+    },
+    {
+      "id": "2",
+      "code": "tep",
+      "name": "Temporary Entry Permission",
+      "maxDurationDays": "180"
+    },
+    {
+      "id": "3",
+      "code": "wp",
+      "name": "Work Permission",
+      "maxDurationDays": "14"
+    },
+    {
+      "id": "4",
+      "code": "mop",
+      "name": "Method of Procedure",
+      "maxDurationDays": "14"
+    },
+    {
+      "id": "5",
+      "code": "mhv",
+      "name": "Material/Vehicle Permit",
+      "maxDurationDays": "14"
+    },
+    {
+      "id": "6",
+      "code": "VR01",
+      "name": "Visitor Registration",
+      "maxDurationDays": "30"
+    },
+    {
+      "id": "7",
+      "code": "TEPq",
+      "name": "BAsic",
+      "maxDurationDays": "30"
+    },
+    {
+      "id": "8",
+      "code": "Lo139",
+      "name": "Location",
+      "maxDurationDays": "30"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tname\tmaxDurationDays\n1\tadmin_visit\tAdmin Visit\tNULL\n2\ttep\tTemporary Entry Permission\t180\n3\twp\tWork Permission\t14\n4\tmop\tMethod of Procedure\t14\n5\tmhv\tMaterial/Vehicle Permit\t14\n6\tVR01\tVisitor Registration\t30\n7\tTEPq\tBAsic\t30\n8\tLo139\tLocation\t30\n",
+  "stderr": "",
+  "execution_time_ms": 1713
+}
