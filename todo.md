@@ -2156,3 +2156,15 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add 'time' to fieldType enum in schema (migration 0038)
 - [x] Show helper text with maximum days info below date fields
 - [x] Test date/time pickers with Admin Visit form (90 days max)
+
+## Bahrain Request Routing Fix (Feb 10, 2026)
+- [x] Investigate why REQ-20260210-8QN8RT didn't route through Bahrain workflow (siteId=1 instead of 30001)
+- [x] Investigate why REQ-20260210-MJUBEG didn't route through Bahrain workflow (same siteId bug)
+- [x] Root cause: siteId extraction bug - code looked for 'site_id' field but form uses 'site' code (already fixed)
+- [x] Manually rerouted both requests to Bahrain Workflow (90001), assigned to Abdullah Alzakari (150006)
+
+## Date Picker Enhancements (Feb 10, 2026)
+- [x] Add date range validation - End Date must be after Start Date (dynamic minDate on End Date)
+- [x] Add time validation - End Time after Start Time when same date
+- [x] Add "Today" quick-select button to date picker
+- [x] maxDurationDays already configurable from Request Types admin UI (enhanced with help text)

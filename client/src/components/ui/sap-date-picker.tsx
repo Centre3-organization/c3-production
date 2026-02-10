@@ -315,6 +315,32 @@ function SapDatePicker({
               </div>
             );
           })}
+
+          {/* Today quick-select button */}
+          {(() => {
+            const todayDisabled = isDateDisabled(today, minDate, maxDate);
+            return (
+              <div className="mt-2 pt-2 border-t border-[#E0E0E0] flex justify-center">
+                <button
+                  type="button"
+                  disabled={todayDisabled}
+                  onClick={() => {
+                    if (!todayDisabled) {
+                      handleDayClick(today.getDate(), today.getMonth(), today.getFullYear());
+                    }
+                  }}
+                  className={cn(
+                    "text-sm font-medium px-4 py-1.5 rounded-md transition-colors",
+                    todayDisabled
+                      ? "text-[#D4D4D4] cursor-not-allowed"
+                      : "text-[#4A90D9] hover:bg-[#E8F0FE]"
+                  )}
+                >
+                  Today
+                </button>
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>

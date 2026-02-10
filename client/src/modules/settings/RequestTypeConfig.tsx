@@ -839,7 +839,7 @@ export default function RequestTypeConfig() {
                         </div>
                         <div>
                           <div className="font-medium">{type.name}</div>
-                          <div className="text-sm text-[#6B6B6B]">Max {type.maxDurationDays} days</div>
+                          <div className="text-sm text-[#6B6B6B]">Validity: up to {type.maxDurationDays} days</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -1155,13 +1155,16 @@ export default function RequestTypeConfig() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="maxDurationDays">Max Duration (days)</Label>
+                <Label htmlFor="maxDurationDays">Max Validity Period (days)</Label>
                 <Input
                   id="maxDurationDays"
                   name="maxDurationDays"
                   type="number"
+                  min={1}
+                  max={365}
                   defaultValue={editingItem?.maxDurationDays || 30}
                 />
+                <p className="text-xs text-[#9E9E9E]">Maximum days from today that users can select in date fields (1-365)</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="sortOrder">Sort Order</Label>

@@ -249,6 +249,19 @@ export default function DynamicRequestForm() {
       }
     });
 
+    // Cross-field date/time validation
+    if (formData.start_date && formData.end_date) {
+      if (formData.end_date < formData.start_date) {
+        newErrors.end_date = t("validation.endDateBeforeStart", "End date must be on or after start date");
+      }
+      // If same date, validate times
+      if (formData.start_date === formData.end_date && formData.start_time && formData.end_time) {
+        if (formData.end_time <= formData.start_time) {
+          newErrors.end_time = t("validation.endTimeBeforeStart", "End time must be after start time");
+        }
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

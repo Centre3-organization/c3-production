@@ -1103,10 +1103,20 @@ export function FieldRenderer({
 
     case "date": {
       const today = new Date();
-      const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      let effectiveMinDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const baseMinDate = new Date(effectiveMinDate);
       const maxDate = maxDurationDays
-        ? new Date(minDate.getTime() + maxDurationDays * 24 * 60 * 60 * 1000)
+        ? new Date(baseMinDate.getTime() + maxDurationDays * 24 * 60 * 60 * 1000)
         : undefined;
+
+      // If this is an end_date field and start_date has a value, set minDate to start_date
+      if (field.code === "end_date" && formValues.start_date) {
+        const startDateParsed = new Date(formValues.start_date + "T00:00:00");
+        if (!isNaN(startDateParsed.getTime()) && startDateParsed > effectiveMinDate) {
+          effectiveMinDate = startDateParsed;
+        }
+      }
+
       return (
         <div className="space-y-1.5">
           <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
@@ -1118,11 +1128,14 @@ export function FieldRenderer({
             onChange={onChange}
             placeholder={getPlaceholder() || "e.g. Dec 31, 2023"}
             disabled={disabled}
-            minDate={minDate}
+            minDate={effectiveMinDate}
             maxDate={maxDate}
             error={!!error}
           />
-          {maxDurationDays && (
+          {field.code === "end_date" && formValues.start_date && (
+            <p className="text-xs text-[#9E9E9E]">Must be on or after {new Date(formValues.start_date + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p>
+          )}
+          {maxDurationDays && !formValues.start_date && (
             <p className="text-xs text-[#9E9E9E]">Maximum {maxDurationDays} days from today</p>
           )}
           {getHelpText() && (
@@ -1185,6 +1198,10 @@ export function FieldRenderer({
     }
 
     case "time": {
+      // Cross-field validation: if this is end_time and dates are the same, show warning
+      const isSameDateRange = field.code === "end_time" && formValues.start_date && formValues.end_date && formValues.start_date === formValues.end_date;
+      const hasTimeConflict = isSameDateRange && formValues.start_time && value && value <= formValues.start_time;
+
       return (
         <div className="space-y-1.5">
           <Label className="text-sm font-medium text-[#2C2C2C] flex items-center gap-1">
@@ -1196,8 +1213,14 @@ export function FieldRenderer({
             onChange={(newTime) => onChange(newTime)}
             placeholder="Select time"
             disabled={disabled}
-            error={!!error}
+            error={!!error || !!hasTimeConflict}
           />
+          {hasTimeConflict && (
+            <p className="text-xs text-[#FF6B6B]">End time must be after start time ({formValues.start_time})</p>
+          )}
+          {isSameDateRange && formValues.start_time && !hasTimeConflict && value && (
+            <p className="text-xs text-[#9E9E9E]">Must be after {formValues.start_time}</p>
+          )}
           {getHelpText() && (
             <p className="text-xs text-[#6B6B6B]">{getHelpText()}</p>
           )}
