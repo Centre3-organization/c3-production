@@ -2362,20 +2362,33 @@ async function startWorkflowForRequest(
         const condValue = String(condition.conditionValue);
         
         // Process type conditions
-        if ((condType === "process_type" || condType === "processType") && condValue !== processType) {
-          allMatch = false;
-          break;
+        if (condType === "process_type" || condType === "processType") {
+          if (condValue !== processType) {
+            allMatch = false;
+            break;
+          }
+          continue;
         }
         // Site ID conditions
-        if ((condType === "site_id" || condType === "siteId") && siteId && condValue !== String(siteId)) {
+        if (condType === "site_id" || condType === "siteId") {
+          if (!siteId || condValue !== String(siteId)) {
+            allMatch = false;
+            break;
+          }
+          continue;
+        }
+        // Category conditions
+        if (condType === "category") {
+          // Category conditions require runtime context not available here
+          // Treat as non-matching to avoid false positives
           allMatch = false;
           break;
         }
-        // Skip non-matching site conditions when no siteId provided
-        if ((condType === "site_id" || condType === "siteId") && !siteId) {
-          allMatch = false;
-          break;
-        }
+        // Any unrecognized condition type should NOT match
+        // This prevents workflows with conditions like 'working_hours', 'vip_visit', etc.
+        // from matching when we can't evaluate them at submission time
+        allMatch = false;
+        break;
       }
       
       if (allMatch) {

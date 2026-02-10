@@ -2168,3 +2168,9 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Add time validation - End Time after Start Time when same date
 - [x] Add "Today" quick-select button to date picker
 - [x] maxDurationDays already configurable from Request Types admin UI (enhanced with help text)
+
+## Bug Fixes (Feb 10, 2026 - Batch 2)
+- [x] Request submission error was already resolved (user confirmed TEP works)
+- [x] Fix REQ-20260210-US6YLI Bahrain request - rerouted to Bahrain Workflow (assigned to Abdullah Alzakari)
+- [x] Root cause: siteId=1 from pre-fix submission + unknown conditions silently passing in evaluator
+- [x] Fixed condition evaluator to reject unknown condition types (working_hours, vip_visit, etc.)
