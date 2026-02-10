@@ -2140,3 +2140,9 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Ensure all existing users have password hashes set (bcrypt, default: Centre3@2026)
 - [x] Test password login flow end-to-end
 - [x] Write vitest tests for password auth (10 tests passing)
+
+## Approver Visibility in Approvals (Feb 10, 2026)
+- [x] Show assigned approver(s) in approval views (My Approvals, Approval History, request detail)
+- [x] Make approver names clickable to show approver details (popover with full list)
+- [x] Support multiple approvers display with +N badge and scrollable popover
+- [x] Include approver info in backend approval queries (getMyPendingApprovals, getMyApprovalHistory)

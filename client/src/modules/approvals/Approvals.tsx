@@ -59,10 +59,16 @@ import { FormDataDisplay } from "@/modules/requests/FormDataDisplay";
 import { format } from "date-fns";
 import QRCode from "qrcode";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   FioriPageHeader,
   FioriFilterBar,
   FioriStatusBadge,
 } from "@/components/fiori";
+import { Users } from "lucide-react";
 
 const typeLabels: Record<string, string> = {
   admin_visit: "Admin Visit",
@@ -373,11 +379,12 @@ export default function Approvals() {
         ) : (
           <div className="bg-white border border-[#E0E0E0] rounded-lg overflow-hidden">
             {/* Table Header */}
-            <div className="grid grid-cols-[1fr_100px_90px_120px_100px_80px_310px] gap-2 px-4 py-2.5 bg-[#FAFAFA] border-b border-[#E0E0E0] text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
+            <div className="grid grid-cols-[1fr_100px_90px_120px_130px_100px_80px_310px] gap-2 px-4 py-2.5 bg-[#FAFAFA] border-b border-[#E0E0E0] text-xs font-medium text-[#6B6B6B] uppercase tracking-wider">
               <span>Request</span>
               <span>Type</span>
               <span>Stage</span>
               <span>Visitor</span>
+              <span>Approver(s)</span>
               <span>Site</span>
               <span>Date</span>
               <span className="text-right">Actions</span>
@@ -386,7 +393,7 @@ export default function Approvals() {
             {filteredTasks.map((task: any) => (
               <div
                 key={task.taskId}
-                className="grid grid-cols-[1fr_100px_90px_120px_100px_80px_310px] gap-2 px-4 py-3 border-b border-[#F0F0F0] hover:bg-[#FAFAFA] cursor-pointer items-center"
+                className="grid grid-cols-[1fr_100px_90px_120px_130px_100px_80px_310px] gap-2 px-4 py-3 border-b border-[#F0F0F0] hover:bg-[#FAFAFA] cursor-pointer items-center"
                 onClick={() => handleViewDetails(task)}
               >
                 <div className="flex items-center gap-2">
@@ -407,6 +414,51 @@ export default function Approvals() {
                   <span className="text-sm text-[#2C2C2C]">{task.request?.visitorName || "N/A"}</span>
                   {task.request?.visitorCompany && (
                     <p className="text-xs text-[#6B6B6B] truncate">{task.request.visitorCompany}</p>
+                  )}
+                </div>
+                {/* Approver(s) column */}
+                <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                  {task.approvers && task.approvers.length > 0 ? (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button className="flex items-center gap-1 text-xs text-[#5B2C93] hover:underline cursor-pointer max-w-full">
+                          <Users className="h-3 w-3 flex-shrink-0" />
+                          <span className="truncate">{task.approvers[0]?.name || task.approvers[0]?.email}</span>
+                          {task.approvers.length > 1 && (
+                            <span className="flex-shrink-0 text-[10px] bg-[#E8DCF5] text-[#5B2C93] px-1 py-0.5 rounded-full font-medium">+{task.approvers.length - 1}</span>
+                          )}
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-72 p-0" align="start">
+                        <div className="px-3 py-2 bg-[#F5F5F5] border-b border-[#E0E0E0]">
+                          <h4 className="text-xs font-medium text-[#6B6B6B] uppercase tracking-wide flex items-center gap-1.5">
+                            <Users className="h-3 w-3 text-[#5B2C93]" /> Assigned Approvers ({task.approvers.length})
+                          </h4>
+                        </div>
+                        <div className="divide-y divide-[#F0F0F0] max-h-[200px] overflow-y-auto">
+                          {task.approvers.map((approver: any) => (
+                            <div key={approver.userId} className="px-3 py-2 flex items-center gap-2">
+                              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium text-white ${
+                                approver.status === 'approved' ? 'bg-[#059669]' : approver.status === 'rejected' ? 'bg-[#FF6B6B]' : 'bg-[#5B2C93]'
+                              }`}>
+                                {(approver.name || approver.email || '?').charAt(0).toUpperCase()}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-[#2C2C2C] truncate">{approver.name || approver.email}</p>
+                                <p className="text-[10px] text-[#6B6B6B]">{approver.jobTitle || approver.assignedVia}</p>
+                              </div>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                                approver.status === 'approved' ? 'bg-[#D1FAE5] text-[#059669]' : approver.status === 'rejected' ? 'bg-[#FFE5E5] text-[#FF6B6B]' : 'bg-[#FEF3C7] text-[#D97706]'
+                              }`}>
+                                {approver.status}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  ) : (
+                    <span className="text-xs text-[#6B6B6B]">—</span>
                   )}
                 </div>
                 <span className="text-xs text-[#6B6B6B] truncate">{task.request?.siteName || "—"}</span>
@@ -709,13 +761,39 @@ export default function Approvals() {
                       { label: t("approvals.workflow", "Workflow"), value: selectedRequest.workflowName || "Default" },
                       { label: t("approvals.currentStage", "Current Stage"), value: selectedRequest.stageName },
                       { label: t("approvals.progress", "Progress"), value: `Stage ${selectedRequest.stageOrder || 1} of ${selectedRequest.totalStages || 1}` },
-                      { label: t("approvals.assignedTo", "Assigned To"), value: selectedRequest.assignedToId ? `User #${selectedRequest.assignedToId}` : "Unassigned" },
                     ].map((item) => (
                       <div key={item.label}>
                         <span className="text-[#6B6B6B] text-xs">{item.label}</span>
                         <p className="text-sm font-medium text-[#2C2C2C]">{item.value || "N/A"}</p>
                       </div>
                     ))}
+                    {/* Approvers list */}
+                    <div>
+                      <span className="text-[#6B6B6B] text-xs flex items-center gap-1">
+                        <Users className="h-3 w-3" /> {t("approvals.approvers", "Approver(s)")}
+                      </span>
+                      {selectedRequest.approvers && selectedRequest.approvers.length > 0 ? (
+                        <div className="mt-1 space-y-1.5">
+                          {selectedRequest.approvers.map((approver: any) => (
+                            <div key={approver.userId} className="flex items-center gap-2">
+                              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium text-white ${
+                                approver.status === 'approved' ? 'bg-[#059669]' : approver.status === 'rejected' ? 'bg-[#FF6B6B]' : 'bg-[#5B2C93]'
+                              }`}>
+                                {(approver.name || approver.email || '?').charAt(0).toUpperCase()}
+                              </div>
+                              <span className="text-sm font-medium text-[#2C2C2C]">{approver.name || approver.email}</span>
+                              <span className={`text-[10px] px-1 py-0.5 rounded ${
+                                approver.status === 'approved' ? 'bg-[#D1FAE5] text-[#059669]' : approver.status === 'rejected' ? 'bg-[#FFE5E5] text-[#FF6B6B]' : 'bg-[#FEF3C7] text-[#D97706]'
+                              }`}>
+                                {approver.status}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm font-medium text-[#2C2C2C]">Unassigned</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

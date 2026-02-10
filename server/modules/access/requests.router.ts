@@ -347,11 +347,50 @@ export const requestsRouter = router({
       historyMap.get(h.instanceId)!.push(h);
     }
     
+    // Fetch all approvers for each task's instance+stage combination
+    const approverTasksData = await db
+      .select({
+        instanceId: approvalTasks.instanceId,
+        stageId: approvalTasks.stageId,
+        assignedTo: approvalTasks.assignedTo,
+        status: approvalTasks.status,
+        assignedVia: approvalTasks.assignedVia,
+        userName: users.name,
+        userEmail: users.email,
+        userId: users.id,
+        userRole: users.role,
+        jobTitle: users.jobTitle,
+      })
+      .from(approvalTasks)
+      .innerJoin(users, eq(approvalTasks.assignedTo, users.id))
+      .where(inArray(approvalTasks.instanceId, instanceIds));
+    
+    // Group approvers by instanceId+stageId key
+    const approversMap = new Map<string, Array<{ userId: number; name: string | null; email: string | null; role: string; jobTitle: string | null; status: string; assignedVia: string }>>();
+    for (const a of approverTasksData) {
+      const key = `${a.instanceId}-${a.stageId}`;
+      if (!approversMap.has(key)) approversMap.set(key, []);
+      const list = approversMap.get(key)!;
+      // Deduplicate by userId
+      if (!list.some(x => x.userId === a.userId)) {
+        list.push({
+          userId: a.userId,
+          name: a.userName,
+          email: a.userEmail,
+          role: a.userRole,
+          jobTitle: a.jobTitle,
+          status: a.status,
+          assignedVia: a.assignedVia,
+        });
+      }
+    }
+    
     return tasks.map(task => ({
       ...task,
       totalStages: stageCountMap.get(task.workflowId) || 1,
       request: requestsMap.get(task.requestId),
       approvalHistory: historyMap.get(task.instanceId) || [],
+      approvers: approversMap.get(`${task.instanceId}-${task.stageId}`) || [],
     }));
   }),
   
@@ -498,6 +537,43 @@ export const requestsRouter = router({
         historyMap.set(h.instanceId, list);
       }
       
+      // Fetch all approvers for each task's instance+stage combination
+      const approverTasksData = await db
+        .select({
+          instanceId: approvalTasks.instanceId,
+          stageId: approvalTasks.stageId,
+          assignedTo: approvalTasks.assignedTo,
+          status: approvalTasks.status,
+          assignedVia: approvalTasks.assignedVia,
+          userName: users.name,
+          userEmail: users.email,
+          userId: users.id,
+          userRole: users.role,
+          jobTitle: users.jobTitle,
+        })
+        .from(approvalTasks)
+        .innerJoin(users, eq(approvalTasks.assignedTo, users.id))
+        .where(inArray(approvalTasks.instanceId, instanceIds));
+      
+      // Group approvers by instanceId+stageId key
+      const approversMap = new Map<string, Array<{ userId: number; name: string | null; email: string | null; role: string; jobTitle: string | null; status: string; assignedVia: string }>>();
+      for (const a of approverTasksData) {
+        const key = `${a.instanceId}-${a.stageId}`;
+        if (!approversMap.has(key)) approversMap.set(key, []);
+        const list = approversMap.get(key)!;
+        if (!list.some(x => x.userId === a.userId)) {
+          list.push({
+            userId: a.userId,
+            name: a.userName,
+            email: a.userEmail,
+            role: a.userRole,
+            jobTitle: a.jobTitle,
+            status: a.status,
+            assignedVia: a.assignedVia,
+          });
+        }
+      }
+      
       return tasks.map(task => {
         const instance = instancesMap.get(task.instanceId);
         return {
@@ -505,6 +581,7 @@ export const requestsRouter = router({
           totalStages: stageCountMap.get(task.workflowId) || 1,
           request: requestsMap.get(task.requestId),
           approvalHistory: historyMap.get(task.instanceId) || [],
+          approvers: approversMap.get(`${task.instanceId}-${task.stageId}`) || [],
           accessMethod: instance ? {
             entryMethod: instance.entryMethod,
             qrCodeData: instance.qrCodeData,
