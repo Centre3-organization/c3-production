@@ -2211,6 +2211,7 @@ export const messageTemplates = mysqlTable("messageTemplates", {
   // Content
   subject: varchar("subject", { length: 500 }),                        // for email only
   body: text("body").notNull(),                                        // supports {{requestId}}, {{requesterName}}, etc.
+  htmlBody: text("htmlBody"),                                          // HTML version for email templates
   bodyAr: text("bodyAr"),                                              // Arabic version
   
   // Variables metadata (JSON array of available variables for this template)
@@ -2256,6 +2257,7 @@ export const messageTriggerRules = mysqlTable("messageTriggerRules", {
     "custom_field",        // value from a specific form field
     "specific_user",       // a specific user ID
     "specific_number",     // a hardcoded phone number
+    "group",               // all members of a specific user group
   ]).notNull(),
   recipientConfig: text("recipientConfig"),                            // JSON: { fieldCode, userId, phoneNumber } depending on recipientType
   

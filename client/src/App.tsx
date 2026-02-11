@@ -56,8 +56,7 @@ import Settings from "./modules/settings/Settings";
 import TranslationManagement from "./modules/settings/TranslationManagement";
 import RequestTypeConfig from "./modules/settings/RequestTypeConfig";
 import IntegrationHub from "./modules/settings/IntegrationHub";
-import SmsWhatsappIntegration from "./modules/settings/SmsWhatsappIntegration";
-import EmailIntegration from "./modules/settings/EmailIntegration";
+import CommunicationsIntegration from "./modules/settings/CommunicationsIntegration";
 
 // MCM Module (Magnetic Card Management)
 // McmDashboard removed - stats moved to CardDirectory
@@ -202,24 +201,14 @@ function Router() {
           <IntegrationHub />
         </Layout>
       </Route>
-      <Route path="/integration-hub/sms-whatsapp">
+      <Route path="/integration-hub/communications">
         <Layout>
-          <SmsWhatsappIntegration />
+          <CommunicationsIntegration />
         </Layout>
       </Route>
-      <Route path="/integration-hub/sms-whatsapp/:tab">
+      <Route path="/integration-hub/communications/:tab">
         <Layout>
-          <SmsWhatsappIntegration />
-        </Layout>
-      </Route>
-      <Route path="/integration-hub/email">
-        <Layout>
-          <EmailIntegration />
-        </Layout>
-      </Route>
-      <Route path="/integration-hub/email/:tab">
-        <Layout>
-          <EmailIntegration />
+          <CommunicationsIntegration />
         </Layout>
       </Route>
       

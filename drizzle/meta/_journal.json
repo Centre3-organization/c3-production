@@ -281,6 +281,20 @@
       "when": 1770732473115,
       "tag": "0039_neat_mandarin",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1770819702513,
+      "tag": "0040_confused_spencer_smythe",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "5",
+      "when": 1770819933866,
+      "tag": "0041_foamy_deadpool",
+      "breakpoints": true
     }
   ]
 }

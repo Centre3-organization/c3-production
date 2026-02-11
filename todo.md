@@ -2241,3 +2241,20 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Create default Email templates for all key events
 - [x] Activate trigger rules for Bahrain workflow (21 rules: 7 SMS + 7 WhatsApp + 7 Email)
 - [x] Ensure templates use proper {{variable}} placeholders
+
+## Integration Hub Cleanup & Merge (Feb 11, 2026)
+- [x] Remove "Building Management" card from Integration Hub landing
+- [x] Fix EAM card text/description (updated to IBM Maximo, SAP PM, Infor EAM with asset lifecycle, work orders, preventive maintenance, spare parts, compliance)
+- [x] Merge SMS/WhatsApp/Email into single "Communications" integration page
+- [x] Add HTML-based template editor for email channel (with preview toggle)
+- [x] Add "other" provider type option for manual configuration
+- [x] Fix channel filtering bug: unified page now shows all 3 channels correctly
+- [x] Clean up all channel confusion across the unified page
+- [x] Delete separate SmsWhatsappIntegration.tsx and EmailIntegration.tsx files
+
+## Security Alert Triggers & Group Recipients (Feb 11, 2026)
+- [x] Add new event types: security_breach, zone_capacity_exceeded, asset_gate_exit, security_alert_custom
+- [x] Add "group" recipient type that sends to all members of a user group
+- [x] Update messaging service resolveRecipients to handle group recipients (queries userGroupMembership table)
+- [x] Update trigger rule UI to support group selection as recipient
+- [ ] Wire security alert events into the security operations module (pending — requires security module event hooks)

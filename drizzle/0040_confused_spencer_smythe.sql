@@ -1,0 +1,1 @@
+ALTER TABLE `messageTemplates` ADD `htmlBody` text;

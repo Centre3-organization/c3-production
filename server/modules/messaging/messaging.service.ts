@@ -25,6 +25,8 @@ import {
   approvalStages,
   sites,
   requestVisitors,
+  userGroupMembership,
+  groups,
 } from "../../../drizzle/schema";
 import { eq, and, desc, isNull, or } from "drizzle-orm";
 import { createProvider, type MessagingProvider, type SendResult } from "./messaging.provider";
@@ -32,6 +34,7 @@ import { createProvider, type MessagingProvider, type SendResult } from "./messa
 // Ensure adapters are registered
 import "./twilio.adapter";
 import "./email.adapter";
+import "./other.adapter";
 
 // ============================================================================
 // TYPES
@@ -59,12 +62,14 @@ export interface ResolvedRecipient {
 
 // All supported event types
 export const EVENT_TYPES = [
+  // Request lifecycle
   "request_created",
   "request_submitted",
   "request_approved",
   "request_rejected",
   "request_cancelled",
   "access_granted",
+  // Approval workflow
   "task_assigned",
   "task_approved",
   "task_rejected",
@@ -72,6 +77,15 @@ export const EVENT_TYPES = [
   "clarification_responded",
   "send_back",
   "request_expired",
+  // Security alerts
+  "security_breach",
+  "zone_capacity_exceeded",
+  "asset_gate_exit",
+  "security_alert_custom",
+  // Visitor operations
+  "visitor_checked_in",
+  "visitor_checked_out",
+  "visitor_overstay",
 ] as const;
 
 export type EventType = typeof EVENT_TYPES[number];
@@ -95,6 +109,17 @@ export const TEMPLATE_VARIABLES = [
   { key: "portalUrl", label: "Portal URL", description: "Link to the Centre3 portal" },
   { key: "date", label: "Date", description: "Current date" },
   { key: "time", label: "Time", description: "Current time" },
+  // Security alert variables
+  { key: "alertType", label: "Alert Type", description: "Type of security alert (breach, capacity, etc.)" },
+  { key: "alertSeverity", label: "Alert Severity", description: "Severity level (critical, high, medium, low)" },
+  { key: "zoneName", label: "Zone Name", description: "Name of the affected zone" },
+  { key: "zoneCapacity", label: "Zone Capacity", description: "Maximum allowed occupancy for the zone" },
+  { key: "currentOccupancy", label: "Current Occupancy", description: "Current number of people in the zone" },
+  { key: "assetName", label: "Asset Name", description: "Name/ID of the asset (MHV, equipment, etc.)" },
+  { key: "assetType", label: "Asset Type", description: "Type of asset (vehicle, equipment, material)" },
+  { key: "gateName", label: "Gate Name", description: "Name of the gate where event occurred" },
+  { key: "alertDescription", label: "Alert Description", description: "Detailed description of the alert" },
+  { key: "groupName", label: "Group Name", description: "Name of the recipient group" },
 ] as const;
 
 // ============================================================================
@@ -421,6 +446,39 @@ class MessagingService {
         const phone = recipientConfig.phoneNumber;
         if (phone) {
           recipients.push({ phone, name: recipientConfig.name || "Unknown" });
+        }
+        break;
+      }
+
+      case "group": {
+        const groupId = recipientConfig.groupId;
+        if (groupId) {
+          // Get all active members of the group
+          const members = await db
+            .select({
+              userId: userGroupMembership.userId,
+              name: users.name,
+              phone: users.phone,
+              email: users.email,
+            })
+            .from(userGroupMembership)
+            .innerJoin(users, eq(users.id, userGroupMembership.userId))
+            .where(
+              and(
+                eq(userGroupMembership.groupId, groupId),
+                eq(userGroupMembership.status, "active")
+              )
+            );
+          for (const member of members) {
+            if (member.phone || member.email) {
+              recipients.push({
+                phone: member.phone,
+                email: member.email,
+                name: member.name,
+                userId: member.userId,
+              });
+            }
+          }
         }
         break;
       }

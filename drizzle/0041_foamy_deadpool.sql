@@ -1,0 +1,1 @@
+ALTER TABLE `messageTriggerRules` MODIFY COLUMN `recipientType` enum('requester','approver','host','visitor','site_manager','custom_field','specific_user','specific_number','group') NOT NULL;

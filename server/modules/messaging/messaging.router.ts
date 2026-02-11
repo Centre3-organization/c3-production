@@ -238,9 +238,11 @@ export const messagingRouter = router({
   sendTestMessage: integrationProcedure
     .input(z.object({
       integrationId: z.number(),
-      channel: z.enum(["sms", "whatsapp"]),
+      channel: z.enum(["sms", "whatsapp", "email"]),
       to: z.string().min(1),
       body: z.string().min(1),
+      subject: z.string().optional(),
+      html: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -258,8 +260,12 @@ export const messagingRouter = router({
       let result;
       if (input.channel === "sms") {
         result = await provider.sendSms({ to: input.to, body: input.body });
-      } else {
+      } else if (input.channel === "whatsapp") {
         result = await provider.sendWhatsApp({ to: input.to, body: input.body });
+      } else if (input.channel === "email" && provider.sendEmail) {
+        result = await provider.sendEmail(input.to, input.subject || "Test Email from Centre3", input.body, input.html);
+      } else {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `Channel ${input.channel} not supported by this provider` });
       }
 
       // Log the test message
@@ -268,7 +274,8 @@ export const messagingRouter = router({
         integrationId: input.integrationId,
         providerType: integration[0].providerType,
         channel: input.channel,
-        recipientPhone: input.to,
+        recipientPhone: input.channel !== "email" ? input.to : undefined,
+        recipientEmail: input.channel === "email" ? input.to : undefined,
         messageBody: input.body,
         status: result.success ? "sent" : "failed",
         providerMessageId: result.providerMessageId,
@@ -313,6 +320,7 @@ export const messagingRouter = router({
       channel: z.enum(["sms", "whatsapp", "email"]),
       subject: z.string().optional(),
       body: z.string().min(1),
+      htmlBody: z.string().optional(),
       bodyAr: z.string().optional(),
       variables: z.array(z.string()).optional(),
     }))
@@ -327,6 +335,7 @@ export const messagingRouter = router({
         channel: input.channel,
         subject: input.subject || null,
         body: input.body,
+        htmlBody: input.htmlBody || null,
         bodyAr: input.bodyAr || null,
         variables: input.variables ? JSON.stringify(input.variables) : null,
         isActive: true,
@@ -345,6 +354,7 @@ export const messagingRouter = router({
       channel: z.enum(["sms", "whatsapp", "email"]).optional(),
       subject: z.string().optional(),
       body: z.string().optional(),
+      htmlBody: z.string().optional(),
       bodyAr: z.string().optional(),
       variables: z.array(z.string()).optional(),
       isActive: z.boolean().optional(),
@@ -359,6 +369,7 @@ export const messagingRouter = router({
       if (input.channel !== undefined) updateData.channel = input.channel;
       if (input.subject !== undefined) updateData.subject = input.subject;
       if (input.body !== undefined) updateData.body = input.body;
+      if (input.htmlBody !== undefined) updateData.htmlBody = input.htmlBody;
       if (input.bodyAr !== undefined) updateData.bodyAr = input.bodyAr;
       if (input.variables !== undefined) updateData.variables = JSON.stringify(input.variables);
       if (input.isActive !== undefined) updateData.isActive = input.isActive;
@@ -420,7 +431,7 @@ export const messagingRouter = router({
       eventType: z.string().min(1),
       templateId: z.number(),
       integrationId: z.number().optional(),
-      recipientType: z.enum(["requester", "approver", "host", "visitor", "site_manager", "custom_field", "specific_user", "specific_number"]),
+      recipientType: z.enum(["requester", "approver", "host", "visitor", "site_manager", "custom_field", "specific_user", "specific_number", "group"]),
       recipientConfig: z.record(z.string(), z.any()).optional(),
       conditions: z.array(z.object({
         field: z.string(),
@@ -464,7 +475,7 @@ export const messagingRouter = router({
       eventType: z.string().optional(),
       templateId: z.number().optional(),
       integrationId: z.number().nullable().optional(),
-      recipientType: z.enum(["requester", "approver", "host", "visitor", "site_manager", "custom_field", "specific_user", "specific_number"]).optional(),
+      recipientType: z.enum(["requester", "approver", "host", "visitor", "site_manager", "custom_field", "specific_user", "specific_number", "group"]).optional(),
       recipientConfig: z.record(z.string(), z.any()).optional(),
       conditions: z.array(z.object({
         field: z.string(),

@@ -6,14 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   MessageSquare,
-  Mail,
   Shield,
-  Cpu,
   Wrench,
   ArrowRight,
   CheckCircle2,
   Clock,
-  Loader2,
   Plug,
   Zap,
   Activity,
@@ -35,38 +32,24 @@ interface IntegrationCard {
   iconColor: string;
   route: string;
   status: "active" | "available" | "coming_soon";
-  category: "communication" | "hardware" | "enterprise" | "security";
+  category: "communication" | "hardware" | "enterprise";
   features: string[];
 }
 
 const INTEGRATION_CATALOG: IntegrationCard[] = [
   {
-    id: "sms-whatsapp",
-    name: "SMS & WhatsApp",
-    nameKey: "integrationHub.smsWhatsapp",
-    description: "Send automated SMS and WhatsApp messages via Twilio or other providers. Configure templates, trigger rules, and track delivery.",
-    descriptionKey: "integrationHub.smsWhatsappFullDesc",
+    id: "communications",
+    name: "Communications",
+    nameKey: "integrationHub.communications",
+    description: "Unified messaging hub for SMS, WhatsApp, and Email. Configure providers (Twilio, SMTP, SendGrid), create templates with dynamic variables, set trigger rules for automated notifications, and track delivery logs across all channels.",
+    descriptionKey: "integrationHub.communicationsFullDesc",
     icon: MessageSquare,
     iconBg: "bg-emerald-500/10",
     iconColor: "text-emerald-600",
-    route: "/integration-hub/sms-whatsapp",
+    route: "/integration-hub/communications",
     status: "active",
     category: "communication",
-    features: ["SMS Notifications", "WhatsApp Messages", "Template Engine", "Delivery Tracking"],
-  },
-  {
-    id: "email",
-    name: "Email",
-    nameKey: "integrationHub.email",
-    description: "Send automated email notifications via SMTP or SendGrid. Separate templates, trigger rules, and delivery logs for email communications.",
-    descriptionKey: "integrationHub.emailFullDesc",
-    icon: Mail,
-    iconBg: "bg-blue-500/10",
-    iconColor: "text-blue-600",
-    route: "/integration-hub/email",
-    status: "active",
-    category: "communication",
-    features: ["SMTP / SendGrid", "HTML Templates", "Trigger Rules", "Delivery Logs"],
+    features: ["SMS", "WhatsApp", "Email", "HTML Templates", "Trigger Rules", "Delivery Logs"],
   },
   {
     id: "siemens-siport",
@@ -86,7 +69,7 @@ const INTEGRATION_CATALOG: IntegrationCard[] = [
     id: "eam",
     name: "Enterprise Asset Management",
     nameKey: "integrationHub.eam",
-    description: "Connect with EAM systems for asset tracking, maintenance scheduling, and facility resource management across all data centres.",
+    description: "Connect with Enterprise Asset Management platforms (IBM Maximo, SAP PM, Infor EAM) for unified asset lifecycle tracking, preventive maintenance scheduling, work order management, and spare parts inventory across all data centre facilities.",
     descriptionKey: "integrationHub.eamDesc",
     icon: Wrench,
     iconBg: "bg-amber-500/10",
@@ -94,21 +77,7 @@ const INTEGRATION_CATALOG: IntegrationCard[] = [
     route: "",
     status: "coming_soon",
     category: "enterprise",
-    features: ["Asset Tracking", "Maintenance Scheduling", "Resource Management", "Reporting"],
-  },
-  {
-    id: "bms",
-    name: "Building Management System",
-    nameKey: "integrationHub.bms",
-    description: "Integrate with BMS for environmental monitoring, HVAC control, and facility automation across data centre infrastructure.",
-    descriptionKey: "integrationHub.bmsDesc",
-    icon: Cpu,
-    iconBg: "bg-purple-500/10",
-    iconColor: "text-purple-600",
-    route: "",
-    status: "coming_soon",
-    category: "hardware",
-    features: ["Environmental Monitoring", "HVAC Control", "Alarm Management", "Energy Analytics"],
+    features: ["Asset Lifecycle", "Work Orders", "Preventive Maintenance", "Spare Parts", "Compliance Reporting"],
   },
 ];
 
@@ -289,7 +258,7 @@ function IntegrationCardComponent({
         <h3 className="text-base font-semibold text-[#2C2C2C] mb-1">
           {t(integration.nameKey, integration.name)}
         </h3>
-        <p className="text-sm text-[#6B6B6B] mb-4 line-clamp-2">
+        <p className="text-sm text-[#6B6B6B] mb-4 line-clamp-3">
           {t(integration.descriptionKey, integration.description)}
         </p>
 
