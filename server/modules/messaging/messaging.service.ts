@@ -29,8 +29,9 @@ import {
 import { eq, and, desc, isNull, or } from "drizzle-orm";
 import { createProvider, type MessagingProvider, type SendResult } from "./messaging.provider";
 
-// Ensure Twilio adapter is registered
+// Ensure adapters are registered
 import "./twilio.adapter";
+import "./email.adapter";
 
 // ============================================================================
 // TYPES
@@ -200,9 +201,12 @@ class MessagingService {
               result = await provider.sendSms({ to: recipient.phone || "", body: renderedBody });
             } else if (channel === "whatsapp") {
               result = await provider.sendWhatsApp({ to: recipient.phone || "", body: renderedBody });
+            } else if (channel === "email" && provider.sendEmail) {
+              // Render subject from template name or first line
+              const subject = template[0].name || "Centre3 Notification";
+              result = await provider.sendEmail(recipient.email || "", subject, renderedBody);
             } else {
-              // Email not yet implemented
-              result = { success: false, errorCode: "UNSUPPORTED", errorMessage: "Email channel not yet implemented" };
+              result = { success: false, errorCode: "UNSUPPORTED", errorMessage: `Channel ${channel} not supported by this provider` };
             }
 
             // Update log with result
@@ -427,8 +431,8 @@ class MessagingService {
       }
     }
 
-    // Filter out recipients without phone numbers (for SMS/WhatsApp)
-    return recipients.filter(r => r.phone);
+    // Return all recipients — caller will filter by channel
+    return recipients;
   }
 
   /**

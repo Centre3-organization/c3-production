@@ -61,6 +61,9 @@ export interface MessagingProvider {
   /** Send a WhatsApp message */
   sendWhatsApp(request: SendWhatsAppRequest): Promise<SendResult>;
   
+  /** Send an email message (optional — only email providers implement this) */
+  sendEmail?(to: string, subject: string, body: string, html?: string): Promise<SendResult>;
+
   /** Test the provider connection with current credentials */
   testConnection(): Promise<ProviderHealthCheck>;
   

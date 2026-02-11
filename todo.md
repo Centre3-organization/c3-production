@@ -2221,3 +2221,23 @@ Create a unified data source system that can pull options from anywhere in the p
 - [ ] Test end-to-end SMS delivery via Twilio (requires Twilio credentials)
 - [ ] Test end-to-end WhatsApp delivery via Twilio (requires Twilio credentials)
 - [x] Verify on/off toggles work correctly (built into trigger rules UI)
+
+## Integration Hub Restructure & Email Integration (Feb 11, 2026)
+
+### Phase 1: Restructure Integration Hub as Marketplace
+- [x] Create Integration Hub landing page with integration cards (SMS/WhatsApp, Email, future Siport/EAM)
+- [x] Add sub-routes: /integration-hub → landing, /integration-hub/sms-whatsapp → current SMS/WA UI, /integration-hub/email → email UI
+- [x] Show "Coming Soon" cards for Siemens Siport, EAM, and other future integrations
+- [x] Update sidebar navigation to point to Integration Hub landing
+
+### Phase 2: Email as Separate Integration
+- [x] Add email channel support to schema (already has 'email' in channel enum)
+- [x] Create SMTP/SendGrid email provider adapter
+- [x] Create separate Email integration page with its own templates, trigger rules, and logs
+- [x] Wire email triggers into the same event system but with separate rule management
+
+### Phase 3: Default Templates & Trigger Rules
+- [x] Create default SMS/WhatsApp templates for all key events (request_submitted, task_assigned, request_approved, request_rejected, access_granted, clarification_requested, request_cancelled)
+- [x] Create default Email templates for all key events
+- [x] Activate trigger rules for Bahrain workflow (21 rules: 7 SMS + 7 WhatsApp + 7 Email)
+- [x] Ensure templates use proper {{variable}} placeholders
