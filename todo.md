@@ -2436,10 +2436,11 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Create checkpoint settings panel for API keys and toggles
 - [x] Create Admin Integrations Dashboard (Camera, AI, Notifications, Watchlist)
 - [x] Build Watchlist Management Dashboard (search, filter, view, edit, delete)
-- [ ] Add document validation (ID/Iqama/Passport)
+- [x] Create Document Validation Modal (ID/Iqama/Passport with Claude API)
+- [x] Build Incident Report History Dashboard (analytics, export, filtering)
+- [x] Build tRPC endpoints for settings and watchlist persistence
 - [ ] Add license plate recognition
 - [ ] Add anomaly detection
-- [ ] Build backend API endpoints for form submissions
-- [ ] Implement supervisor notification system
+- [ ] Implement supervisor notification system (email/SMS)
 - [ ] Test end-to-end flows
 - [ ] Save final checkpoint for publishing

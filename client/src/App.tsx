@@ -72,6 +72,7 @@ import { UnregisteredEntryForm } from "./pages/UnregisteredEntryForm";
 import { FakePassReportForm } from "./pages/FakePassReportForm";
 import { IntegrationsDashboard } from "./pages/IntegrationsDashboard";
 import { WatchlistDashboard } from "./pages/WatchlistDashboard";
+import { IncidentReportHistory } from "./pages/IncidentReportHistory";
 
 // Reports Module
 import Reports from "./modules/reports/Reports";
@@ -239,6 +240,11 @@ function Router() {
       <Route path="/checkpoint-watchlist">
         <Layout>
           <WatchlistDashboard />
+        </Layout>
+      </Route>
+      <Route path="/checkpoint-incidents">
+        <Layout>
+          <IncidentReportHistory />
         </Layout>
       </Route>
       

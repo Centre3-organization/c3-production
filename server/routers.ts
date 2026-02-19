@@ -30,6 +30,7 @@ import { securityAlertsRouter } from "./modules/security/alerts.router";
 
 // Checkpoint Module
 import { checkpointRouter } from "./modules/checkpoint/checkpoint.router";
+import { checkpointSettingsRouter } from "./modules/checkpoint/checkpoint-settings.router";
 
 // Groups Module
 import { groupsRouter } from "./modules/groups/groups.router";
@@ -205,6 +206,7 @@ export const appRouter = router({
   
   // Checkpoint Module
   checkpoint: checkpointRouter,
+  checkpointSettings: checkpointSettingsRouter,
   
   // Groups Module
   groups: groupsRouter,
