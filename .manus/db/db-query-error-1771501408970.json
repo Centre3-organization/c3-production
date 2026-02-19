@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO users (openId, firstName, lastName, email, phone, passwordHash, loginMethod, role, status, userType, createdAt, updatedAt, lastSignedIn) VALUES ('guard_test_' + CAST(UNIX_TIMESTAMP() AS CHAR), 'Security', 'Guard', 'guard@centre3.com', '+966501234567', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/TVm', 'password', 'user', 'active', 'centre3_employee', NOW(), NOW(), NOW())",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute INSERT INTO users (openId, firstName, lastName, email, phone, passwordHash, loginMethod, role, status, userType, createdAt, updatedAt, lastSignedIn) VALUES ('guard_test_' + CAST(UNIX_TIMESTAMP() AS CHAR), 'Security', 'Guard', 'guard@centre3.com', '+966501234567', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/TVm', 'password', 'user', 'active', 'centre3_employee', NOW(), NOW(), NOW())",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1292 (22007) at line 1: Truncated incorrect DOUBLE value: '?'"
+  ]
+}

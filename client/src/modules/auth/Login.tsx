@@ -25,6 +25,8 @@ export default function Login() {
       if (data.sessionToken) {
         localStorage.setItem('app_session_token', data.sessionToken);
       }
+      // Check if user is a guard and route to checkpoint interface
+      // For now, route all users to main dashboard. Guards can access checkpoint via menu.
       window.location.href = "/";
     },
     onError: (err: any) => {

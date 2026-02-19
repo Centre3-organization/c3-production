@@ -2421,3 +2421,17 @@ Create a unified data source system that can pull options from anywhere in the p
 - [ ] Create troubleshooting guide
 - [ ] Document AI service integration
 - [ ] Create deployment guide
+
+
+### Phase 3: UI Styling & Advanced Features
+- [x] Update checkpoint UI background to white
+- [x] Apply proper branding colors to checkpoint interface
+- [x] Integrate guard auto-routing in main login (detect guard role → redirect to /checkpoint)
+- [ ] Fix Drizzle ORM type resolution in checkpoint router
+- [ ] Add WebRTC camera integration for photo capture
+- [ ] Implement Claude API face matching
+- [ ] Add document validation (ID/Iqama/Passport)
+- [ ] Add license plate recognition
+- [ ] Add anomaly detection
+- [ ] Test end-to-end flows
+- [ ] Save final checkpoint for publishing

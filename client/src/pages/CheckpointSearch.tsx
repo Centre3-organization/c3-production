@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, ArrowLeft, CheckCircle, XCircle, Clock } from "lucide-react";
 import { useLocation, useSearch } from "wouter";
+import { trpc } from "@/lib/trpc";
 
 interface RequestDetails {
   id: number;
@@ -32,6 +33,8 @@ export function CheckpointSearch() {
   const [showDenialForm, setShowDenialForm] = useState(false);
   const [denialReason, setDenialReason] = useState("");
   const [denialComments, setDenialComments] = useState("");
+  const logTransactionMutation = trpc.checkpoint.logTransaction.useMutation();
+  const submitDenialMutation = trpc.checkpoint.submitDenialReport.useMutation();
 
   // Mock request data
   const request: RequestDetails = {
@@ -57,20 +60,45 @@ export function CheckpointSearch() {
   const isExpired = new Date(request.validUntil) < new Date();
   const isNotYetValid = new Date(request.validFrom) > new Date();
 
-  const handleAllow = () => {
-    // Mock allow action
-    alert("Entry ALLOWED for " + request.visitorName);
-    setLocation("/checkpoint");
+  const handleAllow = async () => {
+    try {
+      await logTransactionMutation.mutateAsync({
+        checkpointId: 1,
+        requestId: request.id,
+        visitorName: request.visitorName,
+        visitorIdNumber: request.visitorIdNumber,
+        transactionType: "person_entry",
+        decision: "allowed",
+        guardId: 1,
+        notes: "Entry allowed after verification",
+      });
+      alert("Entry ALLOWED for " + request.visitorName);
+      setLocation("/checkpoint");
+    } catch (error) {
+      alert("Failed to log transaction: " + (error as any).message);
+    }
   };
 
-  const handleDeny = () => {
+  const handleDeny = async () => {
     if (!denialReason || !denialComments) {
       alert("Please select a reason and provide comments");
       return;
     }
-    // Mock deny action
-    alert("Entry DENIED - Incident logged");
-    setLocation("/checkpoint");
+    try {
+      await submitDenialMutation.mutateAsync({
+        checkpointId: 1,
+        transactionId: 1,
+        visitorName: request.visitorName,
+        visitorIdNumber: request.visitorIdNumber,
+        denialReason: denialReason as any,
+        comments: denialComments,
+        guardId: 1,
+      });
+      alert("Entry DENIED - Incident logged");
+      setLocation("/checkpoint");
+    } catch (error) {
+      alert("Failed to submit denial: " + (error as any).message);
+    }
   };
 
   return (
@@ -79,8 +107,7 @@ export function CheckpointSearch() {
         {/* Back Button */}
         <Button
           onClick={() => setLocation("/checkpoint")}
-          variant="outline"
-          className="mb-6 bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
+          className="mb-6 bg-slate-300 hover:bg-slate-400 text-slate-900 font-semibold font-poppins"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Search
@@ -88,9 +115,9 @@ export function CheckpointSearch() {
 
         {/* Watchlist Alert */}
         {false && (
-          <Alert className="mb-6 bg-red-900 border-red-700">
-            <AlertCircle className="h-4 w-4 text-red-400" />
-            <AlertDescription className="text-red-200">
+          <Alert className="mb-6 bg-red-100 border-2 border-red-300">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-800">
               ⚠️ WARNING: This person is on the watchlist. Severity: HIGH. Reason: Repeat denial attempts
             </AlertDescription>
           </Alert>
@@ -98,194 +125,177 @@ export function CheckpointSearch() {
 
         {/* Status Alert */}
         <Alert
-          className={`mb-6 ${
+          className={`mb-6 border-2 ${
             isExpired
-              ? "bg-red-900 border-red-700"
+              ? "bg-red-100 border-red-300"
               : isNotYetValid
-                ? "bg-amber-900 border-amber-700"
+                ? "bg-amber-100 border-amber-300"
                 : request.status === "approved"
-                  ? "bg-green-900 border-green-700"
-                  : "bg-yellow-900 border-yellow-700"
+                  ? "bg-green-100 border-green-300"
+                  : "bg-yellow-100 border-yellow-300"
           }`}
         >
           <AlertCircle className="h-4 w-4" />
           <AlertDescription
             className={
               isExpired
-                ? "text-red-200"
+                ? "text-red-800"
                 : isNotYetValid
-                  ? "text-amber-200"
+                  ? "text-amber-800"
                   : request.status === "approved"
-                    ? "text-green-200"
-                    : "text-yellow-200"
+                    ? "text-green-800"
+                    : "text-yellow-800"
             }
           >
             {isExpired
-              ? "❌ REQUEST EXPIRED - Entry should be DENIED"
+              ? "❌ Request has EXPIRED"
               : isNotYetValid
-                ? "⏰ Request not yet valid - Entry should be DENIED"
+                ? "⏰ Request is not yet valid"
                 : request.status === "approved"
-                  ? "✅ REQUEST APPROVED - Entry may be allowed"
-                  : "⏳ REQUEST PENDING - Verify with supervisor"}
+                  ? "✅ Request is APPROVED"
+                  : "⚠️ Request status: " + request.status}
           </AlertDescription>
         </Alert>
 
+        {/* Visitor Information */}
+        <Card className="bg-white border-2 border-purple-200 p-6 mb-6 shadow-md">
+          <h2 className="text-2xl font-bold text-slate-900 mb-4 font-poppins">Visitor Information</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">Name</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorName}</div>
+            </div>
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">ID Number</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorIdNumber}</div>
+            </div>
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">ID Type</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorIdType}</div>
+            </div>
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">Company</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorCompany}</div>
+            </div>
+          </div>
+        </Card>
+
         {/* Request Details */}
-        <div className="grid grid-cols-2 gap-6 mb-8">
-          {/* Left Column - Visitor Info */}
-          <Card className="bg-slate-800 border-slate-700 p-6">
-            <h3 className="text-lg font-bold text-white mb-4">👤 Visitor Information</h3>
-            <div className="space-y-3 text-sm">
-              <div>
-                <div className="text-slate-400">Name</div>
-                <div className="font-semibold text-white">{request.visitorName}</div>
-              </div>
-              <div>
-                <div className="text-slate-400">ID Type</div>
-                <div className="font-semibold text-white">{request.visitorIdType}</div>
-              </div>
-              <div>
-                <div className="text-slate-400">ID Number</div>
-                <div className="font-semibold text-white font-mono">{request.visitorIdNumber}</div>
-              </div>
-              <div>
-                <div className="text-slate-400">Company</div>
-                <div className="font-semibold text-white">{request.visitorCompany}</div>
-              </div>
-              <div>
-                <div className="text-slate-400">Request Type</div>
-                <div className="font-semibold text-white">{request.requestType}</div>
-              </div>
+        <Card className="bg-white border-2 border-slate-200 p-6 mb-6 shadow-md">
+          <h2 className="text-2xl font-bold text-slate-900 mb-4 font-poppins">Request Details</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">Request Number</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.requestNumber}</div>
             </div>
-          </Card>
-
-          {/* Right Column - Host & Access Info */}
-          <Card className="bg-slate-800 border-slate-700 p-6">
-            <h3 className="text-lg font-bold text-white mb-4">🏢 Host & Access</h3>
-            <div className="space-y-3 text-sm">
-              <div>
-                <div className="text-slate-400">Host Name</div>
-                <div className="font-semibold text-white">{request.hostName}</div>
-              </div>
-              <div>
-                <div className="text-slate-400">Department</div>
-                <div className="font-semibold text-white">{request.hostDepartment}</div>
-              </div>
-              <div>
-                <div className="text-slate-400">Valid From</div>
-                <div className="font-semibold text-white">{request.validFrom}</div>
-              </div>
-              <div>
-                <div className="text-slate-400">Valid Until</div>
-                <div className={`font-semibold ${isExpired ? "text-red-400" : "text-white"}`}>
-                  {request.validUntil}
-                </div>
-              </div>
-              <div>
-                <div className="text-slate-400">Access Zones</div>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {request.accessZones.map((zone) => (
-                    <span key={zone} className="bg-blue-700 text-blue-100 px-2 py-1 rounded text-xs font-semibold">
-                      {zone}
-                    </span>
-                  ))}
-                </div>
-              </div>
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">Request Type</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.requestType}</div>
             </div>
-          </Card>
-        </div>
-
-        {/* Special Instructions */}
-        {request.specialInstructions && (
-          <Card className="bg-amber-900 border-amber-700 p-4 mb-8">
-            <div className="text-amber-200 font-semibold mb-2">📋 Special Instructions</div>
-            <div className="text-amber-100">{request.specialInstructions}</div>
-          </Card>
-        )}
-
-        {/* Vehicle Info (if applicable) */}
-        {request.vehicleRegistrationNumber && (
-          <Card className="bg-slate-800 border-slate-700 p-6 mb-8">
-            <h3 className="text-lg font-bold text-white mb-4">🚗 Vehicle Information</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <div className="text-slate-400">License Plate</div>
-                <div className="font-semibold text-white font-mono text-lg">{request.vehicleRegistrationNumber}</div>
-              </div>
-              <div>
-                <div className="text-slate-400">Vehicle Type</div>
-                <div className="font-semibold text-white">{request.vehicleType}</div>
-              </div>
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">Host Name</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.hostName}</div>
             </div>
-          </Card>
-        )}
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">Department</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.hostDepartment}</div>
+            </div>
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">Valid From</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.validFrom}</div>
+            </div>
+            <div>
+              <div className="text-sm text-slate-600 font-poppins">Valid Until</div>
+              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.validUntil}</div>
+            </div>
+          </div>
+          {request.specialInstructions && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+              <div className="text-sm font-semibold text-blue-900 font-poppins">Special Instructions:</div>
+              <div className="text-blue-800 font-poppins">{request.specialInstructions}</div>
+            </div>
+          )}
+        </Card>
 
         {/* Decision Section */}
         {!showDenialForm ? (
           <div className="flex gap-4 mb-8">
             <Button
               onClick={handleAllow}
-              disabled={isExpired || isNotYetValid || request.status !== "approved"}
-              className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-bold h-16 text-lg"
+              disabled={logTransactionMutation.isPending}
+              className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-slate-400 text-white font-bold h-16 text-lg font-poppins"
             >
               <CheckCircle className="w-5 h-5 mr-2" />
-              ALLOW ENTRY
+              {logTransactionMutation.isPending ? "Processing..." : "ALLOW ENTRY"}
             </Button>
             <Button
-              onClick={handleDeny}
-              disabled={submitDenialMutation.isPending}
-              className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-slate-600 text-white font-bold h-16 text-lg"
+              onClick={() => setShowDenialForm(true)}
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold h-16 text-lg font-poppins"
             >
               <XCircle className="w-5 h-5 mr-2" />
-              {submitDenialMutation.isPending ? "Processing..." : "DENY ENTRY"}
+              DENY ENTRY
             </Button>
           </div>
         ) : (
-          <Card className="bg-slate-800 border-slate-700 p-6 mb-8">
-            <h3 className="text-lg font-bold text-white mb-4">❌ Denial Report (Mandatory)</h3>
-            <div className="space-y-4">
+          <Card className="bg-white border-2 border-red-200 p-6 mb-8 shadow-md">
+            <h3 className="text-lg font-bold text-red-900 mb-4 font-poppins">❌ Denial Report (Mandatory)</h3>
+
+            <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-2">Denial Reason *</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2 font-poppins">
+                  Denial Reason *
+                </label>
                 <select
                   value={denialReason}
                   onChange={(e) => setDenialReason(e.target.value)}
-                  className="w-full bg-slate-700 border border-slate-600 text-white p-3 rounded"
+                  className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-red-500 bg-white text-slate-900 font-poppins"
                 >
                   <option value="">Select a reason...</option>
-                  <option value="request_not_found">Request not found in system</option>
-                  <option value="request_expired">Request expired</option>
-                  <option value="wrong_date_time">Wrong date/time</option>
-                  <option value="fake_pass">Suspected fake pass</option>
-                  <option value="escort_not_present">Escort not present</option>
-                  <option value="safety_violation">Safety violation</option>
+                  <option value="request_not_found">Request Not Found</option>
+                  <option value="request_expired">Request Expired</option>
+                  <option value="wrong_date_time">Wrong Date/Time</option>
+                  <option value="fake_pass">Fake Pass</option>
+                  <option value="escort_not_present">Escort Not Present</option>
+                  <option value="safety_violation">Safety Violation</option>
                   <option value="other">Other</option>
                 </select>
               </div>
+
               <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-2">Comments (Mandatory) *</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2 font-poppins">
+                  Comments (min. 20 characters) *
+                </label>
                 <textarea
                   value={denialComments}
                   onChange={(e) => setDenialComments(e.target.value)}
-                  placeholder="Provide detailed reason for denial (minimum 20 characters)..."
-                  className="w-full bg-slate-700 border border-slate-600 text-white p-3 rounded h-24"
-                  minLength={20}
+                  placeholder="Provide detailed reason for denial..."
+                  className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-red-500 bg-white text-slate-900 placeholder-slate-400 font-poppins h-24"
                 />
+                <div className="text-xs text-slate-600 mt-1 font-poppins">
+                  {denialComments.length}/20 characters
+                </div>
               </div>
-              <div className="flex gap-3">
-                <Button
-                  onClick={handleDeny}
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold"
-                >
-                  Submit Denial Report
-                </Button>
-                <Button
-                  onClick={() => setShowDenialForm(false)}
-                  variant="outline"
-                  className="flex-1 bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
-                >
-                  Cancel
-                </Button>
-              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Button
+                onClick={handleDeny}
+                disabled={submitDenialMutation.isPending}
+                className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-bold h-14 text-lg font-poppins"
+              >
+                <XCircle className="w-5 h-5 mr-2" />
+                {submitDenialMutation.isPending ? "Submitting..." : "SUBMIT DENIAL"}
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowDenialForm(false);
+                  setDenialReason("");
+                  setDenialComments("");
+                }}
+                className="flex-1 bg-slate-400 hover:bg-slate-500 text-white font-bold h-14 text-lg font-poppins"
+              >
+                Cancel
+              </Button>
             </div>
           </Card>
         )}
