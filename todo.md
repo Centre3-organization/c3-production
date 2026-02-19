@@ -2431,8 +2431,8 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Build WebRTC camera component for photo capture
 - [x] Create Claude API face matching service with toggle
 - [ ] Implement face matching in verification flow
-- [ ] Build unregistered entry form with photo evidence
-- [ ] Build fake pass report form with photo evidence
+- [x] Build unregistered entry form with photo evidence
+- [x] Build fake pass report form with photo evidence
 - [x] Create checkpoint settings panel for API keys and toggles
 - [ ] Add document validation (ID/Iqama/Passport)
 - [ ] Add license plate recognition

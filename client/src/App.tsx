@@ -68,6 +68,8 @@ import { CheckpointLogin } from "./pages/CheckpointLogin";
 import { CheckpointHome } from "./pages/CheckpointHome";
 import { CheckpointSearch } from "./pages/CheckpointSearch";
 import { CheckpointSettings } from "./pages/CheckpointSettings";
+import { UnregisteredEntryForm } from "./pages/UnregisteredEntryForm";
+import { FakePassReportForm } from "./pages/FakePassReportForm";
 
 // Reports Module
 import Reports from "./modules/reports/Reports";
@@ -85,6 +87,8 @@ function Router() {
       <Route path="/checkpoint/login" component={CheckpointLogin} />
       <Route path="/checkpoint/search" component={CheckpointSearch} />
       <Route path="/checkpoint/settings" component={CheckpointSettings} />
+      <Route path="/checkpoint/unregistered-entry" component={UnregisteredEntryForm} />
+      <Route path="/checkpoint/fake-pass-report" component={FakePassReportForm} />
       <Route path="/checkpoint" component={CheckpointHome} />
       <Route path="/checkpoint/*" component={CheckpointHome} />
       

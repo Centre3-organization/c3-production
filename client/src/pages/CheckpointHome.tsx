@@ -105,16 +105,16 @@ export function CheckpointHome() {
           <h2 className="text-2xl font-bold text-slate-900 mb-4 font-poppins">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Button
-              onClick={() => alert("Unregistered entry form coming soon")}
-              className="bg-blue-600 hover:bg-blue-700 text-white h-20 text-lg font-bold font-poppins"
+              onClick={() => window.location.href = '/checkpoint/unregistered-entry'}
+              className="bg-amber-600 hover:bg-amber-700 text-white h-20 text-lg font-bold font-poppins"
             >
               👤 Unregistered Entry
             </Button>
             <Button
-              onClick={() => alert("Fake pass reporting coming soon")}
+              onClick={() => window.location.href = '/checkpoint/fake-pass-report'}
               className="bg-red-600 hover:bg-red-700 text-white h-20 text-lg font-bold font-poppins"
             >
-              ⚠️ Report Fake Pass
+              🚨 Report Fake Pass
             </Button>
             <Button
               onClick={() => alert("Watchlist feature coming soon")}

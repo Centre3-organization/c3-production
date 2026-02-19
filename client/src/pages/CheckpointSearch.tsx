@@ -3,9 +3,10 @@ import { CheckpointLayout } from "@/components/CheckpointLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, ArrowLeft, CheckCircle, XCircle, Clock } from "lucide-react";
+import { AlertCircle, ArrowLeft, CheckCircle, XCircle, Clock, Camera } from "lucide-react";
 import { useLocation, useSearch } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { CameraCapture } from "@/components/CameraCapture";
 
 interface RequestDetails {
   id: number;
@@ -33,6 +34,8 @@ export function CheckpointSearch() {
   const [showDenialForm, setShowDenialForm] = useState(false);
   const [denialReason, setDenialReason] = useState("");
   const [denialComments, setDenialComments] = useState("");
+  const [showCamera, setShowCamera] = useState(false);
+  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const logTransactionMutation = trpc.checkpoint.logTransaction.useMutation();
   const submitDenialMutation = trpc.checkpoint.submitDenialReport.useMutation();
 
@@ -59,6 +62,11 @@ export function CheckpointSearch() {
 
   const isExpired = new Date(request.validUntil) < new Date();
   const isNotYetValid = new Date(request.validFrom) > new Date();
+
+  const handleCapturePhoto = (photoDataUrl: string) => {
+    setCapturedPhoto(photoDataUrl);
+    setShowCamera(false);
+  };
 
   const handleAllow = async () => {
     try {
@@ -157,25 +165,55 @@ export function CheckpointSearch() {
           </AlertDescription>
         </Alert>
 
-        {/* Visitor Information */}
+        {/* Visitor Information with Photo */}
         <Card className="bg-white border-2 border-purple-200 p-6 mb-6 shadow-md">
           <h2 className="text-2xl font-bold text-slate-900 mb-4 font-poppins">Visitor Information</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <div className="text-sm text-slate-600 font-poppins">Name</div>
-              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorName}</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <div className="text-sm text-slate-600 font-poppins">Name</div>
+                  <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorName}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-slate-600 font-poppins">ID Number</div>
+                  <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorIdNumber}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-slate-600 font-poppins">ID Type</div>
+                  <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorIdType}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-slate-600 font-poppins">Company</div>
+                  <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorCompany}</div>
+                </div>
+              </div>
             </div>
             <div>
-              <div className="text-sm text-slate-600 font-poppins">ID Number</div>
-              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorIdNumber}</div>
-            </div>
-            <div>
-              <div className="text-sm text-slate-600 font-poppins">ID Type</div>
-              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorIdType}</div>
-            </div>
-            <div>
-              <div className="text-sm text-slate-600 font-poppins">Company</div>
-              <div className="text-lg font-semibold text-slate-900 font-poppins">{request.visitorCompany}</div>
+              {capturedPhoto ? (
+                <div className="flex flex-col gap-2">
+                  <img
+                    src={capturedPhoto}
+                    alt="Captured visitor photo"
+                    className="w-full h-40 object-cover rounded-lg border-2 border-green-300"
+                  />
+                  <Button
+                    onClick={() => setShowCamera(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm font-poppins flex items-center justify-center gap-1"
+                  >
+                    <Camera className="w-4 h-4" />
+                    Retake Photo
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  onClick={() => setShowCamera(true)}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold h-40 flex flex-col items-center justify-center gap-2 font-poppins"
+                >
+                  <Camera className="w-8 h-8" />
+                  <span>Capture Photo</span>
+                </Button>
+              )}
             </div>
           </div>
         </Card>
@@ -300,6 +338,15 @@ export function CheckpointSearch() {
           </Card>
         )}
       </div>
+
+      {/* Camera Modal */}
+      {showCamera && (
+        <CameraCapture
+          onCapture={handleCapturePhoto}
+          onClose={() => setShowCamera(false)}
+          title="Capture Visitor Photo"
+        />
+      )}
     </CheckpointLayout>
   );
 }
