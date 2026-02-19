@@ -2427,9 +2427,13 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Update checkpoint UI background to white
 - [x] Apply proper branding colors to checkpoint interface
 - [x] Integrate guard auto-routing in main login (detect guard role → redirect to /checkpoint)
-- [ ] Fix Drizzle ORM type resolution in checkpoint router
-- [ ] Add WebRTC camera integration for photo capture
-- [ ] Implement Claude API face matching
+- [x] Create camera service with toggle on/off in settings
+- [x] Build WebRTC camera component for photo capture
+- [x] Create Claude API face matching service with toggle
+- [ ] Implement face matching in verification flow
+- [ ] Build unregistered entry form with photo evidence
+- [ ] Build fake pass report form with photo evidence
+- [x] Create checkpoint settings panel for API keys and toggles
 - [ ] Add document validation (ID/Iqama/Passport)
 - [ ] Add license plate recognition
 - [ ] Add anomaly detection

@@ -5,6 +5,7 @@ import { useLocation } from "wouter";
 interface CheckpointLayoutProps {
   children: React.ReactNode;
   title?: string;
+  showSettings?: boolean;
 }
 
 export function CheckpointLayout({ children, title }: CheckpointLayoutProps) {
@@ -25,11 +26,17 @@ export function CheckpointLayout({ children, title }: CheckpointLayoutProps) {
           <div className="text-2xl font-bold text-white font-poppins">🔐 CHECKPOINT</div>
           {title && <div className="text-xl text-white font-poppins opacity-90">{title}</div>}
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <div className="text-sm text-white">
             <div className="opacity-80">Guard:</div>
             <div className="font-semibold font-poppins">{user?.firstName} {user?.lastName}</div>
           </div>
+          <Button
+            onClick={() => window.location.href = '/checkpoint/settings'}
+            className="bg-white hover:bg-slate-100 text-purple-600 font-semibold font-poppins px-4 py-2"
+          >
+            ⚙️ Settings
+          </Button>
           <Button
             onClick={handleLogout}
             className="bg-white hover:bg-slate-100 text-purple-600 font-semibold font-poppins px-4 py-2"

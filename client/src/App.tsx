@@ -67,6 +67,7 @@ import { CheckpointApp } from "./pages/CheckpointApp";
 import { CheckpointLogin } from "./pages/CheckpointLogin";
 import { CheckpointHome } from "./pages/CheckpointHome";
 import { CheckpointSearch } from "./pages/CheckpointSearch";
+import { CheckpointSettings } from "./pages/CheckpointSettings";
 
 // Reports Module
 import Reports from "./modules/reports/Reports";
@@ -83,6 +84,7 @@ function Router() {
       {/* Checkpoint Routes - Separate from main app */}
       <Route path="/checkpoint/login" component={CheckpointLogin} />
       <Route path="/checkpoint/search" component={CheckpointSearch} />
+      <Route path="/checkpoint/settings" component={CheckpointSettings} />
       <Route path="/checkpoint" component={CheckpointHome} />
       <Route path="/checkpoint/*" component={CheckpointHome} />
       
