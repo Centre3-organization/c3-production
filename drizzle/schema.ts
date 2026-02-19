@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean, decimal, date, unique } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean, decimal, date, unique, index } from "drizzle-orm/mysql-core";
 
 // ============================================================================
 // EXISTING TABLES (matching current database structure)
@@ -2329,3 +2329,312 @@ export const messageLogs = mysqlTable("messageLogs", {
 });
 export type MessageLog = typeof messageLogs.$inferSelect;
 export type InsertMessageLog = typeof messageLogs.$inferInsert;
+
+
+// ============================================================================
+// CHECKPOINT INTERFACE TABLES (v2.0)
+// ============================================================================
+
+/**
+ * Checkpoints: Physical entry/exit points (gates, doors)
+ * Each checkpoint has a location, type, and configuration
+ */
+export const checkpoints = mysqlTable("checkpoints", {
+  id: int("id").autoincrement().primaryKey(),
+  siteId: int("siteId").notNull().references(() => sites.id),
+  zoneId: int("zoneId").references(() => zones.id),
+  name: varchar("name", { length: 100 }).notNull(),
+  nameAr: varchar("nameAr", { length: 100 }),
+  description: text("description"),
+  type: mysqlEnum("type", ["main_gate", "side_gate", "service_entrance", "emergency_exit", "loading_dock", "other"]).notNull(),
+  location: varchar("location", { length: 255 }),
+  
+  // Hardware configuration
+  hasCamera: boolean("hasCamera").default(false),
+  hasGateControl: boolean("hasGateControl").default(false),
+  gateControlId: varchar("gateControlId", { length: 100 }),
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Checkpoint = typeof checkpoints.$inferSelect;
+export type InsertCheckpoint = typeof checkpoints.$inferInsert;
+
+/**
+ * Checkpoint Transactions: Every entry/exit logged here
+ * Records who/what went through, when, and verification details
+ */
+export const checkpointTransactions = mysqlTable("checkpointTransactions", {
+  id: int("id").autoincrement().primaryKey(),
+  checkpointId: int("checkpointId").notNull().references(() => checkpoints.id),
+  requestId: int("requestId").references(() => requests.id),
+  
+  // Transaction type
+  transactionType: mysqlEnum("transactionType", [
+    "person_entry", "person_exit", 
+    "vehicle_entry", "vehicle_exit", 
+    "asset_in", "asset_out"
+  ]).notNull(),
+  
+  // Decision
+  decision: mysqlEnum("decision", ["allowed", "denied", "held"]).notNull(),
+  
+  // Person/Vehicle info
+  personName: varchar("personName", { length: 255 }),
+  idNumber: varchar("idNumber", { length: 50 }),
+  idType: mysqlEnum("idType", ["national_id", "iqama", "passport", "other"]),
+  vehiclePlate: varchar("vehiclePlate", { length: 20 }),
+  
+  // Verification details
+  idVerified: boolean("idVerified").default(false),
+  photoMatched: boolean("photoMatched").default(false),
+  
+  // AI verification results (JSON stored as text)
+  aiResults: json("aiResults"),
+  
+  // Guard notes
+  notes: text("notes"),
+  
+  // Guard who processed
+  guardId: int("guardId").notNull().references(() => users.id),
+  
+  // Metadata
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CheckpointTransaction = typeof checkpointTransactions.$inferSelect;
+export type InsertCheckpointTransaction = typeof checkpointTransactions.$inferInsert;
+
+/**
+ * Denial Reports: Mandatory documentation when entry is denied
+ * Captures reason, evidence, and escalation details
+ */
+export const denialReports = mysqlTable("denialReports", {
+  id: int("id").autoincrement().primaryKey(),
+  transactionId: int("transactionId").notNull().references(() => checkpointTransactions.id),
+  requestId: int("requestId").references(() => requests.id),
+  
+  // Denial details
+  denialReason: mysqlEnum("denialReason", [
+    "request_not_found", "request_expired", "request_not_valid_yet", "request_cancelled",
+    "wrong_gate", "wrong_date", "wrong_time",
+    "fake_pass", "tampered_pass", "screenshot_pass", "shared_pass",
+    "escort_not_present", "host_declined", "safety_violation", "no_ppe",
+    "vehicle_mismatch", "driver_mismatch", "cargo_issue",
+    "extra_items", "missing_approval", "serial_mismatch",
+    "supervisor_order", "system_error", "other"
+  ]).notNull(),
+  
+  denialCategory: mysqlEnum("denialCategory", [
+    "document", "person", "request", "pass", "procedural", "vehicle", "asset", "other"
+  ]).notNull(),
+  
+  // Mandatory comments
+  comments: text("comments").notNull(),
+  
+  // Evidence
+  photos: json("photos"),  // Array of photo URLs
+  
+  // AI data
+  aiFaceMatchScore: int("aiFaceMatchScore"),
+  aiDocumentValidation: json("aiDocumentValidation"),
+  aiAnomaly: json("aiAnomaly"),
+  
+  // Escalation
+  supervisorNotified: boolean("supervisorNotified").default(false),
+  addToWatchlist: boolean("addToWatchlist").default(false),
+  recommendBlacklist: boolean("recommendBlacklist").default(false),
+  
+  // Guard who denied
+  guardId: int("guardId").notNull().references(() => users.id),
+  checkpointId: int("checkpointId").notNull().references(() => checkpoints.id),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  
+  // Indexes for quick lookup
+}, (table) => ({
+  idxTransaction: index("idx_denial_transaction").on(table.transactionId),
+  idxReason: index("idx_denial_reason").on(table.denialReason),
+  idxCheckpoint: index("idx_denial_checkpoint").on(table.checkpointId),
+  idxTime: index("idx_denial_time").on(table.createdAt),
+}));
+export type DenialReport = typeof denialReports.$inferSelect;
+export type InsertDenialReport = typeof denialReports.$inferInsert;
+
+/**
+ * Unregistered Entry Attempts: Log walk-ins, fake passes, suspicious attempts
+ * When someone tries to enter without a valid request in the system
+ */
+export const unregisteredEntryAttempts = mysqlTable("unregisteredEntryAttempts", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Person details (all optional as may not be provided)
+  personName: varchar("personName", { length: 255 }),
+  idNumber: varchar("idNumber", { length: 50 }),
+  idType: mysqlEnum("idType", ["national_id", "iqama", "passport", "other"]),
+  company: varchar("company", { length: 255 }),
+  phone: varchar("phone", { length: 20 }),
+  
+  // Stated purpose
+  statedHost: varchar("statedHost", { length: 255 }),
+  statedPurpose: text("statedPurpose"),
+  expectedBy: varchar("expectedBy", { length: 255 }),
+  
+  // Vehicle (if applicable)
+  vehiclePlate: varchar("vehiclePlate", { length: 20 }),
+  vehicleType: varchar("vehicleType", { length: 50 }),
+  vehicleColor: varchar("vehicleColor", { length: 30 }),
+  
+  // Attempt classification
+  attemptType: mysqlEnum("attemptType", [
+    "walk_in", "claims_appointment", "wrong_date_time", "fake_pass",
+    "tailgating", "social_engineering", "repeat_attempt", "other_suspicious"
+  ]).notNull(),
+  
+  // Documentation
+  guardNotes: text("guardNotes").notNull(),
+  photos: json("photos"),  // Array of photo URLs
+  
+  // Outcome
+  outcome: mysqlEnum("outcome", [
+    "turned_away", "directed_elsewhere", "escalated_supervisor", "created_walkin", "security_called"
+  ]).notNull(),
+  
+  // Flags
+  flagForReview: boolean("flagForReview").default(false),
+  addToWatchlist: boolean("addToWatchlist").default(false),
+  isRepeatAttempt: boolean("isRepeatAttempt").default(false),
+  
+  // Guard who logged
+  guardId: int("guardId").notNull().references(() => users.id),
+  checkpointId: int("checkpointId").notNull().references(() => checkpoints.id),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  
+}, (table) => ({
+  idxCheckpoint: index("idx_unreg_checkpoint").on(table.checkpointId),
+  idxType: index("idx_unreg_type").on(table.attemptType),
+  idxTime: index("idx_unreg_time").on(table.createdAt),
+  idxPerson: index("idx_unreg_person").on(table.personName, table.idNumber),
+}));
+export type UnregisteredEntryAttempt = typeof unregisteredEntryAttempts.$inferSelect;
+export type InsertUnregisteredEntryAttempt = typeof unregisteredEntryAttempts.$inferInsert;
+
+/**
+ * Fake Pass Reports: Security incident documentation
+ * When a fake, forged, or tampered pass is detected
+ */
+export const fakePassReports = mysqlTable("fakePassReports", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Detection method
+  detectionMethod: mysqlEnum("detectionMethod", [
+    "qr_crypto_failed", "qr_request_not_exist", "photocopy_detected",
+    "physical_tampering", "details_mismatch", "wrong_format", "other"
+  ]).notNull(),
+  
+  // Pass details
+  qrContent: text("qrContent"),
+  passType: mysqlEnum("passType", ["printed", "phone_screen", "laminated_card", "other"]),
+  physicalCondition: text("physicalCondition"),
+  
+  // Person presenting fake pass
+  personName: varchar("personName", { length: 255 }),
+  idShown: boolean("idShown").default(false),
+  idNumber: varchar("idNumber", { length: 50 }),
+  claimedCompany: varchar("claimedCompany", { length: 255 }),
+  claimedHost: varchar("claimedHost", { length: 255 }),
+  
+  // Behavior when confronted
+  behaviorWhenConfronted: mysqlEnum("behaviorWhenConfronted", [
+    "cooperative", "confused", "defensive", "fled", "aggressive"
+  ]),
+  
+  // Evidence (REQUIRED)
+  photoOfPass: varchar("photoOfPass", { length: 500 }).notNull(),
+  photoOfPerson: varchar("photoOfPerson", { length: 500 }),
+  photoOfVehicle: varchar("photoOfVehicle", { length: 500 }),
+  
+  // Detailed notes (minimum 50 chars)
+  guardNotes: text("guardNotes").notNull(),
+  
+  // Actions taken
+  supervisorNotified: boolean("supervisorNotified").default(true),
+  securityDispatched: boolean("securityDispatched").default(false),
+  policeNotified: boolean("policeNotified").default(false),
+  personAddedToWatchlist: boolean("personAddedToWatchlist").default(false),
+  vehicleAddedToWatchlist: boolean("vehicleAddedToWatchlist").default(false),
+  
+  // Vehicle (if applicable)
+  vehiclePlate: varchar("vehiclePlate", { length: 20 }),
+  vehicleDescription: text("vehicleDescription"),
+  
+  // Guard who reported
+  guardId: int("guardId").notNull().references(() => users.id),
+  checkpointId: int("checkpointId").notNull().references(() => checkpoints.id),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  
+}, (table) => ({
+  idxCheckpoint: index("idx_fake_checkpoint").on(table.checkpointId),
+  idxMethod: index("idx_fake_method").on(table.detectionMethod),
+  idxTime: index("idx_fake_time").on(table.createdAt),
+}));
+export type FakePassReport = typeof fakePassReports.$inferSelect;
+export type InsertFakePassReport = typeof fakePassReports.$inferInsert;
+
+/**
+ * Watchlist: Person/Vehicle/Company monitoring
+ * Tracks individuals and vehicles flagged for security concerns
+ */
+export const watchlist = mysqlTable("watchlist", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Entry type
+  entryType: mysqlEnum("entryType", ["person", "vehicle", "company"]).notNull(),
+  
+  // Person details (if person)
+  personName: varchar("personName", { length: 255 }),
+  idNumber: varchar("idNumber", { length: 50 }),
+  idType: mysqlEnum("idType", ["national_id", "iqama", "passport", "other"]),
+  
+  // Vehicle details (if vehicle)
+  vehiclePlate: varchar("vehiclePlate", { length: 20 }),
+  vehicleType: varchar("vehicleType", { length: 50 }),
+  vehicleColor: varchar("vehicleColor", { length: 30 }),
+  
+  // Company (if company)
+  companyName: varchar("companyName", { length: 255 }),
+  
+  // Watchlist info
+  reason: text("reason").notNull(),
+  severity: mysqlEnum("severity", ["low", "medium", "high", "critical"]).notNull(),
+  actionRequired: mysqlEnum("actionRequired", ["monitor", "deny_entry", "alert_supervisor", "call_security"]).notNull(),
+  
+  // Source
+  sourceType: mysqlEnum("sourceType", [
+    "denial_report", "unregistered_attempt", "fake_pass", "security_incident", "manual_entry"
+  ]).notNull(),
+  sourceId: int("sourceId"),  // Reference to source record
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  expiresAt: timestamp("expiresAt"),  // NULL = never expires
+  
+  // Metadata
+  addedBy: int("addedBy").notNull().references(() => users.id),
+  approvedBy: int("approvedBy").references(() => users.id),  // Supervisor approval
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  
+}, (table) => ({
+  idxType: index("idx_watchlist_type").on(table.entryType),
+  idxPerson: index("idx_watchlist_person").on(table.personName, table.idNumber),
+  idxVehicle: index("idx_watchlist_vehicle").on(table.vehiclePlate),
+  idxActive: index("idx_watchlist_active").on(table.isActive),
+}));
+export type WatchlistEntry = typeof watchlist.$inferSelect;
+export type InsertWatchlistEntry = typeof watchlist.$inferInsert;

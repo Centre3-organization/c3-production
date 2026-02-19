@@ -28,6 +28,9 @@ import { dashboardRouter } from "./modules/dashboard/dashboard.router";
 // Security Module
 import { securityAlertsRouter } from "./modules/security/alerts.router";
 
+// Checkpoint Module
+import { checkpointRouter } from "./modules/checkpoint/checkpoint.router";
+
 // Groups Module
 import { groupsRouter } from "./modules/groups/groups.router";
 
@@ -199,6 +202,9 @@ export const appRouter = router({
   
   // Security Module
   securityAlerts: securityAlertsRouter,
+  
+  // Checkpoint Module
+  checkpoint: checkpointRouter,
   
   // Groups Module
   groups: groupsRouter,

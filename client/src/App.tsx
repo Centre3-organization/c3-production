@@ -62,6 +62,12 @@ import CommunicationsIntegration from "./modules/settings/CommunicationsIntegrat
 // McmDashboard removed - stats moved to CardDirectory
 import CardDirectory from "./modules/mcm/CardDirectory";
 
+// Checkpoint Module
+import { CheckpointApp } from "./pages/CheckpointApp";
+import { CheckpointLogin } from "./pages/CheckpointLogin";
+import { CheckpointHome } from "./pages/CheckpointHome";
+import { CheckpointSearch } from "./pages/CheckpointSearch";
+
 // Reports Module
 import Reports from "./modules/reports/Reports";
 import NewCardRequest from "./modules/mcm/NewCardRequest";
@@ -73,6 +79,12 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/access-denied" component={AccessDenied} />
       <Route path="/404" component={NotFound} />
+      
+      {/* Checkpoint Routes - Separate from main app */}
+      <Route path="/checkpoint/login" component={CheckpointLogin} />
+      <Route path="/checkpoint/search" component={CheckpointSearch} />
+      <Route path="/checkpoint" component={CheckpointHome} />
+      <Route path="/checkpoint/*" component={CheckpointHome} />
       
       {/* Protected Routes - Dashboard */}
       <Route path="/">

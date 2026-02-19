@@ -2273,3 +2273,151 @@ Create a unified data source system that can pull options from anywhere in the p
 - [ ] Clean up sql tag usage in connection.ts (infra/db)
 - [ ] Verify TypeScript compilation after all changes
 - [ ] Run all tests to confirm no regressions
+
+
+## Security Checkpoint Interface v2.0 (Feb 19, 2026)
+
+### Phase 1: Database Schema & API
+- [ ] Create checkpoint_transactions table (person/vehicle/asset entry/exit logging)
+- [ ] Create denial_reports table (mandatory denial documentation)
+- [ ] Create unregistered_entry_attempts table (walk-in/fake pass logging)
+- [ ] Create fake_pass_reports table (fraudulent pass detection)
+- [ ] Create watchlist table (person/vehicle/company monitoring)
+- [ ] Create checkpoint router with search, transaction, denial, and watchlist endpoints
+- [ ] Implement request search by QR code, request number, ID number, license plate
+- [ ] Implement transaction logging (allow/deny with verification data)
+- [ ] Implement denial report creation with mandatory fields
+- [ ] Implement unregistered entry logging
+- [ ] Implement fake pass report creation
+- [ ] Implement watchlist checking and management
+
+### Phase 2: Core Checkpoint UI
+- [ ] Create separate checkpoint app entry point (distinct from admin)
+- [ ] Build checkpoint home/dashboard with recent activity
+- [ ] Implement scan/search interface with QR code input
+- [ ] Build request details display card (photo, name, ID, validity, zones, host, instructions)
+- [ ] Implement status badge (APPROVED, PENDING, EXPIRED, etc.)
+- [ ] Create watchlist alert component
+- [ ] Build allow/deny decision buttons
+- [ ] Implement denial form (reason dropdown, mandatory comments, photo upload, supervisor flag)
+- [ ] Implement unregistered entry form (person details, stated purpose, vehicle info, attempt type, guard notes, photo capture)
+- [ ] Implement fake pass report form (detection method, pass details, person info, behavior, evidence photos)
+- [ ] Add visitor time extension feature (up to 2 hours, guard-initiated)
+
+### Phase 3: AI Integration
+- [ ] Implement face matching service using Claude Vision API
+- [ ] Implement document validation service (ID/Iqama/Passport extraction and validation)
+- [ ] Implement license plate recognition service (ALPR without hardware)
+- [ ] Implement QR code validation (cryptographic signature + visual tampering detection)
+- [ ] Implement anomaly detection (unusual patterns, repeat attempts, time-based anomalies)
+- [ ] Create AI decision aid component (consolidated verification summary with recommendation)
+- [ ] Build AI verification panel showing face match score, document validity, anomaly alerts
+- [ ] Implement AI override capability with logging
+
+### Phase 4: Watchlist & Security Features
+- [ ] Implement watchlist checking on request search
+- [ ] Auto-add to watchlist from denial/unregistered/fake pass reports
+- [ ] Implement repeat attempt detection
+- [ ] Create watchlist management UI (view, edit, expire, delete entries)
+- [ ] Implement supervisor notification triggers
+- [ ] Add blacklist recommendation feature
+- [ ] Create incident escalation workflow
+
+### Phase 5: Asset Management
+- [ ] Implement asset in/out verification flow
+- [ ] Build asset item list with serial number scanning
+- [ ] Implement discrepancy detection (count mismatch, serial mismatch)
+- [ ] Create partial allow flow (some items allowed, others denied)
+- [ ] Implement photo capture requirement for high-value items
+- [ ] Build asset verification checklist
+
+### Phase 6: Testing & Polish
+- [ ] Write vitest tests for checkpoint router endpoints
+- [ ] Write vitest tests for AI services
+- [ ] Write vitest tests for watchlist logic
+- [ ] Test person entry/exit flow end-to-end
+- [ ] Test vehicle entry/exit flow end-to-end
+- [ ] Test asset in/out flow end-to-end
+- [ ] Test denial reporting flow
+- [ ] Test unregistered entry logging
+- [ ] Test fake pass detection
+- [ ] Test AI verification accuracy
+- [ ] Optimize mobile/tablet UI for checkpoint terminals
+- [ ] Test offline mode capability
+- [ ] Performance testing with high transaction volume
+
+### Phase 7: Integration & Deployment
+- [ ] Integrate checkpoint module with existing request system
+- [ ] Wire security alerts to checkpoint notifications
+- [ ] Create checkpoint terminal configuration UI
+- [ ] Implement gate control integration (stub or real hardware)
+- [ ] Create guard training documentation
+- [ ] Create admin review dashboard for checkpoint activities
+- [ ] Deploy checkpoint module to staging
+- [ ] Create go-live checklist
+- [ ] Deploy to production
+
+
+## Security Checkpoint Interface v2.0 (Phase 3 - Production)
+
+### API Integration
+- [x] Rebuild checkpoint router with proper Drizzle ORM integration
+- [x] Wire up search endpoints (QR code, request number, ID number, license plate)
+- [x] Implement transaction logging endpoints
+- [x] Implement denial report submission endpoints
+- [x] Implement watchlist check endpoints
+- [x] Add proper error handling and validation
+- [ ] Create unit tests for checkpoint router
+
+### Camera Integration
+- [ ] Add browser WebRTC camera component
+- [ ] Implement photo capture for visitor verification
+- [ ] Implement photo capture for denial evidence
+- [ ] Add camera permission handling
+- [ ] Add photo preview and retake functionality
+- [ ] Implement photo upload to S3 storage
+
+### AI Services Integration
+- [ ] Integrate Claude API for face matching
+- [ ] Implement document validation (ID/Iqama/Passport)
+- [ ] Implement license plate recognition
+- [ ] Add anomaly detection logic
+- [ ] Create AI service error handling
+- [ ] Add confidence scoring for matches
+
+### Offline Mode
+- [ ] Implement local IndexedDB caching
+- [ ] Add sync queue for offline transactions
+- [ ] Implement background sync when reconnected
+- [ ] Add offline status indicator
+- [ ] Create conflict resolution logic
+
+### Hardware Integration
+- [ ] Create gate control API stubs
+- [ ] Create QR scanner integration stubs
+- [ ] Add hardware error handling
+- [ ] Create hardware mock for testing
+
+### Additional Features
+- [ ] Implement unregistered entry form
+- [ ] Implement fake pass reporting form
+- [ ] Implement watchlist management UI
+- [ ] Add checkpoint statistics dashboard
+- [ ] Create incident report export functionality
+- [ ] Add supervisor escalation workflow
+
+### Testing & QA
+- [ ] Test complete allow/deny flow
+- [ ] Test denial reporting with mandatory fields
+- [ ] Test watchlist alerts
+- [ ] Test camera integration
+- [ ] Test offline mode
+- [ ] Performance testing with 100+ requests
+- [ ] Security testing for sensitive data
+
+### Documentation
+- [ ] Create checkpoint user guide
+- [ ] Document API endpoints
+- [ ] Create troubleshooting guide
+- [ ] Document AI service integration
+- [ ] Create deployment guide
