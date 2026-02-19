@@ -70,6 +70,8 @@ import { CheckpointSearch } from "./pages/CheckpointSearch";
 import { CheckpointSettings } from "./pages/CheckpointSettings";
 import { UnregisteredEntryForm } from "./pages/UnregisteredEntryForm";
 import { FakePassReportForm } from "./pages/FakePassReportForm";
+import { IntegrationsDashboard } from "./pages/IntegrationsDashboard";
+import { WatchlistDashboard } from "./pages/WatchlistDashboard";
 
 // Reports Module
 import Reports from "./modules/reports/Reports";
@@ -227,6 +229,16 @@ function Router() {
       <Route path="/integration-hub/communications/:tab">
         <Layout>
           <CommunicationsIntegration />
+        </Layout>
+      </Route>
+      <Route path="/checkpoint-integrations">
+        <Layout>
+          <IntegrationsDashboard />
+        </Layout>
+      </Route>
+      <Route path="/checkpoint-watchlist">
+        <Layout>
+          <WatchlistDashboard />
         </Layout>
       </Route>
       

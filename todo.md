@@ -2434,8 +2434,12 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Build unregistered entry form with photo evidence
 - [x] Build fake pass report form with photo evidence
 - [x] Create checkpoint settings panel for API keys and toggles
+- [x] Create Admin Integrations Dashboard (Camera, AI, Notifications, Watchlist)
+- [x] Build Watchlist Management Dashboard (search, filter, view, edit, delete)
 - [ ] Add document validation (ID/Iqama/Passport)
 - [ ] Add license plate recognition
 - [ ] Add anomaly detection
+- [ ] Build backend API endpoints for form submissions
+- [ ] Implement supervisor notification system
 - [ ] Test end-to-end flows
 - [ ] Save final checkpoint for publishing
