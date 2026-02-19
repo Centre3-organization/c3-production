@@ -61,8 +61,8 @@ type RequestType = {
   categoryId: number;
   code: string;
   name: string;
-  nameAr: string;
-  shortCode: string;
+  nameAr: string | null;
+  shortCode: string | null;
   description: string | null;
   isExclusive: boolean;
   maxDurationDays: number;
@@ -75,7 +75,7 @@ type FormSection = {
   requestTypeId: number;
   code: string;
   name: string;
-  nameAr: string;
+  nameAr: string | null;
   icon: string | null;
   displayOrder: number;
   isRepeatable: boolean;
@@ -89,7 +89,7 @@ type FormField = {
   sectionId: number;
   code: string;
   name: string;
-  nameAr: string;
+  nameAr: string | null;
   fieldType: string;
   isRequired: boolean;
   displayOrder: number;
@@ -827,7 +827,7 @@ export default function RequestTypeConfig() {
               {/* Types List */}
               {selectedCategory && !selectedType && (
                 <div className="space-y-2">
-                  {(types as RequestType[] | undefined)?.map((type) => (
+                  {(types as unknown as RequestType[] | undefined)?.map((type) => (
                     <div
                       key={type.id}
                       className="flex items-center justify-between p-4 border rounded-lg hover:bg-[#F5F5F5]/50 cursor-pointer transition-colors"
@@ -864,7 +864,7 @@ export default function RequestTypeConfig() {
                       </div>
                     </div>
                   ))}
-                  {(!types || (types as RequestType[]).length === 0) && (
+                  {(!types || (types as unknown as RequestType[]).length === 0) && (
                     <div className="text-center py-8 text-[#6B6B6B]">
                       No types found. Create your first request type.
                     </div>
@@ -966,7 +966,7 @@ export default function RequestTypeConfig() {
               {selectedCategory && (
                 <div className="flex justify-between">
                   <span className="text-[#6B6B6B]">Types</span>
-                  <span className="font-medium">{(types as RequestType[])?.length || 0}</span>
+                  <span className="font-medium">{(types as unknown as RequestType[])?.length || 0}</span>
                 </div>
               )}
               {selectedType && (

@@ -2258,3 +2258,18 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Update messaging service resolveRecipients to handle group recipients (queries userGroupMembership table)
 - [x] Update trigger rule UI to support group selection as recipient
 - [ ] Wire security alert events into the security operations module (pending — requires security module event hooks)
+
+## Database Access Consistency Cleanup (Feb 19, 2026)
+- [x] Refactor requestConfig.router.ts: replace direct mysql2/promise with Drizzle ORM (1,353 lines complete)
+- [ ] Refactor alerts.router.ts: replace all db.execute(sql`...`) with Drizzle query builder (in progress)
+- [ ] Clean up sql tag usage in requests.router.ts where Drizzle builder can replace it
+- [ ] Clean up sql tag usage in workflow-engine.ts where Drizzle builder can replace it
+- [ ] Clean up sql tag usage in delegations.router.ts
+- [ ] Clean up sql tag usage in enterprise-rbac.service.ts
+- [ ] Clean up sql tag usage in dashboard.router.ts
+- [ ] Clean up sql tag usage in messaging.router.ts
+- [ ] Clean up sql tag usage in mcm.router.ts
+- [ ] Clean up sql tag usage in comments.router.ts
+- [ ] Clean up sql tag usage in connection.ts (infra/db)
+- [ ] Verify TypeScript compilation after all changes
+- [ ] Run all tests to confirm no regressions

@@ -59,7 +59,7 @@ export function FormPreview({ open, onOpenChange, requestTypeId, typeName }: For
   const isRTL = i18n.language === "ar";
   const [activeTab, setActiveTab] = useState<string>("");
 
-  const { data: formDefinition, isLoading } = trpc.requestConfig.formDefinition.getFormDefinition.useQuery(
+  const { data: formDefinition, isLoading } = trpc.requestConfig.formDefinition.getForTypes.useQuery(
     { typeIds: [requestTypeId] },
     { enabled: open && !!requestTypeId }
   );

@@ -25,7 +25,7 @@ const REFERENCE_SOURCES = [
  */
 export function FormDataDisplay({ formData, selectedTypeIds, categoryId, compact = false }: FormDataDisplayProps) {
   // Fetch form definition to get field labels and sections
-  const { data: formDefinition, isLoading } = trpc.requestConfig.formDefinition.getFormDefinition.useQuery(
+  const { data: formDefinition, isLoading } = trpc.requestConfig.formDefinition.getForTypes.useQuery(
     { typeIds: selectedTypeIds || [] },
     { enabled: !!selectedTypeIds && selectedTypeIds.length > 0 }
   );

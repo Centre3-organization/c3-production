@@ -1,13 +1,29 @@
 import { z } from "zod";
 import { router, protectedProcedure, adminProcedure, publicProcedure } from "../../_core/trpc";
 import { TRPCError } from "@trpc/server";
-import mysql from "mysql2/promise";
-import { ENV } from "../../_core/env";
-
-// Helper to get database connection
-async function getConnection() {
-  return mysql.createConnection(ENV.databaseUrl);
-}
+import { getDb } from "../../infra/db/connection";
+import { eq, and, asc, desc, like, or, inArray, sql, count } from "drizzle-orm";
+import {
+  requestCategories,
+  requestTypes,
+  formSections,
+  formFields,
+  fieldOptions,
+  countries,
+  regions,
+  cities,
+  sites,
+  zones,
+  areas,
+  departments,
+  groups,
+  users,
+  userGroupMembership,
+  groupAccessPolicies,
+  approvalRoles,
+  cardCompanies,
+  materialTypes,
+} from "../../../drizzle/schema";
 
 // ============================================================================
 // REQUEST CATEGORIES ROUTER
@@ -22,65 +38,69 @@ export const requestCategoriesRouter = router({
       }).optional()
     )
     .query(async ({ ctx, input }) => {
-      const connection = await getConnection();
-      try {
-        let query = `
-          SELECT 
-            rc.*,
-            (SELECT COUNT(*) FROM requestTypes rt WHERE rt.categoryId = rc.id AND rt.isActive = true) as typeCount
-          FROM requestCategories rc
-          WHERE 1=1
-        `;
-        
-        if (!input?.includeInactive) {
-          query += ` AND rc.isActive = true`;
-        }
-        
-        query += ` ORDER BY rc.displayOrder ASC`;
-        
-        const [categories] = await connection.execute(query);
-        
-        // Get types for each category
-        for (const cat of categories as any[]) {
-          const [types] = await connection.execute(`
-            SELECT id, code, name, nameAr, shortCode, description, isExclusive, maxDurationDays, displayOrder
-            FROM requestTypes 
-            WHERE categoryId = ? AND isActive = true
-            ORDER BY displayOrder ASC
-          `, [cat.id]);
-          cat.types = types;
-        }
-        
-        return categories;
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const conditions = [];
+      if (!input?.includeInactive) {
+        conditions.push(eq(requestCategories.isActive, true));
       }
+
+      const cats = await db
+        .select()
+        .from(requestCategories)
+        .where(conditions.length > 0 ? and(...conditions) : undefined)
+        .orderBy(asc(requestCategories.displayOrder));
+
+      // Get types for each category
+      const result = [];
+      for (const cat of cats) {
+        const types = await db
+          .select({
+            id: requestTypes.id,
+            code: requestTypes.code,
+            name: requestTypes.name,
+            nameAr: requestTypes.nameAr,
+            shortCode: requestTypes.shortCode,
+            description: requestTypes.description,
+            isExclusive: requestTypes.isExclusive,
+            maxDurationDays: requestTypes.maxDurationDays,
+            displayOrder: requestTypes.displayOrder,
+          })
+          .from(requestTypes)
+          .where(and(eq(requestTypes.categoryId, cat.id), eq(requestTypes.isActive, true)))
+          .orderBy(asc(requestTypes.displayOrder));
+
+        const typeCount = types.length;
+        result.push({ ...cat, types, typeCount });
+      }
+
+      return result;
     }),
 
   // Get category by ID with full details
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const [[category]] = await connection.execute(`
-          SELECT * FROM requestCategories WHERE id = ?
-        `, [input.id]) as any;
-        
-        if (!category) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Category not found" });
-        }
-        
-        // Get types
-        const [types] = await connection.execute(`
-          SELECT * FROM requestTypes WHERE categoryId = ? ORDER BY displayOrder ASC
-        `, [input.id]);
-        category.types = types;
-        
-        return category;
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const [category] = await db
+        .select()
+        .from(requestCategories)
+        .where(eq(requestCategories.id, input.id));
+
+      if (!category) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Category not found" });
       }
+
+      const types = await db
+        .select()
+        .from(requestTypes)
+        .where(eq(requestTypes.categoryId, input.id))
+        .orderBy(asc(requestTypes.displayOrder));
+
+      return { ...category, types };
     }),
 
   // Create category (admin only)
@@ -104,36 +124,27 @@ export const requestCategoriesRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const [result] = await connection.execute(`
-          INSERT INTO requestCategories (
-            code, name, nameAr, description, icon, displayOrder,
-            requiresInternalOnly, allowMultipleTypes, typeCombinationRules,
-            hasRequestorSection, hasLocationSection, hasScheduleSection,
-            hasVisitorSection, hasAttachmentSection
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          input.code,
-          input.name,
-          input.nameAr || null,
-          input.description || null,
-          input.icon || null,
-          input.displayOrder || 0,
-          input.requiresInternalOnly || false,
-          input.allowMultipleTypes || false,
-          input.typeCombinationRules ? JSON.stringify(input.typeCombinationRules) : null,
-          input.hasRequestorSection ?? true,
-          input.hasLocationSection ?? true,
-          input.hasScheduleSection ?? true,
-          input.hasVisitorSection ?? true,
-          input.hasAttachmentSection ?? true,
-        ]);
-        
-        return { id: (result as any).insertId, success: true };
-      } finally {
-        await connection.end();
-      }
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const [result] = await db.insert(requestCategories).values({
+        code: input.code,
+        name: input.name,
+        nameAr: input.nameAr ?? null,
+        description: input.description ?? null,
+        icon: input.icon ?? null,
+        displayOrder: input.displayOrder ?? 0,
+        requiresInternalOnly: input.requiresInternalOnly ?? false,
+        allowMultipleTypes: input.allowMultipleTypes ?? false,
+        typeCombinationRules: input.typeCombinationRules ?? null,
+        hasRequestorSection: input.hasRequestorSection ?? true,
+        hasLocationSection: input.hasLocationSection ?? true,
+        hasScheduleSection: input.hasScheduleSection ?? true,
+        hasVisitorSection: input.hasVisitorSection ?? true,
+        hasAttachmentSection: input.hasAttachmentSection ?? true,
+      });
+
+      return { id: result.insertId, success: true };
     }),
 
   // Update category (admin only)
@@ -153,53 +164,33 @@ export const requestCategoriesRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const { id, ...data } = input;
-        const updates: string[] = [];
-        const values: any[] = [];
-        
-        Object.entries(data).forEach(([key, value]) => {
-          if (value !== undefined) {
-            if (key === 'typeCombinationRules') {
-              updates.push(`${key} = ?`);
-              values.push(JSON.stringify(value));
-            } else {
-              updates.push(`${key} = ?`);
-              values.push(value);
-            }
-          }
-        });
-        
-        if (updates.length > 0) {
-          values.push(id);
-          await connection.execute(
-            `UPDATE requestCategories SET ${updates.join(', ')} WHERE id = ?`,
-            values
-          );
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const { id, ...data } = input;
+      const updateData: Record<string, any> = {};
+      for (const [key, value] of Object.entries(data)) {
+        if (value !== undefined) {
+          updateData[key] = value;
         }
-        
-        return { success: true };
-      } finally {
-        await connection.end();
       }
+
+      if (Object.keys(updateData).length > 0) {
+        await db.update(requestCategories).set(updateData).where(eq(requestCategories.id, id));
+      }
+
+      return { success: true };
     }),
 
-  // Delete category (admin only)
+  // Delete category (admin only - soft delete)
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        // Soft delete by setting isActive to false
-        await connection.execute(
-          `UPDATE requestCategories SET isActive = false WHERE id = ?`,
-          [input.id]
-        );
-        return { success: true };
-      } finally {
-        await connection.end();
-      }
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      await db.update(requestCategories).set({ isActive: false }).where(eq(requestCategories.id, input.id));
+      return { success: true };
     }),
 });
 
@@ -217,55 +208,83 @@ export const requestTypesRouter = router({
       }).optional()
     )
     .query(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        let query = `
-          SELECT rt.*, rc.name as categoryName, rc.code as categoryCode
-          FROM requestTypes rt
-          LEFT JOIN requestCategories rc ON rt.categoryId = rc.id
-          WHERE 1=1
-        `;
-        const params: any[] = [];
-        
-        if (input?.categoryId) {
-          query += ` AND rt.categoryId = ?`;
-          params.push(input.categoryId);
-        }
-        
-        if (!input?.includeInactive) {
-          query += ` AND rt.isActive = true`;
-        }
-        
-        query += ` ORDER BY rt.displayOrder ASC`;
-        
-        const [types] = await connection.execute(query, params);
-        return types;
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const conditions = [];
+      if (input?.categoryId) {
+        conditions.push(eq(requestTypes.categoryId, input.categoryId));
       }
+      if (!input?.includeInactive) {
+        conditions.push(eq(requestTypes.isActive, true));
+      }
+
+      const types = await db
+        .select({
+          id: requestTypes.id,
+          categoryId: requestTypes.categoryId,
+          code: requestTypes.code,
+          name: requestTypes.name,
+          nameAr: requestTypes.nameAr,
+          shortCode: requestTypes.shortCode,
+          description: requestTypes.description,
+          displayOrder: requestTypes.displayOrder,
+          isActive: requestTypes.isActive,
+          isExclusive: requestTypes.isExclusive,
+          maxDurationDays: requestTypes.maxDurationDays,
+          workflowId: requestTypes.workflowId,
+          generateQrCode: requestTypes.generateQrCode,
+          generateDcpForm: requestTypes.generateDcpForm,
+          notifyEmail: requestTypes.notifyEmail,
+          notifySms: requestTypes.notifySms,
+          categoryName: requestCategories.name,
+          categoryCode: requestCategories.code,
+        })
+        .from(requestTypes)
+        .leftJoin(requestCategories, eq(requestTypes.categoryId, requestCategories.id))
+        .where(conditions.length > 0 ? and(...conditions) : undefined)
+        .orderBy(asc(requestTypes.displayOrder));
+
+      return types;
     }),
 
   // Get type by ID with sections and fields
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const [[type]] = await connection.execute(`
-          SELECT rt.*, rc.name as categoryName, rc.code as categoryCode
-          FROM requestTypes rt
-          LEFT JOIN requestCategories rc ON rt.categoryId = rc.id
-          WHERE rt.id = ?
-        `, [input.id]) as any;
-        
-        if (!type) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Request type not found" });
-        }
-        
-        return type;
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const [type] = await db
+        .select({
+          id: requestTypes.id,
+          categoryId: requestTypes.categoryId,
+          code: requestTypes.code,
+          name: requestTypes.name,
+          nameAr: requestTypes.nameAr,
+          shortCode: requestTypes.shortCode,
+          description: requestTypes.description,
+          displayOrder: requestTypes.displayOrder,
+          isActive: requestTypes.isActive,
+          isExclusive: requestTypes.isExclusive,
+          maxDurationDays: requestTypes.maxDurationDays,
+          workflowId: requestTypes.workflowId,
+          generateQrCode: requestTypes.generateQrCode,
+          generateDcpForm: requestTypes.generateDcpForm,
+          notifyEmail: requestTypes.notifyEmail,
+          notifySms: requestTypes.notifySms,
+          categoryName: requestCategories.name,
+          categoryCode: requestCategories.code,
+        })
+        .from(requestTypes)
+        .leftJoin(requestCategories, eq(requestTypes.categoryId, requestCategories.id))
+        .where(eq(requestTypes.id, input.id));
+
+      if (!type) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Request type not found" });
       }
+
+      return type;
     }),
 
   // Create type (admin only)
@@ -289,35 +308,27 @@ export const requestTypesRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const [result] = await connection.execute(`
-          INSERT INTO requestTypes (
-            categoryId, code, name, nameAr, shortCode, description,
-            displayOrder, isExclusive, maxDurationDays, workflowId,
-            generateQrCode, generateDcpForm, notifyEmail, notifySms
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          input.categoryId,
-          input.code,
-          input.name,
-          input.nameAr || null,
-          input.shortCode || null,
-          input.description || null,
-          input.displayOrder || 0,
-          input.isExclusive || false,
-          input.maxDurationDays || null,
-          input.workflowId || null,
-          input.generateQrCode ?? true,
-          input.generateDcpForm ?? true,
-          input.notifyEmail ?? true,
-          input.notifySms ?? true,
-        ]);
-        
-        return { id: (result as any).insertId, success: true };
-      } finally {
-        await connection.end();
-      }
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const [result] = await db.insert(requestTypes).values({
+        categoryId: input.categoryId,
+        code: input.code,
+        name: input.name,
+        nameAr: input.nameAr ?? null,
+        shortCode: input.shortCode ?? null,
+        description: input.description ?? null,
+        displayOrder: input.displayOrder ?? 0,
+        isExclusive: input.isExclusive ?? false,
+        maxDurationDays: input.maxDurationDays ?? null,
+        workflowId: input.workflowId ?? null,
+        generateQrCode: input.generateQrCode ?? false,
+        generateDcpForm: input.generateDcpForm ?? false,
+        notifyEmail: input.notifyEmail ?? false,
+        notifySms: input.notifySms ?? false,
+      });
+
+      return { id: result.insertId, success: true };
     }),
 
   // Update type (admin only)
@@ -334,239 +345,189 @@ export const requestTypesRouter = router({
         isExclusive: z.boolean().optional(),
         maxDurationDays: z.number().optional(),
         workflowId: z.number().optional(),
+        generateQrCode: z.boolean().optional(),
+        generateDcpForm: z.boolean().optional(),
+        notifyEmail: z.boolean().optional(),
+        notifySms: z.boolean().optional(),
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const { id, ...data } = input;
-        const updates: string[] = [];
-        const values: any[] = [];
-        
-        Object.entries(data).forEach(([key, value]) => {
-          if (value !== undefined) {
-            updates.push(`${key} = ?`);
-            values.push(value);
-          }
-        });
-        
-        if (updates.length > 0) {
-          values.push(id);
-          await connection.execute(
-            `UPDATE requestTypes SET ${updates.join(', ')} WHERE id = ?`,
-            values
-          );
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const { id, ...data } = input;
+      const updateData: Record<string, any> = {};
+      for (const [key, value] of Object.entries(data)) {
+        if (value !== undefined) {
+          updateData[key] = value;
         }
-        
-        return { success: true };
-      } finally {
-        await connection.end();
       }
+
+      if (Object.keys(updateData).length > 0) {
+        await db.update(requestTypes).set(updateData).where(eq(requestTypes.id, id));
+      }
+
+      return { success: true };
     }),
 
-  // Delete type (admin only)
+  // Delete type (admin only - soft delete)
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        await connection.execute(
-          `UPDATE requestTypes SET isActive = false WHERE id = ?`,
-          [input.id]
-        );
-        return { success: true };
-      } finally {
-        await connection.end();
-      }
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      await db.update(requestTypes).set({ isActive: false }).where(eq(requestTypes.id, input.id));
+      return { success: true };
     }),
 });
 
 // ============================================================================
-// FORM DEFINITION ROUTER (User-facing API for getting form structure)
+// FORM DEFINITION ROUTER (User-facing)
 // ============================================================================
 
 export const formDefinitionRouter = router({
-  // Get form definition for a request type (or multiple types for combined forms)
-  getFormDefinition: protectedProcedure
-    .input(
-      z.object({
-        typeIds: z.array(z.number()).min(1),
-      })
-    )
+  // Get form definition for selected types (used during request creation)
+  getForTypes: protectedProcedure
+    .input(z.object({ typeIds: z.array(z.number()).min(1) }))
     .query(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        // Get all types
-        const [types] = await connection.execute(`
-          SELECT rt.*, rc.name as categoryName, rc.code as categoryCode,
-                 rc.allowMultipleTypes, rc.typeCombinationRules
-          FROM requestTypes rt
-          LEFT JOIN requestCategories rc ON rt.categoryId = rc.id
-          WHERE rt.id IN (${input.typeIds.map(() => '?').join(',')})
-        `, input.typeIds) as any;
-        
-        if (types.length === 0) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Request types not found" });
-        }
-        
-        // Collect all sections from all types
-        // Track which section codes appear in multiple types (shared sections)
-        const sectionCodeCount = new Map<string, number>();
-        const typeSections = new Map<string, any[]>(); // typeCode -> sections
-        
-        for (const type of types) {
-          const [sections] = await connection.execute(`
-            SELECT * FROM formSections 
-            WHERE requestTypeId = ? AND isActive = true
-            ORDER BY displayOrder ASC
-          `, [type.id]) as any;
-          
-          const processedSections: any[] = [];
-          for (const section of sections) {
-            // Get fields for this section
-            const [fields] = await connection.execute(`
-              SELECT * FROM formFields 
-              WHERE sectionId = ? AND isActive = true
-              ORDER BY displayOrder ASC
-            `, [section.id]) as any;
-            
-            // Parse JSON fields (mysql2 may already parse JSON columns)
-            section.fields = fields.map((f: any) => ({
-              ...f,
-              options: typeof f.options === 'string' ? JSON.parse(f.options) : f.options,
-              validation: typeof f.validation === 'string' ? JSON.parse(f.validation) : f.validation,
-              showCondition: typeof f.showCondition === 'string' ? JSON.parse(f.showCondition) : f.showCondition,
-            }));
-            section.showCondition = typeof section.showCondition === 'string' ? JSON.parse(section.showCondition) : section.showCondition;
-            
-            processedSections.push({
-              ...section,
-              typeCode: type.code,
-              typeName: type.name,
-            });
-            
-            // Count how many types have this section code
-            sectionCodeCount.set(section.code, (sectionCodeCount.get(section.code) || 0) + 1);
-          }
-          typeSections.set(type.code, processedSections);
-        }
-        
-        const isMultiType = types.length > 1;
-        
-        // Build final sections list:
-        // - Shared sections (appearing in 2+ types) are included only once, without type badge
-        // - Type-specific sections keep their type badge
-        const finalSections: any[] = [];
-        const addedSharedCodes = new Set<string>();
-        
-        // First pass: add shared sections (from the first type that has them)
-        if (isMultiType) {
-          for (const type of types) {
-            const sections = typeSections.get(type.code) || [];
-            for (const section of sections) {
-              if (sectionCodeCount.get(section.code)! > 1 && !addedSharedCodes.has(section.code)) {
-                addedSharedCodes.add(section.code);
-                finalSections.push({
-                  ...section,
-                  typeCode: null, // null = shared section, no type badge
-                  typeName: null,
-                  isShared: true,
-                });
-              }
-            }
-          }
-        }
-        
-        // Second pass: add type-specific sections
-        for (const type of types) {
-          const sections = typeSections.get(type.code) || [];
-          for (const section of sections) {
-            if (!isMultiType || sectionCodeCount.get(section.code)! === 1) {
-              finalSections.push(section);
-            }
-          }
-        }
-        
-        // Sort: shared sections first (by display order), then type-specific grouped by type
-        // Build type order map from the original types array
-        const typeOrderMap = new Map<string, number>();
-        types.forEach((t: any, idx: number) => typeOrderMap.set(t.code, idx));
-        
-        const sections = finalSections.sort((a, b) => {
-          // Shared sections come first
-          if (a.isShared && !b.isShared) return -1;
-          if (!a.isShared && b.isShared) return 1;
-          // Within shared sections, sort by display order
-          if (a.isShared && b.isShared) return a.displayOrder - b.displayOrder;
-          // Within type-specific sections, group by type first, then by display order
-          const typeOrderA = typeOrderMap.get(a.typeCode) ?? 999;
-          const typeOrderB = typeOrderMap.get(b.typeCode) ?? 999;
-          if (typeOrderA !== typeOrderB) return typeOrderA - typeOrderB;
-          return a.displayOrder - b.displayOrder;
-        });
-        
-        return {
-          types: types.map((t: any) => ({
-            id: t.id,
-            code: t.code,
-            name: t.name,
-            nameAr: t.nameAr,
-            shortCode: t.shortCode,
-            maxDurationDays: t.maxDurationDays,
-            isExclusive: t.isExclusive,
-          })),
-          categoryCode: types[0].categoryCode,
-          categoryName: types[0].categoryName,
-          allowMultipleTypes: types[0].allowMultipleTypes,
-          typeCombinationRules: typeof types[0].typeCombinationRules === 'string' ? JSON.parse(types[0].typeCombinationRules) : types[0].typeCombinationRules,
-          sections,
-        };
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      // Get types with category info
+      const typesData = await db
+        .select({
+          id: requestTypes.id,
+          code: requestTypes.code,
+          name: requestTypes.name,
+          nameAr: requestTypes.nameAr,
+          shortCode: requestTypes.shortCode,
+          maxDurationDays: requestTypes.maxDurationDays,
+          isExclusive: requestTypes.isExclusive,
+          categoryCode: requestCategories.code,
+          categoryName: requestCategories.name,
+          allowMultipleTypes: requestCategories.allowMultipleTypes,
+          typeCombinationRules: requestCategories.typeCombinationRules,
+        })
+        .from(requestTypes)
+        .leftJoin(requestCategories, eq(requestTypes.categoryId, requestCategories.id))
+        .where(inArray(requestTypes.id, input.typeIds));
+
+      if (typesData.length === 0) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "No types found" });
       }
+
+      // Build a type order map for sorting
+      const typeOrderMap = new Map<string, number>();
+      typesData.forEach((t, i) => typeOrderMap.set(t.code, i));
+
+      // Get sections for all selected types
+      const allSections = await db
+        .select()
+        .from(formSections)
+        .where(
+          and(
+            inArray(formSections.requestTypeId, input.typeIds),
+            eq(formSections.isActive, true)
+          )
+        )
+        .orderBy(asc(formSections.displayOrder));
+
+      // Get fields for all sections
+      const sectionIds = allSections.map(s => s.id);
+      let allFields: any[] = [];
+      if (sectionIds.length > 0) {
+        allFields = await db
+          .select()
+          .from(formFields)
+          .where(
+            and(
+              inArray(formFields.sectionId, sectionIds),
+              eq(formFields.isActive, true)
+            )
+          )
+          .orderBy(asc(formFields.displayOrder));
+      }
+
+      // Group fields by section
+      const fieldsBySection = new Map<number, any[]>();
+      for (const field of allFields) {
+        const list = fieldsBySection.get(field.sectionId) || [];
+        list.push(field);
+        fieldsBySection.set(field.sectionId, list);
+      }
+
+      // Build sections with fields, including typeCode
+      const sections = allSections.map(s => {
+        const typeData = typesData.find(t => t.id === s.requestTypeId);
+        return {
+          ...s,
+          typeCode: typeData?.code || '',
+          fields: fieldsBySection.get(s.id) || [],
+        };
+      });
+
+      // Sort: type-specific sections grouped by type order, then display order
+      sections.sort((a, b) => {
+        const typeOrderA = typeOrderMap.get(a.typeCode) ?? 999;
+        const typeOrderB = typeOrderMap.get(b.typeCode) ?? 999;
+        if (typeOrderA !== typeOrderB) return typeOrderA - typeOrderB;
+        return a.displayOrder - b.displayOrder;
+      });
+
+      return {
+        types: typesData.map(t => ({
+          id: t.id,
+          code: t.code,
+          name: t.name,
+          nameAr: t.nameAr,
+          shortCode: t.shortCode,
+          maxDurationDays: t.maxDurationDays,
+          isExclusive: t.isExclusive,
+        })),
+        categoryCode: typesData[0].categoryCode,
+        categoryName: typesData[0].categoryName,
+        allowMultipleTypes: typesData[0].allowMultipleTypes,
+        typeCombinationRules: typesData[0].typeCombinationRules,
+        sections,
+      };
     }),
 
   // Get form definition by category (for initial form loading)
   getByCategory: protectedProcedure
     .input(z.object({ categoryId: z.number() }))
     .query(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        // Get category
-        const [[category]] = await connection.execute(`
-          SELECT * FROM requestCategories WHERE id = ? AND isActive = true
-        `, [input.categoryId]) as any;
-        
-        if (!category) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Category not found" });
-        }
-        
-        // Get types
-        const [types] = await connection.execute(`
-          SELECT * FROM requestTypes 
-          WHERE categoryId = ? AND isActive = true
-          ORDER BY displayOrder ASC
-        `, [input.categoryId]) as any;
-        
-        return {
-          category: {
-            ...category,
-            typeCombinationRules: typeof category.typeCombinationRules === 'string' ? JSON.parse(category.typeCombinationRules) : category.typeCombinationRules,
-          },
-          types: types.map((t: any) => ({
-            id: t.id,
-            code: t.code,
-            name: t.name,
-            nameAr: t.nameAr,
-            shortCode: t.shortCode,
-            description: t.description,
-            isExclusive: t.isExclusive,
-            maxDurationDays: t.maxDurationDays,
-          })),
-        };
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const [category] = await db
+        .select()
+        .from(requestCategories)
+        .where(and(eq(requestCategories.id, input.categoryId), eq(requestCategories.isActive, true)));
+
+      if (!category) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Category not found" });
       }
+
+      const typesData = await db
+        .select()
+        .from(requestTypes)
+        .where(and(eq(requestTypes.categoryId, input.categoryId), eq(requestTypes.isActive, true)))
+        .orderBy(asc(requestTypes.displayOrder));
+
+      return {
+        category,
+        types: typesData.map(t => ({
+          id: t.id,
+          code: t.code,
+          name: t.name,
+          nameAr: t.nameAr,
+          shortCode: t.shortCode,
+          description: t.description,
+          isExclusive: t.isExclusive,
+          maxDurationDays: t.maxDurationDays,
+        })),
+      };
     }),
 });
 
@@ -579,23 +540,26 @@ export const formSectionsRouter = router({
   list: protectedProcedure
     .input(z.object({ requestTypeId: z.number() }))
     .query(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const [sections] = await connection.execute(`
-          SELECT fs.*, 
-                 (SELECT COUNT(*) FROM formFields ff WHERE ff.sectionId = fs.id) as fieldCount
-          FROM formSections fs
-          WHERE fs.requestTypeId = ?
-          ORDER BY fs.displayOrder ASC
-        `, [input.requestTypeId]) as any;
-        
-        return sections.map((s: any) => ({
-          ...s,
-          showCondition: typeof s.showCondition === 'string' ? JSON.parse(s.showCondition) : s.showCondition,
-        }));
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const sectionsList = await db
+        .select()
+        .from(formSections)
+        .where(eq(formSections.requestTypeId, input.requestTypeId))
+        .orderBy(asc(formSections.displayOrder));
+
+      // Get field counts for each section
+      const result = [];
+      for (const s of sectionsList) {
+        const [countRow] = await db
+          .select({ value: count() })
+          .from(formFields)
+          .where(eq(formFields.sectionId, s.id));
+        result.push({ ...s, fieldCount: countRow?.value ?? 0 });
       }
+
+      return result;
     }),
 
   // Create section (admin only)
@@ -619,30 +583,23 @@ export const formSectionsRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const [result] = await connection.execute(`
-          INSERT INTO formSections (
-            requestTypeId, code, name, nameAr, icon, displayOrder,
-            isRepeatable, minItems, maxItems, showCondition
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          input.requestTypeId,
-          input.code,
-          input.name,
-          input.nameAr || null,
-          input.icon || null,
-          input.displayOrder || 0,
-          input.isRepeatable || false,
-          input.minItems || 0,
-          input.maxItems || 100,
-          input.showCondition ? JSON.stringify(input.showCondition) : null,
-        ]);
-        
-        return { id: (result as any).insertId, success: true };
-      } finally {
-        await connection.end();
-      }
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const [result] = await db.insert(formSections).values({
+        requestTypeId: input.requestTypeId,
+        code: input.code,
+        name: input.name,
+        nameAr: input.nameAr ?? null,
+        icon: input.icon ?? null,
+        displayOrder: input.displayOrder ?? 0,
+        isRepeatable: input.isRepeatable ?? false,
+        minItems: input.minItems ?? 0,
+        maxItems: input.maxItems ?? 100,
+        showCondition: input.showCondition ?? null,
+      });
+
+      return { id: result.insertId, success: true };
     }),
 
   // Update section (admin only)
@@ -666,52 +623,33 @@ export const formSectionsRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const { id, showCondition, ...data } = input;
-        const updates: string[] = [];
-        const values: any[] = [];
-        
-        Object.entries(data).forEach(([key, value]) => {
-          if (value !== undefined) {
-            updates.push(`${key} = ?`);
-            values.push(value);
-          }
-        });
-        
-        if (showCondition !== undefined) {
-          updates.push(`showCondition = ?`);
-          values.push(showCondition ? JSON.stringify(showCondition) : null);
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const { id, ...data } = input;
+      const updateData: Record<string, any> = {};
+      for (const [key, value] of Object.entries(data)) {
+        if (value !== undefined) {
+          updateData[key] = value;
         }
-        
-        if (updates.length > 0) {
-          values.push(id);
-          await connection.execute(
-            `UPDATE formSections SET ${updates.join(', ')} WHERE id = ?`,
-            values
-          );
-        }
-        
-        return { success: true };
-      } finally {
-        await connection.end();
       }
+
+      if (Object.keys(updateData).length > 0) {
+        await db.update(formSections).set(updateData).where(eq(formSections.id, id));
+      }
+
+      return { success: true };
     }),
 
-  // Delete section (admin only)
+  // Delete section (admin only - soft delete)
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        await connection.execute(
-          `UPDATE formSections SET isActive = false WHERE id = ?`,
-          [input.id]
-        );
-        return { success: true };
-      } finally {
-        await connection.end();
-      }
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      await db.update(formSections).set({ isActive: false }).where(eq(formSections.id, input.id));
+      return { success: true };
     }),
 
   // Update section order (admin only)
@@ -727,18 +665,14 @@ export const formSectionsRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        for (const update of input.updates) {
-          await connection.execute(
-            `UPDATE formSections SET displayOrder = ? WHERE id = ?`,
-            [update.displayOrder, update.id]
-          );
-        }
-        return { success: true };
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      for (const update of input.updates) {
+        await db.update(formSections).set({ displayOrder: update.displayOrder }).where(eq(formSections.id, update.id));
       }
+
+      return { success: true };
     }),
 });
 
@@ -751,23 +685,16 @@ export const formFieldsRouter = router({
   list: protectedProcedure
     .input(z.object({ sectionId: z.number() }))
     .query(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const [fields] = await connection.execute(`
-          SELECT * FROM formFields
-          WHERE sectionId = ?
-          ORDER BY displayOrder ASC
-        `, [input.sectionId]) as any;
-        
-        return fields.map((f: any) => ({
-          ...f,
-          options: typeof f.options === 'string' ? JSON.parse(f.options) : f.options,
-          validation: typeof f.validation === 'string' ? JSON.parse(f.validation) : f.validation,
-          showCondition: typeof f.showCondition === 'string' ? JSON.parse(f.showCondition) : f.showCondition,
-        }));
-      } finally {
-        await connection.end();
-      }
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const fields = await db
+        .select()
+        .from(formFields)
+        .where(eq(formFields.sectionId, input.sectionId))
+        .orderBy(asc(formFields.displayOrder));
+
+      return fields;
     }),
 
   // Create field (admin only)
@@ -826,40 +753,32 @@ export const formFieldsRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const [result] = await connection.execute(`
-          INSERT INTO formFields (
-            sectionId, code, name, nameAr, fieldType, isRequired, displayOrder,
-            columnSpan, placeholder, placeholderAr, helpText, helpTextAr, defaultValue,
-            options, optionsSource, optionsApi, dependsOnField, validation, showCondition
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          input.sectionId,
-          input.code,
-          input.name,
-          input.nameAr || null,
-          input.fieldType,
-          input.isRequired || false,
-          input.displayOrder || 0,
-          input.columnSpan || 6,
-          input.placeholder || null,
-          input.placeholderAr || null,
-          input.helpText || null,
-          input.helpTextAr || null,
-          input.defaultValue || null,
-          input.options ? JSON.stringify(input.options) : null,
-          input.optionsSource || 'static',
-          input.optionsApi || null,
-          input.dependsOnField || null,
-          input.validation ? JSON.stringify(input.validation) : null,
-          input.showCondition ? JSON.stringify(input.showCondition) : null,
-        ]);
-        
-        return { id: (result as any).insertId, success: true };
-      } finally {
-        await connection.end();
-      }
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const [result] = await db.insert(formFields).values({
+        sectionId: input.sectionId,
+        code: input.code,
+        name: input.name,
+        nameAr: input.nameAr ?? null,
+        fieldType: input.fieldType,
+        isRequired: input.isRequired ?? false,
+        displayOrder: input.displayOrder ?? 0,
+        columnSpan: input.columnSpan ?? 6,
+        placeholder: input.placeholder ?? null,
+        placeholderAr: input.placeholderAr ?? null,
+        helpText: input.helpText ?? null,
+        helpTextAr: input.helpTextAr ?? null,
+        defaultValue: input.defaultValue ?? null,
+        options: input.options ?? null,
+        optionsSource: input.optionsSource ?? 'static',
+        optionsApi: input.optionsApi ?? null,
+        dependsOnField: input.dependsOnField ?? null,
+        validation: input.validation ?? null,
+        showCondition: input.showCondition ?? null,
+      });
+
+      return { id: result.insertId, success: true };
     }),
 
   // Update field (admin only)
@@ -916,62 +835,33 @@ export const formFieldsRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        const { id, options, validation, showCondition, ...data } = input;
-        const updates: string[] = [];
-        const values: any[] = [];
-        
-        Object.entries(data).forEach(([key, value]) => {
-          if (value !== undefined) {
-            updates.push(`${key} = ?`);
-            values.push(value);
-          }
-        });
-        
-        if (options !== undefined) {
-          updates.push(`options = ?`);
-          values.push(options ? JSON.stringify(options) : null);
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const { id, ...data } = input;
+      const updateData: Record<string, any> = {};
+      for (const [key, value] of Object.entries(data)) {
+        if (value !== undefined) {
+          updateData[key] = value;
         }
-        
-        if (validation !== undefined) {
-          updates.push(`validation = ?`);
-          values.push(validation ? JSON.stringify(validation) : null);
-        }
-        
-        if (showCondition !== undefined) {
-          updates.push(`showCondition = ?`);
-          values.push(showCondition ? JSON.stringify(showCondition) : null);
-        }
-        
-        if (updates.length > 0) {
-          values.push(id);
-          await connection.execute(
-            `UPDATE formFields SET ${updates.join(', ')} WHERE id = ?`,
-            values
-          );
-        }
-        
-        return { success: true };
-      } finally {
-        await connection.end();
       }
+
+      if (Object.keys(updateData).length > 0) {
+        await db.update(formFields).set(updateData).where(eq(formFields.id, id));
+      }
+
+      return { success: true };
     }),
 
-  // Delete field (admin only)
+  // Delete field (admin only - soft delete)
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        await connection.execute(
-          `UPDATE formFields SET isActive = false WHERE id = ?`,
-          [input.id]
-        );
-        return { success: true };
-      } finally {
-        await connection.end();
-      }
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      await db.update(formFields).set({ isActive: false }).where(eq(formFields.id, input.id));
+      return { success: true };
     }),
 
   // Update field order (admin only)
@@ -987,18 +877,14 @@ export const formFieldsRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        for (const update of input.updates) {
-          await connection.execute(
-            `UPDATE formFields SET displayOrder = ? WHERE id = ?`,
-            [update.displayOrder, update.id]
-          );
-        }
-        return { success: true };
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      for (const update of input.updates) {
+        await db.update(formFields).set({ displayOrder: update.displayOrder }).where(eq(formFields.id, update.id));
       }
+
+      return { success: true };
     }),
 
   // Get dependent field options
@@ -1010,37 +896,47 @@ export const formFieldsRouter = router({
       })
     )
     .query(async ({ input }) => {
-      const connection = await getConnection();
-      try {
-        // First check if field has static options
-        const [[field]] = await connection.execute(`
-          SELECT options, optionsSource, optionsApi FROM formFields WHERE id = ?
-        `, [input.fieldId]) as any;
-        
-        if (!field) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Field not found" });
-        }
-        
-        if (field.optionsSource === 'static' && field.options) {
-          return typeof field.options === 'string' ? JSON.parse(field.options) : field.options;
-        }
-        
-        // Check fieldOptions table
-        let query = `SELECT value, label, labelAr FROM fieldOptions WHERE fieldId = ? AND isActive = true`;
-        const params: any[] = [input.fieldId];
-        
-        if (input.parentValue) {
-          query += ` AND parentValue = ?`;
-          params.push(input.parentValue);
-        }
-        
-        query += ` ORDER BY displayOrder ASC`;
-        
-        const [options] = await connection.execute(query, params);
-        return options;
-      } finally {
-        await connection.end();
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      // First check if field has static options
+      const [field] = await db
+        .select({
+          options: formFields.options,
+          optionsSource: formFields.optionsSource,
+          optionsApi: formFields.optionsApi,
+        })
+        .from(formFields)
+        .where(eq(formFields.id, input.fieldId));
+
+      if (!field) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Field not found" });
       }
+
+      if (field.optionsSource === 'static' && field.options) {
+        return field.options;
+      }
+
+      // Check fieldOptions table
+      const conditions = [
+        eq(fieldOptions.fieldId, input.fieldId),
+        eq(fieldOptions.isActive, true),
+      ];
+      if (input.parentValue) {
+        conditions.push(eq(fieldOptions.parentValue, input.parentValue));
+      }
+
+      const options = await db
+        .select({
+          value: fieldOptions.value,
+          label: fieldOptions.label,
+          labelAr: fieldOptions.labelAr,
+        })
+        .from(fieldOptions)
+        .where(and(...conditions))
+        .orderBy(asc(fieldOptions.displayOrder));
+
+      return options;
     }),
 
   // Get options from data source (comprehensive portal-wide data sources)
@@ -1056,286 +952,308 @@ export const formFieldsRouter = router({
           "user_sites", "user_groups", "user_departments",
           "user_profile", "material_types"
         ]),
-        filterValue: z.string().optional(), // For cascading (e.g., countryId for regions)
-        search: z.string().optional(), // For search/autocomplete
+        filterValue: z.string().optional(),
+        search: z.string().optional(),
         limit: z.number().max(500).optional(),
       })
     )
     .query(async ({ input, ctx }) => {
-      const connection = await getConnection();
-      try {
-        const limit = Number(input.limit) || 100;
-        let options: Array<{ value: string; label: string; labelAr?: string }> = [];
-        
-        switch (input.source) {
-          // ============ MASTER DATA SOURCES ============
-          case "countries": {
-            const [rows] = await connection.execute(`
-              SELECT id as value, name as label, name as labelAr 
-              FROM countries 
-              WHERE isActive = 1
-              ORDER BY name ASC
-              LIMIT ${limit}
-            `);
-            options = rows as any;
-            break;
-          }
-          
-          case "regions": {
-            let query = `
-              SELECT id as value, name as label, name as labelAr 
-              FROM regions 
-              WHERE isActive = 1
-            `;
-            const params: any[] = [];
-            if (input.filterValue) {
-              query += ` AND id IN (SELECT DISTINCT regionId FROM sites WHERE countryId = ?)`;
-              params.push(input.filterValue);
-            }
-            query += ` ORDER BY name ASC LIMIT ${limit}`;
-            const [rows] = await connection.execute(query, params);
-            options = rows as any;
-            break;
-          }
-          
-          case "cities": {
-            let query = `
-              SELECT id as value, name as label, name as labelAr 
-              FROM cities 
-              WHERE isActive = 1
-            `;
-            const params: any[] = [];
-            if (input.filterValue) {
-              query += ` AND countryId = ?`;
-              params.push(input.filterValue);
-            }
-            query += ` ORDER BY name ASC LIMIT ${limit}`;
-            const [rows] = await connection.execute(query, params);
-            options = rows as any;
-            break;
-          }
-          
-          // ============ FACILITY SOURCES ============
-          case "sites": {
-            let query = `
-              SELECT id as value, name as label, name as labelAr 
-              FROM sites 
-              WHERE status = 'active'
-            `;
-            const params: any[] = [];
-            if (input.filterValue) {
-              query += ` AND cityId = ?`;
-              params.push(input.filterValue);
-            }
-            if (input.search) {
-              query += ` AND (name LIKE ? OR code LIKE ?)`;
-              params.push(`%${input.search}%`, `%${input.search}%`);
-            }
-            query += ` ORDER BY name ASC LIMIT ${limit}`;
-            const [rows] = await connection.execute(query, params);
-            options = rows as any;
-            break;
-          }
-          
-          case "zones": {
-            let query = `
-              SELECT id as value, name as label, name as labelAr 
-              FROM zones 
-              WHERE status = 'active'
-            `;
-            const params: any[] = [];
-            if (input.filterValue) {
-              query += ` AND siteId = ?`;
-              params.push(input.filterValue);
-            }
-            query += ` ORDER BY name ASC LIMIT ${Number(limit)}`;
-            const [rows] = await connection.execute(query, params);
-            options = rows as any;
-            break;
-          }
-          
-          case "areas": {
-            let query = `
-              SELECT id as value, name as label, name as labelAr 
-              FROM areas 
-              WHERE status = 'active'
-            `;
-            const params: any[] = [];
-            if (input.filterValue) {
-              query += ` AND zoneId = ?`;
-              params.push(input.filterValue);
-            }
-            query += ` ORDER BY name ASC LIMIT ${Number(limit)}`;
-            const [rows] = await connection.execute(query, params);
-            options = rows as any;
-            break;
-          }
-          
-          // ============ ORGANIZATION SOURCES ============
-          case "departments": {
-            const [rows] = await connection.execute(`
-              SELECT id as value, name as label, name as labelAr 
-              FROM departments 
-              WHERE isActive = 1
-              ORDER BY name ASC
-              LIMIT ${limit}
-            `);
-            options = rows as any;
-            break;
-          }
-          
-          case "groups": {
-            let query = `
-              SELECT id as value, name as label, name as labelAr 
-              FROM \`groups\` 
-              WHERE status = 'active'
-            `;
-            const params: any[] = [];
-            if (input.search) {
-              query += ` AND name LIKE ?`;
-              params.push(`%${input.search}%`);
-            }
-            query += ` ORDER BY name ASC LIMIT ${limit}`;
-            const [rows] = await connection.execute(query, params);
-            options = rows as any;
-            break;
-          }
-          
-          case "users": {
-            let query = `
-              SELECT id as value, COALESCE(name, email) as label, email as labelAr 
-              FROM users 
-              WHERE status = 'active'
-            `;
-            const params: any[] = [];
-            if (input.filterValue) {
-              // Filter by department
-              query += ` AND departmentId = ?`;
-              params.push(input.filterValue);
-            }
-            if (input.search) {
-              query += ` AND (name LIKE ? OR email LIKE ?)`;
-              params.push(`%${input.search}%`, `%${input.search}%`);
-            }
-            query += ` ORDER BY name ASC LIMIT ${limit}`;
-            const [rows] = await connection.execute(query, params);
-            options = rows as any;
-            break;
-          }
-          
-          case "contractors": {
-            const [rows] = await connection.execute(`
-              SELECT id as value, companyName as label, companyNameAr as labelAr 
-              FROM cardCompanies 
-              WHERE isActive = true AND companyType IN ('contractor', 'sub_contractor')
-              ORDER BY companyName ASC
-              LIMIT ${limit}
-            `);
-            options = rows as any;
-            break;
-          }
-          
-          // ============ CONFIGURATION SOURCES ============
-          case "request_types": {
-            let query = `
-              SELECT id as value, name as label, nameAr as labelAr 
-              FROM requestTypes 
-              WHERE isActive = true
-            `;
-            const params: any[] = [];
-            if (input.filterValue) {
-              // Filter by category
-              query += ` AND categoryId = ?`;
-              params.push(input.filterValue);
-            }
-            query += ` ORDER BY displayOrder ASC LIMIT ${limit}`;
-            const [rows] = await connection.execute(query, params);
-            options = rows as any;
-            break;
-          }
-          
-          case "approval_roles": {
-            const [rows] = await connection.execute(`
-              SELECT id as value, name as label, description as labelAr 
-              FROM approvalRoles 
-              WHERE isActive = true
-              ORDER BY name ASC
-              LIMIT ${limit}
-            `);
-            options = rows as any;
-            break;
-          }
-          
-          // ============ USER PROFILE SOURCES ============
-          case "user_sites": {
-            // Get sites assigned to current user (through groups or direct assignment)
-            const [rows] = await connection.execute(`
-              SELECT DISTINCT s.id as value, s.name as label, s.nameAr as labelAr
-              FROM sites s
-              LEFT JOIN groupAccessPolicies gap ON gap.siteId = s.id
-              LEFT JOIN userGroupMembership ugm ON ugm.groupId = gap.groupId AND ugm.userId = ?
-              WHERE s.isActive = true AND (ugm.userId IS NOT NULL OR s.id = (SELECT defaultSiteId FROM users WHERE id = ?))
-              ORDER BY s.name ASC
-              LIMIT ${limit}
-            `, [ctx.user.id, ctx.user.id]);
-            options = rows as any;
-            break;
-          }
-          
-          case "user_groups": {
-            // Get groups current user belongs to
-            const [rows] = await connection.execute(`
-              SELECT g.id as value, g.name as label, g.nameAr as labelAr
-              FROM \`groups\` g
-              INNER JOIN userGroupMembership ugm ON ugm.groupId = g.id
-              WHERE ugm.userId = ? AND g.isActive = true
-              ORDER BY g.name ASC
-              LIMIT ${limit}
-            `, [ctx.user.id]);
-            options = rows as any;
-            break;
-          }
-          
-          case "user_departments": {
-            // Get current user's department
-            const [rows] = await connection.execute(`
-              SELECT d.id as value, d.name as label, d.nameAr as labelAr
-              FROM departments d
-              INNER JOIN users u ON u.departmentId = d.id
-              WHERE u.id = ? AND d.isActive = true
-            `, [ctx.user.id]);
-            options = rows as any;
-            break;
-          }
-          
-          // ============ MATERIAL TYPES ============
-          case "material_types": {
-            const [rows] = await connection.execute(`
-              SELECT id as value, name as label, nameAr as labelAr, qtyEnabled 
-              FROM materialTypes 
-              WHERE isActive = 1
-              ORDER BY displayOrder ASC, name ASC
-              LIMIT ${limit}
-            `);
-            options = (rows as any).map((r: any) => ({ ...r, qtyEnabled: !!r.qtyEnabled }));
-            break;
-          }
-          
-          case "user_profile":
-          default:
-            options = [];
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const limit = input.limit || 100;
+      let options: Array<{ value: string; label: string; labelAr?: string | null; qtyEnabled?: boolean }> = [];
+
+      switch (input.source) {
+        // ============ MASTER DATA SOURCES ============
+        case "countries": {
+          const rows = await db
+            .select({ value: countries.id, label: countries.name, labelAr: countries.name })
+            .from(countries)
+            .where(eq(countries.isActive, true))
+            .orderBy(asc(countries.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
         }
-        
-        // Convert numeric IDs to strings for consistency
-        return options.map((opt: any) => ({
-          value: String(opt.value),
-          label: opt.label || '',
-          labelAr: opt.labelAr || undefined,
-          ...(opt.qtyEnabled !== undefined ? { qtyEnabled: opt.qtyEnabled } : {})
-        }));
-      } finally {
-        await connection.end();
+
+        case "regions": {
+          const conditions = [eq(regions.isActive, true)];
+          if (input.filterValue) {
+            // Filter regions that have sites in the given country
+            conditions.push(
+              sql`${regions.id} IN (SELECT DISTINCT regionId FROM sites WHERE countryId = ${Number(input.filterValue)})`
+            );
+          }
+          const rows = await db
+            .select({ value: regions.id, label: regions.name, labelAr: regions.name })
+            .from(regions)
+            .where(and(...conditions))
+            .orderBy(asc(regions.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        case "cities": {
+          const conditions = [eq(cities.isActive, true)];
+          if (input.filterValue) {
+            conditions.push(eq(cities.countryId, Number(input.filterValue)));
+          }
+          const rows = await db
+            .select({ value: cities.id, label: cities.name, labelAr: cities.name })
+            .from(cities)
+            .where(and(...conditions))
+            .orderBy(asc(cities.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        // ============ FACILITY SOURCES ============
+        case "sites": {
+          const conditions = [eq(sites.status, 'active')];
+          if (input.filterValue) {
+            conditions.push(eq(sites.cityId, Number(input.filterValue)));
+          }
+          if (input.search) {
+            conditions.push(
+              or(
+                like(sites.name, `%${input.search}%`),
+                like(sites.code, `%${input.search}%`)
+              )!
+            );
+          }
+          const rows = await db
+            .select({ value: sites.id, label: sites.name, labelAr: sites.name })
+            .from(sites)
+            .where(and(...conditions))
+            .orderBy(asc(sites.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        case "zones": {
+          const conditions = [eq(zones.status, 'active')];
+          if (input.filterValue) {
+            conditions.push(eq(zones.siteId, Number(input.filterValue)));
+          }
+          const rows = await db
+            .select({ value: zones.id, label: zones.name, labelAr: zones.name })
+            .from(zones)
+            .where(and(...conditions))
+            .orderBy(asc(zones.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        case "areas": {
+          const conditions = [eq(areas.status, 'active')];
+          if (input.filterValue) {
+            conditions.push(eq(areas.zoneId, Number(input.filterValue)));
+          }
+          const rows = await db
+            .select({ value: areas.id, label: areas.name, labelAr: areas.name })
+            .from(areas)
+            .where(and(...conditions))
+            .orderBy(asc(areas.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        // ============ ORGANIZATION SOURCES ============
+        case "departments": {
+          const rows = await db
+            .select({ value: departments.id, label: departments.name, labelAr: departments.name })
+            .from(departments)
+            .where(eq(departments.isActive, true))
+            .orderBy(asc(departments.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        case "groups": {
+          const conditions = [eq(groups.status, 'active')];
+          if (input.search) {
+            conditions.push(like(groups.name, `%${input.search}%`));
+          }
+          const rows = await db
+            .select({ value: groups.id, label: groups.name, labelAr: groups.name })
+            .from(groups)
+            .where(and(...conditions))
+            .orderBy(asc(groups.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        case "users": {
+          const conditions = [eq(users.status, 'active')];
+          if (input.filterValue) {
+            conditions.push(eq(users.departmentId, Number(input.filterValue)));
+          }
+          if (input.search) {
+            conditions.push(
+              or(
+                like(users.name, `%${input.search}%`),
+                like(users.email, `%${input.search}%`)
+              )!
+            );
+          }
+          const rows = await db
+            .select({ value: users.id, label: users.name, labelAr: users.email })
+            .from(users)
+            .where(and(...conditions))
+            .orderBy(asc(users.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label || '', labelAr: r.labelAr }));
+          break;
+        }
+
+        case "contractors": {
+          const rows = await db
+            .select({ value: cardCompanies.id, label: cardCompanies.name, labelAr: cardCompanies.nameAr })
+            .from(cardCompanies)
+            .where(
+              and(
+                eq(cardCompanies.isActive, true),
+                inArray(cardCompanies.type, ['contractor', 'subcontractor'])
+              )
+            )
+            .orderBy(asc(cardCompanies.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        // ============ CONFIGURATION SOURCES ============
+        case "request_types": {
+          const conditions = [eq(requestTypes.isActive, true)];
+          if (input.filterValue) {
+            conditions.push(eq(requestTypes.categoryId, Number(input.filterValue)));
+          }
+          const rows = await db
+            .select({ value: requestTypes.id, label: requestTypes.name, labelAr: requestTypes.nameAr })
+            .from(requestTypes)
+            .where(and(...conditions))
+            .orderBy(asc(requestTypes.displayOrder))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        case "approval_roles": {
+          const rows = await db
+            .select({ value: approvalRoles.id, label: approvalRoles.name, labelAr: approvalRoles.description })
+            .from(approvalRoles)
+            .where(eq(approvalRoles.isActive, true))
+            .orderBy(asc(approvalRoles.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        // ============ USER PROFILE SOURCES ============
+        case "user_sites": {
+          const rows = await db
+            .select({
+              value: sites.id,
+              label: sites.name,
+              labelAr: sites.name,
+            })
+            .from(sites)
+            .leftJoin(groupAccessPolicies, eq(groupAccessPolicies.siteId, sites.id))
+            .leftJoin(
+              userGroupMembership,
+              and(
+                eq(userGroupMembership.groupId, groupAccessPolicies.groupId),
+                eq(userGroupMembership.userId, ctx.user.id)
+              )
+            )
+            .where(
+              and(
+                eq(sites.status, 'active'),
+                or(
+                  sql`${userGroupMembership.userId} IS NOT NULL`,
+                  sql`${sites.id} = (SELECT defaultSiteId FROM users WHERE id = ${ctx.user.id})`
+                )
+              )
+            )
+            .orderBy(asc(sites.name))
+            .limit(limit);
+
+          // Deduplicate
+          const seen = new Set<number>();
+          options = [];
+          for (const r of rows) {
+            if (!seen.has(r.value)) {
+              seen.add(r.value);
+              options.push({ value: String(r.value), label: r.label, labelAr: r.labelAr });
+            }
+          }
+          break;
+        }
+
+        case "user_groups": {
+          const rows = await db
+            .select({ value: groups.id, label: groups.name, labelAr: groups.name })
+            .from(groups)
+            .innerJoin(userGroupMembership, eq(userGroupMembership.groupId, groups.id))
+            .where(and(eq(userGroupMembership.userId, ctx.user.id), eq(groups.status, 'active')))
+            .orderBy(asc(groups.name))
+            .limit(limit);
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        case "user_departments": {
+          const rows = await db
+            .select({ value: departments.id, label: departments.name, labelAr: departments.name })
+            .from(departments)
+            .innerJoin(users, eq(users.departmentId, departments.id))
+            .where(and(eq(users.id, ctx.user.id), eq(departments.isActive, true)));
+          options = rows.map(r => ({ value: String(r.value), label: r.label, labelAr: r.labelAr }));
+          break;
+        }
+
+        // ============ MATERIAL TYPES ============
+        case "material_types": {
+          const rows = await db
+            .select({
+              value: materialTypes.id,
+              label: materialTypes.name,
+              labelAr: materialTypes.nameAr,
+              qtyEnabled: materialTypes.qtyEnabled,
+            })
+            .from(materialTypes)
+            .where(eq(materialTypes.isActive, true))
+            .orderBy(asc(materialTypes.displayOrder), asc(materialTypes.name))
+            .limit(limit);
+          options = rows.map(r => ({
+            value: String(r.value),
+            label: r.label,
+            labelAr: r.labelAr,
+            qtyEnabled: !!r.qtyEnabled,
+          }));
+          break;
+        }
+
+        case "user_profile":
+        default:
+          options = [];
       }
+
+      // Ensure consistent string values
+      return options.map(opt => ({
+        value: String(opt.value),
+        label: opt.label || '',
+        labelAr: opt.labelAr || undefined,
+        ...(opt.qtyEnabled !== undefined ? { qtyEnabled: opt.qtyEnabled } : {}),
+      }));
     }),
 });
 

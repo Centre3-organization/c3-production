@@ -61,7 +61,7 @@ export default function DynamicRequestForm() {
 
   // Fetch form definition for selected types
   const { data: formDefinition, isLoading: loadingForm } =
-    trpc.requestConfig.formDefinition.getFormDefinition.useQuery(
+    trpc.requestConfig.formDefinition.getForTypes.useQuery(
       { typeIds: selectedTypeIds },
       { enabled: selectedTypeIds.length > 0 }
     );
