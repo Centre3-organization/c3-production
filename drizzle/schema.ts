@@ -2638,3 +2638,47 @@ export const watchlist = mysqlTable("watchlist", {
 }));
 export type WatchlistEntry = typeof watchlist.$inferSelect;
 export type InsertWatchlistEntry = typeof watchlist.$inferInsert;
+
+
+/**
+ * Checkpoint Settings: Configuration for checkpoint operations
+ * Stores camera, AI, notification, and watchlist settings per checkpoint
+ */
+export const checkpointSettings = mysqlTable("checkpointSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  checkpointId: int("checkpointId").notNull().references(() => checkpoints.id),
+  
+  // Camera settings
+  cameraEnabled: boolean("cameraEnabled").default(true).notNull(),
+  cameraResolution: mysqlEnum("cameraResolution", ["640x480", "1280x720", "1920x1080"]).default("1280x720").notNull(),
+  cameraFacingMode: mysqlEnum("cameraFacingMode", ["user", "environment"]).default("user").notNull(),
+  
+  // AI settings
+  aiEnabled: boolean("aiEnabled").default(false).notNull(),
+  claudeApiKey: varchar("claudeApiKey", { length: 500 }),  // Encrypted in production
+  faceMatchingEnabled: boolean("faceMatchingEnabled").default(false).notNull(),
+  documentValidationEnabled: boolean("documentValidationEnabled").default(false).notNull(),
+  anomalyDetectionEnabled: boolean("anomalyDetectionEnabled").default(false).notNull(),
+  plateRecognitionEnabled: boolean("plateRecognitionEnabled").default(false).notNull(),
+  
+  // Notification settings
+  emailNotificationsEnabled: boolean("emailNotificationsEnabled").default(true).notNull(),
+  smsNotificationsEnabled: boolean("smsNotificationsEnabled").default(false).notNull(),
+  supervisorEmail: varchar("supervisorEmail", { length: 255 }),
+  supervisorPhone: varchar("supervisorPhone", { length: 20 }),
+  
+  // Watchlist settings
+  watchlistEnabled: boolean("watchlistEnabled").default(true).notNull(),
+  autoFlagHighRisk: boolean("autoFlagHighRisk").default(true).notNull(),
+  watchlistRetentionDays: int("watchlistRetentionDays").default(90).notNull(),
+  
+  // Metadata
+  createdBy: int("createdBy").notNull().references(() => users.id),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  
+}, (table) => ({
+  idxCheckpoint: index("idx_settings_checkpoint").on(table.checkpointId),
+}));
+export type CheckpointSetting = typeof checkpointSettings.$inferSelect;
+export type InsertCheckpointSetting = typeof checkpointSettings.$inferInsert;
