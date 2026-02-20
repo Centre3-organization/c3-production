@@ -62,13 +62,8 @@ import CommunicationsIntegration from "./modules/settings/CommunicationsIntegrat
 // McmDashboard removed - stats moved to CardDirectory
 import CardDirectory from "./modules/mcm/CardDirectory";
 
-// Checkpoint Module
-import { CheckpointApp } from "./pages/CheckpointApp";
-import { CheckpointLogin } from "./pages/CheckpointLogin";
+// Checkpoint Module - Integrated into Admin Dashboard
 import { CheckpointHome } from "./pages/CheckpointHome";
-import { CheckpointSearch } from "./pages/CheckpointSearch";
-import { CheckpointSettings } from "./pages/CheckpointSettings";
-import { UnregisteredEntryForm } from "./pages/UnregisteredEntryForm";
 import { FakePassReportForm } from "./pages/FakePassReportForm";
 import { IntegrationsDashboard } from "./pages/IntegrationsDashboard";
 import { WatchlistDashboard } from "./pages/WatchlistDashboard";
@@ -86,16 +81,9 @@ function Router() {
       <Route path="/access-denied" component={AccessDenied} />
       <Route path="/404" component={NotFound} />
       
-      {/* Checkpoint Routes - Separate from main app */}
-      <Route path="/checkpoint/login" component={CheckpointLogin} />
-      <Route path="/checkpoint/search" component={CheckpointSearch} />
-      <Route path="/checkpoint/settings" component={CheckpointSettings} />
-      <Route path="/checkpoint/unregistered-entry" component={UnregisteredEntryForm} />
-      <Route path="/checkpoint/fake-pass-report" component={FakePassReportForm} />
-      <Route path="/checkpoint" component={CheckpointHome} />
-      <Route path="/checkpoint/*" component={CheckpointHome} />
+      {/* Checkpoint Routes - Integrated into Admin Dashboard */}
       
-      {/* Protected Routes - Dashboard */}
+      {/* Protected Routes - Dashboard and Admin Modules */}
       <Route path="/">
         <Layout>
           <Dashboard />

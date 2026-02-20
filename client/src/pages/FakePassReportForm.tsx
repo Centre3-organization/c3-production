@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { CheckpointLayout } from "@/components/CheckpointLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -83,10 +82,9 @@ export function FakePassReportForm() {
   };
 
   return (
-    <CheckpointLayout title="Fake Pass Report">
-      <div className="p-8 max-w-4xl mx-auto">
-        {/* Back Button */}
-        <Button
+    <div className="p-8 max-w-4xl mx-auto">
+      {/* Back Button */}
+      <Button
           onClick={() => setLocation("/checkpoint")}
           className="mb-6 bg-slate-300 hover:bg-slate-400 text-slate-900 font-semibold font-poppins"
         >
@@ -94,8 +92,8 @@ export function FakePassReportForm() {
           Back to Dashboard
         </Button>
 
-        {/* Status Messages */}
-        {submitStatus === "success" && (
+      {/* Status Messages */}
+      {submitStatus === "success" && (
           <Alert className="mb-6 bg-green-100 border-2 border-green-300">
             <AlertCircle className="h-4 w-4 text-green-600" />
             <AlertDescription className="text-green-800 font-poppins">
@@ -104,7 +102,7 @@ export function FakePassReportForm() {
           </Alert>
         )}
 
-        {submitStatus === "error" && errorMessage && (
+      {submitStatus === "error" && errorMessage && (
           <Alert className="mb-6 bg-red-100 border-2 border-red-300">
             <AlertCircle className="h-4 w-4 text-red-600" />
             <AlertDescription className="text-red-800 font-poppins">
@@ -113,7 +111,7 @@ export function FakePassReportForm() {
           </Alert>
         )}
 
-        {/* Warning Alert */}
+      {/* Warning Alert */}
         <Alert className="mb-6 bg-amber-100 border-2 border-amber-300">
           <AlertCircle className="h-4 w-4 text-amber-600" />
           <AlertDescription className="text-amber-800 font-poppins">
@@ -121,8 +119,8 @@ export function FakePassReportForm() {
           </AlertDescription>
         </Alert>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
           {/* Suspected Person Information */}
           <Card className="bg-white border-2 border-red-300 p-6 shadow-md">
             <h2 className="text-2xl font-bold text-red-900 mb-4 font-poppins">🚨 Suspected Person Information</h2>
@@ -296,8 +294,7 @@ export function FakePassReportForm() {
               Cancel
             </Button>
           </div>
-        </form>
-      </div>
+      </form>
 
       {/* Camera Modal */}
       {showCamera && (
@@ -307,6 +304,6 @@ export function FakePassReportForm() {
           title="Capture Evidence Photo"
         />
       )}
-    </CheckpointLayout>
+    </div>
   );
 }

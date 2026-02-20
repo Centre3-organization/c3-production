@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { CheckpointLayout } from "@/components/CheckpointLayout";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -59,7 +59,7 @@ export function CheckpointSettings() {
   };
 
   return (
-    <CheckpointLayout title="Settings">
+    
       <div className="p-8 max-w-4xl mx-auto">
         {/* Back Button */}
         <Button
@@ -231,6 +231,6 @@ export function CheckpointSettings() {
           </div>
         </Card>
       </div>
-    </CheckpointLayout>
+    
   );
 }

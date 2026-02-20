@@ -2441,8 +2441,16 @@ Create a unified data source system that can pull options from anywhere in the p
 - [x] Build tRPC endpoints for settings and watchlist persistence
 - [x] Connect to Database - Replace mock data with real database queries
 - [x] Integrate Claude API - Document validation with confidence scoring
+
+## Restructuring: Move from Separate Guard App to Admin Dashboard
+- [x] Remove separate /checkpoint routes and consolidate to admin dashboard
+- [ ] Integrate CheckpointSettings page into Admin Integrations panel
+- [ ] Create Guard User Management module in admin dashboard
+- [ ] Add Checkpoint Verification interface as admin module
+- [ ] Update routing to use main admin login for all users
+- [ ] Add role-based access control (guard vs admin)
+- [ ] Test guard login and checkpoint access from admin dashboard
 - [ ] Add license plate recognition
 - [ ] Add anomaly detection
 - [ ] Implement supervisor notification system (email/SMS)
-- [ ] Test end-to-end flows
 - [ ] Save final checkpoint for publishing
