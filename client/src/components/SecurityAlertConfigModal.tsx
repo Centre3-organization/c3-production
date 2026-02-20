@@ -20,6 +20,13 @@ import {
   Save
 } from "lucide-react";
 import { trpc } from "@/utils/trpc";
+import {
+  PREDEFINED_TRIGGER_CONDITIONS,
+  STATUS_ON_TRIGGER_OPTIONS,
+  ACTION_POINT_TYPES,
+  NOTIFICATION_CHANNELS,
+  NOTIFICATION_TRIGGERS
+} from "@shared/trigger-conditions";
 
 interface SecurityAlertConfigModalProps {
   open: boolean;
@@ -36,7 +43,7 @@ type ActionType = "deny_entry" | "alert_supervisor" | "call_security" | "escalat
 interface TriggerCondition {
   id: string;
   field: string;
-  operator: "equals" | "contains" | "greaterThan" | "lessThan" | "in";
+  operator: "equals" | "not_equals" | "contains" | "greater_than" | "less_than" | "between" | "in" | "greaterThan" | "lessThan";
   value: any;
 }
 
@@ -238,7 +245,7 @@ export function SecurityAlertConfigModal({ open, onOpenChange, configId }: Secur
           id: configId,
           name,
           description,
-          triggerConditions: conditions,
+          triggerConditions: conditions as any,
           impactLevel,
           statusOnTrigger,
           autoResolve,
@@ -251,7 +258,7 @@ export function SecurityAlertConfigModal({ open, onOpenChange, configId }: Secur
           alertTypeId,
           name,
           description,
-          triggerConditions: conditions,
+          triggerConditions: conditions as any,
           impactLevel,
           affectedAreas: [],
           statusOnTrigger,
@@ -446,11 +453,25 @@ export function SecurityAlertConfigModal({ open, onOpenChange, configId }: Secur
                   <div className="border-t pt-4 space-y-3">
                     <h4 className="text-sm font-medium">Add New Condition</h4>
                     <div className="grid grid-cols-3 gap-2">
-                      <Input
-                        placeholder="Field (e.g., status, severity)"
+                      <select
                         value={newCondition.field || ""}
-                        onChange={(e) => setNewCondition({ ...newCondition, field: e.target.value })}
-                      />
+                        onChange={(e) => {
+                          const template = PREDEFINED_TRIGGER_CONDITIONS.find(c => c.field === e.target.value);
+                          setNewCondition({
+                            field: e.target.value,
+                            operator: (template?.defaultOperator || "") as any,
+                            value: undefined
+                          });
+                        }}
+                        className="px-3 py-2 border border-gray-300 rounded-md"
+                      >
+                        <option value="">Select condition...</option>
+                        {PREDEFINED_TRIGGER_CONDITIONS.map((cond) => (
+                          <option key={cond.id} value={cond.field}>
+                            {cond.label}
+                          </option>
+                        ))}
+                      </select>
                       <select
                         value={newCondition.operator || ""}
                         onChange={(e) => setNewCondition({ ...newCondition, operator: e.target.value as any })}
