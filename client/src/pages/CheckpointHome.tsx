@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, QrCode, Search, Clock, CheckCircle, XCircle } from "lucide-react";
 import { useLocation } from "wouter";
+import { trpc } from "@/utils/trpc";
 
 interface RecentTransaction {
   id: number;
@@ -18,27 +19,18 @@ export function CheckpointHome() {
   const [searchMethod, setSearchMethod] = useState<"qr" | "request_number" | "id_number" | "plate">("request_number");
   const [searchValue, setSearchValue] = useState("");
 
-  // Mock recent transactions
-  const recentTransactions: RecentTransaction[] = [
-    {
-      id: 1,
-      personName: "Ahmed Al-Rashid",
-      transactionType: "Entry Allowed",
-      createdAt: new Date(Date.now() - 5 * 60000).toLocaleTimeString(),
-    },
-    {
-      id: 2,
-      personName: "Fatima Al-Dosari",
-      transactionType: "Entry Denied",
-      createdAt: new Date(Date.now() - 15 * 60000).toLocaleTimeString(),
-    },
-    {
-      id: 3,
-      personName: "Mohammed Al-Otaibi",
-      transactionType: "Entry Allowed",
-      createdAt: new Date(Date.now() - 25 * 60000).toLocaleTimeString(),
-    },
-  ];
+  // Fetch real requests from database
+  const { data: requests = [] } = trpc.requests.list.useQuery();
+  
+  // Convert requests to recent transactions
+  const recentTransactions: RecentTransaction[] = requests
+    .slice(0, 20)
+    .map((req: any) => ({
+      id: req.id,
+      personName: req.visitorName || "Unknown",
+      transactionType: req.status === "approved" ? "Entry Allowed" : "Pending",
+      createdAt: new Date(req.createdAt).toLocaleTimeString(),
+    }));
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

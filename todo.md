@@ -2455,3 +2455,11 @@ Create a unified data source system that can pull options from anywhere in the p
 - [ ] Add anomaly detection
 - [ ] Implement supervisor notification system (email/SMS)
 - [ ] Save final checkpoint for publishing
+
+
+## Security Checkpoint Interface v2.0 - Phase 3 & 4 Integration
+- [ ] Debug checkpoint menu visibility in sidebar - verify menu item appears under Security Operations
+- [ ] Connect real visitor data from requests module to checkpoint interface
+- [ ] Test checkpoint access and data display from sidebar
+- [ ] Implement real database queries for checkpoint transactions
+- [ ] Add supervisor notification system (email/SMS)
