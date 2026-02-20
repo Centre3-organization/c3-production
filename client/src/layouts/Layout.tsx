@@ -34,7 +34,8 @@ import {
   ClipboardList,
   Shield,
   History,
-  Plus
+  Plus,
+  Eye
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -180,6 +181,7 @@ export default function Layout({ children }: LayoutProps) {
       items: [
         { icon: MapPin, labelKey: "nav.globalOverwatch", label: "Global Overwatch", href: "/global-overwatch", requiredPermission: "alerts.view" },
         { icon: ShieldAlert, labelKey: "nav.securityAlerts", label: "Security Alerts", href: "/alerts", badge: 3, requiredPermission: "alerts.view" },
+        { icon: Eye, labelKey: "nav.checkpoint", label: "Checkpoint", href: "/checkpoint", requiredPermission: "alerts.view" },
       ]
     },
     {
