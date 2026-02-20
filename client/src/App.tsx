@@ -107,6 +107,11 @@ function Router() {
           <SecurityAlertConfigPage />
         </Layout>
       </Route>
+      <Route path="/integration-hub/ai-services">
+        <Layout>
+          <IntegrationsDashboard />
+        </Layout>
+      </Route>
       <Route path="/checkpoint/unregistered-entry">
         <Layout>
           <UnregisteredEntry />

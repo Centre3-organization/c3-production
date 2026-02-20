@@ -79,6 +79,20 @@ const INTEGRATION_CATALOG: IntegrationCard[] = [
     category: "enterprise",
     features: ["Asset Lifecycle", "Work Orders", "Preventive Maintenance", "Spare Parts", "Compliance Reporting"],
   },
+  {
+    id: "ai-services",
+    name: "AI Services",
+    nameKey: "integrationHub.aiServices",
+    description: "Advanced AI-powered verification using Claude API. Enable face matching, document validation, anomaly detection, and plate recognition for enhanced security checkpoint operations.",
+    descriptionKey: "integrationHub.aiServicesDesc",
+    icon: Zap,
+    iconBg: "bg-purple-500/10",
+    iconColor: "text-purple-600",
+    route: "/integration-hub/ai-services",
+    status: "active",
+    category: "communication",
+    features: ["Face Matching", "Document Validation", "Anomaly Detection", "Plate Recognition", "Claude API"],
+  },
 ];
 
 // ============================================================================
@@ -97,7 +111,7 @@ export default function IntegrationHub() {
   const totalMessages = logStats?.totalMessages || 0;
 
   const categories = [
-    { key: "communication", label: t("integrationHub.catCommunication", "Communication") },
+    { key: "communication", label: t("integrationHub.catCommunication", "Communication & AI") },
     { key: "hardware", label: t("integrationHub.catHardware", "Hardware & Access Control") },
     { key: "enterprise", label: t("integrationHub.catEnterprise", "Enterprise Systems") },
   ];
