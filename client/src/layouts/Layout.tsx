@@ -35,7 +35,8 @@ import {
   Shield,
   History,
   Plus,
-  Eye
+  Eye,
+  Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -220,6 +221,7 @@ export default function Layout({ children }: LayoutProps) {
         { icon: Users, labelKey: "nav.users", label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
         { icon: Settings, labelKey: "nav.settings", label: "Settings", href: "/settings", requiredPermission: "settings.view" },
         { icon: Radio, labelKey: "nav.integrationHub", label: "Integration Hub", href: "/integration-hub", requiredPermission: "integrations.view" },
+        { icon: Zap, labelKey: "nav.aiIntegrations", label: "AI Integrations", href: "/ai-integrations", requiredPermission: "settings.view" },
       ]
     }
   ];
