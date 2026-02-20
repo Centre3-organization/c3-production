@@ -64,7 +64,9 @@ import CardDirectory from "./modules/mcm/CardDirectory";
 
 // Checkpoint Module - Integrated into Admin Dashboard
 import { CheckpointHome } from "./pages/CheckpointHome";
-import { CheckpointSearch } from "./pages/CheckpointSearch";
+import { CheckpointSearchEnhanced as CheckpointSearch } from "./pages/CheckpointSearchEnhanced";
+import { SecurityDashboard } from "./pages/SecurityDashboard";
+import { CheckpointSearchEnhanced } from "./pages/CheckpointSearchEnhanced";
 import { CheckpointSettings } from "./pages/CheckpointSettings";
 
 import { UnregisteredEntry } from "./pages/UnregisteredEntry";
@@ -100,6 +102,11 @@ function Router() {
       <Route path="/checkpoint/settings">
         <Layout>
           <CheckpointSettings />
+        </Layout>
+      </Route>
+      <Route path="/checkpoint/security-dashboard">
+        <Layout>
+          <SecurityDashboard />
         </Layout>
       </Route>
       <Route path="/security-alert-config">

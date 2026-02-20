@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -7,7 +8,17 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Save, Settings, Loader2, CheckCircle, XCircle } from "lucide-react";
 
 export function IntegrationsDashboard() {
+  const [location] = useLocation();
   const [activeTab, setActiveTab] = useState<"camera" | "ai" | "notifications" | "watchlist">("camera");
+
+  // Set active tab from URL query parameter on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get("tab");
+    if (tabParam === "ai" || tabParam === "camera" || tabParam === "notifications" || tabParam === "watchlist") {
+      setActiveTab(tabParam);
+    }
+  }, [location]);
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -35,6 +46,14 @@ export function IntegrationsDashboard() {
   const [watchlistEnabled, setWatchlistEnabled] = useState(true);
   const [autoFlagHighRisk, setAutoFlagHighRisk] = useState(true);
   const [watchlistRetentionDays, setWatchlistRetentionDays] = useState("90");
+
+  // Reset save status after 3 seconds
+  useEffect(() => {
+    if (saveStatus !== "idle") {
+      const timer = setTimeout(() => setSaveStatus("idle"), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [saveStatus]);
 
   const handleSaveSettings = async () => {
     try {
@@ -78,9 +97,10 @@ export function IntegrationsDashboard() {
 
       localStorage.setItem("checkpoint_integrations", JSON.stringify(settings));
       setSaveStatus("success");
-      setTimeout(() => setSaveStatus("idle"), 3000);
+      setErrorMessage("");
     } catch (error) {
-      setErrorMessage((error as Error).message);
+      console.error("Error saving settings:", error);
+      setErrorMessage("Failed to save settings. Please try again.");
       setSaveStatus("error");
     } finally {
       setIsSaving(false);
@@ -116,12 +136,18 @@ export function IntegrationsDashboard() {
         )}
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-slate-200">
+        <div className="flex gap-2 mb-8 border-b border-slate-200 overflow-x-auto">
           {["camera", "ai", "notifications", "watchlist"].map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab as any)}
-              className={`px-6 py-3 font-semibold font-poppins border-b-2 transition ${
+              onClick={() => {
+                setActiveTab(tab as any);
+                // Update URL with tab parameter
+                const url = new URL(window.location.href);
+                url.searchParams.set("tab", tab);
+                window.history.replaceState({}, "", url.toString());
+              }}
+              className={`px-6 py-3 font-semibold font-poppins border-b-2 transition whitespace-nowrap ${
                 activeTab === tab
                   ? "border-purple-600 text-purple-600"
                   : "border-transparent text-slate-600 hover:text-slate-900"
