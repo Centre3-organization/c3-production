@@ -177,7 +177,6 @@ export default function Layout({ children }: LayoutProps) {
     {
       titleKey: "nav.security",
       title: "Security Operations",
-      requiredPermission: "alerts.view",
       items: [
         { icon: MapPin, labelKey: "nav.globalOverwatch", label: "Global Overwatch", href: "/global-overwatch", requiredPermission: "alerts.view" },
         { icon: ShieldAlert, labelKey: "nav.securityAlerts", label: "Security Alerts", href: "/alerts", badge: 3, requiredPermission: "alerts.view" },
