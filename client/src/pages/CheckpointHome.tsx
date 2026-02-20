@@ -20,7 +20,7 @@ export function CheckpointHome() {
   const [searchValue, setSearchValue] = useState("");
 
   // Fetch real requests from database
-  const { data: requests = [] } = trpc.requests.list.useQuery();
+  const { data: requests = [] } = trpc.requests.getAll.useQuery({});
   
   // Convert requests to recent transactions
   const recentTransactions: RecentTransaction[] = requests
