@@ -27,6 +27,7 @@ import { dashboardRouter } from "./modules/dashboard/dashboard.router";
 
 // Security Module
 import { securityAlertsRouter } from "./modules/security/alerts.router";
+import { alertConfigRouter } from "./modules/security/alertConfig.router";
 
 // Checkpoint Module
 import { checkpointRouter } from "./modules/checkpoint/checkpoint.router";
@@ -203,6 +204,7 @@ export const appRouter = router({
   
   // Security Module
   securityAlerts: securityAlertsRouter,
+  alertConfig: alertConfigRouter,
   
   // Checkpoint Module
   checkpoint: checkpointRouter,

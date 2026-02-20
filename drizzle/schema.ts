@@ -2682,3 +2682,201 @@ export const checkpointSettings = mysqlTable("checkpointSettings", {
 }));
 export type CheckpointSetting = typeof checkpointSettings.$inferSelect;
 export type InsertCheckpointSetting = typeof checkpointSettings.$inferInsert;
+
+
+/**
+ * Security Alert Types: Define alert categories and their properties
+ * Used in the alert configuration system
+ */
+export const securityAlertTypes = mysqlTable("securityAlertTypes", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull().unique(),
+  description: text("description"),
+  
+  // Alert classification
+  category: mysqlEnum("category", ["breach", "impact", "status", "view", "action"]).notNull(),
+  severity: mysqlEnum("severity", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  
+  // Configuration
+  isActive: boolean("isActive").default(true).notNull(),
+  isSystem: boolean("isSystem").default(false).notNull(), // System-defined vs user-defined
+  
+  // Metadata
+  createdBy: int("createdBy").notNull().references(() => users.id),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  
+}, (table) => ({
+  idxCategory: index("idx_alert_category").on(table.category),
+  idxActive: index("idx_alert_active").on(table.isActive),
+}));
+export type SecurityAlertType = typeof securityAlertTypes.$inferSelect;
+export type InsertSecurityAlertType = typeof securityAlertTypes.$inferInsert;
+
+/**
+ * Security Alert Configurations: Define alert rules and notification settings
+ * Main configuration for the alert system
+ */
+export const securityAlertConfigs = mysqlTable("securityAlertConfigs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Alert definition
+  alertTypeId: int("alertTypeId").notNull().references(() => securityAlertTypes.id),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Trigger conditions
+  triggerConditions: json("triggerConditions").$type<{
+    field: string;
+    operator: "equals" | "contains" | "greaterThan" | "lessThan" | "in";
+    value: any;
+  }[]>().notNull(),
+  
+  // Impact configuration
+  impactLevel: mysqlEnum("impactLevel", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  affectedAreas: json("affectedAreas").$type<string[]>(),
+  
+  // Status tracking
+  statusOnTrigger: varchar("statusOnTrigger", { length: 50 }).default("alert_triggered"),
+  autoResolve: boolean("autoResolve").default(false),
+  autoResolveAfterMinutes: int("autoResolveAfterMinutes"),
+  
+  // View/Access configuration
+  viewableBy: json("viewableBy").$type<{
+    type: "role" | "group" | "user";
+    id: number;
+    name: string;
+  }[]>().notNull(),
+  
+  // Action points configuration
+  actionPoints: json("actionPoints").$type<{
+    id: string;
+    name: string;
+    type: "deny_entry" | "alert_supervisor" | "call_security" | "escalate" | "monitor" | "log_incident";
+    conditions: any;
+    order: number;
+  }[]>().notNull(),
+  
+  // Configuration status
+  isActive: boolean("isActive").default(true).notNull(),
+  isEnabled: boolean("isEnabled").default(true).notNull(),
+  
+  // Metadata
+  createdBy: int("createdBy").notNull().references(() => users.id),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  
+}, (table) => ({
+  idxAlertType: index("idx_config_alert_type").on(table.alertTypeId),
+  idxActive: index("idx_config_active").on(table.isActive),
+}));
+export type SecurityAlertConfig = typeof securityAlertConfigs.$inferSelect;
+export type InsertSecurityAlertConfig = typeof securityAlertConfigs.$inferInsert;
+
+/**
+ * Security Alert Notifications: Define notification rules for alerts
+ * Links alerts to notification channels and recipients
+ */
+export const securityAlertNotifications = mysqlTable("securityAlertNotifications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Link to alert config
+  alertConfigId: int("alertConfigId").notNull().references(() => securityAlertConfigs.id, { onDelete: "cascade" }),
+  
+  // Notification trigger
+  triggerOn: mysqlEnum("triggerOn", ["alert_created", "alert_escalated", "action_taken", "alert_resolved"]).notNull(),
+  
+  // Notification channel
+  channel: mysqlEnum("channel", ["email", "sms", "whatsapp", "in_app", "webhook"]).notNull(),
+  
+  // Recipients configuration
+  recipients: json("recipients").$type<{
+    type: "role" | "group" | "user" | "email";
+    id?: number;
+    name: string;
+    value: string; // email address or identifier
+  }[]>().notNull(),
+  
+  // Message template
+  messageTemplate: text("messageTemplate"),
+  messageVariables: json("messageVariables").$type<{
+    name: string;
+    placeholder: string;
+    description: string;
+  }[]>(),
+  
+  // Notification rules
+  sendImmediately: boolean("sendImmediately").default(true),
+  delayMinutes: int("delayMinutes").default(0),
+  deduplicateWithin: int("deduplicateWithin"), // minutes - prevent duplicate notifications
+  
+  // Escalation
+  escalationLevel: int("escalationLevel").default(1),
+  escalateAfterMinutes: int("escalateAfterMinutes"),
+  
+  // Configuration
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  // Metadata
+  createdBy: int("createdBy").notNull().references(() => users.id),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  
+}, (table) => ({
+  idxAlertConfig: index("idx_notif_alert_config").on(table.alertConfigId),
+  idxChannel: index("idx_notif_channel").on(table.channel),
+  idxActive: index("idx_notif_active").on(table.isActive),
+}));
+export type SecurityAlertNotification = typeof securityAlertNotifications.$inferSelect;
+export type InsertSecurityAlertNotification = typeof securityAlertNotifications.$inferInsert;
+
+/**
+ * Security Alert Logs: Track all alerts triggered and actions taken
+ * Audit trail for security events
+ */
+export const securityAlertLogs = mysqlTable("securityAlertLogs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Alert reference
+  alertConfigId: int("alertConfigId").notNull().references(() => securityAlertConfigs.id),
+  
+  // Trigger information
+  triggeredBy: varchar("triggeredBy", { length: 255 }), // Request ID, checkpoint, etc.
+  triggerData: json("triggerData").$type<any>(),
+  
+  // Alert status
+  status: mysqlEnum("status", ["triggered", "acknowledged", "in_progress", "resolved", "escalated"]).default("triggered").notNull(),
+  
+  // Notifications sent
+  notificationsSent: json("notificationsSent").$type<{
+    id: number;
+    channel: string;
+    recipient: string;
+    sentAt: string;
+    status: "sent" | "failed" | "pending";
+  }[]>(),
+  
+  // Actions taken
+  actionsTaken: json("actionsTaken").$type<{
+    id: string;
+    name: string;
+    executedAt: string;
+    result: any;
+  }[]>(),
+  
+  // Resolution
+  resolvedBy: int("resolvedBy").references(() => users.id),
+  resolvedAt: timestamp("resolvedAt"),
+  resolutionNotes: text("resolutionNotes"),
+  
+  // Metadata
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  
+}, (table) => ({
+  idxAlertConfig: index("idx_log_alert_config").on(table.alertConfigId),
+  idxStatus: index("idx_log_status").on(table.status),
+  idxCreatedAt: index("idx_log_created_at").on(table.createdAt),
+}));
+export type SecurityAlertLog = typeof securityAlertLogs.$inferSelect;
+export type InsertSecurityAlertLog = typeof securityAlertLogs.$inferInsert;
