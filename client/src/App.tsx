@@ -82,6 +82,16 @@ function Router() {
       <Route path="/404" component={NotFound} />
       
       {/* Checkpoint Routes - Integrated into Admin Dashboard */}
+      <Route path="/checkpoint">
+        <Layout>
+          <CheckpointHome />
+        </Layout>
+      </Route>
+      <Route path="/checkpoint/fake-pass-report">
+        <Layout>
+          <FakePassReportForm />
+        </Layout>
+      </Route>
       
       {/* Protected Routes - Dashboard and Admin Modules */}
       <Route path="/">

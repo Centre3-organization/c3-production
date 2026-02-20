@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, email, name, role FROM users WHERE email = 'guard@centre3.com' LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, email, name, role FROM users WHERE email = 'guard@centre3.com' LIMIT 1;",
+  "rows": [
+    {
+      "id": "180010",
+      "email": "guard@centre3.com",
+      "name": "NULL",
+      "role": "user"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\trole\n180010\tguard@centre3.com\tNULL\tuser\n",
+  "stderr": "",
+  "execution_time_ms": 1620
+}

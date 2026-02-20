@@ -2444,12 +2444,13 @@ Create a unified data source system that can pull options from anywhere in the p
 
 ## Restructuring: Move from Separate Guard App to Admin Dashboard
 - [x] Remove separate /checkpoint routes and consolidate to admin dashboard
-- [ ] Integrate CheckpointSettings page into Admin Integrations panel
-- [ ] Create Guard User Management module in admin dashboard
-- [ ] Add Checkpoint Verification interface as admin module
-- [ ] Update routing to use main admin login for all users
-- [ ] Add role-based access control (guard vs admin)
-- [ ] Test guard login and checkpoint access from admin dashboard
+- [x] Integrate CheckpointSettings page into Admin Integrations panel
+- [x] Create Guard User Management module in admin dashboard
+- [x] Add Checkpoint Verification interface as admin module
+- [x] Update routing to use main admin login for all users
+- [x] Add role-based access control (guard vs admin)
+- [x] Test guard login and checkpoint access from admin dashboard
+- [x] Add Checkpoint navigation to admin dashboard sidebar
 - [ ] Add license plate recognition
 - [ ] Add anomaly detection
 - [ ] Implement supervisor notification system (email/SMS)
