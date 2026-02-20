@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, email, role, roleId, status FROM users WHERE email = 'guard@centre3.com';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, email, role, roleId, status FROM users WHERE email = 'guard@centre3.com';",
+  "rows": [
+    {
+      "id": "180010",
+      "email": "guard@centre3.com",
+      "role": "admin",
+      "roleId": "NULL",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\trole\troleId\tstatus\n180010\tguard@centre3.com\tadmin\tNULL\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 1574
+}

@@ -64,6 +64,7 @@ import CardDirectory from "./modules/mcm/CardDirectory";
 
 // Checkpoint Module - Integrated into Admin Dashboard
 import { CheckpointHome } from "./pages/CheckpointHome";
+import { CheckpointSearch } from "./pages/CheckpointSearch";
 import { FakePassReportForm } from "./pages/FakePassReportForm";
 import { IntegrationsDashboard } from "./pages/IntegrationsDashboard";
 import { WatchlistDashboard } from "./pages/WatchlistDashboard";
@@ -85,6 +86,11 @@ function Router() {
       <Route path="/checkpoint">
         <Layout>
           <CheckpointHome />
+        </Layout>
+      </Route>
+      <Route path="/checkpoint-search">
+        <Layout>
+          <CheckpointSearch />
         </Layout>
       </Route>
       <Route path="/checkpoint/fake-pass-report">
