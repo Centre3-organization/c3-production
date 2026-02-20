@@ -72,6 +72,7 @@ import { FakePassReportForm } from "./pages/FakePassReportForm";
 import { IntegrationsDashboard } from "./pages/IntegrationsDashboard";
 import { WatchlistDashboard } from "./pages/WatchlistDashboard";
 import { IncidentReportHistory } from "./pages/IncidentReportHistory";
+import { SecurityAlertConfigPage } from "./pages/SecurityAlertConfig";
 
 // Reports Module
 import Reports from "./modules/reports/Reports";
@@ -104,6 +105,11 @@ function Router() {
       <Route path="/ai-integrations">
         <Layout>
           <AIIntegrations />
+        </Layout>
+      </Route>
+      <Route path="/security-alert-config">
+        <Layout>
+          <SecurityAlertConfigPage />
         </Layout>
       </Route>
       <Route path="/checkpoint/unregistered-entry">

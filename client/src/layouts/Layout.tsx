@@ -192,6 +192,7 @@ export default function Layout({ children }: LayoutProps) {
         { icon: Workflow, labelKey: "nav.workflows", label: "Workflow Builder", href: "/workflows", requiredPermission: "workflows.view" },
         { icon: FileText, labelKey: "nav.requestTypes", label: "Request Types", href: "/settings/request-types", requiredPermission: "requestTypes.view" },
         { icon: UserCheck, labelKey: "nav.delegations", label: "Delegations", href: "/delegations", requiredPermission: "delegations.view" },
+        { icon: AlertTriangle, labelKey: "nav.securityAlerts", label: "Security Alerts", href: "/security-alert-config", requiredPermission: "workflows.view" },
       ]
     },
     {
