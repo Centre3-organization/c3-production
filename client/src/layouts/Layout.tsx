@@ -63,6 +63,7 @@ type NavItem = {
   label: string; // Fallback label
   href?: string;
   children?: { labelKey: string; label: string; href: string }[];
+  submenu?: NavItem[];
   badge?: number;
   requiredPermission?: string;
 };
@@ -222,7 +223,6 @@ export default function Layout({ children }: LayoutProps) {
         { icon: Users, labelKey: "nav.users", label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
         { icon: Settings, labelKey: "nav.settings", label: "Settings", href: "/settings", requiredPermission: "settings.view" },
         { icon: Radio, labelKey: "nav.integrationHub", label: "Integration Hub", href: "/integration-hub", requiredPermission: "integrations.view" },
-        { icon: Zap, labelKey: "nav.aiIntegrations", label: "AI Integrations", href: "/ai-integrations", requiredPermission: "settings.view" },
       ]
     }
   ];

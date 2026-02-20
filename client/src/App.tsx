@@ -66,7 +66,7 @@ import CardDirectory from "./modules/mcm/CardDirectory";
 import { CheckpointHome } from "./pages/CheckpointHome";
 import { CheckpointSearch } from "./pages/CheckpointSearch";
 import { CheckpointSettings } from "./pages/CheckpointSettings";
-import { AIIntegrations } from "./pages/AIIntegrations";
+
 import { UnregisteredEntry } from "./pages/UnregisteredEntry";
 import { FakePassReportForm } from "./pages/FakePassReportForm";
 import { IntegrationsDashboard } from "./pages/IntegrationsDashboard";
@@ -100,11 +100,6 @@ function Router() {
       <Route path="/checkpoint/settings">
         <Layout>
           <CheckpointSettings />
-        </Layout>
-      </Route>
-      <Route path="/ai-integrations">
-        <Layout>
-          <AIIntegrations />
         </Layout>
       </Route>
       <Route path="/security-alert-config">
