@@ -67,6 +67,7 @@ import { CheckpointHome } from "./pages/CheckpointHome";
 import { CheckpointSearch } from "./pages/CheckpointSearch";
 import { CheckpointSettings } from "./pages/CheckpointSettings";
 import { AIIntegrations } from "./pages/AIIntegrations";
+import { UnregisteredEntry } from "./pages/UnregisteredEntry";
 import { FakePassReportForm } from "./pages/FakePassReportForm";
 import { IntegrationsDashboard } from "./pages/IntegrationsDashboard";
 import { WatchlistDashboard } from "./pages/WatchlistDashboard";
@@ -90,7 +91,7 @@ function Router() {
           <CheckpointHome />
         </Layout>
       </Route>
-      <Route path="/checkpoint-search">
+      <Route path="/checkpoint/search">
         <Layout>
           <CheckpointSearch />
         </Layout>
@@ -103,6 +104,11 @@ function Router() {
       <Route path="/ai-integrations">
         <Layout>
           <AIIntegrations />
+        </Layout>
+      </Route>
+      <Route path="/checkpoint/unregistered-entry">
+        <Layout>
+          <UnregisteredEntry />
         </Layout>
       </Route>
       <Route path="/checkpoint/fake-pass-report">
@@ -253,7 +259,7 @@ function Router() {
           <IntegrationsDashboard />
         </Layout>
       </Route>
-      <Route path="/checkpoint-watchlist">
+      <Route path="/checkpoint/watchlist">
         <Layout>
           <WatchlistDashboard />
         </Layout>

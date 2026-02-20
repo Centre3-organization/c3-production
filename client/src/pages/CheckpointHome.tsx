@@ -37,7 +37,7 @@ export function CheckpointHome() {
     if (!searchValue.trim()) return;
 
     // Navigate to search page with parameters
-    setLocation(`/checkpoint-search?method=${searchMethod}&value=${encodeURIComponent(searchValue)}`);
+    setLocation(`/checkpoint/search?method=${searchMethod}&value=${encodeURIComponent(searchValue)}`);
   };
 
   return (
@@ -95,19 +95,19 @@ export function CheckpointHome() {
         <h2 className="text-2xl font-bold text-slate-900 mb-4 font-poppins">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Button
-            onClick={() => setLocation('/unregistered-entry')}
+            onClick={() => setLocation('/checkpoint/unregistered-entry')}
             className="bg-amber-600 hover:bg-amber-700 text-white h-20 text-lg font-bold font-poppins"
           >
             👤 Unregistered Entry
           </Button>
           <Button
-            onClick={() => setLocation('/fake-pass-report')}
+            onClick={() => setLocation('/checkpoint/fake-pass-report')}
             className="bg-red-600 hover:bg-red-700 text-white h-20 text-lg font-bold font-poppins"
           >
             🚨 Report Fake Pass
           </Button>
           <Button
-            onClick={() => setLocation('/watchlist')}
+            onClick={() => setLocation('/checkpoint/watchlist')}
             className="bg-orange-600 hover:bg-orange-700 text-white font-bold h-20 text-lg font-poppins"
           >
             📋 View Watchlist
