@@ -4,18 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ArrowLeft, Save, AlertCircle } from "lucide-react";
+import { ArrowLeft, Save, AlertCircle, Lock } from "lucide-react";
 import { useLocation } from "wouter";
 import { cameraService } from "@/services/cameraService";
 import { aiService } from "@/services/aiService";
+import { useAuth } from "@/utils/useAuth";
 
 export function CheckpointSettings() {
   const [, setLocation] = useLocation();
+  const { user, loading } = useAuth();
   const [cameraEnabled, setCameraEnabled] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
   const [claudeApiKey, setClaudeApiKey] = useState("");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Check if user is super-admin
+  const isSuperAdmin = user?.role === "admin" || user?.email === "mohsiin@gmail.com";
 
   // Load settings on mount
   useEffect(() => {
@@ -57,6 +62,38 @@ export function CheckpointSettings() {
       setSaveStatus("error");
     }
   };
+
+  // Show access denied if not super-admin
+  if (!loading && !isSuperAdmin) {
+    return (
+      <div className="p-8 max-w-4xl mx-auto">
+        <Card className="p-8 text-center bg-red-50 border-2 border-red-300">
+          <Lock className="w-16 h-16 text-red-600 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-red-900 mb-2 font-poppins">Access Denied</h1>
+          <p className="text-red-700 mb-6 font-poppins">
+            Only super-admin users can access checkpoint settings.
+          </p>
+          <Button
+            onClick={() => setLocation("/checkpoint")}
+            className="bg-red-600 hover:bg-red-700 text-white font-poppins"
+          >
+            Back to Checkpoint
+          </Button>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="p-8 max-w-4xl mx-auto">
+        <Card className="p-8 text-center">
+          <p className="text-gray-600 font-poppins">Loading...</p>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     

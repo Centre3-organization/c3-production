@@ -93,7 +93,7 @@ export function CheckpointHome() {
       {/* Quick Actions */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 mb-4 font-poppins">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Button
             onClick={() => setLocation('/unregistered-entry')}
             className="bg-amber-600 hover:bg-amber-700 text-white h-20 text-lg font-bold font-poppins"
@@ -111,12 +111,6 @@ export function CheckpointHome() {
             className="bg-orange-600 hover:bg-orange-700 text-white font-bold h-20 text-lg font-poppins"
           >
             📋 View Watchlist
-          </Button>
-          <Button
-            onClick={() => setLocation('/checkpoint/settings')}
-            className="bg-slate-600 hover:bg-slate-700 text-white font-bold h-20 text-lg font-poppins"
-          >
-            ⚙️ Settings
           </Button>
         </div>
       </div>

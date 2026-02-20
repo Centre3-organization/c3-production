@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 // Password-only auth - redirect to /login
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Zap } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -31,6 +31,7 @@ const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
   { icon: Shield, label: "Checkpoint", path: "/checkpoint" },
   { icon: Users, label: "Users", path: "/users" },
+  { icon: Zap, label: "AI Integrations", path: "/ai-integrations", adminOnly: true },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -182,6 +183,10 @@ function DashboardLayoutContent({
           <SidebarContent className="gap-0">
             <SidebarMenu className="px-2 py-1">
               {menuItems.map(item => {
+                // Hide admin-only items from non-admin users
+                if (item.adminOnly && user?.role !== "admin" && user?.email !== "mohsiin@gmail.com") {
+                  return null;
+                }
                 const isActive = location === item.path;
                 return (
                   <SidebarMenuItem key={item.path}>
