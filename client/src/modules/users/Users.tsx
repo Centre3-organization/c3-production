@@ -81,6 +81,7 @@ const permissionModules = [
     id: "approvals", 
     label: "Approvals", 
     actions: [
+      { id: "view", label: "View Approvals" },
       { id: "l1", label: "L1 Approval" },
       { id: "manual", label: "Manual Approval" }
     ] 
@@ -127,10 +128,11 @@ const permissionModules = [
     id: "users", 
     label: "User Administration", 
     actions: [
+      { id: "view", label: "View Users" },
       { id: "create", label: "Create User" },
-      { id: "read", label: "View Users" },
       { id: "update", label: "Edit User" },
-      { id: "delete", label: "Delete User" }
+      { id: "delete", label: "Delete User" },
+      { id: "manage_roles", label: "Manage User Roles" }
     ] 
   },
   { 
@@ -223,6 +225,24 @@ const permissionModules = [
     actions: [
       { id: "view", label: "View Integrations" },
       { id: "configure", label: "Configure Integrations" }
+    ] 
+  },
+  { 
+    id: "admin", 
+    label: "Admin", 
+    actions: [
+      { id: "access", label: "Access Admin Panel" },
+      { id: "roles", label: "Manage Roles" },
+      { id: "audit", label: "View Audit Logs" }
+    ] 
+  },
+  { 
+    id: "facilities", 
+    label: "Facilities", 
+    actions: [
+      { id: "view", label: "View Facilities" },
+      { id: "create", label: "Create Facilities" },
+      { id: "update", label: "Update Facilities" }
     ] 
   }
 ];
@@ -430,11 +450,13 @@ export default function Users() {
 
   const handleSaveRole = () => {
     if (!selectedRole) return;
+    const permissionCodes = convertPermissionsToArray(selectedRole.permissions);
+    
     if (selectedRole.isNew) {
       const code = selectedRole.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
       createRoleMutation.mutate({
         name: selectedRole.name, code,
-        description: selectedRole.description, level: 50, permissions: [],
+        description: selectedRole.description, level: 50, permissions: permissionCodes,
       });
     } else {
       updateRoleMutation.mutate({

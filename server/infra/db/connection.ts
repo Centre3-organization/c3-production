@@ -804,6 +804,12 @@ export async function seedPermissions(): Promise<void> {
     { code: "admin:roles", module: "admin", action: "roles", name: "Manage Roles", category: "Admin" },
     { code: "admin:audit", module: "admin", action: "audit", name: "View Audit Logs", category: "Admin" },
     
+    // Roles
+    { code: "roles:view", module: "roles", action: "view", name: "View Roles", category: "Roles" },
+    { code: "roles:create", module: "roles", action: "create", name: "Create Roles", category: "Roles" },
+    { code: "roles:update", module: "roles", action: "update", name: "Update Roles", category: "Roles" },
+    { code: "roles:delete", module: "roles", action: "delete", name: "Delete Roles", category: "Roles" },
+    
     // Legacy compatibility
     { code: "facilities:view", module: "facilities", action: "view", name: "View Facilities", category: "Facilities" },
     { code: "facilities:create", module: "facilities", action: "create", name: "Create Facilities", category: "Facilities" },
@@ -851,6 +857,7 @@ export async function seedRolePermissions(): Promise<void> {
       "reports:view", "reports:export",
       "settings:view", "settings:update",
       "admin:access", "admin:roles", "admin:audit",
+      "roles:view", "roles:create", "roles:update", "roles:delete",
     ],
     security_manager: [
       "dashboard:view", "dashboard:analytics",
