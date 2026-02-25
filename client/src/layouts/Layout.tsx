@@ -131,12 +131,16 @@ export default function Layout({ children }: LayoutProps) {
   const hasPermission = (permissionPath: string): boolean => {
     if (!permissions) return false;
     
-    // Use the actual permissions from the user's system role
-    // The getMyPermissions endpoint already handles super_admin/admin role escalation
-    // based on the role's actual permission assignments
-    // Permissions are in format "module:action" (e.g., "dashboard:view")
-    const permissionsArray = Array.isArray(permissions) ? permissions : (permissions as any)?.permissions || [];
-    return (permissionsArray as string[]).includes(permissionPath);
+    // Permissions are returned as nested object: { module: { action: boolean } }
+    // e.g., { dashboard: { view: true }, requests: { view: true, create: true } }
+    const [module, action] = permissionPath.split(':');
+    
+    if (!module || !action) return false;
+    
+    const modulePerms = (permissions as any)?.[module];
+    if (!modulePerms || typeof modulePerms !== 'object') return false;
+    
+    return modulePerms[action] === true;
   };
 
   // Define all navigation sections with permission requirements

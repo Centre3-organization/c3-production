@@ -1,0 +1,20 @@
+{
+  "query": "SELECT id, email, role FROM users WHERE email IN ('osama@techbanq.net', 'mohsiin@gmail.com') LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user BsRQq1X2Mh9kZmK.6749932367bb --database WqXabcMRQ5aEFJ4QyeefuN --execute SELECT id, email, role FROM users WHERE email IN ('osama@techbanq.net', 'mohsiin@gmail.com') LIMIT 10;",
+  "rows": [
+    {
+      "id": "3",
+      "email": "mohsiin@gmail.com",
+      "role": "admin"
+    },
+    {
+      "id": "180008",
+      "email": "osama@techbanq.net",
+      "role": "admin"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\trole\n3\tmohsiin@gmail.com\tadmin\n180008\tosama@techbanq.net\tadmin\n",
+  "stderr": "",
+  "execution_time_ms": 1505
+}
