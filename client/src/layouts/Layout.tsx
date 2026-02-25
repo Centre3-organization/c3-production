@@ -135,8 +135,8 @@ export default function Layout({ children }: LayoutProps) {
     // The getMyPermissions endpoint already handles super_admin/admin role escalation
     // based on the role's actual permission assignments
     // Permissions are in format "module:action" (e.g., "dashboard:view")
-    const permissionsArray = Array.isArray(permissions) ? permissions : [];
-    return permissionsArray.includes(permissionPath);
+    const permissionsArray = Array.isArray(permissions) ? permissions : (permissions as any)?.permissions || [];
+    return (permissionsArray as string[]).includes(permissionPath);
   };
 
   // Define all navigation sections with permission requirements
