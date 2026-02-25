@@ -726,6 +726,7 @@ export async function seedPermissions(): Promise<void> {
     { code: "requests:reject", module: "requests", action: "reject", name: "Reject Requests", category: "Requests" },
     
     // Approvals
+    { code: "approvals:view", module: "approvals", action: "view", name: "View Approvals", category: "Approvals" },
     { code: "approvals:l1", module: "approvals", action: "l1", name: "L1 Approval", category: "Approvals" },
     { code: "approvals:manual", module: "approvals", action: "manual", name: "Manual Approval", category: "Approvals" },
     
@@ -844,6 +845,7 @@ export async function seedRolePermissions(): Promise<void> {
       "users:view", "users:create", "users:update", "users:delete", "users:manage_roles",
       "groups:view", "groups:create", "groups:update", "groups:delete",
       "requests:view", "requests:create", "requests:update", "requests:approve", "requests:reject",
+      "approvals:view",
       "facilities:view", "facilities:create", "facilities:update",
       "workflows:view", "workflows:create", "workflows:update",
       "reports:view", "reports:export",
@@ -855,6 +857,7 @@ export async function seedRolePermissions(): Promise<void> {
       "users:view",
       "groups:view",
       "requests:view", "requests:approve", "requests:reject",
+      "approvals:view",
       "facilities:view",
       "reports:view", "reports:export",
       "admin:access", "admin:audit",
@@ -880,6 +883,7 @@ export async function seedRolePermissions(): Promise<void> {
       "users:view",
       "groups:view",
       "requests:view", "requests:approve", "requests:reject",
+      "approvals:view",
       "facilities:view",
       "reports:view",
     ],

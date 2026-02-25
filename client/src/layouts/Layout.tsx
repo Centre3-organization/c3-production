@@ -145,7 +145,7 @@ export default function Layout({ children }: LayoutProps) {
   const allNavSections: NavSection[] = [
     {
       items: [
-        { icon: LayoutDashboard, labelKey: "nav.dashboard", label: "Dashboard", href: "/", requiredPermission: "dashboard.view" },
+        { icon: LayoutDashboard, labelKey: "nav.dashboard", label: "Dashboard", href: "/", requiredPermission: "dashboard:view" },
       ]
     },
     {
@@ -153,76 +153,76 @@ export default function Layout({ children }: LayoutProps) {
       title: "Requests",
       items: [
         // Requestors can see All Requests (scoped to their own data)
-        { icon: FileText, labelKey: "nav.allRequests", label: "All Requests", href: "/requests", requiredPermission: "requests.view" },
-        { icon: CreditCard, labelKey: "nav.newRequest", label: "New Request", href: "/requests/new", requiredPermission: "requests.create" },
+        { icon: FileText, labelKey: "nav.allRequests", label: "All Requests", href: "/requests", requiredPermission: "requests:view" },
+        { icon: CreditCard, labelKey: "nav.newRequest", label: "New Request", href: "/requests/new", requiredPermission: "requests:create" },
       ]
     },
     {
       titleKey: "nav.approvals",
       title: "Approvals",
-      requiredPermission: "approvals.view",
+      requiredPermission: "approvals:view",
       items: [
-        { icon: FileCheck, labelKey: "nav.myApprovals", label: "My Approvals", href: "/approvals", requiredPermission: "approvals.view" },
-        { icon: Clock, labelKey: "nav.approvalHistory", label: "Approval History", href: "/approvals/history", requiredPermission: "approvals.view" },
+        { icon: FileCheck, labelKey: "nav.myApprovals", label: "My Approvals", href: "/approvals", requiredPermission: "approvals:view" },
+        { icon: Clock, labelKey: "nav.approvalHistory", label: "Approval History", href: "/approvals/history", requiredPermission: "approvals:view" },
       ]
     },
     {
       titleKey: "nav.facilities",
       title: "Site and Facilities",
-      requiredPermission: "sites.read",
+      requiredPermission: "sites:read",
       items: [
-        { icon: Building2, labelKey: "nav.sites", label: "Sites", href: "/sites", requiredPermission: "sites.read" },
-        { icon: Map, labelKey: "nav.zones", label: "Zones", href: "/zones", requiredPermission: "zones.read" },
-        { icon: Radio, labelKey: "nav.areas", label: "Areas", href: "/areas", requiredPermission: "zones.read" },
+        { icon: Building2, labelKey: "nav.sites", label: "Sites", href: "/sites", requiredPermission: "sites:read" },
+        { icon: Map, labelKey: "nav.zones", label: "Zones", href: "/zones", requiredPermission: "zones:read" },
+        { icon: Radio, labelKey: "nav.areas", label: "Areas", href: "/areas", requiredPermission: "zones:read" },
       ]
     },
     {
       titleKey: "nav.security",
       title: "Security Operations",
       items: [
-        { icon: MapPin, labelKey: "nav.globalOverwatch", label: "Global Overwatch", href: "/global-overwatch", requiredPermission: "alerts.view" },
-        { icon: ShieldAlert, labelKey: "nav.securityAlerts", label: "Security Alerts", href: "/alerts", badge: 3, requiredPermission: "alerts.view" },
+        { icon: MapPin, labelKey: "nav.globalOverwatch", label: "Global Overwatch", href: "/global-overwatch", requiredPermission: "alerts:view" },
+        { icon: ShieldAlert, labelKey: "nav.securityAlerts", label: "Security Alerts", href: "/alerts", badge: 3, requiredPermission: "alerts:view" },
         { icon: Eye, labelKey: "nav.checkpoint", label: "Checkpoint", href: "/checkpoint" },
       ]
     },
     {
       titleKey: "nav.processConfiguration",
       title: "Process Configuration",
-      requiredPermission: "workflows.view",
+      requiredPermission: "workflows:view",
       items: [
-        { icon: Workflow, labelKey: "nav.workflows", label: "Workflow Builder", href: "/workflows", requiredPermission: "workflows.view" },
-        { icon: FileText, labelKey: "nav.requestTypes", label: "Request Types", href: "/settings/request-types", requiredPermission: "requestTypes.view" },
-        { icon: UserCheck, labelKey: "nav.delegations", label: "Delegations", href: "/delegations", requiredPermission: "delegations.view" },
-        { icon: AlertTriangle, labelKey: "nav.securityAlerts", label: "Security Alerts", href: "/security-alert-config", requiredPermission: "workflows.view" },
+        { icon: Workflow, labelKey: "nav.workflows", label: "Workflow Builder", href: "/workflows", requiredPermission: "workflows:view" },
+        { icon: FileText, labelKey: "nav.requestTypes", label: "Request Types", href: "/settings/request-types", requiredPermission: "requestTypes:view" },
+        { icon: UserCheck, labelKey: "nav.delegations", label: "Delegations", href: "/delegations", requiredPermission: "delegations:view" },
+        { icon: AlertTriangle, labelKey: "nav.securityAlerts", label: "Security Alerts", href: "/security-alert-config", requiredPermission: "workflows:view" },
       ]
     },
     {
       titleKey: "nav.mcm",
       title: "Card Management",
-      requiredPermission: "cards.view",
+      requiredPermission: "cards:view",
       items: [
-        { icon: CreditCard, labelKey: "nav.cardControl", label: "Card Control", href: "/mcm", requiredPermission: "cards.view" },
+        { icon: CreditCard, labelKey: "nav.cardControl", label: "Card Control", href: "/mcm", requiredPermission: "cards:view" },
       ]
     },
     {
       titleKey: "nav.reports",
       title: "Reports",
-      requiredPermission: "reports.view",
+      requiredPermission: "reports:view",
       items: [
-        { icon: BarChart3, labelKey: "nav.reports", label: "Reports", href: "/reports", requiredPermission: "reports.view" },
+        { icon: BarChart3, labelKey: "nav.reports", label: "Reports", href: "/reports", requiredPermission: "reports:view" },
       ]
     },
 
     {
       titleKey: "nav.administration",
       title: "Administration",
-      requiredPermission: "users.read",
+      requiredPermission: "users:view",
       items: [
-        { icon: FolderTree, labelKey: "nav.groups", label: "Groups", href: "/groups", requiredPermission: "groups.view" },
-        { icon: Building2, labelKey: "nav.companies", label: "Companies", href: "/companies", requiredPermission: "settings.view" },
-        { icon: Users, labelKey: "nav.users", label: "Users & Roles", href: "/users", requiredPermission: "users.read" },
-        { icon: Settings, labelKey: "nav.settings", label: "Settings", href: "/settings", requiredPermission: "settings.view" },
-        { icon: Radio, labelKey: "nav.integrationHub", label: "Integration Hub", href: "/integration-hub", requiredPermission: "integrations.view" },
+        { icon: FolderTree, labelKey: "nav.groups", label: "Groups", href: "/groups", requiredPermission: "groups:view" },
+        { icon: Building2, labelKey: "nav.companies", label: "Companies", href: "/companies", requiredPermission: "settings:view" },
+        { icon: Users, labelKey: "nav.users", label: "Users & Roles", href: "/users", requiredPermission: "users:view" },
+        { icon: Settings, labelKey: "nav.settings", label: "Settings", href: "/settings", requiredPermission: "settings:view" },
+        { icon: Radio, labelKey: "nav.integrationHub", label: "Integration Hub", href: "/integration-hub", requiredPermission: "integrations:view" },
       ]
     }
   ];
