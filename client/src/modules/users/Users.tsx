@@ -830,16 +830,21 @@ export default function Users() {
                   </div>
                   <p className="text-sm text-[#6B6B6B] mb-3">{role.description || "No description"}</p>
                   <div className="flex flex-wrap gap-1">
-                    {Object.entries(role.permissions || {} as Record<string, unknown>).slice(0, 3).map(([key, value]) => (
-                      value ? (
+                    {Object.entries(role.permissions || {} as Record<string, unknown>)
+                      .filter(([_, value]) => value && typeof value === 'object' && Object.values(value as Record<string, boolean>).some(Boolean))
+                      .slice(0, 3)
+                      .map(([key]) => (
                         <Badge key={key} variant="secondary" className="text-xs bg-[#F5F5F5] text-[#6B6B6B]">
                           {key}
                         </Badge>
-                      ) : null
-                    ))}
-                    {Object.keys(role.permissions || {}).length > 3 && (
+                      ))}
+                    {Object.entries(role.permissions || {})
+                      .filter(([_, value]) => value && typeof value === 'object' && Object.values(value as Record<string, boolean>).some(Boolean))
+                      .length > 3 && (
                       <Badge variant="secondary" className="text-xs bg-[#F5F5F5] text-[#6B6B6B]">
-                        +{Object.keys(role.permissions || {}).length - 3} more
+                        +{Object.entries(role.permissions || {})
+                          .filter(([_, value]) => value && typeof value === 'object' && Object.values(value as Record<string, boolean>).some(Boolean))
+                          .length - 3} more
                       </Badge>
                     )}
                   </div>
