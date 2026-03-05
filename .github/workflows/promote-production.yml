@@ -1,0 +1,30 @@
+name: Promote to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type PROMOTE to confirm'
+        required: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Validate confirmation
+        if: ${{ github.event.inputs.confirm != 'PROMOTE' }}
+        run: |
+          echo "You must type PROMOTE to confirm."
+          exit 1
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push staging main to production main
+        run: |
+          git remote add staging https://x-access-token:${{ secrets.STAGING_REPO_TOKEN }}@github.com/mohsinqreshii/center3-staging.git
+          git fetch staging
+          git remote add production https://x-access-token:${{ secrets.PRODUCTION_REPO_TOKEN }}@github.com/mohsinqreshii/center3-production.git
+          git push production refs/remotes/staging/main:refs/heads/main --force
