@@ -24,7 +24,7 @@ jobs:
 
       - name: Push staging main to production main
         run: |
-          git remote add staging https://x-access-token:${{ secrets.STAGING_REPO_TOKEN }}@github.com/mohsinqreshii/center3-staging.git
+          git remote add staging https://x-access-token:${{ secrets.STAGING_REPO_TOKEN }}@github.com/Centre3-organization/centre3-staging.git
           git fetch staging
-          git remote add production https://x-access-token:${{ secrets.PRODUCTION_REPO_TOKEN }}@github.com/mohsinqreshii/center3-production.git
+          git remote add production https://x-access-token:${{ secrets.PRODUCTION_REPO_TOKEN }}@github.com/Centre3-organization/c3-production.git
           git push production refs/remotes/staging/main:refs/heads/main --force
